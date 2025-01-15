@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <title>게시판 목록</title>
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <h2>
+    <% if (category === 'anabada') { %>
+      아나바다
+    <% } else if (category === 'meeting') { %>
+      만남의 광장
+    <% } else { %>
+      업체 추천
+    <% } %> 게시판
+  </h2>
+
+  <a href="/board/<%= category %>/new">글쓰기</a>
+  <ul>
+    <% posts.forEach(post => { %>
+      <li>
+        <a href="/board/<%= category %>/<%= post._id %>"><%= post.title %></a>
+        - <%= post.author.username %>  
+        (<%= new Date(post.createdAt).toLocaleString() %>)
+      </li>
+    <% }) %>
+  </ul>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <title>LongIsland Korea - 메인</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <main>
+    <h2>게시판 최신글</h2>
+
+    <section>
+      <h3>아나바다 최신글</h3>
+      <ul>
+        <% recentAnabada.forEach(post => { %>
+          <li>
+            <a href="/board/anabada/<%= post._id %>"><%= post.title %></a>
+            (by <%= post.author.username %>)
+          </li>
+        <% }) %>
+      </ul>
+    </section>
+
+    <section>
+      <h3>만남의 광장 최신글</h3>
+      <ul>
+        <% recentMeeting.forEach(post => { %>
+          <li>
+            <a href="/board/meeting/<%= post._id %>"><%= post.title %></a>
+            (by <%= post.author.username %>)
+          </li>
+        <% }) %>
+      </ul>
+    </section>
+
+    <section>
+      <h3>업체 추천 최신글</h3>
+      <ul>
+        <% recentRecommend.forEach(post => { %>
+          <li>
+            <a href="/board/recommend/<%= post._id %>"><%= post.title %></a>
+            (by <%= post.author.username %>)
+          </li>
+        <% }) %>
+      </ul>
+    </section>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

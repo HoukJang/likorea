@@ -1,0 +1,18 @@
+<header>
+    <h1><a href="/">LongIsland Korea</a></h1>
+    <nav>
+      <ul>
+        <li><a href="/">홈</a></li>
+        <li><a href="/board/anabada">아나바다</a></li>
+        <li><a href="/board/meeting">만남의 광장</a></li>
+        <li><a href="/board/recommend">업체 추천</a></li>
+        <% if (!session.userId) { %>
+          <li><a href="/register">회원가입</a></li>
+          <li><a href="/login">로그인</a></li>
+        <% } else { %>
+          <li><a href="/logout">로그아웃</a></li>
+        <% } %>
+      </ul>
+    </nav>
+  </header>
+  
