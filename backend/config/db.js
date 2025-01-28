@@ -6,8 +6,8 @@ const connectDB = async () => {
   try {
     // Atlas에서 확인한 Connection String
     await mongoose.connect(process.env.ATLAS_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      // useNewUrlParser: true,
+      // useUnifiedTopology: true,
     });
     console.log("MongoDB Atlas Connected!");
   } catch (error) {
