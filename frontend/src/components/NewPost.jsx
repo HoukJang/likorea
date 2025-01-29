@@ -1,7 +1,6 @@
-
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './NewPost.css';
 
 // 백엔드 서버 주소
 const BASE_URL = process.env.REACT_APP_API_URL;
@@ -15,8 +14,9 @@ function NewPost() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    console.log('handleSubmit 호출됨');
     const newPost = { title, author, content };
-
+    
     try {
       const res = await fetch(BASE_URL, {
         method: 'POST',
@@ -32,10 +32,10 @@ function NewPost() {
   }
 
   return (
-    <div>
-      <h2>새 글 작성</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
+    <div className="new-post-container">
+      {/* <h2>새 글 작성</h2> */}
+      <form onSubmit={handleSubmit} className="new-post-form">
+        <div className="form-group">
           <label>제목:</label>
           <input
             type="text"
@@ -44,7 +44,7 @@ function NewPost() {
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>작성자:</label>
           <input
             type="text"
@@ -52,16 +52,16 @@ function NewPost() {
             onChange={(e) => setAuthor(e.target.value)}
           />
         </div>
-        <div>
-          <label>내용:</label><br/>
+        <div className="form-group">
+          <label>내용:</label>
           <textarea
-            rows="5"
+            rows="10"
             required
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
         </div>
-        <button type="submit">등록</button>
+        <button type="submit" className="submit-button">등록</button>
       </form>
     </div>
   );
