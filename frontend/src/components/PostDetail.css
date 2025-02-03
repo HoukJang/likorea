@@ -1,0 +1,23 @@
+.post-detail-container {
+  padding: 20px;
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.post-detail-container h2 {
+  margin-bottom: 10px;
+  font-size: 1.8em;
+  color: #333;
+}
+
+.post-detail-container p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.post-content {
+  margin-top: 20px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}

@@ -26,7 +26,7 @@ exports.getPostByID = async (req, res) => {
 // 새글 작성
 exports.createPost = async (req, res) => {
     try {
-        const { title, content, suthor } = req.body;
+        const { title, content, author } = req.body;
         const newPost = new Post({ title, content, author });
         await newPost.save();
         res.status(201).json(newPost);
