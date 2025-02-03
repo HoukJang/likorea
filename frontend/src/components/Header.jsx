@@ -1,9 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 function Header() {
+    const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/login');
+    };
+
     return (
         <header className="header" style={{ textAlign: 'center' }}>
             <h1>
@@ -24,9 +32,23 @@ function Header() {
                 </span>
             </h1>
             <nav>
-            <Link to="/signup">회원가입</Link> | <Link to="/">게시글 목록</Link> | <Link to="/new">새 글 작성</Link>
+                {token ? (
+                    <>
+                        <Link to="#" onClick={handleLogout} style={{ textDecoration: 'none' }}>
+                            로그아웃
+                        </Link>
+                        {' | '}
+                        <Link to="/" style={{ textDecoration: 'none' }}>자유 게시판</Link>
+                    </>
+                ) : (
+                    <>
+                        <Link to="/login" style={{ textDecoration: 'none' }}>로그인</Link>
+                        {' | '}
+                        <Link to="/" style={{ textDecoration: 'none' }}>자유 게시판</Link>
+                    </>
+                )}
             </nav>
-            <hr/>
+            <hr />
         </header>
     );
 }

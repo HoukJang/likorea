@@ -1,61 +1,55 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import './EditPost.css';
+import { API_BASE_URL } from '../config';
 
-// 백엔드 서버 주소
-const BASE_URL = process.env.REACT_APP_API_URL;
-
-function EditPost() {
+const EditPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const token = localStorage.getItem('token');
   const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
 
-  // 마운트 시 기존 글 불러오기
   useEffect(() => {
-    fetchPost();
-    // eslint-disable-next-line
-  }, []);
-
-  async function fetchPost() {
-    try {
-      const res = await fetch(`${BASE_URL}/${id}`);
-      if (!res.ok) throw new Error('해당 글을 찾을 수 없음');
-      const data = await res.json();
-      setTitle(data.title);
-      setAuthor(data.author || '');
-      setContent(data.content);
-    } catch (error) {
-      console.error('글 불러오기 실패:', error);
-      alert('글을 불러오는 중 오류가 발생했습니다.');
-      navigate('/');
+    async function fetchPost() {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/posts/${id}`);
+        if (!res.ok) throw new Error('게시글 로딩 실패');
+        const data = await res.json();
+        setTitle(data.title);
+        setContent(data.content);
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }
+    fetchPost();
+  }, [id]);
 
-  async function handleUpdate(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const updatedPost = { title, author, content };
+    const updatedPost = { title, content };
 
     try {
-      const res = await fetch(`${BASE_URL}/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/posts/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(updatedPost),
       });
-      if (!res.ok) throw new Error('서버 오류');
-      alert('수정 완료!');
-      navigate('/');
+      if (!res.ok) throw new Error('게시글 수정 실패');
+      alert('게시글이 수정되었습니다.');
+      navigate(`/posts/${id}`);
     } catch (error) {
       console.error('게시글 수정 실패:', error);
     }
-  }
+  };
 
   return (
-    <div>
-      <h2>글 수정</h2>
-      <form onSubmit={handleUpdate}>
-        <div>
+    <div className="edit-post-container">
+      <form className="edit-post-form" onSubmit={handleSubmit}>
+        <div className="form-group">
           <label>제목:</label>
           <input
             type="text"
@@ -64,27 +58,19 @@ function EditPost() {
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <div>
-          <label>작성자:</label>
-          <input
-            type="text"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>내용:</label><br/>
+        <div className="form-group">
+          <label>내용:</label>
           <textarea
-            rows="5"
+            rows="10"
             required
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
         </div>
-        <button type="submit">수정</button>
+        <button type="submit" className="submit-button">수정</button>
       </form>
     </div>
   );
-}
+};
 
 export default EditPost;
