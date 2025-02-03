@@ -10,23 +10,37 @@
 }
 
 .post-item {
-  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
   padding: 10px 0;
+  border-bottom: 1px solid #ddd;
 }
 
-.post-item:last-child {
-  border-bottom: none;
-}
-
-.post-item h3 {
-  margin: 0;
+.post-title {
+  flex: 3;
   font-size: 1.3em;
   color: #007bff;
-  cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 20px;
 }
 
-.post-item p {
-  margin: 5px 0;
+.post-title:hover {
+  text-decoration: underline;
+}
+
+.post-author {
+  flex: 1;
+  text-align: center;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.post-date {
+  flex: 1;
+  text-align: right;
+  font-size: 0.9em;
   color: #555;
 }

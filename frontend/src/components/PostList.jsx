@@ -26,11 +26,13 @@ function PostList() {
       <ul className="post-list">
         {posts.map(post => (
           <li key={post._id} className="post-item">
-            <Link to={`/posts/${post._id}`}>
-              <h3>{post.title}</h3>
+            <Link to={`/posts/${post._id}`} className="post-title">
+              {post.title}
             </Link>
-            <p>작성자: {post.author}</p>
-            <p>등록일: {new Date(post.createdAt).toLocaleDateString()}</p>
+            <span className="post-author">{post.author}</span>
+            <span className="post-date">
+              {new Date(post.createdAt).toLocaleDateString()}
+            </span>
           </li>
         ))}
       </ul>

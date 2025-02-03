@@ -7,6 +7,7 @@ import PostList from './components/PostList';
 import NewPost from './components/NewPost';
 import EditPost from './components/EditPost';
 import PostDetail from './components/PostDetail';
+import Signup from './components/Signup';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/new" element={<NewPost />} />
           <Route path="/edit/:id" element={<EditPost />} />
           <Route path="/posts/:id" element={<PostDetail />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </div>
     </Router>

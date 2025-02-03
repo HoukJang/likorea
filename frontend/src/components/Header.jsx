@@ -24,7 +24,7 @@ function Header() {
                 </span>
             </h1>
             <nav>
-                <Link to="/">게시글 목록</Link> | <Link to="/new">새 글 작성</Link>
+            <Link to="/signup">회원가입</Link> | <Link to="/">게시글 목록</Link> | <Link to="/new">새 글 작성</Link>
             </nav>
             <hr/>
         </header>
