@@ -1,73 +1,49 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './Login.css';
-import { API_BASE_URL } from '../config';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-  const [error, setError] = useState('');
+  const [form, setForm] = useState({ email: '', password: '' });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${API_BASE_URL}/api/login`, {
+      const res = await fetch('http://localhost:5000/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(form)
       });
-      if (!res.ok) {
-        const message = await res.text();
-        throw new Error(message || '로그인 실패');
-      }
       const data = await res.json();
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('username', data.username); // username 저장
-      alert('로그인에 성공했습니다!');
-      navigate('/');
-    } catch (err) {
-      console.error('로그인 오류:', err);
-      setError(err.message);
+      if (res.ok) {
+        alert('로그인 성공!');
+        localStorage.setItem('token', data.token);
+        navigate('/');
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error('로그인 실패', error);
     }
   };
 
   return (
-    <div className="login-container">
+    <div>
       <h2>로그인</h2>
-      {error && <p className="error-message">{error}</p>}
-      <form onSubmit={handleSubmit} className="login-form">
-        <label>
-          이메일
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          비밀번호
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </label>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>이메일:</label>
+          <input type="email" name="email" value={form.email} onChange={handleChange} required />
+        </div>
+        <div>
+          <label>비밀번호:</label>
+          <input type="password" name="password" value={form.password} onChange={handleChange} required />
+        </div>
         <button type="submit">로그인</button>
       </form>
-      <p className="additional-link">
-        계정이 없으신가요? <Link to="/signup">회원가입</Link>
-      </p>
     </div>
   );
 }

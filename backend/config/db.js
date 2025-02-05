@@ -1,17 +1,14 @@
-require('dotenv').config();
-
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    // Atlas에서 확인한 Connection String
-    await mongoose.connect(process.env.ATLAS_URI, {
-      // useNewUrlParser: true,
-      // useUnifiedTopology: true,
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     });
-    console.log("MongoDB Atlas Connected!");
+    console.log("MongoDB 연결 성공");
   } catch (error) {
-    console.error(error);
+    console.error("MongoDB 연결 실패", error);
     process.exit(1);
   }
 };

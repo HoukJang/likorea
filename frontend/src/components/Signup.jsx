@@ -1,97 +1,51 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Signup.css';
-import { API_BASE_URL } from '../config';
 
 function Signup() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    passwordConfirm: '',
-  });
-  const [error, setError] = useState('');
+  const [form, setForm] = useState({ email: '', nickname: '', password: '' });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username, email, password, passwordConfirm } = formData;
-
-    if (password !== passwordConfirm) {
-      setError('비밀번호가 일치하지 않습니다.');
-      return;
-    }
-
     try {
-      const res = await fetch(`${API_BASE_URL}/api/signup`, {
+      const res = await fetch('http://localhost:5000/api/users/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify(form)
       });
-
-      if (!res.ok) {
-        const message = await res.text();
-        throw new Error(message || '회원가입 실패');
+      const data = await res.json();
+      if (res.ok) {
+        alert('회원가입 성공!');
+        navigate('/login');
+      } else {
+        alert(data.message);
       }
-
-      alert('회원가입에 성공했습니다!');
-      navigate('/login'); // 로그인 페이지 경로 (필요에 따라 수정)
     } catch (error) {
-      console.error('회원가입 에러:', error);
-      setError(error.message);
+      console.error('회원가입 실패', error);
     }
   };
 
   return (
-    <div className="signup-container">
+    <div>
       <h2>회원가입</h2>
-      {error && <p className="error-message">{error}</p>}
-      <form className="signup-form" onSubmit={handleSubmit}>
-        <label>
-          아이디
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          이메일
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          비밀번호
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          비밀번호 확인
-          <input
-            type="password"
-            name="passwordConfirm"
-            value={formData.passwordConfirm}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <button type="submit">가입하기</button>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>이메일:</label>
+          <input type="email" name="email" value={form.email} onChange={handleChange} required />
+        </div>
+        <div>
+          <label>별명:</label>
+          <input type="text" name="nickname" value={form.nickname} onChange={handleChange} required />
+        </div>
+        <div>
+          <label>비밀번호:</label>
+          <input type="password" name="password" value={form.password} onChange={handleChange} required />
+        </div>
+        <button type="submit">회원가입</button>
       </form>
     </div>
   );
