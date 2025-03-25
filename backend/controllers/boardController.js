@@ -1,8 +1,6 @@
 const BoardPost = require('../models/BoardPost');
 
-// boardType (free 또는 trade)는 URL 파라미터로 받고, 작성자는 인증 미들웨어로부터 받아오는 것이 좋습니다.
-// 여기서는 예시로 요청 본문에 author(사용자ID)가 포함된다고 가정합니다.
-
+// 게시글 생성 (기존)
 exports.createPost = async (req, res) => {
   try {
     const { boardType } = req.params; // URL 예: /api/boards/free 또는 /api/boards/trade
@@ -14,6 +12,7 @@ exports.createPost = async (req, res) => {
   }
 };
 
+// 게시글 조회 (기존)
 exports.getPosts = async (req, res) => {
   try {
     const { boardType } = req.params;

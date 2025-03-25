@@ -44,4 +44,4 @@ boardPostSchema.pre('save', async function(next) {
   }
 });
 
-module.exports = mongoose.model('BoardPost', boardPostSchema); 
+module.exports = mongoose.model('BoardPost', boardPostSchema);

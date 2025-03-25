@@ -1,0 +1,42 @@
+.banner {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .banner h1 {
+    margin: 0;
+    text-align: center;
+  }
+  
+  /* New styling for menu bar */
+  .main-nav {
+    background-color: #282c34;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+  }
+  
+  .main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+  }
+  
+  .main-nav li {
+    margin: 0 30px;
+  }
+  
+  .main-nav a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 18px;
+  }
+  
+  .auth-menu a {
+    text-decoration: none;
+    color: #007bff;
+  }
