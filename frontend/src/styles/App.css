@@ -40,3 +40,35 @@
     text-decoration: none;
     color: #007bff;
   }
+
+  .banner-container {
+    display: block;      /* 배너를 block 요소로 표시 */
+    margin: 0 auto;      /* 가운데 정렬 */
+    width: 100%;         /* 가로 전체 사용 */
+  }
+
+  /* 필요하다면, 다른 요소와의 충돌을 방지하기 위한 z-index 추가 */
+  .banner-container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 20px;
+  }
+
+  .nav-left a,
+  .nav-right a {
+    text-decoration: none;
+    color: inherit;
+    margin-right: 20px;
+    font-size: 18px;
+  }
+
+  .nav-right a {
+    margin-right: 0;
+  }
