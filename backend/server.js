@@ -12,7 +12,26 @@ const app = express();
 
 // 요청 본문 파싱 및 CORS 설정
 app.use(express.json());
-app.use(cors());
+
+const allowedOrigins = ['http://localhost:3000', 'http://your-domain.com'];
+app.use(cors({
+  origin: function(origin, callback) {
+    // 요청이 없는 경우(예: Curl) 허용
+    if (!origin) {
+      return callback(null, true);
+    }
+    // origin 끝의 슬래시 제거
+    const normalizedOrigin = origin.replace(/\/+$/, '');
+    console.log('Normalized Origin:', normalizedOrigin);
+    // Explicitly allow localhost:3000 in addition to allowedOrigins
+    if (allowedOrigins.includes(normalizedOrigin) || normalizedOrigin === 'http://localhost:3000') {
+      callback(null, true);
+    } else {
+      callback(new Error(`Not allowed by CORS: ${normalizedOrigin}`));
+    }
+  },
+  credentials: true
+}));
 
 // Add logging middleware to log every API call
 app.use((req, res, next) => {

@@ -1,11 +1,18 @@
 const BoardPost = require('../models/BoardPost');
+const sanitizeHtml = require('sanitize-html');
 
 // 게시글 생성 (기존)
 exports.createPost = async (req, res) => {
   try {
     const { boardType } = req.params; // URL 예: /api/boards/free 또는 /api/boards/trade
-    const { title, content, author } = req.body;
-    const post = await BoardPost.create({ boardType, title, content, author });
+    let { title, content, author: authorEmail } = req.body;
+    // sanitize title와 content
+    title = sanitizeHtml(title, { allowedTags: [] }); // 제목은 순수 텍스트만 허용
+    content = sanitizeHtml(content, {
+      allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img'],
+      allowedAttributes: { a: ['href'], img: ['src', 'alt'] }
+    });
+    const post = await BoardPost.create({ boardType, title, content, author: authorEmail });
     res.status(201).json({ message: '게시글 생성 성공', post });
   } catch (error) {
     res.status(400).json({ message: '게시글 생성 실패', error: error.message });
@@ -29,7 +36,7 @@ exports.getPosts = async (req, res) => {
 exports.updatePost = async (req, res) => {
   try {
     const { boardType, postId } = req.params;
-    const { title, content, author } = req.body; // 실제 서비스에서는 로그인된 사용자 정보로 author 검증 필요
+    let { title, content, author } = req.body; // 실제 서비스에서는 로그인된 사용자 정보로 author 검증 필요
     const post = await BoardPost.findById(postId);
     if (!post) {
       return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
@@ -38,8 +45,18 @@ exports.updatePost = async (req, res) => {
     if (post.author.toString() !== author) {
       return res.status(403).json({ message: '권한이 없습니다.' });
     }
-    post.title = title || post.title;
-    post.content = content || post.content;
+    // sanitize 및 업데이트
+    if (title) {
+      title = sanitizeHtml(title, { allowedTags: [] });
+      post.title = title;
+    }
+    if (content) {
+      content = sanitizeHtml(content, {
+        allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img'],
+        allowedAttributes: { a: ['href'], img: ['src', 'alt'] }
+      });
+      post.content = content;
+    }
     await post.save();
     res.json({ message: '게시글 수정 성공', post });
   } catch (error) {
@@ -70,7 +87,12 @@ exports.deletePost = async (req, res) => {
 exports.addComment = async (req, res) => {
   try {
     const { boardType, postId } = req.params;
-    const { content, author } = req.body;
+    let { content, author } = req.body;
+    // sanitize 댓글 내용: 기본적인 태그만 허용
+    content = sanitizeHtml(content, {
+      allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img'],
+      allowedAttributes: { a: ['href'], img: ['src', 'alt'] }
+    });
     const post = await BoardPost.findById(postId);
     if (!post) {
       return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });

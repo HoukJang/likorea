@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import BoardList from './components/BoardList';
+import BoardDetail from './components/BoardDetail'; // New detail page
 import BoardPostForm from './components/BoardPostForm';
 import BoardEditForm from './components/BoardEditForm';
 import './styles/App.css';
@@ -21,6 +22,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/boards/:boardType" element={<BoardList />} />
         <Route path="/boards/:boardType/new" element={<BoardPostForm />} />
+        <Route path="/boards/:boardType/:postId" element={<BoardDetail />} />
         <Route path="/boards/:boardType/:postId/edit" element={<BoardEditForm />} />
       </Routes>
     </BrowserRouter>

@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 exports.signup = async (req, res) => {
   try {
     console.log('회원가입 요청:', req.body);
-    const { email, nickname, password } = req.body;
+    const { email, password } = req.body; // removed nickname
     // 이메일 중복 체크 추가
     const existingUser = await User.findOne({ email });
     if(existingUser) {
@@ -31,13 +31,12 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: '잘못된 비밀번호' });
     }
-    // payload에 nickname 대신 email 사용
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
-    res.json({ message: '로그인 성공', token });
+    res.json({ message: '로그인 성공', token, email: user.email });
   } catch (error) {
     res.status(500).json({ message: '로그인 실패', error: error.message });
   }

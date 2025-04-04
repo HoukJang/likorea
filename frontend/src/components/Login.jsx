@@ -22,6 +22,8 @@ function Login() {
       const data = await response.json();
       if (data.token) {
         localStorage.setItem('authToken', data.token); // authToken 저장
+        localStorage.setItem('userEmail', data.email);  // 새로 추가: userEmail 저장
+        console.log(localStorage)
         setIsLoggedIn(true);
         console.log('로그인 성공, authChange 이벤트 디스패치'); // 로그 추가
         window.dispatchEvent(new Event('authChange')); // Header 업데이트를 위해 이벤트 디스패치
@@ -35,6 +37,7 @@ function Login() {
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userEmail');
     setIsLoggedIn(false);
     // ...추가: 리다이렉트 혹은 상태 업데이트...
   };
