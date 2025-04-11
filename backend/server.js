@@ -22,7 +22,7 @@ app.use(cors({
     }
     // origin 끝의 슬래시 제거
     const normalizedOrigin = origin.replace(/\/+$/, '');
-    console.log('Normalized Origin:', normalizedOrigin);
+
     // Explicitly allow localhost:3000 in addition to allowedOrigins
     if (allowedOrigins.includes(normalizedOrigin) || normalizedOrigin === 'http://localhost:3000') {
       callback(null, true);

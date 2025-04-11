@@ -14,7 +14,7 @@ const commentSchema = new mongoose.Schema(
 const boardPostSchema = new mongoose.Schema(
   {
     postNumber: { type: Number, unique: true },
-    boardType: { type: String, required: true, enum: ['free', 'trade'] },
+    boardType: { type: String, required: true, enum: ['trade', 'general'] },
     title: { type: String, required: true },
     content: { type: String, required: true },
     // 글 작성자 (User 모델의 ObjectId, populate로 별명 활용 가능)

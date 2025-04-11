@@ -37,12 +37,10 @@ function BoardPostForm() {
       setMessage('로그인 후 게시글 생성이 가능합니다.');
       return;
     }
-    // 수정: 작성자 정보를 localStorage에서 'userEmail'로 가져옴
     const email = localStorage.getItem('userEmail');
     console.log(localStorage); // 디버깅용 로그
 
     try {
-      // 변경: JSON body에 email 추가 (기존 authorId 대신)
       const response = await fetch(`${BACKEND_URL}/api/boards/${boardType}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -51,7 +49,7 @@ function BoardPostForm() {
       if (!response.ok) throw new Error('게시글 생성 실패');
       setMessage('게시글이 생성되었습니다!');
       console.log('게시글 생성 성공:', response);
-      // navigate(`/boards/${boardType}`);
+      navigate(`/boards/${boardType}`);
     } catch(error) {
       setMessage(error.message);
     }
