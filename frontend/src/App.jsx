@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Banner from './components/Banner'; // Banner 컴포넌트 import
 import Header from './components/Header'; // Header 컴포넌트 import
 import Home from './pages/Home';
@@ -9,11 +9,12 @@ import BoardList from './components/BoardList';
 import BoardDetail from './components/BoardDetail'; // New detail page
 import BoardPostForm from './components/BoardPostForm';
 import BoardEditForm from './components/BoardEditForm';
+import BoardPostView from './components/BoardPostView';
 import './styles/App.css';
 
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Banner />
       <Header />
       <Routes>
@@ -22,10 +23,10 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/boards/:boardType" element={<BoardList />} />
         <Route path="/boards/:boardType/new" element={<BoardPostForm />} />
-        <Route path="/boards/:boardType/:postId" element={<BoardDetail />} />
+        <Route path="/boards/:boardType/:postId" element={<BoardPostView />} />
         <Route path="/boards/:boardType/:postId/edit" element={<BoardEditForm />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 

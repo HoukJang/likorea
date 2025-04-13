@@ -7,6 +7,8 @@ function BoardList() {
   const { boardType } = useParams();
   console.log("useParams boardType:", boardType);
   const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 5;
 
   useEffect(() => {
     console.log("useEffect 실행 - boardType:", boardType);
@@ -14,14 +16,19 @@ function BoardList() {
       try {
         const data = await getBoards(boardType);
         console.log("백엔드에서 반환된 데이터:", data);
-        // 만약 data가 { posts: [...] } 형태라면 아래와 같이 수정
-        setPosts(data.posts || data);
+        const postsData = data.posts || data;
+        setPosts(postsData.slice().reverse());
       } catch (error) {
         console.error("게시글 목록 조회 오류:", error);
       }
     };
     fetchPosts();
   }, [boardType]);
+
+  const totalPages = Math.ceil(posts.length / postsPerPage);
+  const indexOfLast = currentPage * postsPerPage;
+  const indexOfFirst = indexOfLast - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirst, indexOfLast);
 
   console.log("BoardList 렌더링 - posts 길이:", posts.length);
 
@@ -62,9 +69,11 @@ function BoardList() {
             </tr>
           </thead>
           <tbody>
-            {posts.map((post, index) => (
-              <tr key={post.id} style={{ borderBottom: "1px solid #ccc" }}>
-                <td style={{ padding: "8px", width: "5%", textAlign: "center" }}>{index + 1}</td>
+            {currentPosts.map((post, idx) => (
+              <tr key={post._id || post.id || idx} style={{ borderBottom: "1px solid #ccc" }}>
+                <td style={{ padding: "8px", width: "5%", textAlign: "center" }}>
+                  {post.postNumber}
+                </td>
                 <td style={{ padding: "8px", width: "50%", textAlign: "left" }}>
                   <Link to={`/boards/${boardType}/${post.id}`}>{post.title}</Link>
                 </td>
@@ -81,6 +90,33 @@ function BoardList() {
             ))}
           </tbody>
         </table>
+      )}
+      {totalPages > 1 && (
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+          <button 
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            style={{ marginRight: "10px" }}
+          >
+            이전
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button 
+              key={i} 
+              onClick={() => setCurrentPage(i + 1)}
+              style={{ margin: "0 5px", fontWeight: currentPage === i + 1 ? "bold" : "normal" }}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button 
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            style={{ marginLeft: "10px" }}
+          >
+            다음
+          </button>
+        </div>
       )}
     </div>
   );

@@ -33,6 +33,12 @@ app.use(cors({
   credentials: true
 }));
 
+// Global logging middleware
+app.use((req, res, next) => {
+  console.log(`[Global] ${req.method} ${req.originalUrl}`, 'params:', req.params, 'body:', req.body);
+  next();
+});
+
 // Add logging middleware to log every API call
 app.use((req, res, next) => {
     console.log(`API 호출: ${req.method} ${req.originalUrl}`);

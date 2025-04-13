@@ -23,7 +23,33 @@ function BoardPostForm() {
         const file = item.getAsFile();
         const reader = new FileReader();
         reader.onload = function(event) {
-          document.execCommand('insertHTML', false, `<img src="${event.target.result}" alt="pasted-image" />`);
+          console.log("FileReader 결과:", event.target.result); // 데이터 URL 확인
+          const img = document.createElement('img');
+          img.src = event.target.result;
+          console.log("생성된 img 태그 src:", img.src); // 이미지 태그의 src 로그
+          img.alt = "pasted-image";
+          img.style.maxWidth = "100%";
+          const selection = window.getSelection();
+          if (selection && selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(img);
+            // 업데이트: 커서를 이미지 바로 뒤로 이동
+            range.setStartAfter(img);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            // contentEditable 변경 알림을 위해 input 이벤트 발생
+            const target = e.currentTarget || e.target;
+            if (target) {
+              target.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          } else {
+            const target = e.currentTarget || e.target;
+            if (target) {
+              target.appendChild(img);
+              target.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          }
         };
         reader.readAsDataURL(file);
         e.preventDefault();
@@ -38,7 +64,7 @@ function BoardPostForm() {
       return;
     }
     const email = localStorage.getItem('userEmail');
-    console.log(localStorage); // 디버깅용 로그
+    console.log("제출 전 content:", content); // 제출 전 content 출력
 
     try {
       const response = await fetch(`${BACKEND_URL}/api/boards/${boardType}`, {

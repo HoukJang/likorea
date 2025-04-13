@@ -1,14 +1,24 @@
 const express = require('express');
 const { 
-  createPost, getPosts, updatePost, deletePost,
+  createPost, getPosts, getPost, updatePost, deletePost,
   addComment, updateComment, deleteComment 
 } = require('../controllers/boardController');
 
 const router = express.Router();
 
+// 추가: 모든 라우트에 대해 로그를 출력하는 미들웨어
+router.use((req, res, next) => {
+  console.log(`[BoardRoutes] ${req.method} ${req.originalUrl}`, 
+              'params:', req.params, 'body:', req.body);
+  next();
+});
+
 // 게시글 목록 조회 및 생성
 router.get('/:boardType', getPosts);
 router.post('/:boardType', createPost);
+
+// 추가: 게시글 단일 조회
+router.get('/:boardType/:postId', getPost);
 
 // 게시글 수정 및 삭제 (postId는 MongoDB의 _id 사용)
 router.put('/:boardType/:postId', updatePost);
@@ -22,4 +32,4 @@ router.put('/:boardType/:postId/comments/:commentId', updateComment);
 // 댓글 삭제: DELETE /api/boards/:boardType/:postId/comments/:commentId
 router.delete('/:boardType/:postId/comments/:commentId', deleteComment);
 
-module.exports = router; 
+module.exports = router;

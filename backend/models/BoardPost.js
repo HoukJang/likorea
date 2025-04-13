@@ -26,6 +26,12 @@ const boardPostSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// 추가: _id를 활용한 가상 id 필드 생성
+boardPostSchema.virtual('id').get(function() {
+  return this._id.toHexString();
+});
+boardPostSchema.set('toJSON', { virtuals: true, versionKey: false });
+
 // 새 게시글 생성 시 boardType에 따른 postNumber 자동 증가 처리
 boardPostSchema.pre('save', async function(next) {
   if (!this.isNew) return next();

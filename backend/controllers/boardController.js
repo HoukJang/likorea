@@ -13,8 +13,9 @@ exports.createPost = async (req, res) => {
     // sanitize title and content
     title = sanitizeHtml(title, { allowedTags: [] });
     content = sanitizeHtml(content, {
-      allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img'],
-      allowedAttributes: { a: ['href'], img: ['src', 'alt'] }
+      allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img', 'div'],
+      allowedAttributes: { a: ['href'], img: ['src', 'alt'] },
+      allowedSchemes: ['http', 'https', 'data']  // allow data URIs
     });
     const post = await BoardPost.create({ boardType, title, content, author: user._id });
     console.log('게시글 생성 성공:', post);
@@ -32,8 +33,29 @@ exports.getPosts = async (req, res) => {
     const posts = await BoardPost.find({ boardType })
       .populate('author', 'email')
       .sort({ modifiedAt: -1 });
-    console.log('게시글 목록:', posts);
     res.json(posts);
+  } catch (error) {
+    res.status(400).json({ message: '게시글 조회 실패', error: error.message });
+  }
+};
+
+// 추가: 게시글 단일 조회
+exports.getPost = async (req, res) => {
+  try {
+    console.log('게시글 단일 조회 요청');
+    const { boardType, postId } = req.params;
+    console.log('게시글 단일 조회:', req.params);
+    // 게시글 조회 시 조회수 증가
+    await BoardPost.findByIdAndUpdate(postId, { $inc: { viewCount: 1 } });
+    // 게시글 조회
+    const post = await BoardPost.findOne({ _id: postId, boardType })
+      .populate('author', 'email')
+      .exec();
+    console.log('게시글 단일 조회:', post);
+    if (!post) {
+      return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
+    }
+    res.json(post);
   } catch (error) {
     res.status(400).json({ message: '게시글 조회 실패', error: error.message });
   }
@@ -58,8 +80,9 @@ exports.updatePost = async (req, res) => {
     }
     if (content) {
       content = sanitizeHtml(content, {
-        allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img'],
-        allowedAttributes: { a: ['href'], img: ['src', 'alt'] }
+        allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img', 'div'],
+        allowedAttributes: { a: ['href'], img: ['src', 'alt'] },
+        allowedSchemes: ['http', 'https', 'data']  // allow data URIs
       });
       post.content = content;
     }
@@ -99,8 +122,9 @@ exports.addComment = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
     content = sanitizeHtml(content, {
-      allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img'],
-      allowedAttributes: { a: ['href'], img: ['src', 'alt'] }
+      allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img', 'div'],
+      allowedAttributes: { a: ['href'], img: ['src', 'alt'] },
+      allowedSchemes: ['http', 'https', 'data']  // allow data URIs
     });
     const post = await BoardPost.findById(postId);
     if (!post) return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
