@@ -1,12 +1,13 @@
 // src/components/CommentForm.jsx
 import React, { useState } from 'react';
+import '../styles/CommentForm.css'; // Import the CSS file
 
 function CommentForm({ boardType, postId, onCommentAdded }) {
   const [comment, setComment] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const author = "로그인한 사용자의 ID 또는 닉네임"; // 실제 로그인 정보 사용
+    const author = localStorage.getItem('userEmail');
     try {
       const res = await fetch(`http://localhost:5000/api/boards/${boardType}/${postId}/comments`, {
         method: 'POST',
@@ -27,12 +28,17 @@ function CommentForm({ boardType, postId, onCommentAdded }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>댓글:</label>
-        <textarea name="comment" value={comment} onChange={(e) => setComment(e.target.value)} required />
+    <form className="comment-form" onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label className="form-label">댓글:</label>
+        <textarea 
+          className="comment-textarea"
+          value={comment} 
+          onChange={(e) => setComment(e.target.value)} 
+          required 
+        />
       </div>
-      <button type="submit">댓글 작성</button>
+      <button type="submit" className="submit-button">댓글 작성</button>
     </form>
   );
 }

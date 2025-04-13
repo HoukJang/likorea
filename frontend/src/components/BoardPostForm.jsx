@@ -1,20 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BACKEND_URL } from '../config';
+import { getBoardPost } from '../api/boards';
+import '../styles/BoardPostForm.css';
 
 function BoardPostForm() {
   const navigate = useNavigate();
-  const { boardType } = useParams();
+  const { boardType, postId } = useParams(); // postId is optional for editing
+  const isEditMode = Boolean(postId);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [message, setMessage] = useState('');
+  const contentRef = useRef(null);
 
-  // 새로 추가: 텍스트를 HTML로 변환하는 함수 (예: 줄바꿈을 <br>로 변환)
-  const convertContentToHtml = (text) => {
-    return text.replace(/\n/g, '<br>');
-  };
+  // If editing, fetch post data and update state
+  useEffect(() => {
+    if (isEditMode) {
+      async function fetchPost() {
+        try {
+          const data = await getBoardPost(boardType, postId);
+          setTitle(data.title);
+          setContent(data.content);
+          if (contentRef.current) {
+            contentRef.current.innerHTML = data.content;
+          }
+        } catch (error) {
+          console.error("게시글 조회 오류:", error);
+        }
+      }
+      fetchPost();
+    }
+  }, [boardType, postId, isEditMode]);
 
-  // 새로 추가: 붙여넣기 이벤트 핸들러 (클립보드 이미지 처리)
+  // Convert text newlines to <br>
+  const convertContentToHtml = (text) => text.replace(/\n/g, '<br>');
+
+  // Handle paste for images
   const handlePaste = (e) => {
     const items = e.clipboardData.items;
     for (const index in items) {
@@ -23,10 +44,8 @@ function BoardPostForm() {
         const file = item.getAsFile();
         const reader = new FileReader();
         reader.onload = function(event) {
-          console.log("FileReader 결과:", event.target.result); // 데이터 URL 확인
           const img = document.createElement('img');
           img.src = event.target.result;
-          console.log("생성된 img 태그 src:", img.src); // 이미지 태그의 src 로그
           img.alt = "pasted-image";
           img.style.maxWidth = "100%";
           const selection = window.getSelection();
@@ -34,11 +53,9 @@ function BoardPostForm() {
             const range = selection.getRangeAt(0);
             range.deleteContents();
             range.insertNode(img);
-            // 업데이트: 커서를 이미지 바로 뒤로 이동
             range.setStartAfter(img);
             selection.removeAllRanges();
             selection.addRange(range);
-            // contentEditable 변경 알림을 위해 input 이벤트 발생
             const target = e.currentTarget || e.target;
             if (target) {
               target.dispatchEvent(new Event('input', { bubbles: true }));
@@ -57,58 +74,71 @@ function BoardPostForm() {
     }
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!localStorage.getItem('authToken')) {
       setMessage('로그인 후 게시글 생성이 가능합니다.');
       return;
     }
     const email = localStorage.getItem('userEmail');
-    console.log("제출 전 content:", content); // 제출 전 content 출력
+    const currentContent = contentRef.current ? contentRef.current.innerHTML : content;
 
     try {
-      const response = await fetch(`${BACKEND_URL}/api/boards/${boardType}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, content: convertContentToHtml(content), email })
-      });
-      if (!response.ok) throw new Error('게시글 생성 실패');
-      setMessage('게시글이 생성되었습니다!');
-      console.log('게시글 생성 성공:', response);
+      let response;
+      if (isEditMode) {
+        // Update existing post
+        response = await fetch(`${BACKEND_URL}/api/boards/${boardType}/${postId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, content: currentContent, email })
+        });
+      } else {
+        // Create new post
+        response = await fetch(`${BACKEND_URL}/api/boards/${boardType}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, content: currentContent, email })
+        });
+      }
+
+      if (!response.ok) throw new Error(isEditMode ? '게시글 수정 실패' : '게시글 생성 실패');
+      setMessage(isEditMode ? '게시글이 수정되었습니다!' : '게시글이 생성되었습니다!');
       navigate(`/boards/${boardType}`);
-    } catch(error) {
+    } catch (error) {
       setMessage(error.message);
     }
   };
 
   return (
-    <div style={{ textAlign: "center", fontSize: "1.2rem", margin: "0 auto", maxWidth: "800px", padding: "0 2rem" }}>
-      <h2 style={{ textAlign: "center", fontSize: "2rem" }}>
-        {boardType === "general" ? "일반" : boardType} 게시판 - 게시글 생성
+    <div className="form-container">
+      <h2 className="form-title">
+        {isEditMode ? "게시글 수정" : `${boardType === "general" ? "일반" : boardType} 게시판 - 게시글 생성`}
       </h2>
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "1rem" }}>
+        <div className="form-group">
           <input 
             type="text" 
             placeholder="제목:" 
             value={title} 
-            onChange={(e)=> setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
             required
-            style={{ width: "100%", fontSize: "1.2rem" }}
+            className="title-input"
           />
         </div>
-        <div style={{ marginBottom: "1rem" }}>
-          {/* 기존 textarea를 contentEditable div로 교체 */}
+        <div className="form-group">
           <div 
             contentEditable
+            ref={contentRef}
             onInput={(e) => setContent(e.currentTarget.innerHTML)}
             onPaste={handlePaste}
-            style={{ width: "100%", minHeight: "500px", fontSize: "1.2rem", border: "1px solid #ccc", padding: "0.5rem", textAlign: "left" }}
+            className="content-editor"
           ></div>
         </div>
-        <button type="submit" style={{ fontSize: "1.2rem" }}>게시글 생성</button>
+        <button type="submit" className="submit-button">
+          {isEditMode ? "수정 완료" : "게시글 생성"}
+        </button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p className="message">{message}</p>}
     </div>
   );
 }

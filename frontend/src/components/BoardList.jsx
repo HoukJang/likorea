@@ -40,20 +40,22 @@ function BoardList() {
         </h1>
       </header>
       <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '20px 0' }}>
-        <Link 
-          to={`/boards/${boardType}/new`} 
-          style={{ 
-            backgroundColor: '#337ab7', 
-            color: '#fff', 
-            padding: '10px 20px', 
-            borderRadius: '4px', 
-            textDecoration: 'none', 
-            fontWeight: 'bold',
-            marginRight: "10px" // 추가된 오른쪽 margin
-          }}
-        >
-          글쓰기
-        </Link>
+        {localStorage.getItem('authToken') && (
+          <Link 
+            to={`/boards/${boardType}/new`} 
+            style={{ 
+              backgroundColor: '#337ab7', 
+              color: '#fff', 
+              padding: '10px 20px', 
+              borderRadius: '4px', 
+              textDecoration: 'none', 
+              fontWeight: 'bold',
+              marginRight: "10px" // 추가된 오른쪽 margin
+            }}
+          >
+            글쓰기
+          </Link>
+        )}
       </div>
       {posts.length === 0 ? (
         <p>게시글이 없습니다.</p>
