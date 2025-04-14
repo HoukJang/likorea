@@ -3,21 +3,61 @@ import { Link, useParams } from 'react-router-dom';
 import { getBoards } from '../api/boards';
 
 function BoardList() {
-  console.log("BoardList 컴포넌트 마운트");
   const { boardType } = useParams();
-  console.log("useParams boardType:", boardType);
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 5;
+  const [postsPerPage, setPostsPerPage] = useState(10); // 기본값을 10으로 변경
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
+  // 페이지네이션 버튼 스타일 크기 증가
+  const paginationButtonStyle = {
+    fontSize: "1.1rem", // 글자 크기를 키움
+    padding: "8px 12px", // 패딩 증가
+    border: "1px solid #ccc",
+    background: "#f8f9fa",
+    cursor: "pointer",
+    borderRadius: "4px", // 모서리 둥글게
+    minWidth: "40px", // 최소 너비 설정
+    textAlign: "center" // 숫자 중앙 정렬
+  };
+
+  // 화면 크기 변화 감지 및 페이지당 글 개수 조정
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+      
+      // 화면 높이에 따라 페이지당 글 개수 동적 조정
+      const availableHeight = window.innerHeight - 250; // 헤더, 여백 등 고려
+      const rowHeight = 40; // 대략적인 행 높이
+      const calculatedPostsPerPage = Math.max(5, Math.floor(availableHeight / rowHeight));
+      
+      setPostsPerPage(calculatedPostsPerPage);
+    };
+    
+    handleResize(); // 초기 설정
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
-    console.log("useEffect 실행 - boardType:", boardType);
     const fetchPosts = async () => {
       try {
         const data = await getBoards(boardType);
-        console.log("백엔드에서 반환된 데이터:", data);
         const postsData = data.posts || data;
-        setPosts(postsData.slice().reverse());
+
+        // 게시글을 수정일(updatedAt) 기준으로 내림차순 정렬
+        const sortedPosts = [...postsData].sort((a, b) => {
+          // 수정일이 없는 경우 생성일을 사용
+          const dateA = a.updatedAt || a.createdAt;
+          const dateB = b.updatedAt || b.createdAt;
+          return new Date(dateB) - new Date(dateA); // 내림차순 (최신순)
+        });
+
+        setPosts(sortedPosts);
+        setCurrentPage(1); // 게시판 변경 시 페이지 초기화
       } catch (error) {
         console.error("게시글 목록 조회 오류:", error);
       }
@@ -30,7 +70,12 @@ function BoardList() {
   const indexOfFirst = indexOfLast - postsPerPage;
   const currentPosts = posts.slice(indexOfFirst, indexOfLast);
 
-  console.log("BoardList 렌더링 - posts 길이:", posts.length);
+  // 페이지당 글 개수 변경 핸들러
+  const handlePostsPerPageChange = (e) => {
+    const value = parseInt(e.target.value);
+    setPostsPerPage(value);
+    setCurrentPage(1); // 페이지당 글 개수 변경 시 첫 페이지로 이동
+  };
 
   return (
     <div>
@@ -39,23 +84,40 @@ function BoardList() {
           {boardType === "general" ? "일반" : boardType} 게시판
         </h1>
       </header>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '20px 0' }}>
-        {localStorage.getItem('authToken') && (
-          <Link 
-            to={`/boards/${boardType}/new`} 
-            style={{ 
-              backgroundColor: '#337ab7', 
-              color: '#fff', 
-              padding: '10px 20px', 
-              borderRadius: '4px', 
-              textDecoration: 'none', 
-              fontWeight: 'bold',
-              marginRight: "10px" // 추가된 오른쪽 margin
-            }}
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        margin: '20px 0' 
+      }}>
+        <div>
+          <label htmlFor="postsPerPage" style={{ marginRight: '10px' }}>페이지당 글 개수:</label>
+          <select 
+            id="postsPerPage" 
+            value={postsPerPage} 
+            onChange={handlePostsPerPageChange}
+            style={{ padding: '5px' }}
           >
-            글쓰기
-          </Link>
-        )}
+            <option value="5">5개</option>
+            <option value="10">10개</option>
+            <option value="15">15개</option>
+            <option value="20">20개</option>
+          </select>
+        </div>
+        <Link 
+          to={`/boards/${boardType}/new`} 
+          style={{ 
+            backgroundColor: '#337ab7', 
+            color: '#fff', 
+            padding: '10px 20px', 
+            borderRadius: '4px', 
+            textDecoration: 'none', 
+            fontWeight: 'bold',
+            marginRight: "10px" // 추가된 오른쪽 margin
+          }}
+        >
+          글쓰기
+        </Link>
       </div>
       {posts.length === 0 ? (
         <p>게시글이 없습니다.</p>
@@ -80,7 +142,7 @@ function BoardList() {
                   <Link to={`/boards/${boardType}/${post.id}`}>{post.title}</Link>
                 </td>
                 <td style={{ padding: "8px", width: "15%", textAlign: "left" }}>
-                  {typeof post.author === 'object' ? post.author.email : post.author}
+                  {typeof post.author === 'object' ? post.author.id : post.author}
                 </td>
                 <td style={{ padding: "8px", width: "15%", textAlign: "center" }}>
                   {new Date(post.createdAt).toLocaleDateString()}
@@ -98,7 +160,11 @@ function BoardList() {
           <button 
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            style={{ marginRight: "10px" }}
+            style={{ 
+              ...paginationButtonStyle,
+              marginRight: "10px",
+              opacity: currentPage === 1 ? 0.5 : 1
+            }}
           >
             이전
           </button>
@@ -106,7 +172,12 @@ function BoardList() {
             <button 
               key={i} 
               onClick={() => setCurrentPage(i + 1)}
-              style={{ margin: "0 5px", fontWeight: currentPage === i + 1 ? "bold" : "normal" }}
+              style={{ 
+                ...paginationButtonStyle,
+                margin: "0 5px", 
+                fontWeight: currentPage === i + 1 ? "bold" : "normal",
+                background: currentPage === i + 1 ? "#e7f1ff" : "#f8f9fa"
+              }}
             >
               {i + 1}
             </button>
@@ -114,7 +185,11 @@ function BoardList() {
           <button 
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            style={{ marginLeft: "10px" }}
+            style={{ 
+              ...paginationButtonStyle,
+              marginLeft: "10px",
+              opacity: currentPage === totalPages ? 0.5 : 1
+            }}
           >
             다음
           </button>

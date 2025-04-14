@@ -1,10 +1,10 @@
 const express = require('express');
-const { signup, login, getUsers, getUser, checkEmailExists, logout } = require('../controllers/userController');
+const { signup, login, logout, getUsers, getUser, checkEmailExists } = require('../controllers/userController');
 const router = express.Router();
 
 // 사용자 목록 조회
 router.get('/', getUsers);
-// 이메일 중복 여부 확인 ("/exists" 라우트는 ":id"보다 위에 있어야 함)
+// 이메일 중복 여부 확인
 router.get('/exists', checkEmailExists);
 // 사용자 상세 정보 조회
 router.get('/:id', getUser);

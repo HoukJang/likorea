@@ -12,6 +12,7 @@ function BoardPostForm() {
   const [content, setContent] = useState('');
   const [message, setMessage] = useState('');
   const contentRef = useRef(null);
+  const [originalAuthor, setOriginalAuthor] = useState(null); // 원본 게시글 작성자 저장
 
   // If editing, fetch post data and update state
   useEffect(() => {
@@ -23,6 +24,10 @@ function BoardPostForm() {
           setContent(data.content);
           if (contentRef.current) {
             contentRef.current.innerHTML = data.content;
+          }
+          // 원 작성자 정보 저장
+          if (data.author) {
+            setOriginalAuthor(data.author);
           }
         } catch (error) {
           console.error("게시글 조회 오류:", error);
@@ -80,32 +85,61 @@ function BoardPostForm() {
       setMessage('로그인 후 게시글 생성이 가능합니다.');
       return;
     }
-    const email = localStorage.getItem('userEmail');
+    
+    const currentUserId = localStorage.getItem('userId');
     const currentContent = contentRef.current ? contentRef.current.innerHTML : content;
-
+    
     try {
       let response;
       if (isEditMode) {
         // Update existing post
+        // 현재 인증된 사용자 ID는 currentUserId
+        // 하지만 author 필드는 원본 작성자의 ID로 유지
+        const authorId = originalAuthor && originalAuthor.id ? originalAuthor.id : currentUserId;
+        
+        console.log('수정 요청 데이터:', {
+          title,
+          content: currentContent,
+          id: authorId
+        });
+
         response = await fetch(`${BACKEND_URL}/api/boards/${boardType}/${postId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, content: currentContent, email })
+          body: JSON.stringify({
+            title,
+            content: currentContent,
+            id: authorId,  // 인증용 - 현재 로그인한 사람
+          })
         });
       } else {
         // Create new post
         response = await fetch(`${BACKEND_URL}/api/boards/${boardType}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, content: currentContent, email })
+          body: JSON.stringify({ 
+            title, 
+            content: currentContent, 
+            id: currentUserId  // 새 글 작성시에는 현재 로그인한 사용자가 작성자
+          })
         });
       }
 
-      if (!response.ok) throw new Error(isEditMode ? '게시글 수정 실패' : '게시글 생성 실패');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || (isEditMode ? '게시글 수정 실패' : '게시글 생성 실패'));
+      }
+      
+      const data = await response.json();
       setMessage(isEditMode ? '게시글이 수정되었습니다!' : '게시글이 생성되었습니다!');
-      navigate(`/boards/${boardType}`);
+      
+      // 게시글 상세 페이지로 이동
+      setTimeout(() => {
+        navigate(`/boards/${boardType}/${isEditMode ? postId : data.post.id}`);
+      }, 1000);
     } catch (error) {
       setMessage(error.message);
+      console.error('게시글 저장 오류:', error);
     }
   };
 

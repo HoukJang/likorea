@@ -59,11 +59,41 @@ html, body {
   }
   
   .login-btn:hover {
-    background-color: #0056b3;
+    background-color: #0069d9;
+  }
+
+  .login-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
   }
   
   .signup-link {
     margin-top: 15px;
     font-size: 14px;
     text-align: center;
+  }
+
+  .message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    line-height: 1.5;
+    font-size: 0.95rem;
+  }
+
+  .error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+  }
+
+  .success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+  }
+
+  /* 권한에 대한 강조 스타일 */
+  .authority-highlight {
+    font-weight: bold;
   }

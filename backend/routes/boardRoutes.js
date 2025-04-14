@@ -1,35 +1,13 @@
 const express = require('express');
-const { 
-  createPost, getPosts, getPost, updatePost, deletePost,
-  addComment, updateComment, deleteComment 
-} = require('../controllers/boardController');
-
 const router = express.Router();
+const boardController = require('../controllers/boardController');
 
-// 추가: 모든 라우트에 대해 로그를 출력하는 미들웨어
-router.use((req, res, next) => {
-  console.log(`[BoardRoutes] ${req.method} ${req.originalUrl}`, 
-              'params:', req.params, 'body:', req.body);
-  next();
-});
+// 디버깅: boardController에 올바른 함수들이 들어있는지 확인합니다.
 
-// 게시글 목록 조회 및 생성
-router.get('/:boardType', getPosts);
-router.post('/:boardType', createPost);
-
-// 추가: 게시글 단일 조회
-router.get('/:boardType/:postId', getPost);
-
-// 게시글 수정 및 삭제 (postId는 MongoDB의 _id 사용)
-router.put('/:boardType/:postId', updatePost);
-router.delete('/:boardType/:postId', deletePost);
-
-// 댓글 관련 라우트
-// 댓글 작성: POST /api/boards/:boardType/:postId/comments
-router.post('/:boardType/:postId/comments', addComment);
-// 댓글 수정: PUT /api/boards/:boardType/:postId/comments/:commentId
-router.put('/:boardType/:postId/comments/:commentId', updateComment);
-// 댓글 삭제: DELETE /api/boards/:boardType/:postId/comments/:commentId
-router.delete('/:boardType/:postId/comments/:commentId', deleteComment);
+router.post('/:boardType', boardController.createPost);
+router.get('/:boardType', boardController.getPosts);
+router.get('/:boardType/:postId', boardController.getPost);
+router.put('/:boardType/:postId', boardController.updatePost);
+router.delete('/:boardType/:postId', boardController.deletePost);
 
 module.exports = router;

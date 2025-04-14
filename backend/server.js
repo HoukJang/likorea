@@ -7,6 +7,8 @@ const connectDB = require('./config/db');
 
 const userRoutes = require('./routes/userRoutes');
 const boardRoutes = require('./routes/boardRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const commentRoutes = require('./routes/commentRoutes');
 
 const app = express();
 
@@ -20,11 +22,11 @@ app.use(cors({
     if (!origin) {
       return callback(null, true);
     }
+    // 요청된 origin을 출력해서 어떤 값이 들어오는지 확인
+    console.log('요청된 Origin:', origin);
     // origin 끝의 슬래시 제거
     const normalizedOrigin = origin.replace(/\/+$/, '');
-
-    // Explicitly allow localhost:3000 in addition to allowedOrigins
-    if (allowedOrigins.includes(normalizedOrigin) || normalizedOrigin === 'http://localhost:3000') {
+    if (allowedOrigins.includes(normalizedOrigin)) {
       callback(null, true);
     } else {
       callback(new Error(`Not allowed by CORS: ${normalizedOrigin}`));
@@ -32,12 +34,6 @@ app.use(cors({
   },
   credentials: true
 }));
-
-// Global logging middleware
-app.use((req, res, next) => {
-  console.log(`[Global] ${req.method} ${req.originalUrl}`, 'params:', req.params, 'body:', req.body);
-  next();
-});
 
 // Add logging middleware to log every API call
 app.use((req, res, next) => {
@@ -50,6 +46,8 @@ connectDB();
 // API 라우트 설정
 app.use('/api/users', userRoutes);
 app.use('/api/boards', boardRoutes);
+app.use('/api/admin', adminRoutes); // 추가된 관리자 전용 API 라우트
+app.use('/api/comments', commentRoutes);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`서버가 ${PORT}번 포트에서 실행 중입니다.`));

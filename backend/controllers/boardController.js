@@ -5,17 +5,15 @@ const sanitizeHtml = require('sanitize-html');
 // 게시글 생성 (수정)
 exports.createPost = async (req, res) => {
   try {
-    const { boardType } = req.params; // e.g., /api/boards/general
-    let { title, content, email } = req.body; // email from request body
-    // find user by email
-    const user = await User.findOne({ email });
+    const { boardType } = req.params;
+    let { title, content, id } = req.body;
+    const user = await User.findOne({ id });
     if (!user) return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
-    // sanitize title and content
     title = sanitizeHtml(title, { allowedTags: [] });
     content = sanitizeHtml(content, {
       allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img', 'div'],
       allowedAttributes: { a: ['href'], img: ['src', 'alt'] },
-      allowedSchemes: ['http', 'https', 'data']  // allow data URIs
+      allowedSchemes: ['http', 'https', 'data']
     });
     const post = await BoardPost.create({ boardType, title, content, author: user._id });
     console.log('게시글 생성 성공:', post);
@@ -26,12 +24,12 @@ exports.createPost = async (req, res) => {
   }
 };
 
-// 게시글 조회 (기존)
+// 게시글 목록 조회
 exports.getPosts = async (req, res) => {
   try {
     const { boardType } = req.params;
     const posts = await BoardPost.find({ boardType })
-      .populate('author', 'email')
+      .populate('author', 'id email')
       .sort({ modifiedAt: -1 });
     res.json(posts);
   } catch (error) {
@@ -39,19 +37,18 @@ exports.getPosts = async (req, res) => {
   }
 };
 
-// 추가: 게시글 단일 조회
+// 게시글 단일 조회
 exports.getPost = async (req, res) => {
   try {
-    console.log('게시글 단일 조회 요청');
     const { boardType, postId } = req.params;
-    console.log('게시글 단일 조회:', req.params);
-    // 게시글 조회 시 조회수 증가
-    await BoardPost.findByIdAndUpdate(postId, { $inc: { viewCount: 1 } });
-    // 게시글 조회
-    const post = await BoardPost.findOne({ _id: postId, boardType })
-      .populate('author', 'email')
+    await BoardPost.updateOne(
+      { _id: postId },
+      { $inc: { viewCount: 1 } },
+      { timestamps: false }
+    );
+    let post = await BoardPost.findOne({ _id: postId, boardType })
+      .populate('author', 'id')
       .exec();
-    console.log('게시글 단일 조회:', post);
     if (!post) {
       return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
     }
@@ -61,16 +58,20 @@ exports.getPost = async (req, res) => {
   }
 };
 
-// 게시글 수정 (수정)
+// 게시글 수정
 exports.updatePost = async (req, res) => {
   try {
     const { boardType, postId } = req.params;
-    let { title, content, email } = req.body; // email now from request
-    // lookup user and verify ownership
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    let { title, content, id } = req.body;
+    console.log('게시글 수정 요청:', req.body);
+    const user = await User.findOne({ id });
+    console.log('조회된 사용자:', user);
+    if (!user)
+      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
     const post = await BoardPost.findById(postId);
-    if (!post) return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
+    console.log('조회된 게시글:', post);
+    if (!post)
+      return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
     if (post.author.toString() !== user._id.toString()) {
       return res.status(403).json({ message: '권한이 없습니다.' });
     }
@@ -82,7 +83,7 @@ exports.updatePost = async (req, res) => {
       content = sanitizeHtml(content, {
         allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img', 'div'],
         allowedAttributes: { a: ['href'], img: ['src', 'alt'] },
-        allowedSchemes: ['http', 'https', 'data']  // allow data URIs
+        allowedSchemes: ['http', 'https', 'data']
       });
       post.content = content;
     }
@@ -94,93 +95,26 @@ exports.updatePost = async (req, res) => {
   }
 };
 
-// 게시글 삭제 (수정)
+// 게시글 삭제
 exports.deletePost = async (req, res) => {
   try {
     const { boardType, postId } = req.params;
-    const { email } = req.body;
-    const user = await User.findOne({ email });
+    const { userId } = req.body;
+    const user = await User.findOne({ id: userId });
     if (!user) return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
     const post = await BoardPost.findById(postId);
     if (!post) return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
     if (post.author.toString() !== user._id.toString()) {
-      return res.status(403).json({ message: '권한이 없습니다.' });
+      const postAuthor = await User.findById(post.author);
+
+
+      if (!postAuthor || user.authority <= postAuthor.authority) {
+        return res.status(403).json({ message: '권한이 없습니다.' });
+      }
     }
     await BoardPost.findByIdAndDelete(postId);
     res.json({ message: '게시글 삭제 성공' });
   } catch (error) {
     res.status(400).json({ message: '게시글 삭제 실패', error: error.message });
-  }
-};
-
-// 댓글 작성 (수정)
-exports.addComment = async (req, res) => {
-  try {
-    const { boardType, postId } = req.params;
-    let { content, email } = req.body;
-    // lookup user by email
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
-    content = sanitizeHtml(content, {
-      allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img', 'div'],
-      allowedAttributes: { a: ['href'], img: ['src', 'alt'] },
-      allowedSchemes: ['http', 'https', 'data']  // allow data URIs
-    });
-    const post = await BoardPost.findById(postId);
-    if (!post) return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
-    post.comments.push({ content, author: user._id });
-    post.modifiedAt = new Date();
-    await post.save();
-    res.status(201).json({ message: '댓글 작성 성공', comments: post.comments });
-  } catch (error) {
-    res.status(400).json({ message: '댓글 작성 실패', error: error.message });
-  }
-};
-
-// 댓글 수정 (수정)
-exports.updateComment = async (req, res) => {
-  try {
-    const { boardType, postId, commentId } = req.params;
-    const { content, email } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
-    const post = await BoardPost.findById(postId);
-    if (!post) return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
-    const comment = post.comments.id(commentId);
-    if (!comment) return res.status(404).json({ message: '댓글을 찾을 수 없습니다.' });
-    if (comment.author.toString() !== user._id.toString()) {
-      return res.status(403).json({ message: '권한이 없습니다.' });
-    }
-    comment.content = content || comment.content;
-    post.modifiedAt = new Date();
-    await post.save();
-    res.json({ message: '댓글 수정 성공', comment });
-  } catch (error) {
-    res.status(400).json({ message: '댓글 수정 실패', error: error.message });
-  }
-};
-
-// 댓글 삭제 (수정)
-exports.deleteComment = async (req, res) => {
-  try {
-    const { boardType, postId, commentId } = req.params;
-    const { author } = req.body;
-    const post = await BoardPost.findById(postId);
-    if (!post) {
-      return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
-    }
-    const comment = post.comments.id(commentId);
-    if (!comment) {
-      return res.status(404).json({ message: '댓글을 찾을 수 없습니다.' });
-    }
-    if (comment.author.toString() !== author) {
-      return res.status(403).json({ message: '권한이 없습니다.' });
-    }
-    comment.remove();
-    post.modifiedAt = new Date(); // update modifiedAt after comment deletion
-    await post.save();
-    res.json({ message: '댓글 삭제 성공' });
-  } catch (error) {
-    res.status(400).json({ message: '댓글 삭제 실패', error: error.message });
   }
 };
