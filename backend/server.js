@@ -8,7 +8,7 @@ const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const boardRoutes = require('./routes/boardRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const commentRoutes = require('./routes/commentRoutes');
+
 
 const app = express();
 
@@ -47,7 +47,6 @@ connectDB();
 app.use('/api/users', userRoutes);
 app.use('/api/boards', boardRoutes);
 app.use('/api/admin', adminRoutes); // 추가된 관리자 전용 API 라우트
-app.use('/api/comments', commentRoutes);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`서버가 ${PORT}번 포트에서 실행 중입니다.`));
