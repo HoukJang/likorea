@@ -78,7 +78,11 @@ function BoardList() {
   };
 
   return (
-    <div>
+    <div className="board-list-container" style={{ 
+      maxWidth: "1200px", 
+      margin: "0 auto",  // 중앙 정렬
+      padding: "0 20px"  // 좌우 패딩 추가
+    }}>
       <header className="page-header">
         <h1 style={{ textAlign: "center" }}>
           {boardType === "general" ? "일반" : boardType} 게시판
@@ -122,38 +126,45 @@ function BoardList() {
       {posts.length === 0 ? (
         <p>게시글이 없습니다.</p>
       ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr style={{ borderBottom: "2px solid #000" }}>
-              <th style={{ textAlign: "center", padding: "8px", width: "5%" }}>글번호</th>
-              <th style={{ textAlign: "center", padding: "8px", width: "50%" }}>제목</th>
-              <th style={{ textAlign: "center", padding: "8px", width: "15%" }}>글쓴이</th>
-              <th style={{ textAlign: "center", padding: "8px", width: "15%" }}>날짜</th>
-              <th style={{ textAlign: "center", padding: "8px", width: "20%" }}>조회수</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentPosts.map((post, idx) => (
-              <tr key={post._id || post.id || idx} style={{ borderBottom: "1px solid #ccc" }}>
-                <td style={{ padding: "8px", width: "5%", textAlign: "center" }}>
-                  {post.postNumber}
-                </td>
-                <td style={{ padding: "8px", width: "50%", textAlign: "left" }}>
-                  <Link to={`/boards/${boardType}/${post.id}`}>{post.title}</Link>
-                </td>
-                <td style={{ padding: "8px", width: "15%", textAlign: "left" }}>
-                  {typeof post.author === 'object' ? post.author.id : post.author}
-                </td>
-                <td style={{ padding: "8px", width: "15%", textAlign: "center" }}>
-                  {new Date(post.createdAt).toLocaleDateString()}
-                </td>
-                <td style={{ padding: "8px", width: "20%", textAlign: "center" }}>
-                  {post.viewCount ?? 0}
-                </td>
+        <div className="table-responsive" style={{ overflowX: "auto" }}>
+          <table style={{ 
+            width: "100%", 
+            borderCollapse: "collapse",
+            marginLeft: "auto",  // 테이블 자체에도 좌우 마진 자동
+            marginRight: "auto"
+          }}>
+            <thead>
+              <tr style={{ borderBottom: "2px solid #000" }}>
+                <th style={{ textAlign: "center", padding: "8px", width: "5%" }}>글번호</th>
+                <th style={{ textAlign: "center", padding: "8px", width: "50%" }}>제목</th>
+                <th style={{ textAlign: "center", padding: "8px", width: "15%" }}>글쓴이</th>
+                <th style={{ textAlign: "center", padding: "8px", width: "15%" }}>날짜</th>
+                <th style={{ textAlign: "center", padding: "8px", width: "20%" }}>조회수</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {currentPosts.map((post, idx) => (
+                <tr key={post._id || post.id || idx} style={{ borderBottom: "1px solid #ccc" }}>
+                  <td style={{ padding: "8px", width: "5%", textAlign: "center" }}>
+                    {post.postNumber}
+                  </td>
+                  <td style={{ padding: "8px", width: "50%", textAlign: "left" }}>
+                    <Link to={`/boards/${boardType}/${post.id}`}>{post.title}</Link>
+                  </td>
+                  <td style={{ padding: "8px", width: "15%", textAlign: "left" }}>
+                    {typeof post.author === 'object' ? post.author.id : post.author}
+                  </td>
+                  <td style={{ padding: "8px", width: "15%", textAlign: "center" }}>
+                    {new Date(post.createdAt).toLocaleDateString()}
+                  </td>
+                  <td style={{ padding: "8px", width: "20%", textAlign: "center" }}>
+                    {post.viewCount ?? 0}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
       {totalPages > 1 && (
         <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
