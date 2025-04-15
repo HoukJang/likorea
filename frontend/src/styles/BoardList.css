@@ -1,0 +1,27 @@
+.board-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.page-header {
+  margin-bottom: 20px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+/* 반응형 디자인을 위한 미디어 쿼리 */
+@media (max-width: 768px) {
+  .board-list-container {
+    padding: 0 15px;
+  }
+  
+  .table-responsive table {
+    min-width: 600px; /* 모바일에서도 테이블이 가로 스크롤 되도록 최소 너비 설정 */
+  }
+}
+
+/* 추가적인 스타일은 필요에 따라 여기에 작성 */

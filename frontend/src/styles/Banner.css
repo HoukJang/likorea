@@ -1,0 +1,13 @@
+.banner-container {
+  /* background-color: #f5f5f5; */ /* 배경색 제거 */
+  text-align: center;
+  padding: 20px 0;
+  /* border: 2px solid red;  제거된 스타일 */
+}
+
+.banner-image {
+  max-width: 600px;  /* Reduced width */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}

@@ -1,0 +1,38 @@
+.form-container {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 0 2rem;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.title-input {
+  width: 100%;
+  font-size: 1.2rem;
+}
+
+.content-editor {
+  width: 100%;
+  min-height: 500px;
+  font-size: 1.2rem;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.submit-button {
+  font-size: 1.2rem;
+}
+
+.message {
+  margin-top: 1rem;
+}
