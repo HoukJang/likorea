@@ -27,6 +27,7 @@ exports.createPost = async (req, res) => {
 // 게시글 목록 조회
 exports.getPosts = async (req, res) => {
   try {
+    console.log('게시글 목록 조회 요청:', req.params);
     const { boardType } = req.params;
     const posts = await BoardPost.find({ boardType })
       .populate('author', 'id email')

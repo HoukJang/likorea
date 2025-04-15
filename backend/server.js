@@ -15,7 +15,7 @@ const app = express();
 // 요청 본문 파싱 및 CORS 설정
 app.use(express.json());
 
-const allowedOrigins = ['http://localhost:3000', 'http://your-domain.com'];
+const allowedOrigins = ['http://localhost:3000', 'http://likorea.com', 'https://likorea.com', 'http://www.likorea.com', 'https://www.likorea.com'];
 app.use(cors({
   origin: function(origin, callback) {
     // 요청이 없는 경우(예: Curl) 허용
