@@ -9,7 +9,6 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [authority, setAuthority] = useState(3); // 권한 기본값을 3(일반 사용자)으로 설정
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,7 +39,7 @@ function Signup() {
       const response = await fetch(`${BACKEND_URL}/api/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, email, password, authority })
+        body: JSON.stringify({ id, email, password, authority: 3 })
       });
 
       const data = await response.json();
@@ -77,7 +76,7 @@ function Signup() {
             onChange={(e) => setId(e.target.value)}
             required
             disabled={isLoading}
-            placeholder="사용할 아이디 입력"
+            placeholder="사용할 아이디 입력11"
           />
         </div>
         <div className="form-group">
@@ -118,17 +117,7 @@ function Signup() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="authority">권한</label>
-          <select
-            id="authority"
-            value={authority}
-            onChange={(e) => setAuthority(parseInt(e.target.value))} // 문자열을 정수로 변환
-            disabled={isLoading}
-            className="authority-select"
-          >
-            <option value={3}>일반 사용자</option>
-            <option value={5}>관리자</option>
-          </select>
+          {/* 권한 설정 제거: 기본 일반 사용자 */}
         </div>
         <button type="submit" className="signup-btn" disabled={isLoading}>
           {isLoading ? '처리 중...' : '회원가입'}
