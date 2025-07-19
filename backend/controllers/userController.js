@@ -1,61 +1,83 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const { 
+  asyncHandler, 
+  ValidationError, 
+  AuthenticationError, 
+  NotFoundError, 
+  ConflictError 
+} = require('../middleware/errorHandler');
 
 // 회원가입
-exports.signup = async (req, res) => {
-  try {
-    console.log('회원가입 요청:', req.body);
-    const { id, email, password, authority } = req.body;
-    
-    // 아이디 중복 체크
-    const existingId = await User.findOne({ id });
-    if (existingId) {
-      return res.status(409).json({ message: '이미 존재하는 아이디입니다.' });
-    }
-    
-    // 이메일 중복 체크
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(409).json({ message: '이미 존재하는 이메일입니다.' });
-    }
-    
-    // 회원가입: id, email, password, authority (미제공시 authority는 기본 3)
-    const user = await User.create({ id, email, password, authority });
-    res.status(201).json({ message: '회원가입 성공', user });
-  } catch (error) {
-    res.status(400).json({ message: '회원가입 실패', error: error.message });
+exports.signup = asyncHandler(async (req, res) => {
+  const { id, email, password, authority } = req.body;
+  
+  // 필수 필드 검증
+  if (!id || !email || !password) {
+    throw new ValidationError('아이디, 이메일, 비밀번호는 필수입니다.');
   }
-};
+  
+  // 아이디 중복 체크
+  const existingId = await User.findOne({ id });
+  if (existingId) {
+    throw new ConflictError('이미 존재하는 아이디입니다.');
+  }
+  
+  // 이메일 중복 체크
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    throw new ConflictError('이미 존재하는 이메일입니다.');
+  }
+  
+  // 회원가입: id, email, password, authority (미제공시 authority는 기본 3)
+  const user = await User.create({ id, email, password, authority });
+  res.status(201).json({ 
+    success: true,
+    message: '회원가입 성공', 
+    user: {
+      id: user.id,
+      email: user.email,
+      authority: user.authority,
+      createdAt: user.createdAt
+    }
+  });
+});
 
 // 로그인
-exports.login = async (req, res) => {
-  try {
-    // id와 password로 로그인 시도
-    const { id, password } = req.body;
-    console.log('로그인 요청:', req.body);
+exports.login = asyncHandler(async (req, res) => {
+  const { id, password } = req.body;
 
-    const user = await User.findOne({ id });
-    if (!user) {
-      return res.status(401).json({ message: '잘못된 아이디' });
-    }
-    
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.status(401).json({ message: '잘못된 비밀번호' });
-    }
-    
-    const token = jwt.sign(
-      { _id: user._id, id: user.id, email: user.email, authority: user.authority },
-      process.env.JWT_SECRET,
-      { expiresIn: '1d' }
-    );
-    const userObj = user.toObject();
-    delete userObj.password; // password 필드 제거
-    res.json({ message: '로그인 성공', token, user: userObj });
-  } catch (error) {
-    res.status(500).json({ message: '로그인 실패', error: error.message });
+  // 필수 필드 검증
+  if (!id || !password) {
+    throw new ValidationError('아이디와 비밀번호는 필수입니다.');
   }
-};
+
+  const user = await User.findOne({ id });
+  if (!user) {
+    throw new AuthenticationError('잘못된 아이디입니다.');
+  }
+  
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) {
+    throw new AuthenticationError('잘못된 비밀번호입니다.');
+  }
+  
+  const token = jwt.sign(
+    { _id: user._id, id: user.id, email: user.email, authority: user.authority },
+    process.env.JWT_SECRET,
+    { expiresIn: '1d' }
+  );
+  
+  const userObj = user.toObject();
+  delete userObj.password; // password 필드 제거
+  
+  res.json({ 
+    success: true,
+    message: '로그인 성공', 
+    token, 
+    user: userObj 
+  });
+});
 
 // 사용자 목록 조회 (pagination 및 필요한 필드 반환)
 exports.getUsers = async (req, res) => {

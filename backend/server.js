@@ -4,18 +4,22 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const connectDB = require('./config/db');
+const logger = require('./utils/logger');
+const { errorHandler, notFound } = require('./middleware/errorHandler');
 
 const userRoutes = require('./routes/userRoutes');
 const boardRoutes = require('./routes/boardRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-
 
 const app = express();
 
 // 요청 본문 파싱 및 CORS 설정
 app.use(express.json());
 
-const allowedOrigins = ['http://localhost:3000', 'http://likorea.com', 'https://likorea.com', 'http://www.likorea.com', 'https://www.likorea.com'];
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',') 
+  : ['http://localhost:3000'];
+
 app.use(cors({
   origin: function(origin, callback) {
     // 요청이 없는 경우(예: Curl) 허용
@@ -35,20 +39,26 @@ app.use(cors({
   credentials: true
 }));
 
-// Add logging middleware to log every API call
-app.use((req, res, next) => {
-    console.log(`API 호출: ${req.method} ${req.originalUrl}`);
-    next();
-});
+// 로깅 미들웨어
+app.use(logger.request);
 
 connectDB();
 
 // API 라우트 설정
 app.use('/api/users', userRoutes);
 app.use('/api/boards', boardRoutes);
-app.use('/api/admin', adminRoutes); // 추가된 관리자 전용 API 라우트
+app.use('/api/admin', adminRoutes);
+
+// 404 에러 처리 (라우트 설정 후에 위치)
+app.use(notFound);
+
+// 에러 처리 미들웨어 (마지막에 위치)
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, "127.0.0.1", () => {
-  console.log(`서버가 ${PORT}번 포트에서 실행 중입니다.`);
+const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
+
+app.listen(PORT, HOST, () => {
+  logger.info(`서버가 ${HOST}:${PORT}에서 실행 중입니다.`);
+  logger.info(`환경: ${process.env.NODE_ENV || 'development'}`);
 });

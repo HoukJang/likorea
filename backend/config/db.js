@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
+    if (!process.env.MONGO_URI) {
+      console.warn("MONGO_URI가 설정되지 않았습니다. MongoDB 연결을 건너뜁니다.");
+      return;
+    }
+    
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true
@@ -9,7 +14,7 @@ const connectDB = async () => {
     console.log("MongoDB 연결 성공");
   } catch (error) {
     console.error("MongoDB 연결 실패", error);
-    process.exit(1);
+    console.warn("MongoDB 없이 서버를 계속 실행합니다.");
   }
 };
 

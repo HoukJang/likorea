@@ -1,105 +1,112 @@
-import { BACKEND_URL } from '../config';
+import apiClient from './client';
 
+/**
+ * 게시판 관련 API 함수들
+ */
+
+/**
+ * 게시글 목록 조회
+ * @param {string} boardType - 게시판 타입
+ * @returns {Promise} 게시글 목록
+ */
 export const getBoards = async (boardType) => {
-  const response = await fetch(`${BACKEND_URL}/api/boards/${boardType}`);
-  if (!response.ok) throw new Error(`게시글 목록 조회 실패: ${response.status}`);
-  return response.json();
+  return apiClient.get(`/api/boards/${boardType}`);
 };
 
+/**
+ * 게시글 생성
+ * @param {string} boardType - 게시판 타입
+ * @param {Object} boardData - 게시글 데이터
+ * @returns {Promise} 생성된 게시글
+ */
 export const createBoard = async (boardType, boardData) => {
-  const response = await fetch(`${BACKEND_URL}/api/boards/${boardType}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(boardData)
-  });
-  if (!response.ok) throw new Error(`게시글 생성 실패: ${response.status}`);
-  return response.json();
+  return apiClient.post(`/api/boards/${boardType}`, boardData);
 };
 
+/**
+ * 게시글 수정
+ * @param {string} boardType - 게시판 타입
+ * @param {string} postId - 게시글 ID
+ * @param {Object} boardData - 수정할 게시글 데이터
+ * @returns {Promise} 수정된 게시글
+ */
 export const updateBoard = async (boardType, postId, boardData) => {
-  const response = await fetch(`${BACKEND_URL}/api/boards/${boardType}/${postId}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(boardData)
-  });
-  if (!response.ok) throw new Error(`게시글 수정 실패: ${response.status}`);
-  return response.json();
+  return apiClient.put(`/api/boards/${boardType}/${postId}`, boardData);
 };
 
+/**
+ * 게시글 삭제
+ * @param {string} boardType - 게시판 타입
+ * @param {string} postId - 게시글 ID
+ * @param {string} userId - 사용자 ID
+ * @returns {Promise} 삭제 결과
+ */
 export const deleteBoard = async (boardType, postId, userId) => {
-  const response = await fetch(`${BACKEND_URL}/api/boards/${boardType}/${postId}`, {
-    method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId })
-  });
-  if (!response.ok) throw new Error(`게시글 삭제 실패: ${response.status}`);
-  return response.json();
+  return apiClient.delete(`/api/boards/${boardType}/${postId}`, { userId });
 };
 
-export const addComment = async (boardType, postId, commentData) => {
-  const response = await fetch(`${BACKEND_URL}/api/boards/${boardType}/${postId}/comments`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-      content: commentData.content,
-      id: commentData.id  // 사용자 ID
-    })
-  });
-  if (!response.ok) throw new Error(`댓글 생성 실패: ${response.status}`);
-  return response.json();
-};
-
-export const updateComment = async (boardType, postId, commentId, commentData) => {
-  const response = await fetch(`${BACKEND_URL}/api/boards/${boardType}/${postId}/comments/${commentId}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      content: commentData.content,
-      id: commentData.id  // 사용자 ID
-    })
-  });
-  if (!response.ok) throw new Error(`댓글 수정 실패: ${response.status}`);
-  return response.json();
-};
-
-export const deleteComment = async (boardType, postId, commentId, userId) => {
-  const response = await fetch(`${BACKEND_URL}/api/boards/${boardType}/${postId}/comments/${commentId}`, {
-    method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id: userId })
-  });
-  if (!response.ok) throw new Error(`댓글 삭제 실패: ${response.status}`);
-  return response.json();
-};
-
+/**
+ * 게시글 조회
+ * @param {string} boardType - 게시판 타입
+ * @param {string} postId - 게시글 ID
+ * @returns {Promise} 게시글 정보
+ */
 export const getBoardPost = async (boardType, postId) => {
-  const response = await fetch(`${BACKEND_URL}/api/boards/${boardType}/${postId}`);
-  if (!response.ok) {
-    throw new Error(`게시글 조회 실패: ${response.statusText}`);
-  }
-  return await response.json();
+  return apiClient.get(`/api/boards/${boardType}/${postId}`);
 };
 
-export const getUser = async (userId) => {
-  try {
-    const response = await fetch(`${BACKEND_URL}/api/users/${userId}`);
-    if (!response.ok) {
-      throw new Error('사용자 정보 조회에 실패했습니다.');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('API 오류:', error);
-    throw error;
-  }
+/**
+ * 댓글 추가
+ * @param {string} boardType - 게시판 타입
+ * @param {string} postId - 게시글 ID
+ * @param {Object} commentData - 댓글 데이터
+ * @returns {Promise} 생성된 댓글
+ */
+export const addComment = async (boardType, postId, commentData) => {
+  return apiClient.post(`/api/boards/${boardType}/${postId}/comments`, {
+    content: commentData.content,
+    id: commentData.id
+  });
 };
 
+/**
+ * 댓글 수정
+ * @param {string} boardType - 게시판 타입
+ * @param {string} postId - 게시글 ID
+ * @param {string} commentId - 댓글 ID
+ * @param {Object} commentData - 수정할 댓글 데이터
+ * @returns {Promise} 수정된 댓글
+ */
+export const updateComment = async (boardType, postId, commentId, commentData) => {
+  return apiClient.put(`/api/boards/${boardType}/${postId}/comments/${commentId}`, {
+    content: commentData.content,
+    id: commentData.id
+  });
+};
+
+/**
+ * 댓글 삭제
+ * @param {string} boardType - 게시판 타입
+ * @param {string} postId - 게시글 ID
+ * @param {string} commentId - 댓글 ID
+ * @param {string} userId - 사용자 ID
+ * @returns {Promise} 삭제 결과
+ */
+export const deleteComment = async (boardType, postId, commentId, userId) => {
+  return apiClient.delete(`/api/boards/${boardType}/${postId}/comments/${commentId}`, {
+    id: userId
+  });
+};
+
+/**
+ * 댓글 목록 조회
+ * @param {string} boardType - 게시판 타입
+ * @param {string} postId - 게시글 ID
+ * @returns {Promise} 댓글 목록
+ */
 export const getComments = async (boardType, postId) => {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/boards/${boardType}/${postId}/comments`);
-    if (!response.ok) {
-      throw new Error(`댓글 조회 실패: ${response.status}`);
-    }
-    return await response.json();
+    return await apiClient.get(`/api/boards/${boardType}/${postId}/comments`);
   } catch (error) {
     console.error('댓글 조회 오류:', error);
     // 에러 발생 시 빈 댓글 목록 반환

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Signup.css';
-import { BACKEND_URL } from '../config';
+import { useApi } from '../hooks/useApi';
+import { signup } from '../api/auth';
 
 function Signup() {
   const navigate = useNavigate();
+  const { execute: signupApi, loading, error, clearError } = useApi();
   const [id, setId] = useState(''); // 추가: 사용자 ID 필드
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,23 +32,11 @@ function Signup() {
       return;
     }
 
-    setIsLoading(true);
+    clearError();
     setMessage('');
 
     try {
-      // BackendAPI 문서에 맞게 "/api/users" 엔드포인트로 수정
-      const response = await fetch(`${BACKEND_URL}/api/users`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, email, password, authority: 3 })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        // 서버에서 보낸 오류 메시지 표시
-        throw new Error(data.message || '회원가입 처리 중 오류가 발생했습니다.');
-      }
+      await signupApi(() => signup({ id, email, password, authority: 3 }));
 
       // 회원가입 성공
       setMessage('회원가입에 성공했습니다! 로그인 페이지로 이동합니다.');
@@ -58,8 +47,6 @@ function Signup() {
       }, 2000);
     } catch (error) {
       setMessage(error.message || '회원가입 중 오류가 발생했습니다.');
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -75,7 +62,7 @@ function Signup() {
             value={id}
             onChange={(e) => setId(e.target.value)}
             required
-            disabled={isLoading}
+            disabled={loading}
             placeholder="사용할 아이디 입력11"
           />
         </div>
@@ -87,7 +74,7 @@ function Signup() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            disabled={isLoading}
+            disabled={loading}
             placeholder="이메일 주소 입력"
           />
         </div>
@@ -100,29 +87,29 @@ function Signup() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength="6"
-            disabled={isLoading}
+            disabled={loading}
             placeholder="6자 이상 입력"
           />
         </div>
         <div className="form-group">
-          <label htmlFor="confirm">비밀번호 확인</label>
+          <label name="confirm">비밀번호 확인</label>
           <input
             type="password"
             id="confirm"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             required
-            disabled={isLoading}
+            disabled={loading}
             placeholder="비밀번호 재입력"
           />
         </div>
         <div className="form-group">
           {/* 권한 설정 제거: 기본 일반 사용자 */}
         </div>
-        <button type="submit" className="signup-btn" disabled={isLoading}>
-          {isLoading ? '처리 중...' : '회원가입'}
+        <button type="submit" className="signup-btn" disabled={loading}>
+          {loading ? '처리 중...' : '회원가입'}
         </button>
-        {message && <div className={`message ${message.includes('성공') ? 'success' : 'error'}`}>{message}</div>}
+        {(message || error) && <div className={`message ${(message || error).includes('성공') ? 'success' : 'error'}`}>{message || error}</div>}
         <div className="login-link">
           이미 계정이 있으신가요? <Link to="/login">로그인</Link>
         </div>
