@@ -102,4 +102,93 @@ exports.checkEmailExists = async (req, res) => {
 // 로그아웃 (토큰 기반 인증의 경우 클라이언트에서 삭제 처리)
 exports.logout = (req, res) => {
   res.json({ message: '로그아웃 성공' });
-}
+};
+
+// 아이디 중복 여부 확인
+exports.checkIdExists = async (req, res) => {
+  try {
+    const { id } = req.query;
+    if (!id) {
+      return res.status(400).json({ message: 'ID parameter required' });
+    }
+    const exists = await User.findOne({ id });
+    res.json({ exists: !!exists });
+  } catch (error) {
+    res.status(400).json({ message: '아이디 중복 여부 확인 실패', error: error.message });
+  }
+};
+
+// 사용자 정보 수정
+exports.updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { email, authority, password } = req.body;
+    
+    const user = await User.findOne({ id });
+    if (!user) {
+      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+    
+    // 수정할 필드들 업데이트
+    if (email) user.email = email;
+    if (authority !== undefined) user.authority = authority;
+    if (password) user.password = password;
+    
+    await user.save();
+    
+    const userObj = user.toObject();
+    delete userObj.password;
+    
+    res.json({ 
+      message: '사용자 정보 수정 성공', 
+      user: userObj 
+    });
+  } catch (error) {
+    res.status(400).json({ message: '사용자 정보 수정 실패', error: error.message });
+  }
+};
+
+// 사용자 삭제
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const user = await User.findOne({ id });
+    if (!user) {
+      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+    
+    await User.findByIdAndDelete(user._id);
+    res.json({ message: '사용자 삭제 성공' });
+  } catch (error) {
+    res.status(400).json({ message: '사용자 삭제 실패', error: error.message });
+  }
+};
+
+// 토큰 유효성 검증
+exports.verifyToken = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ valid: false, message: '토큰이 제공되지 않았습니다.' });
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded._id, 'id email authority');
+    
+    if (!user) {
+      return res.status(401).json({ valid: false, message: '유효하지 않은 토큰입니다.' });
+    }
+    
+    res.json({ 
+      valid: true, 
+      user: {
+        id: user.id,
+        email: user.email,
+        authority: user.authority
+      }
+    });
+  } catch (error) {
+    res.status(401).json({ valid: false, message: '토큰 검증 실패', error: error.message });
+  }
+};

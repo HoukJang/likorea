@@ -29,10 +29,25 @@ exports.getPosts = async (req, res) => {
   try {
     console.log('게시글 목록 조회 요청:', req.params);
     const { boardType } = req.params;
+    const { page = 1, limit = 10 } = req.query;
+    
+    const skip = (Number(page) - 1) * Number(limit);
+    
     const posts = await BoardPost.find({ boardType })
-      .populate('author', 'id email')
-      .sort({ modifiedAt: -1 });
-    res.json(posts);
+      .populate('author', 'id email authority')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+      
+    const totalPosts = await BoardPost.countDocuments({ boardType });
+    const totalPages = Math.ceil(totalPosts / Number(limit));
+    
+    res.json({
+      posts,
+      totalPosts,
+      totalPages,
+      currentPage: Number(page)
+    });
   } catch (error) {
     res.status(400).json({ message: '게시글 조회 실패', error: error.message });
   }

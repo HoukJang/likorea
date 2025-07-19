@@ -211,15 +211,16 @@
   - Variables:
     - boardType: string, 필수 - 게시판 타입
     - postId: string, 필수 - 게시글 ID
-    - email: string, 필수 - 사용자 이메일  
+    - userId: string, 필수 - 사용자 ID  
   - Response:
     ```json
     { "message": "게시글 삭제 성공" }
     ```
 
 ## 댓글 관련 API
-- **GET** `/api/comments/{postId}` : 특정 게시글의 댓글 조회  
+- **GET** `/api/boards/{boardType}/{postId}/comments` : 특정 게시글의 댓글 조회  
   - Variables:
+    - boardType: string, 필수 - 게시판 타입
     - postId: string, 필수 - 댓글이 조회될 게시글 ID  
   - Response:
     ```json
@@ -229,7 +230,7 @@
         {
           "_id": "commentID",
           "content": "댓글 내용",
-          "author": "author": { "id": "userID", "authority": 3 },
+          "author": { "id": "userID", "authority": 3 },
           "createdAt": "2025-04-14T00:40:55.504Z",
           "updatedAt": "2025-04-14T00:40:55.504Z"
         }
@@ -361,3 +362,75 @@
       }
     }
     ```
+
+##  API 문서 vs 실제 구현 비교 분석
+
+### ✅ **일치하는 부분**
+
+#### 사용자 관련 API
+- **GET** `/api/users` - 사용자 목록 조회 ✅
+- **POST** `/api/users` - 신규 사용자 등록 ✅
+- **GET** `/api/users/{id}` - 사용자 상세 정보 조회 ✅
+- **GET** `/api/users/exists` - 이메일 중복 여부 확인 ✅
+- **POST** `/api/users/login` - 로그인 ✅
+- **POST** `/api/users/logout` - 로그아웃 ✅
+
+#### 게시글 관련 API
+- **GET** `/api/boards/{boardType}` - 게시글 목록 조회 ✅
+- **POST** `/api/boards/{boardType}` - 게시글 생성 ✅
+- **GET** `/api/boards/{boardType}/{postId}` - 게시글 단일 조회 ✅
+- **PUT** `/api/boards/{boardType}/{postId}` - 게시글 수정 ✅
+- **DELETE** `/api/boards/{boardType}/{postId}` - 게시글 삭제 ✅
+
+#### 댓글 관련 API
+- **GET** `/api/boards/{boardType}/{postId}/comments` - 댓글 조회 ✅
+- **POST** `/api/boards/{boardType}/{postId}/comments` - 댓글 작성 ✅
+- **PUT** `/api/boards/{boardType}/{postId}/comments/{commentId}` - 댓글 수정 ✅
+- **DELETE** `/api/boards/{boardType}/{postId}/comments/{commentId}` - 댓글 삭제 ✅
+
+#### 관리자 API
+- **GET** `/api/admin/users` - 모든 사용자 목록 조회 ✅
+- **GET** `/api/admin/stats` - 사이트 통계 정보 조회 ✅
+- **GET** `/api/admin/boards` - 모든 게시판 정보 조회 ✅
+- **POST** `/api/admin/boards` - 새 게시판 유형 생성 ✅
+
+### ❌ **차이점 및 문제점**
+
+#### 1. **누락된 API** ✅ **해결됨**
+- **GET** `/api/users/exists-id?id={id}` - 아이디 중복 여부 확인 ✅
+- **PUT** `/api/users/{id}` - 사용자 정보 수정 ✅
+- **DELETE** `/api/users/{id}` - 사용자 삭제 ✅
+- **GET** `/api/users/verify` - 토큰 유효성 검증 ✅
+
+#### 2. **응답 형식 차이** ✅ **해결됨**
+- **게시글 목록 조회**: pagination 정보 추가됨 ✅
+- **게시글 삭제**: 파라미터가 `userId`로 통일됨 ✅
+- **댓글 조회**: 경로가 `/api/boards/{boardType}/{postId}/comments`로 통일됨 ✅
+
+#### 3. **구현 세부사항 차이** ✅ **해결됨**
+- **게시글 목록 정렬**: `createdAt` 기준으로 통일됨 ✅
+- **댓글 모델**: 별도 Comment 모델 사용으로 명확해짐 ✅
+
+### ✅ **개선 완료 사항**
+
+#### 1. **누락된 API 구현 완료**
+```javascript
+// userController.js에 추가된 함수들
+exports.checkIdExists = async (req, res) => { /* 구현 완료 */ };
+exports.updateUser = async (req, res) => { /* 구현 완료 */ };
+exports.deleteUser = async (req, res) => { /* 구현 완료 */ };
+exports.verifyToken = async (req, res) => { /* 구현 완료 */ };
+```
+
+#### 2. **API 문서 업데이트 완료**
+- 댓글 API 경로 수정 완료
+- 게시글 삭제 파라미터 수정 완료 (`email` → `userId`)
+- 응답 형식 통일 완료
+
+#### 3. **일관성 개선 완료**
+- 게시글 목록에 pagination 추가 완료
+- 정렬 기준 통일 완료 (`createdAt` 기준)
+- 에러 응답 형식 표준화 완료
+
+### 🎉 **최종 결과**
+API 문서와 실제 구현이 완전히 일치하게 되었습니다!
