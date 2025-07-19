@@ -1,0 +1,129 @@
+/* 공통 버튼 기본 스타일 */
+.common-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 버튼 크기 */
+.common-button--small {
+  padding: 6px 12px;
+  font-size: 12px;
+  min-height: 32px;
+}
+
+.common-button--medium {
+  padding: 8px 16px;
+  font-size: 14px;
+  min-height: 40px;
+}
+
+.common-button--large {
+  padding: 12px 24px;
+  font-size: 16px;
+  min-height: 48px;
+}
+
+/* 버튼 변형 */
+.common-button--primary {
+  background-color: #337ab7;
+  color: white;
+}
+
+.common-button--primary:hover:not(.common-button--disabled) {
+  background-color: #286090;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.common-button--secondary {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.common-button--secondary:hover:not(.common-button--disabled) {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.common-button--danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.common-button--danger:hover:not(.common-button--disabled) {
+  background-color: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+.common-button--success {
+  background-color: #28a745;
+  color: white;
+}
+
+.common-button--success:hover:not(.common-button--disabled) {
+  background-color: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+/* 비활성화 상태 */
+.common-button--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* 로딩 상태 */
+.common-button--loading {
+  cursor: wait;
+}
+
+.common-button--loading .common-button__content {
+  opacity: 0.7;
+}
+
+/* 스피너 */
+.common-button__spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 포커스 상태 */
+.common-button:focus {
+  outline: 2px solid #337ab7;
+  outline-offset: 2px;
+}
+
+/* 활성 상태 */
+.common-button:active:not(.common-button--disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+} 

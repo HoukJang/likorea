@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Signup.css';
 import { useApi } from '../hooks/useApi';
 import { signup } from '../api/auth';
+import Button from './common/Button';
+import Input from './common/Input';
 
 function Signup() {
   const navigate = useNavigate();
@@ -55,60 +57,69 @@ function Signup() {
       <form className="signup-box" onSubmit={handleSubmit}>
         <h2>회원가입</h2>
         <div className="form-group">
-          <label htmlFor="id">아이디</label>
-          <input
+          <Input
             type="text"
             id="id"
+            name="id"
             value={id}
             onChange={(e) => setId(e.target.value)}
             required
             disabled={loading}
-            placeholder="사용할 아이디 입력11"
+            placeholder="사용할 아이디 입력"
+            label="아이디"
           />
         </div>
         <div className="form-group">
-          <label htmlFor="email">이메일</label>
-          <input
+          <Input
             type="email"
             id="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             disabled={loading}
             placeholder="이메일 주소 입력"
+            label="이메일"
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">비밀번호</label>
-          <input
+          <Input
             type="password"
             id="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength="6"
             disabled={loading}
             placeholder="6자 이상 입력"
+            label="비밀번호"
+            helperText="최소 6자 이상 입력해주세요"
           />
         </div>
         <div className="form-group">
-          <label name="confirm">비밀번호 확인</label>
-          <input
+          <Input
             type="password"
             id="confirm"
+            name="confirm"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             required
             disabled={loading}
             placeholder="비밀번호 재입력"
+            label="비밀번호 확인"
           />
         </div>
-        <div className="form-group">
-          {/* 권한 설정 제거: 기본 일반 사용자 */}
-        </div>
-        <button type="submit" className="signup-btn" disabled={loading}>
-          {loading ? '처리 중...' : '회원가입'}
-        </button>
+        <Button
+          type="submit"
+          variant="primary"
+          size="large"
+          loading={loading}
+          disabled={loading}
+          className="signup-btn"
+        >
+          회원가입
+        </Button>
         {(message || error) && <div className={`message ${(message || error).includes('성공') ? 'success' : 'error'}`}>{message || error}</div>}
         <div className="login-link">
           이미 계정이 있으신가요? <Link to="/login">로그인</Link>

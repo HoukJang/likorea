@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import Button from './common/Button';
+import Input from './common/Input';
 import '../styles/Login.css';
 
 // 권한 레벨에 따른 텍스트 반환 함수
@@ -47,32 +49,41 @@ function Login() {
       <form className="login-box" onSubmit={handleSubmit}>
         <h2>로그인</h2>
         <div className="form-group">
-          <label htmlFor="id">아이디</label>
-          <input
+          <Input
             type="text"
             id="id"
+            name="id"
             value={id}
             onChange={(e) => setId(e.target.value)}
             required
             disabled={loading}
             placeholder="아이디 입력"
+            label="아이디"
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">비밀번호</label>
-          <input
+          <Input
             type="password"
             id="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             disabled={loading}
             placeholder="비밀번호 입력"
+            label="비밀번호"
           />
         </div>
-        <button type="submit" className="login-btn" disabled={loading}>
-          {loading ? '로그인 중...' : '로그인'}
-        </button>
+        <Button
+          type="submit"
+          variant="primary"
+          size="large"
+          loading={loading}
+          disabled={loading}
+          className="login-btn"
+        >
+          로그인
+        </Button>
         {(message || error) && (
           <div className={`message ${(message || error).includes('성공') ? 'success' : 'error'}`}>
             {message || error}

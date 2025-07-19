@@ -1,0 +1,179 @@
+/* 공통 로딩 기본 스타일 */
+.common-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+}
+
+/* 로딩 크기 */
+.common-loading--small {
+  gap: 8px;
+  padding: 12px;
+}
+
+.common-loading--medium {
+  gap: 12px;
+  padding: 20px;
+}
+
+.common-loading--large {
+  gap: 16px;
+  padding: 32px;
+}
+
+/* 스피너 타입 */
+.common-loading__spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.common-loading__spinner .spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #337ab7;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.common-loading--small .common-loading__spinner .spinner {
+  width: 16px;
+  height: 16px;
+  border-width: 1.5px;
+}
+
+.common-loading--large .common-loading__spinner .spinner {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+/* 점 타입 */
+.common-loading__dots {
+  display: flex;
+  gap: 4px;
+}
+
+.common-loading__dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: dots 1.4s ease-in-out infinite both;
+}
+
+.common-loading__dots .dot:nth-child(1) { animation-delay: -0.32s; }
+.common-loading__dots .dot:nth-child(2) { animation-delay: -0.16s; }
+
+.common-loading--small .common-loading__dots .dot {
+  width: 6px;
+  height: 6px;
+}
+
+.common-loading--large .common-loading__dots .dot {
+  width: 12px;
+  height: 12px;
+}
+
+/* 펄스 타입 */
+.common-loading__pulse {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.common-loading--small .common-loading__pulse {
+  width: 16px;
+  height: 16px;
+}
+
+.common-loading--large .common-loading__pulse {
+  width: 32px;
+  height: 32px;
+}
+
+/* 스켈레톤 타입 */
+.common-loading__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.common-loading__skeleton .skeleton-line {
+  height: 12px;
+  border-radius: 4px;
+  animation: skeleton 1.5s ease-in-out infinite;
+}
+
+.common-loading__skeleton .skeleton-line:nth-child(1) { animation-delay: 0s; }
+.common-loading__skeleton .skeleton-line:nth-child(2) { animation-delay: 0.2s; }
+.common-loading__skeleton .skeleton-line:nth-child(3) { animation-delay: 0.4s; }
+
+.common-loading--small .common-loading__skeleton .skeleton-line {
+  height: 8px;
+}
+
+.common-loading--large .common-loading__skeleton .skeleton-line {
+  height: 16px;
+}
+
+/* 로딩 텍스트 */
+.common-loading__text {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+}
+
+.common-loading--small .common-loading__text {
+  font-size: 12px;
+}
+
+.common-loading--large .common-loading__text {
+  font-size: 16px;
+}
+
+/* 애니메이션 */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes dots {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes skeleton {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0.3;
+  }
+} 
