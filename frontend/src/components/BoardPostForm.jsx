@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BACKEND_URL } from '../config';
-import { getBoardPost } from '../api/boards';
+import { getBoardPost, createBoard, updateBoard } from '../api/boards';
+import { getCurrentUser, isAuthenticated } from '../api/auth';
 import '../styles/BoardPostForm.css';
 
 function BoardPostForm() {
@@ -13,29 +14,47 @@ function BoardPostForm() {
   const [message, setMessage] = useState('');
   const contentRef = useRef(null);
   const [originalAuthor, setOriginalAuthor] = useState(null); // 원본 게시글 작성자 저장
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // 현재 사용자 정보 확인
+  useEffect(() => {
+    const user = getCurrentUser();
+    const authenticated = isAuthenticated();
+    
+    if (!authenticated || !user) {
+      setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+      return;
+    }
+    
+    setCurrentUser(user);
+  }, [navigate]);
 
   // If editing, fetch post data and update state
   useEffect(() => {
-    if (isEditMode) {
+    if (isEditMode && currentUser) {
       async function fetchPost() {
         try {
           const data = await getBoardPost(boardType, postId);
-          setTitle(data.title);
-          setContent(data.content);
+          setTitle(data.post.title);
+          setContent(data.post.content);
           if (contentRef.current) {
-            contentRef.current.innerHTML = data.content;
+            contentRef.current.innerHTML = data.post.content;
           }
           // 원 작성자 정보 저장
-          if (data.author) {
-            setOriginalAuthor(data.author);
+          if (data.post.author) {
+            setOriginalAuthor(data.post.author);
           }
         } catch (error) {
           console.error("게시글 조회 오류:", error);
+          setMessage('게시글을 불러오는데 실패했습니다.');
         }
       }
       fetchPost();
     }
-  }, [boardType, postId, isEditMode]);
+  }, [boardType, postId, isEditMode, currentUser]);
 
   // Convert text newlines to <br>
   const convertContentToHtml = (text) => text.replace(/\n/g, '<br>');
@@ -81,73 +100,83 @@ function BoardPostForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!localStorage.getItem('authToken')) {
-      setMessage('로그인 후 게시글 생성이 가능합니다.');
+    
+    // 로그인 상태 재확인
+    if (!isAuthenticated() || !currentUser) {
+      setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
       return;
     }
     
-    const currentUserId = localStorage.getItem('userId');
+    if (!title.trim()) {
+      setMessage('제목을 입력해주세요.');
+      return;
+    }
+    
+    if (!content.trim()) {
+      setMessage('내용을 입력해주세요.');
+      return;
+    }
+    
     const currentContent = contentRef.current ? contentRef.current.innerHTML : content;
     
     try {
       let response;
       if (isEditMode) {
         // Update existing post
-        // 현재 인증된 사용자 ID는 currentUserId
-        // 하지만 author 필드는 원본 작성자의 ID로 유지
-        const authorId = originalAuthor && originalAuthor.id ? originalAuthor.id : currentUserId;
-        
         console.log('수정 요청 데이터:', {
           title,
-          content: currentContent,
-          id: authorId
+          content: currentContent
         });
 
-        response = await fetch(`${BACKEND_URL}/api/boards/${boardType}/${postId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title,
-            content: currentContent,
-            id: authorId,  // 인증용 - 현재 로그인한 사람
-          })
+        response = await updateBoard(boardType, postId, {
+          title,
+          content: currentContent
         });
       } else {
         // Create new post
-        response = await fetch(`${BACKEND_URL}/api/boards/${boardType}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            title, 
-            content: currentContent, 
-            id: currentUserId  // 새 글 작성시에는 현재 로그인한 사용자가 작성자
-          })
+        console.log('생성 요청 데이터:', {
+          title,
+          content: currentContent
+        });
+
+        response = await createBoard(boardType, {
+          title,
+          content: currentContent
         });
       }
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || (isEditMode ? '게시글 수정 실패' : '게시글 생성 실패'));
-      }
-      
-      const data = await response.json();
       setMessage(isEditMode ? '게시글이 수정되었습니다!' : '게시글이 생성되었습니다!');
       
       // 게시글 상세 페이지로 이동
       setTimeout(() => {
-        navigate(`/boards/${boardType}/${isEditMode ? postId : data.post.id}`);
+        navigate(`/boards/${boardType}/${isEditMode ? postId : response.post._id}`);
       }, 1000);
     } catch (error) {
-      setMessage(error.message);
+      setMessage(error.message || (isEditMode ? '게시글 수정 실패' : '게시글 생성 실패'));
       console.error('게시글 저장 오류:', error);
     }
   };
+
+  // 로그인되지 않은 경우 로딩 표시
+  if (!currentUser) {
+    return (
+      <div className="form-container">
+        <div className="loading">로그인 상태를 확인하는 중...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="form-container">
       <h2 className="form-title">
         {isEditMode ? "게시글 수정" : `${boardType === "general" ? "일반" : boardType} 게시판 - 게시글 생성`}
       </h2>
+      <div className="user-info">
+        작성자: {currentUser.email} (ID: {currentUser.id})
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <input 
@@ -166,13 +195,14 @@ function BoardPostForm() {
             onInput={(e) => setContent(e.currentTarget.innerHTML)}
             onPaste={handlePaste}
             className="content-editor"
+            placeholder="내용을 입력하세요..."
           ></div>
         </div>
         <button type="submit" className="submit-button">
           {isEditMode ? "수정 완료" : "게시글 생성"}
         </button>
       </form>
-      {message && <p className="message">{message}</p>}
+      {message && <p className={`message ${message.includes('성공') ? 'success' : 'error'}`}>{message}</p>}
     </div>
   );
 }

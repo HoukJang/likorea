@@ -11,14 +11,17 @@ const {
 // 게시글 생성 (수정)
 exports.createPost = asyncHandler(async (req, res) => {
   const { boardType } = req.params;
-  let { title, content, id } = req.body;
+  let { title, content } = req.body;
+  
+  // 인증된 사용자 정보 사용
+  const userId = req.user.id;
   
   // 필수 필드 검증
-  if (!title || !content || !id) {
-    throw new ValidationError('제목, 내용, 사용자 ID는 필수입니다.');
+  if (!title || !content) {
+    throw new ValidationError('제목과 내용은 필수입니다.');
   }
   
-  const user = await User.findOne({ id });
+  const user = await User.findOne({ id: userId });
   if (!user) {
     throw new NotFoundError('사용자를 찾을 수 없습니다.');
   }
@@ -98,14 +101,12 @@ exports.getPost = asyncHandler(async (req, res) => {
 // 게시글 수정
 exports.updatePost = asyncHandler(async (req, res) => {
   const { boardType, postId } = req.params;
-  let { title, content, id } = req.body;
+  let { title, content } = req.body;
   
-  // 필수 필드 검증
-  if (!id) {
-    throw new ValidationError('사용자 ID는 필수입니다.');
-  }
+  // 인증된 사용자 정보 사용
+  const userId = req.user.id;
   
-  const user = await User.findOne({ id });
+  const user = await User.findOne({ id: userId });
   if (!user) {
     throw new NotFoundError('사용자를 찾을 수 없습니다.');
   }
@@ -115,7 +116,8 @@ exports.updatePost = asyncHandler(async (req, res) => {
     throw new NotFoundError('게시글을 찾을 수 없습니다.');
   }
   
-  if (post.author.toString() !== user._id.toString()) {
+  // 작성자 또는 관리자만 수정 가능
+  if (post.author.toString() !== user._id.toString() && user.authority < 5) {
     throw new AuthorizationError('게시글 수정 권한이 없습니다.');
   }
   
@@ -150,11 +152,9 @@ exports.updatePost = asyncHandler(async (req, res) => {
 // 게시글 삭제
 exports.deletePost = asyncHandler(async (req, res) => {
   const { boardType, postId } = req.params;
-  const { userId } = req.body;
   
-  if (!userId) {
-    throw new ValidationError('사용자 ID는 필수입니다.');
-  }
+  // 인증된 사용자 정보 사용
+  const userId = req.user.id;
   
   const user = await User.findOne({ id: userId });
   if (!user) {
@@ -166,7 +166,8 @@ exports.deletePost = asyncHandler(async (req, res) => {
     throw new NotFoundError('게시글을 찾을 수 없습니다.');
   }
   
-  if (post.author.toString() !== user._id.toString()) {
+  // 작성자 또는 관리자만 삭제 가능
+  if (post.author.toString() !== user._id.toString() && user.authority < 5) {
     const postAuthor = await User.findById(post.author);
     
     if (!postAuthor || user.authority <= postAuthor.authority) {
