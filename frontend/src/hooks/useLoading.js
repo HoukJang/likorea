@@ -1,96 +1,72 @@
 import { useState, useCallback } from 'react';
 
 /**
- * 로딩 상태를 관리하는 커스텀 훅
- * 여러 로딩 상태를 동시에 관리 가능
+ * 로딩 상태 관리를 위한 커스텀 훅
  */
-export const useLoading = (initialStates = {}) => {
-  const [loadingStates, setLoadingStates] = useState(initialStates);
+export const useLoading = (initialState = false) => {
+  const [loading, setLoading] = useState(initialState);
+  const [loadingStates, setLoadingStates] = useState({});
 
   /**
-   * 특정 키의 로딩 상태 설정
-   * @param {string} key - 로딩 상태 키
-   * @param {boolean} isLoading - 로딩 상태
+   * 로딩 상태 설정
    */
-  const setLoading = useCallback((key, isLoading) => {
+  const setLoadingState = useCallback((isLoading) => {
+    setLoading(isLoading);
+  }, []);
+
+  /**
+   * 특정 작업의 로딩 상태 설정
+   */
+  const setTaskLoading = useCallback((taskName, isLoading) => {
     setLoadingStates(prev => ({
       ...prev,
-      [key]: isLoading,
+      [taskName]: isLoading
     }));
   }, []);
 
   /**
-   * 여러 키의 로딩 상태를 한번에 설정
-   * @param {Object} states - 로딩 상태 객체
+   * 특정 작업의 로딩 상태 확인
    */
-  const setMultipleLoading = useCallback((states) => {
-    setLoadingStates(prev => ({
-      ...prev,
-      ...states,
-    }));
-  }, []);
-
-  /**
-   * 특정 키의 로딩 상태 확인
-   * @param {string} key - 로딩 상태 키
-   * @returns {boolean} 로딩 상태
-   */
-  const isLoading = useCallback((key) => {
-    return loadingStates[key] || false;
+  const isTaskLoading = useCallback((taskName) => {
+    return loadingStates[taskName] || false;
   }, [loadingStates]);
 
   /**
-   * 전체 로딩 상태 확인
-   * @returns {boolean} 전체 로딩 상태
+   * 모든 작업의 로딩 상태 확인
    */
-  const isAnyLoading = useCallback(() => {
-    return Object.values(loadingStates).some(loading => loading);
+  const isAnyTaskLoading = useCallback(() => {
+    return Object.values(loadingStates).some(state => state);
   }, [loadingStates]);
+
+  /**
+   * 비동기 작업을 로딩 상태와 함께 실행
+   */
+  const withLoading = useCallback(async (asyncFn, taskName = 'default') => {
+    try {
+      setTaskLoading(taskName, true);
+      const result = await asyncFn();
+      return result;
+    } finally {
+      setTaskLoading(taskName, false);
+    }
+  }, [setTaskLoading]);
 
   /**
    * 로딩 상태 초기화
-   * @param {string|Array} keys - 초기화할 키들 (생략 시 전체 초기화)
    */
-  const resetLoading = useCallback((keys = null) => {
-    if (keys === null) {
-      setLoadingStates({});
-    } else {
-      const keysToReset = Array.isArray(keys) ? keys : [keys];
-      setLoadingStates(prev => {
-        const newStates = { ...prev };
-        keysToReset.forEach(key => {
-          delete newStates[key];
-        });
-        return newStates;
-      });
-    }
+  const clearLoading = useCallback(() => {
+    setLoading(false);
+    setLoadingStates({});
   }, []);
 
-  /**
-   * 로딩 상태를 자동으로 관리하는 함수 래퍼
-   * @param {string} key - 로딩 상태 키
-   * @param {Function} asyncFunction - 비동기 함수
-   * @returns {Function} 래핑된 함수
-   */
-  const withLoading = useCallback((key, asyncFunction) => {
-    return async (...args) => {
-      try {
-        setLoading(key, true);
-        const result = await asyncFunction(...args);
-        return result;
-      } finally {
-        setLoading(key, false);
-      }
-    };
-  }, [setLoading]);
-
   return {
+    loading,
     loadingStates,
-    setLoading,
-    setMultipleLoading,
-    isLoading,
-    isAnyLoading,
-    resetLoading,
+    setLoadingState,
+    setTaskLoading,
+    isTaskLoading,
+    isAnyTaskLoading,
     withLoading,
+    clearLoading
   };
 }; 

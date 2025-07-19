@@ -6,12 +6,28 @@ dotenv.config();
 const connectDB = require('./config/db');
 const logger = require('./utils/logger');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
+const { 
+  createRateLimiters, 
+  configureHelmet, 
+  additionalSecurity, 
+  ipWhitelist, 
+  requestSizeLimit 
+} = require('./middleware/security');
 
 const userRoutes = require('./routes/userRoutes');
 const boardRoutes = require('./routes/boardRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 
+// Swagger 설정
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./config/swagger');
+
 const app = express();
+
+// 보안 미들웨어 적용
+app.use(configureHelmet());
+app.use(additionalSecurity);
+app.use(requestSizeLimit);
 
 // 요청 본문 파싱 및 CORS 설정
 app.use(express.json());
@@ -42,12 +58,18 @@ app.use(cors({
 // 로깅 미들웨어
 app.use(logger.request);
 
+// Rate Limiting 설정
+const { generalLimiter, loginLimiter, signupLimiter, postLimiter } = createRateLimiters();
+
 connectDB();
 
-// API 라우트 설정
-app.use('/api/users', userRoutes);
-app.use('/api/boards', boardRoutes);
-app.use('/api/admin', adminRoutes);
+// Swagger UI 설정
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+
+// API 라우트 설정 (Rate Limiting 적용)
+app.use('/api/users', generalLimiter, userRoutes);
+app.use('/api/boards', generalLimiter, boardRoutes);
+app.use('/api/admin', generalLimiter, adminRoutes);
 
 // 404 에러 처리 (라우트 설정 후에 위치)
 app.use(notFound);
@@ -55,10 +77,16 @@ app.use(notFound);
 // 에러 처리 미들웨어 (마지막에 위치)
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5001;
-const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
+// Express 앱을 export (테스트용)
+module.exports = app;
 
-app.listen(PORT, HOST, () => {
-  logger.info(`서버가 ${HOST}:${PORT}에서 실행 중입니다.`);
-  logger.info(`환경: ${process.env.NODE_ENV || 'development'}`);
-});
+// 개발 환경에서만 서버 시작
+if (process.env.NODE_ENV !== 'test') {
+  const PORT = process.env.PORT || 5001;
+  const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
+
+  app.listen(PORT, HOST, () => {
+    logger.info(`서버가 ${HOST}:${PORT}에서 실행 중입니다.`);
+    logger.info(`환경: ${process.env.NODE_ENV || 'development'}`);
+  });
+}

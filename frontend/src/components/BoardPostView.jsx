@@ -3,12 +3,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { 
   getBoardPost, 
   deleteBoard, 
-  getUser, 
   addComment, 
   deleteComment, 
   updateComment,
   getComments
 } from '../api/boards';
+import { getUser } from '../api/auth';
+import { processPostData, processCommentsList, formatDate, getAuthorId } from '../utils/dataUtils';
+import { usePermission } from '../hooks/usePermission';
+import { useErrorHandler } from '../utils/errorHandler';
 import '../styles/BoardPostView.css';
 
 function BoardPostView() {
@@ -23,39 +26,44 @@ function BoardPostView() {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editCommentText, setEditCommentText] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  const { canModify: checkCanModify } = usePermission();
+  const { handleError } = useErrorHandler();
 
   // 게시글과 댓글을 함께 불러오는 함수 업데이트
   const fetchPostAndComments = async () => {
     setLoading(true);
+    setError(null);
+    
     try {
       // 게시글 데이터 가져오기
       const data = await getBoardPost(boardType, postId);
-      setPost(data);
+      const processedPost = processPostData(data);
+      setPost(processedPost);
       
-      // 댓글 데이터 별도로 가져오기 (새 API 사용)
+      // 댓글 데이터 별도로 가져오기
       try {
         const commentsData = await getComments(boardType, postId);
-        if (commentsData && commentsData.comments && Array.isArray(commentsData.comments)) {
-          setComments(commentsData.comments);
-        } else {
-          console.log("댓글 없음 또는 배열 아님:", commentsData);
-          setComments([]);
-        }
+        const processedComments = processCommentsList(commentsData.comments || commentsData);
+        setComments(processedComments);
       } catch (commentError) {
-        console.error("댓글 로드 중 오류:", commentError);
+        const processedError = handleError(commentError, '댓글 로드');
+        console.error("댓글 로드 중 오류:", processedError);
+        
         // 댓글 로드 실패 시 게시글의 댓글 데이터 사용 시도
         if (data.comments && Array.isArray(data.comments)) {
-          setComments(data.comments);
+          const fallbackComments = processCommentsList(data.comments);
+          setComments(fallbackComments);
         } else {
           setComments([]);
         }
       }
       
       // 권한 확인
-      checkEditDeletePermission(data);
+      checkEditDeletePermission(processedPost);
     } catch (error) {
-      console.error("게시글 조회 오류:", error);
-      setError(error.message);
+      const processedError = handleError(error, '게시글 조회');
+      setError(processedError.message);
     } finally {
       setLoading(false);
     }
@@ -74,32 +82,14 @@ function BoardPostView() {
     }
   }, [isRefreshing]);
 
-  const checkEditDeletePermission = async (postData) => {
-    if (!postData || !localStorage.getItem('authToken')) {
+  const checkEditDeletePermission = (postData) => {
+    if (!postData) {
       setCanModify(false);
       return;
     }
     
-    const currentUserId = localStorage.getItem('userId');
-    const currentUserAuthority = parseInt(localStorage.getItem('userAuthority') || '0');
-    
-    const isSameUser = postData.author && postData.author.id === currentUserId;
-    
-    if (isSameUser) {
-      setCanModify(true);
-      return;
-    }
-    
-    try {
-      const authorData = await getUser(postData.author.id);
-      const authorAuthority = authorData && authorData.authority ? 
-        parseInt(authorData.authority) : 0;
-
-      setCanModify(currentUserAuthority > authorAuthority);
-    } catch (error) {
-      console.error("작성자 정보 조회 실패:", error);
-      setCanModify(false);
-    }
+    const canModifyPost = checkCanModify(postData);
+    setCanModify(canModifyPost);
   };
 
   const handleDelete = async () => {
@@ -115,55 +105,12 @@ function BoardPostView() {
     }
   };
 
-  // 댓글 수정/삭제 권한 확인 함수 - 비동기 호출 없이 단순화
+  // 댓글 수정/삭제 권한 확인 함수
   const canModifyComment = (comment) => {
-    if (!localStorage.getItem('authToken') || !comment) return false;
-    
-    const currentUserId = localStorage.getItem('userId');
-    const currentUserAuthority = parseInt(localStorage.getItem('userAuthority') || '0');
-    
-    // 댓글의 작성자 정보 추출 (로컬에서만 확인)
-    let commentAuthorId = '';
-    let commentAuthorAuthority = 0;
-    
-    if (typeof comment.author === 'object' && comment.author !== null) {
-      // author가 객체인 경우
-      commentAuthorId = comment.author.id || '';
-      commentAuthorAuthority = parseInt(comment.author.authority || '0', 10);
-    } else {
-      // author가 문자열인 경우
-      commentAuthorId = comment.author || '';
-    }
-    
-    // console.log('댓글 권한 확인:', {
-    //   commentId: comment.id || comment._id,
-    //   commentAuthorId,
-    //   commentAuthorAuthority,
-    //   currentUserId,
-    //   currentUserAuthority,
-    //   isSameUser: commentAuthorId === currentUserId,
-    //   hasHigherAuthority: currentUserAuthority > commentAuthorAuthority
-    // });
-    
-    // 1. 본인 댓글일 경우 항상 수정/삭제 가능
-    if (commentAuthorId === currentUserId) {
-      return true;
-    }
-    
-    // 2. 본인 댓글이 아닌 경우, 현재 사용자의 권한이 작성자보다 높을 때만 수정/삭제 가능
-    return currentUserAuthority > commentAuthorAuthority;
+    return checkCanModify(comment);
   };
 
-  // 작성자 정보 추출 함수 - 안전하게 가져오기 (표시용)
-  const getAuthorId = (author) => {
-    if (!author) return '익명';
-    
-    if (typeof author === 'object' && author !== null) {
-      return author.id || '익명';
-    }
-    
-    return author || '익명';
-  };
+  // 작성자 정보 추출 함수는 dataUtils에서 가져온 함수 사용
 
   // 댓글 작성 핸들러 - API 문서에 맞게 업데이트
   const handleCommentSubmit = async (e) => {

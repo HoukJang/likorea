@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getBoards } from '../api/boards';
+import { processPostsList, formatDate, getAuthorId } from '../utils/dataUtils';
+import { useErrorHandler } from '../utils/errorHandler';
 
 function BoardList() {
   const { boardType } = useParams();
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(10); // 기본값을 10으로 변경
+  const [postsPerPage, setPostsPerPage] = useState(10);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const { handleError } = useErrorHandler();
 
   // 페이지네이션 버튼 스타일 크기 증가
   const paginationButtonStyle = {
@@ -45,25 +50,33 @@ function BoardList() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setLoading(true);
+        setError(null);
+        
         const data = await getBoards(boardType);
         const postsData = data.posts || data;
 
+        // 안전한 데이터 처리
+        const processedPosts = processPostsList(postsData);
+        
         // 게시글을 수정일(updatedAt) 기준으로 내림차순 정렬
-        const sortedPosts = [...postsData].sort((a, b) => {
-          // 수정일이 없는 경우 생성일을 사용
+        const sortedPosts = [...processedPosts].sort((a, b) => {
           const dateA = a.updatedAt || a.createdAt;
           const dateB = b.updatedAt || b.createdAt;
-          return new Date(dateB) - new Date(dateA); // 내림차순 (최신순)
+          return new Date(dateB) - new Date(dateA);
         });
 
         setPosts(sortedPosts);
-        setCurrentPage(1); // 게시판 변경 시 페이지 초기화
+        setCurrentPage(1);
       } catch (error) {
-        console.error("게시글 목록 조회 오류:", error);
+        const processedError = handleError(error, '게시글 목록 조회');
+        setError(processedError.message);
+      } finally {
+        setLoading(false);
       }
     };
     fetchPosts();
-  }, [boardType]);
+  }, [boardType, handleError]);
 
   const totalPages = Math.ceil(posts.length / postsPerPage);
   const indexOfLast = currentPage * postsPerPage;
@@ -123,7 +136,15 @@ function BoardList() {
           글쓰기
         </Link>
       </div>
-      {posts.length === 0 ? (
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <p>게시글을 불러오는 중...</p>
+        </div>
+      ) : error ? (
+        <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>
+          <p>오류: {error}</p>
+        </div>
+      ) : posts.length === 0 ? (
         <p>게시글이 없습니다.</p>
       ) : (
         <div className="table-responsive" style={{ overflowX: "auto" }}>
@@ -152,10 +173,10 @@ function BoardList() {
                     <Link to={`/boards/${boardType}/${post.id}`}>{post.title}</Link>
                   </td>
                   <td style={{ padding: "8px", width: "15%", textAlign: "left" }}>
-                    {typeof post.author === 'object' ? post.author.id : post.author}
+                    {getAuthorId(post.author)}
                   </td>
                   <td style={{ padding: "8px", width: "15%", textAlign: "center" }}>
-                    {new Date(post.createdAt).toLocaleDateString()}
+                    {formatDate(post.createdAt)}
                   </td>
                   <td style={{ padding: "8px", width: "20%", textAlign: "center" }}>
                     {post.viewCount ?? 0}

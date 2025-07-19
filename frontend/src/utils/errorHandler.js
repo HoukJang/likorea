@@ -1,3 +1,5 @@
+import { useState, useCallback } from 'react';
+
 // 에러 타입 정의
 export const ERROR_TYPES = {
   NETWORK: 'NETWORK_ERROR',
@@ -94,13 +96,20 @@ export const logError = (error, context = '') => {
 
 // 에러 처리 훅
 export const useErrorHandler = () => {
-  const handleError = (error, context = '') => {
+  const [error, setError] = useState(null);
+  
+  const handleError = useCallback((error, context = '') => {
     const processedError = handleApiError(error);
     logError(processedError, context);
+    setError(processedError);
     return processedError;
-  };
-
-  return { handleError };
+  }, []);
+  
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+  
+  return { error, handleError, clearError };
 };
 
 // 토스트 메시지 표시 (선택적)

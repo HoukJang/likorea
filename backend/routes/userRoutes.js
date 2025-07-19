@@ -1,6 +1,17 @@
 const express = require('express');
 const { signup, login, logout, getUsers, getUser, checkEmailExists, checkIdExists, updateUser, deleteUser, verifyToken } = require('../controllers/userController');
+const { createRateLimiters } = require('../middleware/security');
+const { validateUserInput } = require('../middleware/validation');
 const router = express.Router();
+
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: 사용자 관리 API
+ */
+
+const { loginLimiter, signupLimiter } = createRateLimiters();
 
 // 사용자 목록 조회
 router.get('/', getUsers);
@@ -13,14 +24,14 @@ router.get('/verify', verifyToken);
 // 사용자 상세 정보 조회
 router.get('/:id', getUser);
 // 신규 사용자 등록
-router.post('/', signup);
+router.post('/', signupLimiter, validateUserInput, signup);
 // 사용자 정보 수정
-router.put('/:id', updateUser);
+router.put('/:id', validateUserInput, updateUser);
 // 사용자 삭제
 router.delete('/:id', deleteUser);
 
 // 인증 관련 API
-router.post('/login', login);
+router.post('/login', loginLimiter, validateUserInput, login);
 router.post('/logout', logout);
 
 module.exports = router;
