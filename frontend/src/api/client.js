@@ -64,7 +64,8 @@ class ApiClient {
       }
 
       if (!response.ok) {
-        const error = new Error(data.message || `API 요청 실패: ${response.status}`);
+        const errorMessage = data.error || data.message || `API 요청 실패: ${response.status}`;
+        const error = new Error(errorMessage);
         error.response = response;
         error.data = data;
         throw error;

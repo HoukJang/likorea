@@ -1,36 +1,87 @@
+/* 태극 테마 색상 체계 */
+:root {
+  --primary-bg: #ffffff;
+  --secondary-bg: #111111;
+  --primary-text: #111111;
+  --secondary-text: #6b7280;
+  --accent-red: #dc2626;
+  --accent-red-dark: #b91c1c;
+  --accent-blue: #2563eb;
+  --accent-blue-dark: #1d4ed8;
+  --gray-light: #f8fafc;
+  --gray-medium: #6b7280;
+  --gray-dark: #374151;
+  --border-color: #e5e7eb;
+  --text-primary: #111111;
+  --text-secondary: #6b7280;
+  --white: #ffffff;
+  --focus-outline: 2px solid var(--accent-blue);
+  --focus-outline-offset: 2px;
+  --btn-radius: 8px;
+  --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+  
+  /* 통일된 글자 크기 체계 */
+  --font-size-xs: 0.75rem;    /* 12px - 매우 작은 텍스트 */
+  --font-size-sm: 0.875rem;   /* 14px - 작은 텍스트 */
+  --font-size-base: 1rem;     /* 16px - 기본 텍스트 */
+  --font-size-lg: 1.125rem;   /* 18px - 큰 텍스트 */
+  --font-size-xl: 1.25rem;    /* 20px - 매우 큰 텍스트 */
+}
+
 .comment-form {
-  margin-top: 20px;
+  margin-top: 30px;
+  font-family: var(--font-family);
 }
 
 .form-group {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .form-label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--primary-text);
+  font-size: var(--font-size-base);
 }
 
 .comment-textarea {
   width: 100%;
-  height: 100px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  height: 120px;
+  padding: 16px 20px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--btn-radius);
   resize: vertical;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  color: var(--primary-text);
+  background-color: var(--white);
+  transition: all 0.3s ease;
+}
+
+.comment-textarea:focus {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .submit-button {
-  padding: 8px 16px;
-  background-color: #337ab7;
-  color: white;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-dark) 100%);
+  color: var(--white);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--btn-radius);
   cursor: pointer;
-  font-size: 1rem;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-family: var(--font-family);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .submit-button:hover {
-  background-color: #286090;
+  background: linear-gradient(135deg, var(--accent-blue-dark) 0%, var(--accent-blue) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
 }

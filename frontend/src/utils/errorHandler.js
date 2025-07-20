@@ -51,6 +51,8 @@ export const handleApiError = (error) => {
     // 서버에서 전달된 에러 메시지가 있으면 사용
     if (error.response.data && error.response.data.error) {
       message = error.response.data.error;
+    } else if (error.response.data && error.response.data.message) {
+      message = error.response.data.message;
     } else {
       message = ERROR_MESSAGES[errorType];
     }

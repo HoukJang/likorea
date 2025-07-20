@@ -7,117 +7,131 @@ import apiClient from './client';
 
 /**
  * 게시글 목록 조회
- * @param {string} boardType - 게시판 타입
  * @param {Object} options - 조회 옵션
  * @param {number} options.page - 페이지 번호 (기본값: 1)
  * @param {number} options.limit - 페이지당 항목 수 (기본값: 10)
+ * @param {string} options.type - 타입 태그 필터
+ * @param {string} options.region - 지역 태그 필터
+ * @param {string} options.search - 검색어
  * @returns {Promise} 게시글 목록
  */
-export const getBoards = async (boardType, options = {}) => {
-  const { page = 1, limit = 10 } = options;
-  return apiClient.get(`/api/boards/${boardType}?page=${page}&limit=${limit}`);
+export const getBoards = async (options = {}) => {
+  const { page = 1, limit = 10, type, region, search } = options;
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString()
+  });
+  
+  if (type) params.append('type', type);
+  if (region) params.append('region', region);
+  if (search) params.append('search', search);
+  
+  return apiClient.get(`/api/boards?${params.toString()}`);
 };
 
 /**
  * 게시글 생성
- * @param {string} boardType - 게시판 타입
  * @param {Object} boardData - 게시글 데이터
  * @param {string} boardData.title - 게시글 제목
  * @param {string} boardData.content - 게시글 내용
+ * @param {Object} boardData.tags - 태그 정보
+ * @param {string} boardData.tags.type - 타입 태그
+ * @param {string} boardData.tags.region - 지역 태그
  * @returns {Promise} 생성된 게시글
  */
-export const createBoard = async (boardType, boardData) => {
-  return apiClient.post(`/api/boards/${boardType}`, {
+export const createBoard = async (boardData) => {
+  return apiClient.post('/api/boards', {
     title: boardData.title,
-    content: boardData.content
+    content: boardData.content,
+    tags: boardData.tags
   });
 };
 
 /**
  * 게시글 수정
- * @param {string} boardType - 게시판 타입
  * @param {string} postId - 게시글 ID
  * @param {Object} boardData - 수정할 게시글 데이터
  * @param {string} boardData.title - 게시글 제목
  * @param {string} boardData.content - 게시글 내용
+ * @param {Object} boardData.tags - 태그 정보 (선택사항)
  * @returns {Promise} 수정된 게시글
  */
-export const updateBoard = async (boardType, postId, boardData) => {
-  return apiClient.put(`/api/boards/${boardType}/${postId}`, {
+export const updateBoard = async (postId, boardData) => {
+  return apiClient.put(`/api/boards/${postId}`, {
     title: boardData.title,
-    content: boardData.content
+    content: boardData.content,
+    tags: boardData.tags
   });
 };
 
 /**
  * 게시글 삭제
- * @param {string} boardType - 게시판 타입
  * @param {string} postId - 게시글 ID
  * @returns {Promise} 삭제 결과
  */
-export const deleteBoard = async (boardType, postId) => {
-  return apiClient.delete(`/api/boards/${boardType}/${postId}`);
+export const deleteBoard = async (postId) => {
+  return apiClient.delete(`/api/boards/${postId}`);
 };
 
 /**
  * 게시글 조회
- * @param {string} boardType - 게시판 타입
  * @param {string} postId - 게시글 ID
  * @returns {Promise} 게시글 정보
  */
-export const getBoardPost = async (boardType, postId) => {
-  return apiClient.get(`/api/boards/${boardType}/${postId}`);
+export const getBoardPost = async (postId) => {
+  return apiClient.get(`/api/boards/${postId}`);
 };
 
 /**
  * 댓글 추가
- * @param {string} boardType - 게시판 타입
  * @param {string} postId - 게시글 ID
  * @param {Object} commentData - 댓글 데이터
  * @param {string} commentData.content - 댓글 내용
+ * @param {string} commentData.id - 사용자 ID
  * @returns {Promise} 생성된 댓글
  */
-export const addComment = async (boardType, postId, commentData) => {
-  return apiClient.post(`/api/boards/${boardType}/${postId}/comments`, {
-    content: commentData.content
+export const addComment = async (postId, commentData) => {
+  return apiClient.post(`/api/boards/${postId}/comments`, {
+    content: commentData.content,
+    id: commentData.id
   });
 };
 
 /**
  * 댓글 수정
- * @param {string} boardType - 게시판 타입
  * @param {string} postId - 게시글 ID
  * @param {string} commentId - 댓글 ID
  * @param {Object} commentData - 수정할 댓글 데이터
  * @param {string} commentData.content - 댓글 내용
+ * @param {string} commentData.id - 사용자 ID
  * @returns {Promise} 수정된 댓글
  */
-export const updateComment = async (boardType, postId, commentId, commentData) => {
-  return apiClient.put(`/api/boards/${boardType}/${postId}/comments/${commentId}`, {
-    content: commentData.content
+export const updateComment = async (postId, commentId, commentData) => {
+  return apiClient.put(`/api/boards/${postId}/comments/${commentId}`, {
+    content: commentData.content,
+    id: commentData.id
   });
 };
 
 /**
  * 댓글 삭제
- * @param {string} boardType - 게시판 타입
  * @param {string} postId - 게시글 ID
  * @param {string} commentId - 댓글 ID
+ * @param {string} userId - 사용자 ID
  * @returns {Promise} 삭제 결과
  */
-export const deleteComment = async (boardType, postId, commentId) => {
-  return apiClient.delete(`/api/boards/${boardType}/${postId}/comments/${commentId}`);
+export const deleteComment = async (postId, commentId, userId) => {
+  return apiClient.delete(`/api/boards/${postId}/comments/${commentId}?userId=${userId}`);
 };
 
 /**
  * 댓글 목록 조회
- * @param {string} boardType - 게시판 타입
  * @param {string} postId - 게시글 ID
  * @returns {Promise} 댓글 목록
  */
-export const getComments = async (boardType, postId) => {
+export const getComments = async (postId) => {
   try {
-    return await apiClient.get(`/api/boards/${boardType}/${postId}/comments`);
+    return await apiClient.get(`/api/boards/${postId}/comments`);
   } catch (error) {
     console.error('댓글 조회 오류:', error);
     // 에러 발생 시 빈 댓글 목록 반환

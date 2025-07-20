@@ -1,30 +1,3 @@
-const sanitizeHtml = require('sanitize-html');
-
-/**
- * 입력 데이터 정제 함수
- * @param {Object} data - 정제할 데이터
- * @returns {Object} 정제된 데이터
- */
-const sanitizeData = (data) => {
-  if (typeof data === 'string') {
-    return sanitizeHtml(data, {
-      allowedTags: [],
-      allowedAttributes: {},
-      disallowedTagsMode: 'recursiveEscape'
-    }).trim();
-  }
-  
-  if (typeof data === 'object' && data !== null) {
-    const sanitized = {};
-    for (const [key, value] of Object.entries(data)) {
-      sanitized[key] = sanitizeData(value);
-    }
-    return sanitized;
-  }
-  
-  return data;
-};
-
 /**
  * 이메일 형식 검증
  * @param {string} email - 검증할 이메일
@@ -97,15 +70,32 @@ const validateUserInput = (req, res, next) => {
       }
     }
     
-    // 데이터 정제
-    req.body = sanitizeData(req.body);
-    
     next();
   } catch (error) {
     return res.status(400).json({
       error: '입력 데이터 검증 중 오류가 발생했습니다.'
     });
   }
+};
+
+/**
+ * HTML 태그를 제거한 순수 텍스트 길이 계산
+ * @param {string} html - HTML 문자열
+ * @returns {number} 순수 텍스트 길이
+ */
+const getTextLength = (html) => {
+  // HTML 태그 제거
+  const textOnly = html.replace(/<[^>]*>/g, '');
+  // HTML 엔티티 디코딩
+  const decoded = textOnly
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+  
+  return decoded.trim().length;
 };
 
 /**
@@ -122,15 +112,19 @@ const validatePostInput = (req, res, next) => {
       });
     }
     
-    // 내용 검증
-    if (!content || typeof content !== 'string' || content.trim().length < 1 || content.length > 10000) {
+    // 내용 검증 (HTML 태그 제거 후 순수 텍스트 길이로 검증)
+    if (!content || typeof content !== 'string') {
       return res.status(400).json({
-        error: '내용은 1-10000자 사이여야 합니다.'
+        error: '내용을 입력해주세요.'
       });
     }
     
-    // 데이터 정제
-    req.body = sanitizeData(req.body);
+    const textLength = getTextLength(content);
+    if (textLength < 1 || textLength > 10000) {
+      return res.status(400).json({
+        error: `내용은 1-10000자 사이여야 합니다. (현재: ${textLength}자)`
+      });
+    }
     
     next();
   } catch (error) {
@@ -153,9 +147,6 @@ const validateCommentInput = (req, res, next) => {
         error: '댓글 내용은 1-1000자 사이여야 합니다.'
       });
     }
-    
-    // 데이터 정제
-    req.body = sanitizeData(req.body);
     
     next();
   } catch (error) {
@@ -201,12 +192,41 @@ const validateParams = (req, res, next) => {
   }
 };
 
+/**
+ * 로그인 입력 검증 미들웨어 (비밀번호 검증 제외)
+ */
+const validateLoginInput = (req, res, next) => {
+  try {
+    const { id, password } = req.body;
+    
+    // ID 검증
+    if (!id || typeof id !== 'string' || id.length < 3 || id.length > 20) {
+      return res.status(400).json({
+        error: 'ID는 3-20자 사이여야 합니다.'
+      });
+    }
+    
+    // 비밀번호 존재 여부만 확인 (강도 검증 제외)
+    if (!password || typeof password !== 'string') {
+      return res.status(400).json({
+        error: '비밀번호를 입력해주세요.'
+      });
+    }
+    
+    next();
+  } catch (error) {
+    return res.status(400).json({
+      error: '로그인 입력 데이터 검증 중 오류가 발생했습니다.'
+    });
+  }
+};
+
 module.exports = {
-  sanitizeData,
   validateEmail,
   validatePassword,
   validateUserInput,
   validatePostInput,
   validateCommentInput,
-  validateParams
+  validateParams,
+  validateLoginInput
 }; 

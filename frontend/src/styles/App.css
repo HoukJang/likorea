@@ -1,74 +1,134 @@
+/* 태극 테마 색상 체계 */
+:root {
+  --primary-bg: #ffffff;
+  --secondary-bg: #111111;
+  --primary-text: #111111;
+  --secondary-text: #6b7280;
+  --accent-red: #dc2626;
+  --accent-red-dark: #b91c1c;
+  --accent-blue: #2563eb;
+  --accent-blue-dark: #1d4ed8;
+  --gray-light: #f8fafc;
+  --gray-medium: #6b7280;
+  --gray-dark: #374151;
+  --border-color: #e5e7eb;
+  --text-primary: #111111;
+  --text-secondary: #6b7280;
+  --white: #ffffff;
+  --focus-outline: 2px solid var(--accent-blue);
+  --focus-outline-offset: 2px;
+  --btn-radius: 8px;
+  --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+  
+  /* 통일된 글자 크기 체계 */
+  --font-size-xs: 0.75rem;    /* 12px - 매우 작은 텍스트 */
+  --font-size-sm: 0.875rem;   /* 14px - 작은 텍스트 */
+  --font-size-base: 1rem;     /* 16px - 기본 텍스트 */
+  --font-size-lg: 1.125rem;   /* 18px - 큰 텍스트 */
+  --font-size-xl: 1.25rem;    /* 20px - 매우 큰 텍스트 */
+}
+
 .banner {
-    background-color: #f5f5f5;
-    padding: 20px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .banner h1 {
-    margin: 0;
-    text-align: center;
-  }
-  
-  /* New styling for menu bar */
-  .main-nav {
-    background-color: #282c34;
-    padding: 10px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 0;
-  }
-  
-  .main-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-  }
-  
-  .main-nav li {
-    margin: 0 30px;
-  }
-  
-  .main-nav a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 18px;
-  }
-  
-  .auth-menu a {
-    text-decoration: none;
-    color: #007bff;
-  }
+  background: linear-gradient(135deg, var(--gray-light) 0%, var(--white) 100%);
+  padding: 30px;
+  border-bottom: 2px solid var(--border-color);
+  font-family: var(--font-family);
+}
 
-  .banner-container {
-    display: block;      /* 배너를 block 요소로 표시 */
-    margin: 0 auto;      /* 가운데 정렬 */
-    width: 100%;         /* 가로 전체 사용 */
-  }
+.banner h1 {
+  margin: 0;
+  text-align: center;
+  color: var(--accent-blue);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
 
-  /* 필요하다면, 다른 요소와의 충돌을 방지하기 위한 z-index 추가 */
-  .banner-container {
-    position: relative;
-    z-index: 1;
-  }
+/* New styling for menu bar */
+.main-nav {
+  background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--gray-dark) 100%);
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0;
+  border-bottom: 3px solid var(--accent-blue);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
 
-  .header-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #ddd;
-    padding: 10px 20px;
-  }
+.main-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  font-family: var(--font-family);
+}
 
-  .nav-left a,
-  .nav-right a {
-    text-decoration: none;
-    color: inherit;
-    margin-right: 20px;
-    font-size: 18px;
-  }
+.main-nav li {
+  margin: 0 30px;
+}
 
-  .nav-right a {
-    margin-right: 0;
-  }
+.main-nav a {
+  text-decoration: none;
+  color: var(--white);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 10px 16px;
+  border-radius: var(--btn-radius);
+}
+
+.main-nav a:hover {
+  color: var(--accent-blue);
+  background-color: rgba(37, 99, 235, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+}
+
+.auth-menu a {
+  text-decoration: none;
+  color: var(--accent-blue);
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.auth-menu a:hover {
+  color: var(--accent-blue-dark);
+}
+
+.banner-container {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--border-color);
+  padding: 15px 30px;
+  background-color: var(--white);
+  font-family: var(--font-family);
+}
+
+.nav-left a,
+.nav-right a {
+  text-decoration: none;
+  color: var(--primary-text);
+  margin-right: 25px;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.nav-left a:hover,
+.nav-right a:hover {
+  color: var(--accent-blue);
+}
+
+.nav-right a {
+  margin-right: 0;
+}

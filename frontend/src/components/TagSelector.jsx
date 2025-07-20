@@ -1,0 +1,86 @@
+import React, { useState, useEffect } from 'react';
+import { getAllTags } from '../api/tags';
+import '../styles/TagSelector.css';
+
+const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
+  const [tags, setTags] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        setLoading(true);
+        const response = await getAllTags();
+        setTags(response.tags || {});
+      } catch (err) {
+        console.error('태그 로딩 실패:', err);
+        setError('태그를 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTags();
+  }, []);
+
+  const handleTagChange = (category, value) => {
+    const newTags = {
+      ...selectedTags,
+      [category]: value
+    };
+    onTagChange(newTags);
+  };
+
+  if (loading) {
+    return <div className="tag-selector-loading">태그를 불러오는 중...</div>;
+  }
+
+  if (error) {
+    return <div className="tag-selector-error">오류: {error}</div>;
+  }
+
+  return (
+    <div className="tag-selector">
+      <div className="tag-group">
+        <label className="tag-label">
+          Type {required && <span className="required">*</span>}
+        </label>
+        <select
+          className="tag-select"
+          value={selectedTags.type || ''}
+          onChange={(e) => handleTagChange('type', e.target.value)}
+          required={required}
+        >
+          <option value="">Type 선택</option>
+          {tags.type && tags.type.map(tag => (
+            <option key={tag.value} value={tag.value}>
+              {tag.displayName}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="tag-group">
+        <label className="tag-label">
+          Region {required && <span className="required">*</span>}
+        </label>
+        <select
+          className="tag-select"
+          value={selectedTags.region || ''}
+          onChange={(e) => handleTagChange('region', e.target.value)}
+          required={required}
+        >
+          <option value="">Region 선택</option>
+          {tags.region && tags.region.map(tag => (
+            <option key={tag.value} value={tag.value}>
+              {tag.displayName}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
+};
+
+export default TagSelector; 

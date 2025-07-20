@@ -6,6 +6,7 @@ dotenv.config();
 const connectDB = require('./config/db');
 const logger = require('./utils/logger');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
+const { initializeTags } = require('./utils/initTags');
 const { 
   createRateLimiters, 
   configureHelmet, 
@@ -17,6 +18,7 @@ const {
 const userRoutes = require('./routes/userRoutes');
 const boardRoutes = require('./routes/boardRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const tagRoutes = require('./routes/tagRoutes');
 
 // Swagger 설정
 const swaggerUi = require('swagger-ui-express');
@@ -61,7 +63,15 @@ app.use(logger.request);
 // Rate Limiting 설정
 const { generalLimiter, loginLimiter, signupLimiter, postLimiter } = createRateLimiters();
 
-connectDB();
+// 데이터베이스 연결 및 태그 초기화
+connectDB().then(async () => {
+  try {
+    await initializeTags();
+    logger.info('태그 시스템 초기화 완료');
+  } catch (error) {
+    logger.error('태그 시스템 초기화 실패:', error);
+  }
+});
 
 // Swagger UI 설정
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
@@ -70,6 +80,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 app.use('/api/users', generalLimiter, userRoutes);
 app.use('/api/boards', generalLimiter, boardRoutes);
 app.use('/api/admin', generalLimiter, adminRoutes);
+app.use('/api/tags', generalLimiter, tagRoutes);
 
 // 404 에러 처리 (라우트 설정 후에 위치)
 app.use(notFound);

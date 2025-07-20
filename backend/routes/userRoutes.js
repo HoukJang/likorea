@@ -1,7 +1,7 @@
 const express = require('express');
 const { signup, login, logout, getUsers, getUser, checkEmailExists, checkIdExists, updateUser, deleteUser, verifyToken } = require('../controllers/userController');
 const { createRateLimiters } = require('../middleware/security');
-const { validateUserInput } = require('../middleware/validation');
+const { validateUserInput, validateLoginInput } = require('../middleware/validation');
 const router = express.Router();
 
 /**
@@ -348,7 +348,7 @@ router.delete('/:id', deleteUser);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post('/login', loginLimiter, validateUserInput, login);
+router.post('/login', loginLimiter, validateLoginInput, login);
 
 /**
  * @swagger

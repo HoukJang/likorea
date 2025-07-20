@@ -122,11 +122,13 @@ export const processPostData = (post) => {
       id: '',
       title: '제목 없음',
       content: '내용 없음',
-      author: '익명',
+      author: { id: '익명' },
       createdAt: new Date(),
       updatedAt: new Date(),
       viewCount: 0,
-      postNumber: 0
+      postNumber: 0,
+      commentCount: 0,
+      tags: {}
     };
   }
   
@@ -134,11 +136,13 @@ export const processPostData = (post) => {
     id: post.id || post._id || '',
     title: post.title || '제목 없음',
     content: post.content || '내용 없음',
-    author: getAuthorId(post.author),
+    author: post.author || { id: '익명' },
     createdAt: post.createdAt || new Date(),
     updatedAt: post.updatedAt || post.createdAt || new Date(),
     viewCount: isValidNumber(post.viewCount) ? post.viewCount : 0,
-    postNumber: isValidNumber(post.postNumber) ? post.postNumber : 0
+    postNumber: isValidNumber(post.postNumber) ? post.postNumber : 0,
+    commentCount: isValidNumber(post.commentCount) ? post.commentCount : 0,
+    tags: post.tags || {}
   };
 };
 

@@ -40,7 +40,25 @@ function Login() {
       }, 2000); // 메시지를 더 오래 표시하기 위해 2초로 증가
       
     } catch (error) {
-      setMessage(error.message || '로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
+      let errorMessage = '로그인에 실패했습니다.';
+      
+      if (error.message) {
+        if (error.message.includes('비밀번호가 틀렸습니다')) {
+          errorMessage = '비밀번호가 틀렸습니다. 다시 확인해주세요.';
+        } else if (error.message.includes('존재하지 않는 사용자')) {
+          errorMessage = '존재하지 않는 아이디입니다. 아이디를 확인해주세요.';
+        } else if (error.message.includes('입력 정보를 확인해주세요')) {
+          errorMessage = '아이디와 비밀번호를 올바르게 입력해주세요.';
+        } else if (error.message.includes('토큰이 만료되었습니다')) {
+          errorMessage = '로그인이 만료되었습니다. 다시 로그인해주세요.';
+        } else if (error.message.includes('인증 토큰이 필요합니다')) {
+          errorMessage = '로그인이 필요합니다. 아이디와 비밀번호를 입력해주세요.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      setMessage(errorMessage);
     }
   };
 

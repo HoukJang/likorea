@@ -9,13 +9,15 @@ import {
   getComments
 } from '../api/boards';
 import { getUser } from '../api/auth';
+import { getAllTags } from '../api/tags';
 import { processPostData, processCommentsList, formatDate, getAuthorId } from '../utils/dataUtils';
+import { createTagDisplayData } from '../utils/tagUtils';
 import { usePermission } from '../hooks/usePermission';
 import { useErrorHandler } from '../utils/errorHandler';
 import '../styles/BoardPostView.css';
 
 function BoardPostView() {
-  const { boardType, postId } = useParams();
+  const { postId } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [canModify, setCanModify] = useState(false);
@@ -26,6 +28,7 @@ function BoardPostView() {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editCommentText, setEditCommentText] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [tagList, setTagList] = useState(null);
   
   const { canModify: checkCanModify } = usePermission();
   const { handleError } = useErrorHandler();
@@ -36,14 +39,26 @@ function BoardPostView() {
     setError(null);
     
     try {
+      // 태그 정보 가져오기
+      const tagResponse = await getAllTags();
+      setTagList(tagResponse.tags);
+      
       // 게시글 데이터 가져오기
-      const data = await getBoardPost(boardType, postId);
+      const response = await getBoardPost(postId);
+      console.log('API 응답 데이터:', response);
+      
+      // API 응답에서 post 필드 추출
+      const data = response.post || response;
+      console.log('추출된 게시글 데이터:', data);
+      
       const processedPost = processPostData(data);
+      console.log('처리된 게시글 데이터:', processedPost);
+      
       setPost(processedPost);
       
       // 댓글 데이터 별도로 가져오기
       try {
-        const commentsData = await getComments(boardType, postId);
+        const commentsData = await getComments(postId);
         const processedComments = processCommentsList(commentsData.comments || commentsData);
         setComments(processedComments);
       } catch (commentError) {
@@ -72,7 +87,7 @@ function BoardPostView() {
   // 컴포넌트 마운트 또는 페이지 이동 시 데이터 로드
   useEffect(() => {
     fetchPostAndComments();
-  }, [boardType, postId]);
+  }, [postId]);
 
   // 필요할 때 데이터 새로고침
   useEffect(() => {
@@ -96,8 +111,8 @@ function BoardPostView() {
     if (window.confirm("정말 삭제하시겠습니까?")) {
       try {
         const userId = localStorage.getItem('userId');
-        await deleteBoard(boardType, postId, userId);
-        navigate(`/boards/${boardType}`);
+        await deleteBoard(postId, userId);
+        navigate('/boards');
       } catch (error) {
         console.error("게시글 삭제 실패:", error);
         alert("삭제 권한이 없거나 오류가 발생했습니다.");
@@ -121,17 +136,23 @@ function BoardPostView() {
       return;
     }
     
-    if (!localStorage.getItem('authToken')) {
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
       alert('로그인 후 댓글을 작성할 수 있습니다.');
       return;
     }
 
     const userId = localStorage.getItem('userId');
+    const userAuthority = localStorage.getItem('userAuthority');
+    
+    console.log('댓글 작성 시도 - 사용자 ID:', userId, '권한 레벨:', userAuthority);
+    console.log('인증 토큰 존재:', !!authToken);
+    console.log('토큰 일부:', authToken ? authToken.substring(0, 20) + '...' : '없음');
     
     try {
       setLoading(true);
       // API 문서에 맞게 요청 데이터 구성
-      const response = await addComment(boardType, postId, {
+      const response = await addComment(postId, {
         content: commentText,  // 댓글 내용
         id: userId             // 사용자 ID
       });
@@ -143,7 +164,6 @@ function BoardPostView() {
         // 입력 필드 초기화
         setCommentText('');
         
-        alert('댓글이 성공적으로 작성되었습니다.');
         fetchPostAndComments();
       } else {
         // 응답에 댓글 정보가 없는 경우 전체 데이터 다시 로드
@@ -151,7 +171,55 @@ function BoardPostView() {
       }
     } catch (error) {
       console.error("댓글 작성 오류:", error);
-      alert(`댓글 작성 실패: ${error.message}`);
+      console.error("댓글 작성 오류 상세:", {
+        message: error.message,
+        originalError: error.originalError,
+        response: error.response,
+        data: error.data,
+        status: error.response?.status
+      });
+      
+      let errorMessage = '댓글 작성에 실패했습니다.';
+      
+      // originalError 확인
+      const originalError = error.originalError || error.message;
+      
+      if (originalError && typeof originalError === 'string') {
+        if (originalError.includes('토큰이 만료되었습니다') || 
+            originalError.includes('jwt expired') ||
+            originalError.includes('접근 권한이 없습니다')) {
+          errorMessage = '로그인이 만료되었습니다. 다시 로그인해주세요.';
+          // 로그아웃 처리
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('userId');
+          localStorage.removeItem('userEmail');
+          localStorage.removeItem('userAuthority');
+          // 로그인 페이지로 리다이렉트
+          navigate('/login');
+          return;
+        } else if (originalError.includes('댓글 내용과 사용자 ID는 필수입니다')) {
+          errorMessage = '댓글 내용과 사용자 정보가 필요합니다. 다시 시도해주세요.';
+        } else if (originalError.includes('댓글 내용은 1-1000자 사이여야 합니다')) {
+          errorMessage = originalError; // 백엔드에서 이미 구체적인 메시지 제공
+        } else if (originalError.includes('권한이 부족합니다')) {
+          errorMessage = '댓글을 작성할 권한이 없습니다.';
+        } else if (originalError.includes('인증 토큰이 필요합니다')) {
+          errorMessage = '로그인이 필요합니다. 댓글을 작성하려면 로그인해주세요.';
+        } else if (originalError.includes('사용자를 찾을 수 없습니다')) {
+          errorMessage = '사용자 정보를 찾을 수 없습니다. 다시 로그인해주세요.';
+        } else if (error.message && error.message !== '입력 정보를 확인해주세요.') {
+          errorMessage = error.message;
+        } else {
+          errorMessage = originalError;
+        }
+      } else if (error.message && error.message !== '입력 정보를 확인해주세요.') {
+        errorMessage = error.message;
+      } else {
+        // 기본 에러 메시지
+        errorMessage = '댓글 작성 중 오류가 발생했습니다. 다시 시도해주세요.';
+      }
+      
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -179,7 +247,7 @@ function BoardPostView() {
       const userId = localStorage.getItem('userId');
       
       // API 문서에 맞게 요청 데이터 구성
-      const response = await updateComment(boardType, postId, commentId, {
+      const response = await updateComment(postId, commentId, {
         content: editCommentText,  // 수정할 댓글 내용
         id: userId                 // 사용자 ID
       });
@@ -198,10 +266,45 @@ function BoardPostView() {
       setEditingCommentId(null);
       setEditCommentText('');
       
-      alert('댓글이 성공적으로 수정되었습니다.');
     } catch (error) {
       console.error("댓글 수정 오류:", error);
-      alert(`댓글 수정 실패: ${error.message}`);
+      console.error("댓글 수정 오류 상세:", {
+        message: error.message,
+        originalError: error.originalError,
+        response: error.response,
+        data: error.data,
+        status: error.response?.status
+      });
+      
+      let errorMessage = '댓글 수정에 실패했습니다.';
+      
+      // originalError 확인
+      const originalError = error.originalError || error.message;
+      
+      if (originalError && typeof originalError === 'string') {
+        if (originalError.includes('댓글 내용은 1-1000자 사이여야 합니다')) {
+          errorMessage = originalError; // 백엔드에서 이미 구체적인 메시지 제공
+        } else if (originalError.includes('권한이 부족합니다')) {
+          errorMessage = '댓글을 수정할 권한이 없습니다. 작성자만 수정할 수 있습니다.';
+        } else if (originalError.includes('인증 토큰이 필요합니다')) {
+          errorMessage = '로그인이 필요합니다. 댓글을 수정하려면 로그인해주세요.';
+        } else if (originalError.includes('댓글을 찾을 수 없습니다')) {
+          errorMessage = '수정할 댓글을 찾을 수 없습니다.';
+        } else if (originalError.includes('사용자를 찾을 수 없습니다')) {
+          errorMessage = '사용자 정보를 찾을 수 없습니다. 다시 로그인해주세요.';
+        } else if (error.message && error.message !== '입력 정보를 확인해주세요.') {
+          errorMessage = error.message;
+        } else {
+          errorMessage = originalError;
+        }
+      } else if (error.message && error.message !== '입력 정보를 확인해주세요.') {
+        errorMessage = error.message;
+      } else {
+        // 기본 에러 메시지
+        errorMessage = '댓글 수정 중 오류가 발생했습니다. 다시 시도해주세요.';
+      }
+      
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -216,7 +319,7 @@ function BoardPostView() {
       const userId = localStorage.getItem('userId');
       
       // API 문서에 맞게 요청
-      await deleteComment(boardType, postId, commentId, userId);
+              await deleteComment(postId, commentId, userId);
       
       // 로컬 상태에서 삭제된 댓글 제거
       setComments(prevComments => 
@@ -233,10 +336,45 @@ function BoardPostView() {
         }));
       }
       
-      alert('댓글이 성공적으로 삭제되었습니다.');
     } catch (error) {
       console.error("댓글 삭제 오류:", error);
-      alert(`댓글 삭제 실패: ${error.message}`);
+      console.error("댓글 삭제 오류 상세:", {
+        message: error.message,
+        originalError: error.originalError,
+        response: error.response,
+        data: error.data,
+        status: error.response?.status
+      });
+      
+      let errorMessage = '댓글 삭제에 실패했습니다.';
+      
+      // originalError 확인
+      const originalError = error.originalError || error.message;
+      
+      if (originalError && typeof originalError === 'string') {
+        if (originalError.includes('사용자 ID는 필수입니다')) {
+          errorMessage = '사용자 정보가 필요합니다. 다시 시도해주세요.';
+        } else if (originalError.includes('권한이 부족합니다')) {
+          errorMessage = '댓글을 삭제할 권한이 없습니다. 작성자만 삭제할 수 있습니다.';
+        } else if (originalError.includes('인증 토큰이 필요합니다')) {
+          errorMessage = '로그인이 필요합니다. 댓글을 삭제하려면 로그인해주세요.';
+        } else if (originalError.includes('댓글을 찾을 수 없습니다')) {
+          errorMessage = '삭제할 댓글을 찾을 수 없습니다.';
+        } else if (originalError.includes('사용자를 찾을 수 없습니다')) {
+          errorMessage = '사용자 정보를 찾을 수 없습니다. 다시 로그인해주세요.';
+        } else if (error.message && error.message !== '입력 정보를 확인해주세요.') {
+          errorMessage = error.message;
+        } else {
+          errorMessage = originalError;
+        }
+      } else if (error.message && error.message !== '입력 정보를 확인해주세요.') {
+        errorMessage = error.message;
+      } else {
+        // 기본 에러 메시지
+        errorMessage = '댓글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.';
+      }
+      
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -253,7 +391,7 @@ function BoardPostView() {
         {canModify && (
           <div className="post-actions">
             <button 
-              onClick={() => navigate(`/boards/${boardType}/${postId}/edit`)} 
+              onClick={() => navigate(`/boards/${postId}/edit`)} 
               className="action-button edit-button"
             >
               수정
@@ -283,6 +421,16 @@ function BoardPostView() {
         <span className="post-views">
           <strong>조회수:</strong> {post.viewCount || 0}
         </span>
+        {post.tags && (
+          <div className="post-tags">
+            <strong>태그:</strong>
+            {createTagDisplayData(post.tags, tagList).map((tag, index) => (
+              <span key={index} className={`tag ${tag.category}-tag`}>
+                {tag.category === 'type' ? 'Type' : 'Region'}: {tag.displayName}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
       
       <hr className="post-divider" />

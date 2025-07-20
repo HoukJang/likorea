@@ -48,13 +48,31 @@ export const updateUserAuthority = async (userId, authority) => {
 };
 
 /**
- * 사용자 계정 비활성화/활성화
+ * 사용자 정보 수정
  * @param {string} userId - 사용자 ID
- * @param {boolean} isActive - 활성화 여부
- * @returns {Promise} 상태 변경 결과
+ * @param {Object} userData - 수정할 사용자 정보
+ * @returns {Promise} 수정 결과
  */
-export const toggleUserStatus = async (userId, isActive) => {
-  return apiClient.put(`/api/admin/users/${userId}/status`, { isActive });
+export const updateUserInfo = async (userId, userData) => {
+  return apiClient.put(`/api/admin/users/${userId}`, userData);
+};
+
+/**
+ * 사용자 삭제
+ * @param {string} userId - 사용자 ID
+ * @returns {Promise} 삭제 결과
+ */
+export const deleteUser = async (userId) => {
+  return apiClient.delete(`/api/admin/users/${userId}`);
+};
+
+/**
+ * 사용자 상세 정보 조회
+ * @param {string} userId - 사용자 ID
+ * @returns {Promise} 사용자 상세 정보
+ */
+export const getUserDetails = async (userId) => {
+  return apiClient.get(`/api/admin/users/${userId}`);
 };
 
 /**

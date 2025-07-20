@@ -17,19 +17,12 @@ const { postLimiter } = createRateLimiters();
 
 /**
  * @swagger
- * /api/boards/{boardType}:
+ * /api/boards:
  *   post:
  *     summary: 게시글 생성
  *     tags: [Boards]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: boardType
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시판 타입 (예: general, notice)
  *     requestBody:
  *       required: true
  *       content:
@@ -39,6 +32,7 @@ const { postLimiter } = createRateLimiters();
  *             required:
  *               - title
  *               - content
+ *               - tags
  *             properties:
  *               title:
  *                 type: string
@@ -46,6 +40,18 @@ const { postLimiter } = createRateLimiters();
  *               content:
  *                 type: string
  *                 description: 게시글 내용
+ *               tags:
+ *                 type: object
+ *                 required:
+ *                   - type
+ *                   - region
+ *                 properties:
+ *                   type:
+ *                     type: string
+ *                     description: 게시글 타입 태그
+ *                   region:
+ *                     type: string
+ *                     description: 게시글 지역 태그
  *     responses:
  *       201:
  *         description: 게시글 생성 성공
@@ -73,21 +79,15 @@ const { postLimiter } = createRateLimiters();
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post('/:boardType', validateParams, authenticateToken, requireAuthority(1), postLimiter, validatePostInput, boardController.createPost);
+router.post('/', authenticateToken, requireAuthority(1), postLimiter, validatePostInput, boardController.createPost);
 
 /**
  * @swagger
- * /api/boards/{boardType}:
+ * /api/boards:
  *   get:
  *     summary: 게시글 목록 조회
  *     tags: [Boards]
  *     parameters:
- *       - in: path
- *         name: boardType
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시판 타입
  *       - in: query
  *         name: page
  *         schema:
@@ -100,6 +100,21 @@ router.post('/:boardType', validateParams, authenticateToken, requireAuthority(1
  *           type: integer
  *           default: 10
  *         description: 페이지당 항목 수
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *         description: 타입 태그 필터
+ *       - in: query
+ *         name: region
+ *         schema:
+ *           type: string
+ *         description: 지역 태그 필터
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: 검색어
  *     responses:
  *       200:
  *         description: 게시글 목록 조회 성공
@@ -120,22 +135,18 @@ router.post('/:boardType', validateParams, authenticateToken, requireAuthority(1
  *                   type: integer
  *                 currentPage:
  *                   type: integer
+ *                 filters:
+ *                   type: object
  */
-router.get('/:boardType', validateParams, boardController.getPosts);
+router.get('/', boardController.getPosts);
 
 /**
  * @swagger
- * /api/boards/{boardType}/{postId}:
+ * /api/boards/{postId}:
  *   get:
  *     summary: 게시글 상세 조회
  *     tags: [Boards]
  *     parameters:
- *       - in: path
- *         name: boardType
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시판 타입
  *       - in: path
  *         name: postId
  *         required: true
@@ -161,23 +172,17 @@ router.get('/:boardType', validateParams, boardController.getPosts);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/:boardType/:postId', validateParams, boardController.getPost);
+router.get('/:postId', validateParams, boardController.getPost);
 
 /**
  * @swagger
- * /api/boards/{boardType}/{postId}:
+ * /api/boards/{postId}:
  *   put:
  *     summary: 게시글 수정
  *     tags: [Boards]
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - in: path
- *         name: boardType
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시판 타입
  *       - in: path
  *         name: postId
  *         required: true
@@ -197,6 +202,15 @@ router.get('/:boardType/:postId', validateParams, boardController.getPost);
  *               content:
  *                 type: string
  *                 description: 게시글 내용
+ *               tags:
+ *                 type: object
+ *                 properties:
+ *                   type:
+ *                     type: string
+ *                     description: 게시글 타입 태그
+ *                   region:
+ *                     type: string
+ *                     description: 게시글 지역 태그
  *     responses:
  *       200:
  *         description: 게시글 수정 성공
@@ -224,23 +238,17 @@ router.get('/:boardType/:postId', validateParams, boardController.getPost);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.put('/:boardType/:postId', validateParams, authenticateToken, requireAuthority(1), validatePostInput, boardController.updatePost);
+router.put('/:postId', validateParams, authenticateToken, requireAuthority(1), validatePostInput, boardController.updatePost);
 
 /**
  * @swagger
- * /api/boards/{boardType}/{postId}:
+ * /api/boards/{postId}:
  *   delete:
  *     summary: 게시글 삭제
  *     tags: [Boards]
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - in: path
- *         name: boardType
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시판 타입
  *       - in: path
  *         name: postId
  *         required: true
@@ -272,226 +280,12 @@ router.put('/:boardType/:postId', validateParams, authenticateToken, requireAuth
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.delete('/:boardType/:postId', validateParams, authenticateToken, requireAuthority(1), boardController.deletePost);
+router.delete('/:postId', validateParams, authenticateToken, requireAuthority(1), boardController.deletePost);
 
-/**
- * @swagger
- * /api/boards/{boardType}/{postId}/comments:
- *   post:
- *     summary: 댓글 생성
- *     tags: [Boards]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: boardType
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시판 타입
- *       - in: path
- *         name: postId
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시글 ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - content
- *             properties:
- *               content:
- *                 type: string
- *                 description: 댓글 내용
- *     responses:
- *       201:
- *         description: 댓글 생성 성공
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- *                 comment:
- *                   $ref: '#/components/schemas/Comment'
- *       400:
- *         description: 유효하지 않은 입력
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       401:
- *         description: 인증 필요
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-router.post('/:boardType/:postId/comments', validateParams, authenticateToken, requireAuthority(1), postLimiter, validateCommentInput, commentController.createComment);
-
-/**
- * @swagger
- * /api/boards/{boardType}/{postId}/comments:
- *   get:
- *     summary: 댓글 목록 조회
- *     tags: [Boards]
- *     parameters:
- *       - in: path
- *         name: boardType
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시판 타입
- *       - in: path
- *         name: postId
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시글 ID
- *     responses:
- *       200:
- *         description: 댓글 목록 조회 성공
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 comments:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Comment'
- */
-router.get('/:boardType/:postId/comments', validateParams, commentController.getComments);
-
-/**
- * @swagger
- * /api/boards/{boardType}/{postId}/comments/{commentId}:
- *   put:
- *     summary: 댓글 수정
- *     tags: [Boards]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: boardType
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시판 타입
- *       - in: path
- *         name: postId
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시글 ID
- *       - in: path
- *         name: commentId
- *         required: true
- *         schema:
- *           type: string
- *         description: 댓글 ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - content
- *             properties:
- *               content:
- *                 type: string
- *                 description: 댓글 내용
- *     responses:
- *       200:
- *         description: 댓글 수정 성공
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- *                 comment:
- *                   $ref: '#/components/schemas/Comment'
- *       401:
- *         description: 인증 필요 또는 권한 부족
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       404:
- *         description: 댓글을 찾을 수 없음
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-router.put('/:boardType/:postId/comments/:commentId', validateParams, authenticateToken, requireAuthority(1), validateCommentInput, commentController.updateComment);
-
-/**
- * @swagger
- * /api/boards/{boardType}/{postId}/comments/{commentId}:
- *   delete:
- *     summary: 댓글 삭제
- *     tags: [Boards]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: boardType
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시판 타입
- *       - in: path
- *         name: postId
- *         required: true
- *         schema:
- *           type: string
- *         description: 게시글 ID
- *       - in: path
- *         name: commentId
- *         required: true
- *         schema:
- *           type: string
- *         description: 댓글 ID
- *     responses:
- *       200:
- *         description: 댓글 삭제 성공
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- *       401:
- *         description: 인증 필요 또는 권한 부족
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       404:
- *         description: 댓글을 찾을 수 없음
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-router.delete('/:boardType/:postId/comments/:commentId', validateParams, authenticateToken, requireAuthority(1), commentController.deleteComment);
+// 댓글 관련 라우트
+router.get('/:postId/comments', validateParams, commentController.getComments);
+router.post('/:postId/comments', validateParams, authenticateToken, commentController.createComment);
+router.put('/:postId/comments/:commentId', validateParams, authenticateToken, requireAuthority(1), validateCommentInput, commentController.updateComment);
+router.delete('/:postId/comments/:commentId', validateParams, authenticateToken, requireAuthority(1), commentController.deleteComment);
 
 module.exports = router;

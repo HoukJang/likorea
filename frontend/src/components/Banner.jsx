@@ -1,10 +1,10 @@
 import React from 'react';
-import picture1 from '../styles/Picture1.svg';
+import bannerImage from '../styles/banner_image.png';
 import '../styles/Banner.css';
 
 const Banner = () => (
   <div className="banner-container">
-    <img src={picture1} alt="Banner" className="banner-image" />
+    <img src={bannerImage} alt="Long Island Korea Community" className="banner-image" />
   </div>
 );
 

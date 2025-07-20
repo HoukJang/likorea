@@ -1,7 +1,6 @@
 const Comment = require('../models/Comment');
 const BoardPost = require('../models/BoardPost');
 const User = require('../models/User');
-const sanitizeHtml = require('sanitize-html');
 const { 
   asyncHandler, 
   ValidationError, 
@@ -25,23 +24,31 @@ exports.getComments = asyncHandler(async (req, res) => {
 
 // 댓글 작성
 exports.createComment = asyncHandler(async (req, res) => {
-  const { boardType, postId } = req.params;
+  const { postId } = req.params;
   let { content, id } = req.body;
+  
+  console.log('댓글 작성 컨트롤러 - 요청 데이터:', { postId, content, id });
+  console.log('댓글 작성 컨트롤러 - 전체 req.body:', req.body);
+  console.log('댓글 작성 컨트롤러 - 사용자 정보:', req.user);
   
   // 필수 필드 검증
   if (!content || !id) {
+    console.log('댓글 작성 컨트롤러 - 필수 필드 누락');
+    console.log('댓글 작성 컨트롤러 - content:', content);
+    console.log('댓글 작성 컨트롤러 - id:', id);
     throw new ValidationError('댓글 내용과 사용자 ID는 필수입니다.');
   }
   
   const user = await User.findOne({ id });
   if (!user) {
+    console.log('댓글 작성 컨트롤러 - 사용자를 찾을 수 없음:', id);
     throw new NotFoundError('사용자를 찾을 수 없습니다.');
   }
   
-  content = sanitizeHtml(content, {
-    allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a', 'img', 'div'],
-    allowedAttributes: { a: ['href'], img: ['src', 'alt'] },
-    allowedSchemes: ['http', 'https', 'data']
+  console.log('댓글 작성 컨트롤러 - 사용자 정보 확인:', {
+    id: user.id,
+    email: user.email,
+    authority: user.authority
   });
   
   const comment = await Comment.create({
@@ -49,6 +56,8 @@ exports.createComment = asyncHandler(async (req, res) => {
     author: user._id,
     post: postId
   });
+  
+  console.log('댓글 작성 컨트롤러 - 댓글 생성 성공:', comment._id);
   
   // BoardPost의 댓글 배열에 새 댓글 추가
   await BoardPost.findByIdAndUpdate(postId, { $push: { comments: comment._id } });
@@ -68,7 +77,7 @@ exports.createComment = asyncHandler(async (req, res) => {
 
 // 댓글 수정
 exports.updateComment = asyncHandler(async (req, res) => {
-  const { boardType, postId, commentId } = req.params;
+  const { postId, commentId } = req.params;
   const { content, id } = req.body;
   
   // 필수 필드 검증
@@ -86,7 +95,8 @@ exports.updateComment = asyncHandler(async (req, res) => {
     throw new NotFoundError('댓글을 찾을 수 없습니다.');
   }
   
-  if (comment.author.toString() !== user._id.toString()) {
+  // 작성자 또는 관리자만 수정 가능
+  if (comment.author.toString() !== user._id.toString() && user.authority !== 5) {
     throw new AuthorizationError('댓글 수정 권한이 없습니다.');
   }
   
@@ -108,15 +118,20 @@ exports.updateComment = asyncHandler(async (req, res) => {
 
 // 댓글 삭제
 exports.deleteComment = asyncHandler(async (req, res) => {
-  const { boardType, postId, commentId } = req.params;
-  const { id } = req.body;
+  const { postId, commentId } = req.params;
+  const { userId } = req.query; // URL 파라미터로 변경
+  
+  console.log('댓글 삭제 컨트롤러 - 요청 데이터:', { postId, commentId, userId });
+  console.log('댓글 삭제 컨트롤러 - 전체 req.query:', req.query);
+  console.log('댓글 삭제 컨트롤러 - 사용자 정보:', req.user);
   
   // 필수 필드 검증
-  if (!id) {
+  if (!userId) {
+    console.log('댓글 삭제 컨트롤러 - 사용자 ID 누락');
     throw new ValidationError('사용자 ID는 필수입니다.');
   }
   
-  const user = await User.findOne({ id });
+  const user = await User.findOne({ id: userId });
   if (!user) {
     throw new NotFoundError('사용자를 찾을 수 없습니다.');
   }
@@ -126,7 +141,8 @@ exports.deleteComment = asyncHandler(async (req, res) => {
     throw new NotFoundError('댓글을 찾을 수 없습니다.');
   }
   
-  if (comment.author.toString() !== user._id.toString()) {
+  // 작성자 또는 관리자만 삭제 가능
+  if (comment.author.toString() !== user._id.toString() && user.authority !== 5) {
     throw new AuthorizationError('댓글 삭제 권한이 없습니다.');
   }
   

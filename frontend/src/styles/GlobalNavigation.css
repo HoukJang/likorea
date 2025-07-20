@@ -1,0 +1,153 @@
+/* 태극 테마 색상 체계 */
+:root {
+  --primary-bg: #ffffff;
+  --secondary-bg: #111111;
+  --primary-text: #111111;
+  --secondary-text: #6b7280;
+  --accent-red: #dc2626;
+  --accent-red-dark: #b91c1c;
+  --accent-blue: #2563eb;
+  --accent-blue-dark: #1d4ed8;
+  --gray-light: #f8fafc;
+  --gray-medium: #6b7280;
+  --gray-dark: #374151;
+  --border-color: #e5e7eb;
+  --text-primary: #111111;
+  --text-secondary: #6b7280;
+  --white: #ffffff;
+  --focus-outline: 2px solid var(--accent-blue);
+  --focus-outline-offset: 2px;
+  --btn-radius: 8px;
+  --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+  
+  /* 통일된 글자 크기 체계 */
+  --font-size-xs: 0.75rem;    /* 12px - 매우 작은 텍스트 */
+  --font-size-sm: 0.875rem;   /* 14px - 작은 텍스트 */
+  --font-size-base: 1rem;     /* 16px - 기본 텍스트 */
+  --font-size-lg: 1.125rem;   /* 18px - 큰 텍스트 */
+  --font-size-xl: 1.25rem;    /* 20px - 매우 큰 텍스트 */
+}
+
+.global-navigation {
+  background: var(--white);
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav-button {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--btn-radius);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-family);
+  background: var(--white);
+  color: var(--primary-text);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-button:hover {
+  background: var(--gray-light);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button:focus {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+.main-button {
+  background: var(--accent-blue);
+  color: var(--white);
+  border-color: var(--accent-blue);
+}
+
+.main-button:hover {
+  background: var(--accent-blue-dark);
+  border-color: var(--accent-blue-dark);
+}
+
+.user-button {
+  background: var(--gray-light);
+  color: var(--secondary-text);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.user-button:hover {
+  background: var(--border-color);
+  color: var(--primary-text);
+}
+
+.logout-button {
+  background: var(--accent-red);
+  color: var(--white);
+  border-color: var(--accent-red);
+}
+
+.logout-button:hover {
+  background: var(--accent-red-dark);
+  border-color: var(--accent-red-dark);
+}
+
+.login-button {
+  background: var(--accent-blue);
+  color: var(--white);
+  border-color: var(--accent-blue);
+}
+
+.login-button:hover {
+  background: var(--accent-blue-dark);
+  border-color: var(--accent-blue-dark);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 15px;
+  }
+  
+  .nav-right {
+    gap: 10px;
+  }
+  
+  .nav-button {
+    padding: 6px 12px;
+    font-size: var(--font-size-xs);
+  }
+  
+  .user-button {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+} 

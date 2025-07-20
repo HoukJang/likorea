@@ -1,42 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getBoards } from '../api/boards';
+import { getAllTags } from '../api/tags';
 import { processPostsList, formatDate, getAuthorId } from '../utils/dataUtils';
-import { useErrorHandler } from '../utils/errorHandler';
+import { getTagDisplayName } from '../utils/tagUtils';
+import TagFilter from './TagFilter';
+import '../styles/BoardList.css';
 
 function BoardList() {
-  const { boardType } = useParams();
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(10);
-  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { handleError } = useErrorHandler();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(20);
+  const [filters, setFilters] = useState({ type: '', region: '' });
+  const [isMobile, setIsMobile] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [tagList, setTagList] = useState(null);
 
-  // 페이지네이션 버튼 스타일 크기 증가
-  const paginationButtonStyle = {
-    fontSize: "1.1rem", // 글자 크기를 키움
-    padding: "8px 12px", // 패딩 증가
-    border: "1px solid #ccc",
-    background: "#f8f9fa",
-    cursor: "pointer",
-    borderRadius: "4px", // 모서리 둥글게
-    minWidth: "40px", // 최소 너비 설정
-    textAlign: "center" // 숫자 중앙 정렬
-  };
+  // 컴포넌트 마운트 시 postsPerPage를 20으로 강제 설정
+  useEffect(() => {
+    setPostsPerPage(20);
+  }, []);
+
+  // 로그인 상태 확인
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    setIsLoggedIn(!!token);
+  }, []);
+
+  // 태그 정보 가져오기
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const tagResponse = await getAllTags();
+        setTagList(tagResponse.tags);
+      } catch (error) {
+        console.error('태그 정보 조회 오류:', error);
+      }
+    };
+    fetchTags();
+  }, []);
 
   // 화면 크기 변화 감지 및 페이지당 글 개수 조정
   useEffect(() => {
     const handleResize = () => {
-      setWindowHeight(window.innerHeight);
+      setIsMobile(window.innerWidth < 768); // 모바일 화면 크기 기준
       
-      // 화면 높이에 따라 페이지당 글 개수 동적 조정
-      const availableHeight = window.innerHeight - 250; // 헤더, 여백 등 고려
-      const rowHeight = 40; // 대략적인 행 높이
-      const calculatedPostsPerPage = Math.max(5, Math.floor(availableHeight / rowHeight));
-      
-      setPostsPerPage(calculatedPostsPerPage);
+      // 화면 크기에 따른 자동 조정 로직 제거
+      // 사용자가 선택한 글 개수를 유지
     };
     
     handleResize(); // 초기 설정
@@ -53,10 +67,16 @@ function BoardList() {
         setLoading(true);
         setError(null);
         
-        const data = await getBoards(boardType);
-        const postsData = data.posts || data;
+        const apiParams = {
+          page: currentPage,
+          limit: postsPerPage,
+          ...filters
+        };
+        
+        const data = await getBoards(apiParams);
 
-        // 안전한 데이터 처리
+        const postsData = data.posts || data;
+        
         const processedPosts = processPostsList(postsData);
         
         // 게시글을 수정일(updatedAt) 기준으로 내림차순 정렬
@@ -67,21 +87,21 @@ function BoardList() {
         });
 
         setPosts(sortedPosts);
-        setCurrentPage(1);
+        setTotalPages(data.totalPages || 1);
       } catch (error) {
-        const processedError = handleError(error, '게시글 목록 조회');
-        setError(processedError.message);
+        console.error('게시글 목록 조회 오류:', error);
+        setError(error.message || '게시글 목록을 불러오는 중 오류가 발생했습니다.');
       } finally {
         setLoading(false);
       }
     };
     fetchPosts();
-  }, [boardType, handleError]);
+  }, [currentPage, postsPerPage, filters]);
 
-  const totalPages = Math.ceil(posts.length / postsPerPage);
-  const indexOfLast = currentPage * postsPerPage;
-  const indexOfFirst = indexOfLast - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirst, indexOfLast);
+  // const indexOfLast = currentPage * postsPerPage;
+  // const indexOfFirst = indexOfLast - postsPerPage;
+  // const currentPosts = posts.slice(indexOfFirst, indexOfLast);
+  const currentPosts = posts;
 
   // 페이지당 글 개수 변경 핸들러
   const handlePostsPerPageChange = (e) => {
@@ -90,113 +110,173 @@ function BoardList() {
     setCurrentPage(1); // 페이지당 글 개수 변경 시 첫 페이지로 이동
   };
 
+  // 필터 변경 핸들러
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+    setCurrentPage(1); // 필터 변경 시 첫 페이지로 이동
+  };
+
+  // 키보드 이벤트 핸들러
+  const handleKeyDown = (e, action) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      action();
+    }
+  };
+
   return (
-    <div className="board-list-container" style={{ 
-      maxWidth: "1200px", 
-      margin: "0 auto",  // 중앙 정렬
-      padding: "0 20px"  // 좌우 패딩 추가
-    }}>
-      <header className="page-header">
-        <h1 style={{ textAlign: "center" }}>
-          {boardType === "general" ? "일반" : boardType} 게시판
-        </h1>
-      </header>
-      <div style={{ 
+    <div className="board-list-container" role="main" aria-label="게시판 목록">
+      {/* 태그 필터 컴포넌트 */}
+      <div className="user-controls" role="region" aria-label="사용자 컨트롤">
+        <TagFilter 
+          onFilterChange={handleFilterChange}
+          currentFilters={filters}
+        />
+      </div>
+      
+      <div className="posts-per-page-container" style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
         margin: '20px 0' 
-      }}>
+      }} role="region" aria-label="페이지 설정">
         <div>
-          <label htmlFor="postsPerPage" style={{ marginRight: '10px' }}>페이지당 글 개수:</label>
+          <label htmlFor="postsPerPage" style={{ marginRight: '10px', fontSize: '1rem', fontWeight: '600' }}>페이지당 글 개수:</label>
           <select 
             id="postsPerPage" 
             value={postsPerPage} 
             onChange={handlePostsPerPageChange}
-            style={{ padding: '5px' }}
+            style={{ padding: '8px 12px', fontSize: '1rem', borderRadius: '8px', border: '1px solid #e5e7eb' }}
+            aria-label="페이지당 표시할 게시글 개수 선택"
           >
-            <option value="5">5개</option>
-            <option value="10">10개</option>
-            <option value="15">15개</option>
             <option value="20">20개</option>
+            <option value="50">50개</option>
+            <option value="100">100개</option>
+            <option value="200">200개</option>
           </select>
         </div>
-        <Link 
-          to={`/boards/${boardType}/new`} 
-          style={{ 
-            backgroundColor: '#337ab7', 
-            color: '#fff', 
-            padding: '10px 20px', 
-            borderRadius: '4px', 
-            textDecoration: 'none', 
-            fontWeight: 'bold',
-            marginRight: "10px" // 추가된 오른쪽 margin
-          }}
-        >
-          글쓰기
-        </Link>
+        
+        {isLoggedIn && (
+          <Link 
+            to="/boards/new" 
+            className="write-btn"
+            aria-label="새 게시글 작성"
+          >
+            ✏️ 글쓰기
+          </Link>
+        )}
       </div>
+      
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '20px' }}>
+        <div className="loading-container" role="status" aria-live="polite">
+          <div className="loading-spinner" aria-hidden="true"></div>
           <p>게시글을 불러오는 중...</p>
         </div>
       ) : error ? (
-        <div style={{ textAlign: 'center', padding: '20px', color: 'red' }}>
+        <div className="error-container" role="alert" aria-live="assertive">
           <p>오류: {error}</p>
         </div>
       ) : posts.length === 0 ? (
-        <p>게시글이 없습니다.</p>
-      ) : (
-        <div className="table-responsive" style={{ overflowX: "auto" }}>
-          <table style={{ 
-            width: "100%", 
-            borderCollapse: "collapse",
-            marginLeft: "auto",  // 테이블 자체에도 좌우 마진 자동
-            marginRight: "auto"
-          }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid #000" }}>
-                <th style={{ textAlign: "center", padding: "8px", width: "5%" }}>글번호</th>
-                <th style={{ textAlign: "center", padding: "8px", width: "50%" }}>제목</th>
-                <th style={{ textAlign: "center", padding: "8px", width: "15%" }}>글쓴이</th>
-                <th style={{ textAlign: "center", padding: "8px", width: "15%" }}>날짜</th>
-                <th style={{ textAlign: "center", padding: "8px", width: "20%" }}>조회수</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentPosts.map((post, idx) => (
-                <tr key={post._id || post.id || idx} style={{ borderBottom: "1px solid #ccc" }}>
-                  <td style={{ padding: "8px", width: "5%", textAlign: "center" }}>
-                    {post.postNumber}
-                  </td>
-                  <td style={{ padding: "8px", width: "50%", textAlign: "left" }}>
-                    <Link to={`/boards/${boardType}/${post.id}`}>{post.title}</Link>
-                  </td>
-                  <td style={{ padding: "8px", width: "15%", textAlign: "left" }}>
-                    {getAuthorId(post.author)}
-                  </td>
-                  <td style={{ padding: "8px", width: "15%", textAlign: "center" }}>
-                    {formatDate(post.createdAt)}
-                  </td>
-                  <td style={{ padding: "8px", width: "20%", textAlign: "center" }}>
-                    {post.viewCount ?? 0}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="empty-state" role="status" aria-live="polite">
+          <div className="empty-state-icon" aria-hidden="true">📝</div>
+          <p>게시글이 없습니다.</p>
         </div>
+      ) : (
+        <>
+          {/* 데스크톱 테이블 뷰 */}
+          <div className="table-responsive" role="region" aria-label="게시글 목록 테이블">
+            <table className="board-table" role="table" aria-label="게시글 목록">
+              <thead>
+                <tr>
+                  <th scope="col" style={{ width: "10%" }}>글종류</th>
+                  <th scope="col" style={{ width: "50%" }}>제목</th>
+                  <th scope="col" style={{ width: "15%" }}>글쓴이</th>
+                  <th scope="col" style={{ width: "15%" }}>날짜</th>
+                  <th scope="col" style={{ width: "10%" }}>조회수</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentPosts.map((post, idx) => (
+                  <tr 
+                    key={post._id || post.id || idx}
+                    role="row"
+                    tabIndex={0}
+                    aria-label={`게시글 ${post.postNumber}: ${post.title}`}
+                    onKeyDown={(e) => handleKeyDown(e, () => navigate(`/boards/${post.id}`))}
+                  >
+                    <td className="post-number" style={{ textAlign: "center" }} role="cell">
+                      {tagList && post.tags && post.tags.type 
+                        ? getTagDisplayName(post.tags.type, tagList, 'type')
+                        : (post.type || '일반')}
+                    </td>
+                    <td style={{ textAlign: "left" }} role="cell">
+                      <Link 
+                        to={`/boards/${post.id}`} 
+                        className="post-title" 
+                        style={{ 
+                          color: 'inherit', 
+                          textDecoration: 'none'
+                        }}
+                        aria-label={`게시글 제목: ${post.title}`}
+                      >
+                        {post.title}
+                        <span className="comment-count">
+                          [{post.commentCount || 0}]
+                        </span>
+                      </Link>
+                    </td>
+                    <td className="post-author" style={{ textAlign: "left" }} role="cell">
+                      {getAuthorId(post.author)}
+                    </td>
+                    <td className="post-date" style={{ textAlign: "center" }} role="cell">
+                      {formatDate(post.createdAt)}
+                    </td>
+                    <td className="post-views" style={{ textAlign: "center" }} role="cell">
+                      {post.viewCount ?? 0}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* 모바일 카드 뷰 */}
+          <div className="mobile-card-view" role="region" aria-label="게시글 목록 카드">
+            {currentPosts.map((post, idx) => (
+              <Link 
+                key={post._id || post.id || idx} 
+                to={`/boards/${post.id}`} 
+                className="mobile-card"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+                aria-label={`게시글 ${post.postNumber}: ${post.title}, 작성자: ${getAuthorId(post.author)}, 조회수: ${post.viewCount ?? 0}`}
+              >
+                <div className="mobile-card-header">
+                  <span className="mobile-card-number">#{post.postNumber}</span>
+                  <span className="mobile-card-views">조회 {post.viewCount ?? 0}</span>
+                </div>
+                <div className="mobile-card-title">
+                  {post.title}
+                  <span className="mobile-comment-count">
+                    [{post.commentCount || 0}]
+                  </span>
+                </div>
+                <div className="mobile-card-footer">
+                  <span className="mobile-card-author">{getAuthorId(post.author)}</span>
+                  <span className="mobile-card-date">{formatDate(post.createdAt)}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </>
       )}
+      
       {totalPages > 1 && (
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+        <nav className="pagination" role="navigation" aria-label="페이지 네비게이션">
           <button 
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            style={{ 
-              ...paginationButtonStyle,
-              marginRight: "10px",
-              opacity: currentPage === 1 ? 0.5 : 1
-            }}
+            className="pagination-btn"
+            aria-label="이전 페이지"
           >
             이전
           </button>
@@ -204,12 +284,9 @@ function BoardList() {
             <button 
               key={i} 
               onClick={() => setCurrentPage(i + 1)}
-              style={{ 
-                ...paginationButtonStyle,
-                margin: "0 5px", 
-                fontWeight: currentPage === i + 1 ? "bold" : "normal",
-                background: currentPage === i + 1 ? "#e7f1ff" : "#f8f9fa"
-              }}
+              className={`pagination-btn ${currentPage === i + 1 ? 'active' : ''}`}
+              aria-label={`${i + 1}페이지로 이동`}
+              aria-current={currentPage === i + 1 ? 'page' : undefined}
             >
               {i + 1}
             </button>
@@ -217,15 +294,12 @@ function BoardList() {
           <button 
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            style={{ 
-              ...paginationButtonStyle,
-              marginLeft: "10px",
-              opacity: currentPage === totalPages ? 0.5 : 1
-            }}
+            className="pagination-btn"
+            aria-label="다음 페이지"
           >
             다음
           </button>
-        </div>
+        </nav>
       )}
     </div>
   );
