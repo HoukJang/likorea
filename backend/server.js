@@ -25,6 +25,10 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./config/swagger');
 
 const app = express();
+// trust proxy 설정을 조건부로 적용
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); // 단일 프록시만 신뢰
+}
 
 // 보안 미들웨어 적용
 app.use(configureHelmet());
@@ -39,22 +43,10 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   : ['http://localhost:3000'];
 
 app.use(cors({
-  origin: function(origin, callback) {
-    // 요청이 없는 경우(예: Curl) 허용
-    if (!origin) {
-      return callback(null, true);
-    }
-    // 요청된 origin을 출력해서 어떤 값이 들어오는지 확인
-    console.log('요청된 Origin:', origin);
-    // origin 끝의 슬래시 제거
-    const normalizedOrigin = origin.replace(/\/+$/, '');
-    if (allowedOrigins.includes(normalizedOrigin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`Not allowed by CORS: ${normalizedOrigin}`));
-    }
-  },
-  credentials: true
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 // 로깅 미들웨어
@@ -98,6 +90,6 @@ if (process.env.NODE_ENV !== 'test') {
 
   app.listen(PORT, HOST, () => {
     logger.info(`서버가 ${HOST}:${PORT}에서 실행 중입니다.`);
-    logger.info(`환경: ${process.env.NODE_ENV || 'development'}`);
+    logger.info(`환경: ${process.env.NODE_ENV}`);
   });
 }

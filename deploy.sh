@@ -13,6 +13,7 @@ echo "🚀 배포 환경: $ENVIRONMENT"
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # 로그 함수
@@ -28,6 +29,10 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+log_step() {
+    echo -e "${BLUE}[STEP]${NC} $1"
+}
+
 # 환경 확인
 if [ "$ENVIRONMENT" != "development" ] && [ "$ENVIRONMENT" != "production" ]; then
     log_error "지원하지 않는 환경입니다: $ENVIRONMENT"
@@ -38,7 +43,7 @@ fi
 log_info "배포를 시작합니다..."
 
 # 1. Git 상태 확인
-log_info "Git 상태 확인 중..."
+log_step "1. Git 상태 확인"
 if [ -n "$(git status --porcelain)" ]; then
     log_warn "커밋되지 않은 변경사항이 있습니다."
     read -p "계속하시겠습니까? (y/N): " -n 1 -r
@@ -50,7 +55,7 @@ if [ -n "$(git status --porcelain)" ]; then
 fi
 
 # 2. 의존성 설치
-log_info "의존성 설치 중..."
+log_step "2. 의존성 설치"
 
 # 백엔드 의존성 설치
 log_info "백엔드 의존성 설치..."
@@ -65,74 +70,88 @@ npm install
 cd ..
 
 # 3. 환경변수 확인
-log_info "환경변수 확인 중..."
+log_step "3. 환경변수 확인"
 if [ "$ENVIRONMENT" = "production" ]; then
     if [ ! -f "backend/.env" ]; then
         log_error "백엔드 .env 파일이 없습니다."
+        log_info "백엔드 .env 파일을 생성해주세요."
         exit 1
     fi
     
     if [ ! -f "frontend/.env" ]; then
         log_error "프론트엔드 .env 파일이 없습니다."
+        log_info "프론트엔드 .env 파일을 생성해주세요."
         exit 1
     fi
 fi
 
 # 4. 테스트 실행
-log_info "테스트 실행 중..."
+log_step "4. 테스트 실행"
 cd backend
 npm test || log_warn "백엔드 테스트 실패 (무시됨)"
 cd ../frontend
 npm test || log_warn "프론트엔드 테스트 실패 (무시됨)"
 cd ..
 
-# 5. 빌드
-log_info "빌드 중..."
-
-# 프론트엔드 빌드
-log_info "프론트엔드 빌드..."
+# 5. 프론트엔드 빌드
+log_step "5. 프론트엔드 빌드"
+log_info "프론트엔드 빌드 중..."
 cd frontend
 npm run build
+
+# 빌드 파일 권한 설정
+log_info "빌드 파일 권한 설정..."
+chown -R www-data:www-data build/
 cd ..
 
-# 6. 배포
-if [ "$ENVIRONMENT" = "production" ]; then
-    log_info "프로덕션 배포 중..."
-    
-    # PM2로 백엔드 시작
-    log_info "백엔드 서버 시작..."
-    cd backend
-    pm2 start server.js --name "likorea-backend" --env production || pm2 restart likorea-backend
-    cd ..
-    
-    # Nginx 설정 (필요시)
-    log_info "Nginx 설정 확인..."
-    if command -v nginx &> /dev/null; then
-        log_info "Nginx가 설치되어 있습니다."
-    else
-        log_warn "Nginx가 설치되어 있지 않습니다."
-    fi
-    
+# 6. 백엔드 서버 시작
+log_step "6. 백엔드 서버 시작"
+cd backend
+if pm2 list | grep -q "likorea-backend"; then
+    log_info "기존 백엔드 서버 재시작..."
+    pm2 restart likorea-backend --update-env
 else
-    log_info "개발 환경 배포 중..."
+    log_info "새 백엔드 서버 시작..."
+    pm2 start server.js --name "likorea-backend" --env production
+fi
+cd ..
+
+# 7. Nginx 설정 확인
+log_step "7. Nginx 설정 확인"
+if command -v nginx &> /dev/null; then
+    log_info "Nginx 설정 테스트..."
+    nginx -t
     
-    # 개발 서버 시작
-    log_info "개발 서버 시작..."
-    cd backend
-    npm run dev &
-    BACKEND_PID=$!
-    cd ../frontend
-    npm start &
-    FRONTEND_PID=$!
-    cd ..
-    
-    log_info "개발 서버가 시작되었습니다."
-    log_info "백엔드 PID: $BACKEND_PID"
-    log_info "프론트엔드 PID: $FRONTEND_PID"
-    log_info "종료하려면 Ctrl+C를 누르세요."
-    
-    # 프로세스 종료 대기
-    wait
+    log_info "Nginx 재시작..."
+    systemctl reload nginx
+else
+    log_warn "Nginx가 설치되어 있지 않습니다."
 fi
 
-log_info "배포가 완료되었습니다! 🎉" 
+# 8. SSL 인증서 설정 (프로덕션)
+if [ "$ENVIRONMENT" = "production" ]; then
+    log_step "8. SSL 인증서 설정"
+    if command -v certbot &> /dev/null; then
+        log_info "SSL 인증서 확인 중..."
+        certbot certificates | grep -q "likorea.com" || {
+            log_info "SSL 인증서 발급 중..."
+            certbot --nginx -d likorea.com -d www.likorea.com --non-interactive
+        }
+    else
+        log_warn "Certbot이 설치되어 있지 않습니다."
+    fi
+fi
+
+# 9. 서비스 상태 확인
+log_step "9. 서비스 상태 확인"
+log_info "PM2 프로세스 상태:"
+pm2 list
+
+log_info "Nginx 상태:"
+systemctl status nginx --no-pager -l
+
+# 10. 배포 완료
+log_info "🎉 배포가 완료되었습니다!"
+log_info "🌐 웹사이트: https://likorea.com"
+log_info "📊 PM2 모니터링: pm2 monit"
+log_info "📝 로그 확인: pm2 logs likorea-backend" 
