@@ -463,6 +463,13 @@ function BoardPostView() {
               
               // 수정 삭제 권한 확인
               const hasPermission = canModifyComment(comment);
+              console.log('댓글 권한 확인:', {
+                commentId,
+                authorId,
+                currentUserId: localStorage.getItem('userId'),
+                hasPermission,
+                commentAuthor: comment.author
+              });
               
               return (
                 <div key={commentId} className="comment-item">

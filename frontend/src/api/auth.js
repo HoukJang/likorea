@@ -19,7 +19,7 @@ export const login = async (credentials) => {
  * @returns {Promise} 회원가입 결과
  */
 export const signup = async (userData) => {
-  return apiClient.post('/api/users/signup', userData);
+  return apiClient.post('/api/users', userData);
 };
 
 /**

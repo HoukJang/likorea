@@ -21,13 +21,58 @@ const parseRegionFilter = (regionFilter) => {
   // 빈 값 처리
   if (!trimmed) return null;
   
+  // 쉼표로 구분된 OR 검색: "24, 25, 26" 또는 "30-40, 0"
+  if (trimmed.includes(',')) {
+    const values = trimmed.split(',').map(s => s.trim()).filter(s => s);
+    const validValues = [];
+    
+    for (const value of values) {
+      // "0" 값 처리
+      if (value === '0') {
+        validValues.push('0');
+        continue;
+      }
+      
+      // 범위 검색 처리: "30-40"
+      if (value.includes('-')) {
+        const [start, end] = value.split('-').map(s => s.trim());
+        const startNum = parseInt(start);
+        const endNum = parseInt(end);
+        
+        if (!isNaN(startNum) && !isNaN(endNum) && startNum > 0 && endNum > 0 && startNum <= endNum) {
+          // 범위 내의 모든 값 추가
+          for (let i = startNum; i <= endNum; i++) {
+            validValues.push(i.toString());
+          }
+        }
+        continue;
+      }
+      
+      // 숫자 값 처리 (양수만)
+      const num = parseInt(value);
+      if (!isNaN(num) && num > 0) {
+        validValues.push(num.toString());
+      }
+    }
+    
+    if (validValues.length > 0) {
+      return { $in: validValues };
+    }
+    return null;
+  }
+  
+  // "0" 값 처리 (지역 선택 안함)
+  if (trimmed === '0') {
+    return '0';
+  }
+  
   // 범위 형식: "24-60"
   if (trimmed.includes('-')) {
     const [start, end] = trimmed.split('-').map(s => s.trim());
     const startNum = parseInt(start);
     const endNum = parseInt(end);
     
-    if (!isNaN(startNum) && !isNaN(endNum) && startNum <= endNum) {
+    if (!isNaN(startNum) && !isNaN(endNum) && startNum > 0 && endNum > 0 && startNum <= endNum) {
       return {
         $gte: startNum.toString(),
         $lte: endNum.toString()
@@ -35,10 +80,18 @@ const parseRegionFilter = (regionFilter) => {
     }
   }
   
+  // 미만 형식: "<13"
+  if (trimmed.startsWith('<') && !trimmed.startsWith('<=')) {
+    const num = parseInt(trimmed.substring(1));
+    if (!isNaN(num) && num > 0) {
+      return { $lt: num.toString() };
+    }
+  }
+  
   // 이하 형식: "<=13"
   if (trimmed.startsWith('<=')) {
     const num = parseInt(trimmed.substring(2));
-    if (!isNaN(num)) {
+    if (!isNaN(num) && num > 0) {
       return { $lte: num.toString() };
     }
   }
@@ -46,20 +99,20 @@ const parseRegionFilter = (regionFilter) => {
   // 이상 형식: ">73"
   if (trimmed.startsWith('>')) {
     const num = parseInt(trimmed.substring(1));
-    if (!isNaN(num)) {
+    if (!isNaN(num) && num > 0) {
       return { $gt: num.toString() };
     }
   }
   
-  // 단일 값: "24"
+  // 단일 값: "24" (양수만)
   const singleNum = parseInt(trimmed);
-  if (!isNaN(singleNum)) {
+  if (!isNaN(singleNum) && singleNum > 0) {
     return singleNum.toString();
   }
   
   // 특수 값 처리
-  if (trimmed === '<=13') {
-    return { $lte: '13' };
+  if (trimmed === '<13') {
+    return { $lt: '13' };
   }
   
   if (trimmed === '>73') {
@@ -81,8 +134,8 @@ exports.createPost = asyncHandler(async (req, res) => {
     throw new ValidationError('제목과 내용은 필수입니다.');
   }
   
-  if (!tags || !tags.type || !tags.region) {
-    throw new ValidationError('Type과 Region 태그는 필수입니다.');
+  if (!tags || !tags.type) {
+    throw new ValidationError('글종류 태그는 필수입니다.');
   }
   
   const user = await User.findOne({ id: userId });
@@ -92,13 +145,19 @@ exports.createPost = asyncHandler(async (req, res) => {
   
   // 태그 유효성 검증
   const typeTag = await Tag.findOne({ category: 'type', value: tags.type, isActive: true });
-  const regionTag = await Tag.findOne({ category: 'region', value: tags.region, isActive: true });
   
   if (!typeTag) {
-    throw new ValidationError('유효하지 않은 Type 태그입니다.');
+    throw new ValidationError('유효하지 않은 글종류 태그입니다.');
   }
-  if (!regionTag) {
-    throw new ValidationError('유효하지 않은 Region 태그입니다.');
+  
+  // 지역 태그는 선택사항 (없으면 '0'으로 설정)
+  if (!tags.region) {
+    tags.region = '0';
+  } else {
+    const regionTag = await Tag.findOne({ category: 'region', value: tags.region, isActive: true });
+    if (!regionTag) {
+      throw new ValidationError('유효하지 않은 지역 태그입니다.');
+    }
   }
   
   const post = await BoardPost.create({ 
@@ -136,7 +195,7 @@ exports.getPosts = asyncHandler(async (req, res) => {
   }
   
   if (region) {
-    // Region 범위 필터링 처리
+    // Region 필터링 처리 (parseRegionFilter에서 "0"과 양수 모두 처리)
     const regionFilter = parseRegionFilter(region);
     if (regionFilter) {
       filter['tags.region'] = regionFilter;
@@ -159,7 +218,7 @@ exports.getPosts = asyncHandler(async (req, res) => {
   // 각 게시글의 댓글 수 계산
   const postsWithCommentCount = await Promise.all(
     posts.map(async (post) => {
-      const commentCount = await Comment.countDocuments({ postId: post._id });
+      const commentCount = await Comment.countDocuments({ post: post._id });
       return {
         ...post.toObject(),
         commentCount

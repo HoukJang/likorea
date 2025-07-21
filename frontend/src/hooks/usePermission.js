@@ -50,12 +50,33 @@ export const usePermission = () => {
     const currentUserId = getCurrentUserId();
     const currentAuthority = getCurrentAuthority();
     
-    // 작성자 정보 추출
-    const targetAuthorId = getAuthority(target.author) === 0 ? 
-      (typeof target.author === 'object' ? target.author.id : target.author) : 
-      (typeof target.author === 'object' ? target.author.id : target.author);
+    // 작성자 정보 추출 - 댓글과 게시글의 author 구조가 다름
+    let targetAuthorId;
+    let targetAuthority = 0;
     
-    const targetAuthority = getAuthority(target.author);
+    if (target.author) {
+      if (typeof target.author === 'object') {
+        // 게시글의 경우: author가 객체 {id: "likorea", authority: 5}
+        targetAuthorId = target.author.id;
+        targetAuthority = target.author.authority || 0;
+      } else {
+        // 댓글의 경우: author가 문자열 "likorea"
+        targetAuthorId = target.author;
+        // 댓글 작성자의 권한은 기본적으로 3 (일반 사용자)
+        targetAuthority = 3;
+      }
+    } else {
+      return false;
+    }
+    
+    console.log('권한 확인 상세:', {
+      targetAuthorId,
+      currentUserId,
+      targetAuthority,
+      currentAuthority,
+      isSameUser: targetAuthorId === currentUserId,
+      isHigherAuthority: currentAuthority > targetAuthority
+    });
     
     // 1. 본인 작성물인 경우 항상 수정/삭제 가능
     if (targetAuthorId === currentUserId) {

@@ -17,27 +17,91 @@ const initializeTags = async () => {
       { value: '기타', displayName: '기타', order: 5 }
     ];
 
-    // Region 태그들 (Exit 13부터 Exit 73까지)
+    // Region 태그들 (Exit 13부터 Exit 73까지) - 정확한 지역명 매핑
     const regionTags = [];
+
+    // LIE(Long Island Expressway) Exit → 대표 지역 매핑
+    const exitNames = {
+      '13': 'Exit 13 - Long Island City (Borden Ave / Pulaski Bridge)',
+      '14': 'Exit 14 - Long Island City (NY 25A / 50th Ave)',
+      '15': 'Exit 15 - Long Island City (Van Dam St)',
+      '16': 'Exit 16 - Long Island City (Hunters Point Ave / Greenpoint Ave)',
+      '17': 'Exit 17 - BQE (I-278) – Brooklyn / Queens',
+      '18': 'Exit 18 - Maspeth (Maurice Ave)',
+      '19': 'Exit 19 - Elmhurst (Woodhaven Blvd / Queens Blvd)',
+      '20': 'Exit 20 - Corona (Junction Blvd)',
+      '21': 'Exit 21 - Corona / Rego Park (108th St)',
+      '22': 'Exit 22 - Flushing (Grand Central Pkwy / Van Wyck Expwy)',
+      '23': 'Exit 23 - Flushing (Main St)',
+      '24': 'Exit 24 - Flushing (Kissena Blvd)',
+      '25': 'Exit 25 - Fresh Meadows (Utopia Pkwy / 188th St)',
+      '26': 'Exit 26 - Fresh Meadows (Francis Lewis Blvd)',
+      '27': 'Exit 27 - Bayside (Clearview Expwy I-295)',
+      '28': 'Exit 28 - Bayside (Oceania St / Francis Lewis Blvd)',
+      '29': 'Exit 29 - Oakland Gardens (Springfield Blvd)',
+      '30': 'Exit 30 - Douglaston (Douglaston Pkwy / East Hampton Blvd)',
+      '31': 'Exit 31 - Alley Pond Park / Little Neck (Cross Island Pkwy)',
+      '32': 'Exit 32 - Little Neck (Little Neck Pkwy)',
+      '33': 'Exit 33 - Lake Success / Great Neck (Community Dr / Lakeville Rd)',
+      '34': 'Exit 34 - North Hills (New Hyde Park Rd)',
+      '35': 'Exit 35 - Manhasset (Shelter Rock Rd)',
+      '36': 'Exit 36 - Manhasset / Port Washington (Searingtown Rd)',
+      '37': 'Exit 37 - Roslyn / Mineola (Willis Ave)',
+      '38': 'Exit 38 - East Hills (Northern State Pkwy)',
+      '39': 'Exit 39 - Glen Cove / Hempstead (Glen Cove Rd)',
+      '40': 'Exit 40 - Syosset / Mineola (NY 25 Jericho Tpke)',
+      '41': 'Exit 41 - Hicksville / Oyster Bay (NY 106 / NY 107)',
+      '42': 'Exit 42 - Jericho (Northern State Pkwy)',
+      '43': 'Exit 43 - Syosset / Bethpage (South Oyster Bay Rd)',
+      '44': 'Exit 44 - Syosset / Seaford (NY 135)',
+      '45': 'Exit 45 - Plainview / Woodbury (Manetto Hill Rd)',
+      '46': 'Exit 46 - Plainview (Sunnyside Blvd)',
+      '48': 'Exit 48 - Old Bethpage (Round Swamp Rd)',
+      '49': 'Exit 49 - Melville / Farmingdale / Huntington (NY 110)',
+      '50': 'Exit 50 - Dix Hills / Wyandanch (Bagatelle Rd)',
+      '51': 'Exit 51 - Dix Hills / Babylon (NY 231)',
+      '52': 'Exit 52 - Commack / North Babylon (Commack Rd)',
+      '53': 'Exit 53 - Bay Shore / Kings Park (Sagtikos Pkwy)',
+      '55': 'Exit 55 - Central Islip (Motor Pkwy CR 67)',
+      '56': 'Exit 56 - Smithtown / Islip (NY 111)',
+      '57': 'Exit 57 - Hauppauge / Patchogue (NY 454)',
+      '58': 'Exit 58 - Islandia / Nesconset (Old Nichols Rd)',
+      '59': 'Exit 59 - Ronkonkoma / Oakdale (Ocean Ave)',
+      '60': 'Exit 60 - Lake Ronkonkoma / Sayville (Ronkonkoma Ave)',
+      '61': 'Exit 61 - Holbrook / Patchogue (Patchogue-Holbrook Rd CR 19)',
+      '62': 'Exit 62 - Stony Brook / East Setauket / Blue Point (Nicolls Rd CR 97)',
+      '63': 'Exit 63 - Patchogue / Mount Sinai (North Ocean Ave CR 83)',
+      '64': 'Exit 64 - Port Jefferson / Patchogue (NY 112)',
+      '65': 'Exit 65 - Medford / Centereach / Shirley (Horseblock Rd)',
+      '66': 'Exit 66 - Yaphank / East Patchogue (Sills Rd)',
+      '67': 'Exit 67 - Yaphank / Brookhaven (Yaphank Ave)',
+      '68': 'Exit 68 - Shirley / Wading River (William Floyd Pkwy CR 46)',
+      '69': 'Exit 69 - Wading River / Center Moriches (Wading River Rd)',
+      '70': 'Exit 70 - Manorville / Montauk (County Route 111)',
+      '71': 'Exit 71 - Calverton / Hampton Bays (NY 24)',
+      '72': 'Exit 72 - Riverhead / Calverton (NY 25)',
+      '73': 'Exit 73 - Greenport / Orient (CR 58)'
+    };
+
+    // Exit 13부터 73까지만 생성 (Exit 1-12 제거)
     for (let exit = 13; exit <= 73; exit++) {
+      const exitStr = exit.toString();
+      // Exit 47, 54는 매핑에 없으므로 건너뛰기
+      if (exit === 47 || exit === 54) continue;
+      
       regionTags.push({
-        value: exit.toString(),
-        displayName: `Exit ${exit}`,
+        value: exitStr,
+        displayName: exitNames[exitStr] || `Exit ${exit}`,
         order: exit
       });
     }
-    // Exit 13 이하
-    regionTags.push({
-      value: '<=13',
-      displayName: 'Exit 13 이하',
-      order: 12
-    });
-    // Exit 73 이상
-    regionTags.push({
-      value: '>73',
-      displayName: 'Exit 73 이상',
-      order: 74
-    });
+
+    // 범위 태그 추가 (Exit 13 이하, Exit 73 이상)
+    regionTags.push({ value: '<13', displayName: 'Exit 13 이하 – Queens / Brooklyn', order: 12 });
+    regionTags.push({ value: '>73', displayName: 'Exit 73 이상 – East End', order: 74 });
+    
+    // 기본 옵션 추가 (지역 선택 안함)
+    regionTags.push({ value: '0', displayName: '지역 선택 안함', order: 0 });
 
     // Type 태그 생성/업데이트
     for (const tagData of typeTags) {
@@ -67,7 +131,7 @@ const initializeTags = async () => {
 
     console.log('태그 시스템 초기화 완료!');
     console.log(`- Type 태그: ${typeTags.length}개`);
-    console.log(`- Region 태그: ${regionTags.length}개 (Exit 13 이하, Exit 13~73, Exit 73 이상)`);
+    console.log(`- Region 태그: ${regionTags.length}개 (Exit 13~73, Exit 73 이상)`);
 
   } catch (error) {
     console.error('태그 시스템 초기화 실패:', error);

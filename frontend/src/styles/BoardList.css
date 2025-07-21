@@ -215,6 +215,13 @@
   background-color: var(--white);
 }
 
+.board-table .post-region {
+  color: var(--primary-text);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  background-color: var(--white);
+}
+
 .board-table .post-date {
   color: var(--primary-text);
   font-size: var(--font-size-base);
@@ -526,6 +533,12 @@
 .mobile-card-author {
   font-weight: 500;
   font-style: italic;
+}
+
+.mobile-card-region {
+  font-weight: 500;
+  color: var(--secondary-text);
+  font-size: var(--font-size-sm);
 }
 
 .mobile-card-date {

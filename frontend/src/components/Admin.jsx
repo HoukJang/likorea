@@ -59,7 +59,8 @@ function Admin() {
       }
       
       const response = await getAllUsers(params.toString());
-      setUsers(response.data || []);
+      console.log('사용자 목록 API 응답:', response);
+      setUsers(response.users || []);
       setCurrentPage(response.currentPage || 1);
       setTotalPages(response.totalPages || 1);
       setLoading(false);

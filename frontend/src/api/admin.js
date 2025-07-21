@@ -6,10 +6,12 @@ import apiClient from './client';
 
 /**
  * 전체 사용자 목록 조회
+ * @param {string} queryString - 쿼리 파라미터 문자열
  * @returns {Promise} 사용자 목록
  */
-export const getAllUsers = async () => {
-  return apiClient.get('/api/admin/users');
+export const getAllUsers = async (queryString = '') => {
+  const url = queryString ? `/api/admin/users?${queryString}` : '/api/admin/users';
+  return apiClient.get(url);
 };
 
 /**

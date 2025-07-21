@@ -188,10 +188,11 @@ function BoardList() {
             <table className="board-table" role="table" aria-label="게시글 목록">
               <thead>
                 <tr>
-                  <th scope="col" style={{ width: "10%" }}>글종류</th>
-                  <th scope="col" style={{ width: "50%" }}>제목</th>
-                  <th scope="col" style={{ width: "15%" }}>글쓴이</th>
-                  <th scope="col" style={{ width: "15%" }}>날짜</th>
+                  <th scope="col" style={{ width: "8%" }}>글종류</th>
+                  <th scope="col" style={{ width: "45%" }}>제목</th>
+                  <th scope="col" style={{ width: "12%" }}>지역</th>
+                  <th scope="col" style={{ width: "12%" }}>글쓴이</th>
+                  <th scope="col" style={{ width: "13%" }}>날짜</th>
                   <th scope="col" style={{ width: "10%" }}>조회수</th>
                 </tr>
               </thead>
@@ -225,7 +226,12 @@ function BoardList() {
                         </span>
                       </Link>
                     </td>
-                    <td className="post-author" style={{ textAlign: "left" }} role="cell">
+                    <td className="post-region" style={{ textAlign: "center" }} role="cell">
+                      {tagList && post.tags && post.tags.region 
+                        ? (post.tags.region === '0' ? '전체' : `Exit ${post.tags.region}`)
+                        : (post.region === '0' ? '전체' : (post.region ? `Exit ${post.region}` : '전체'))}
+                    </td>
+                    <td className="post-author" style={{ textAlign: "center" }} role="cell">
                       {getAuthorId(post.author)}
                     </td>
                     <td className="post-date" style={{ textAlign: "center" }} role="cell">
@@ -262,6 +268,11 @@ function BoardList() {
                 </div>
                 <div className="mobile-card-footer">
                   <span className="mobile-card-author">{getAuthorId(post.author)}</span>
+                  <span className="mobile-card-region">
+                    {tagList && post.tags && post.tags.region 
+                      ? (post.tags.region === '0' ? '전체' : `Exit ${post.tags.region}`)
+                      : (post.region === '0' ? '전체' : (post.region ? `Exit ${post.region}` : '전체'))}
+                  </span>
                   <span className="mobile-card-date">{formatDate(post.createdAt)}</span>
                 </div>
               </Link>

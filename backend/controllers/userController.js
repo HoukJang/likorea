@@ -12,6 +12,9 @@ const {
 exports.signup = asyncHandler(async (req, res) => {
   const { id, email, password, authority } = req.body;
   
+  console.log('회원가입 요청 데이터:', { id, email, authority });
+  console.log('전체 req.body:', req.body);
+  
   // 필수 필드 검증
   if (!id || !email || !password) {
     throw new ValidationError('아이디, 이메일, 비밀번호는 필수입니다.');

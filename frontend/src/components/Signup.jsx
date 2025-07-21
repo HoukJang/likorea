@@ -34,11 +34,29 @@ function Signup() {
       return;
     }
 
+    // 비밀번호 요구사항 검증
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    
+    if (!hasLowerCase) {
+      setMessage('비밀번호는 소문자를 포함해야 합니다.');
+      return;
+    }
+    
+    if (!hasNumbers) {
+      setMessage('비밀번호는 숫자를 포함해야 합니다.');
+      return;
+    }
+
     clearError();
     setMessage('');
 
     try {
-      await signupApi(() => signup({ id, email, password, authority: 3 }));
+      const signupData = { id, email, password, authority: 3 };
+      console.log('회원가입 요청 데이터:', signupData);
+      
+      const result = await signupApi(() => signup(signupData));
+      console.log('회원가입 성공 결과:', result);
 
       // 회원가입 성공
       setMessage('회원가입에 성공했습니다! 로그인 페이지로 이동합니다.');
@@ -48,6 +66,10 @@ function Signup() {
         navigate('/login');
       }, 2000);
     } catch (error) {
+      console.error('회원가입 에러 상세:', error);
+      console.error('에러 응답:', error.response);
+      console.error('에러 데이터:', error.data);
+      
       let errorMessage = '회원가입 중 오류가 발생했습니다.';
       
       if (error.message) {
@@ -114,7 +136,7 @@ function Signup() {
             disabled={loading}
             placeholder="6자 이상 입력"
             label="비밀번호"
-            helperText="최소 6자 이상 입력해주세요"
+            helperText="최소 6자 이상, 소문자와 숫자를 포함해주세요"
           />
         </div>
         <div className="form-group">

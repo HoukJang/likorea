@@ -82,7 +82,7 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
           <input
             type="text"
             className="filter-input"
-            placeholder="Exit 번호 (예: 24, 24-60, <=13, >73)"
+            placeholder="Exit 번호 (예: 24, 24,25,26, 24-60, 30-40,0, <=13, >73, 0=지역선택안함)"
             value={filters.region}
             onChange={(e) => handleFilterChange('region', e.target.value)}
           />

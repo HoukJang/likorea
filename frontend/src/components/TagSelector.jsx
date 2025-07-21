@@ -44,7 +44,7 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
     <div className="tag-selector">
       <div className="tag-group">
         <label className="tag-label">
-          Type {required && <span className="required">*</span>}
+          글종류 {required && <span className="required">*</span>}
         </label>
         <select
           className="tag-select"
@@ -52,7 +52,7 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
           onChange={(e) => handleTagChange('type', e.target.value)}
           required={required}
         >
-          <option value="">Type 선택</option>
+          <option value="">글종류 선택</option>
           {tags.type && tags.type.map(tag => (
             <option key={tag.value} value={tag.value}>
               {tag.displayName}
@@ -63,15 +63,13 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
 
       <div className="tag-group">
         <label className="tag-label">
-          Region {required && <span className="required">*</span>}
+          지역
         </label>
         <select
           className="tag-select"
-          value={selectedTags.region || ''}
+          value={selectedTags.region || '0'}
           onChange={(e) => handleTagChange('region', e.target.value)}
-          required={required}
         >
-          <option value="">Region 선택</option>
           {tags.region && tags.region.map(tag => (
             <option key={tag.value} value={tag.value}>
               {tag.displayName}

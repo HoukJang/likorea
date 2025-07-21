@@ -12,7 +12,7 @@ function BoardPostForm() {
   const isEditMode = Boolean(postId);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [tags, setTags] = useState({ type: '', region: '' });
+  const [tags, setTags] = useState({ type: '', region: '0' });
   const [message, setMessage] = useState('');
   const contentRef = useRef(null);
   const [originalAuthor, setOriginalAuthor] = useState(null); // 원본 게시글 작성자 저장
@@ -42,7 +42,7 @@ function BoardPostForm() {
           const data = await getBoardPost(postId);
           setTitle(data.post.title);
           setContent(data.post.content);
-          setTags(data.post.tags || { type: '', region: '' });
+          setTags(data.post.tags || { type: '', region: '0' });
           if (contentRef.current) {
             contentRef.current.innerHTML = data.post.content;
           }
@@ -125,8 +125,8 @@ function BoardPostForm() {
       return;
     }
     
-    if (!tags.type || !tags.region) {
-      setMessage('Type과 Region 태그를 모두 선택해주세요.');
+    if (!tags.type) {
+      setMessage('글종류 태그를 선택해주세요.');
       return;
     }
     
@@ -152,7 +152,9 @@ function BoardPostForm() {
         console.log('생성 요청 데이터:', {
           title,
           content: currentContent,
-          tags
+          tags,
+          tagsType: tags.type,
+          tagsRegion: tags.region
         });
 
         response = await createBoard({
@@ -192,8 +194,8 @@ function BoardPostForm() {
         errorMessage = errorMessage; // 백엔드에서 이미 구체적인 메시지 제공
       } else if (errorMessage.includes('제목은 1-100자 사이여야 합니다')) {
         errorMessage = errorMessage; // 백엔드에서 이미 구체적인 메시지 제공
-      } else if (errorMessage.includes('Type과 Region 태그를 모두 선택해주세요')) {
-        errorMessage = 'Type과 Region 태그를 모두 선택해주세요.';
+      } else if (errorMessage.includes('글종류 태그를 선택해주세요')) {
+        errorMessage = '글종류 태그를 선택해주세요.';
       } else if (errorMessage.includes('권한이 부족합니다')) {
         errorMessage = '게시글을 수정할 권한이 없습니다. 작성자만 수정할 수 있습니다.';
       } else if (errorMessage.includes('토큰이 만료되었습니다')) {
