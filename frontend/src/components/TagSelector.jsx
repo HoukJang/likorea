@@ -3,9 +3,16 @@ import { getAllTags } from '../api/tags';
 import '../styles/TagSelector.css';
 
 const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
+  const [userAuthority, setUserAuthority] = useState(0);
   const [tags, setTags] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // 사용자 권한 확인
+    const authority = localStorage.getItem('userAuthority');
+    setUserAuthority(authority ? parseInt(authority) : 0);
+  }, []);
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -53,11 +60,17 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
           required={required}
         >
           <option value="">글종류 선택</option>
-          {tags.type && tags.type.map(tag => (
-            <option key={tag.value} value={tag.value}>
-              {tag.displayName}
-            </option>
-          ))}
+          {tags.type && tags.type.map(tag => {
+            // 공지 태그는 권한 4 이상만 선택 가능
+            if (tag.value === '공지' && userAuthority < 4) {
+              return null;
+            }
+            return (
+              <option key={tag.value} value={tag.value}>
+                {tag.displayName}
+              </option>
+            );
+          })}
         </select>
       </div>
 

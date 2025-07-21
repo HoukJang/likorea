@@ -10,6 +10,7 @@ const initializeTags = async () => {
 
     // Type 태그들
     const typeTags = [
+      { value: '공지', displayName: '공지', order: 0 },
       { value: '사고팔고', displayName: '사고팔고', order: 1 },
       { value: '부동산', displayName: '부동산', order: 2 },
       { value: '생활정보', displayName: '생활정보', order: 3 },

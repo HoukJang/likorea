@@ -68,7 +68,7 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
             value={filters.type}
             onChange={(e) => handleFilterChange('type', e.target.value)}
           >
-            <option value="">모든 글종류</option>
+            <option value="">전체</option>
             {tags.type && tags.type.map(tag => (
               <option key={tag.value} value={tag.value}>
                 {tag.displayName}
@@ -82,7 +82,7 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
           <input
             type="text"
             className="filter-input"
-            placeholder="Exit 번호 (예: 24, 24,25,26, 24-60, 30-40,0, <=13, >73, 0=지역선택안함)"
+            placeholder="Exit 번호 (예: 24, 24-60, 0)"
             value={filters.region}
             onChange={(e) => handleFilterChange('region', e.target.value)}
           />
@@ -93,7 +93,7 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
           <input
             type="text"
             className="filter-input"
-            placeholder="제목 또는 내용 검색..."
+            placeholder="제목/내용 검색"
             value={filters.search}
             onChange={(e) => handleFilterChange('search', e.target.value)}
           />
@@ -104,14 +104,14 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
             className="clear-filters-btn"
             onClick={clearFilters}
           >
-            필터 초기화
+            초기화
           </button>
         )}
       </div>
 
       {hasActiveFilters && (
         <div className="active-filters">
-          <span className="active-filters-label">활성 필터:</span>
+          <span className="active-filters-label">필터:</span>
           {filters.type && (
             <span className="filter-tag">
               글종류: {tags.type?.find(t => t.value === filters.type)?.displayName}

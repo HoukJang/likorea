@@ -164,7 +164,8 @@ exports.createPost = asyncHandler(async (req, res) => {
     title, 
     content, 
     tags,
-    author: user._id 
+    author: user._id,
+    modifiedAt: new Date()
   });
   
   res.status(201).json({ 
@@ -209,11 +210,25 @@ exports.getPosts = asyncHandler(async (req, res) => {
     ];
   }
   
-  const posts = await BoardPost.find(filter)
+  // 공지와 일반 게시글을 분리해서 가져오기
+  const noticeFilter = { ...filter, 'tags.type': '공지' };
+  const normalFilter = { ...filter, 'tags.type': { $ne: '공지' } };
+  
+  // 공지 게시글 가져오기 (최신순)
+  const notices = await BoardPost.find(noticeFilter)
     .populate('author', 'id email authority')
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(Number(limit));
+    .sort({ createdAt: -1 });
+  
+  // 일반 게시글 가져오기 (최신순)
+  const normalPosts = await BoardPost.find(normalFilter)
+    .populate('author', 'id email authority')
+    .sort({ createdAt: -1 });
+  
+  // 공지를 먼저, 그 다음 일반 게시글
+  const allPosts = [...notices, ...normalPosts];
+  
+  // 페이지네이션 적용
+  const posts = allPosts.slice(skip, skip + Number(limit));
     
   // 각 게시글의 댓글 수 계산
   const postsWithCommentCount = await Promise.all(

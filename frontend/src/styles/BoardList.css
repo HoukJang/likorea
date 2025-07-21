@@ -179,6 +179,48 @@
 .board-table .post-number {
   font-weight: 600;
   color: var(--accent-blue);
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-align: center;
+  min-width: 60px;
+}
+
+/* 글종류별 테이블 태그 색상 */
+.board-table tr[data-post-type="생활정보"] .post-number {
+  color: #3B82F6;
+}
+
+.board-table tr[data-post-type="부동산"] .post-number {
+  color: #10B981;
+}
+
+.board-table tr[data-post-type="취업"] .post-number {
+  color: #F59E0B;
+}
+
+.board-table tr[data-post-type="커뮤니티"] .post-number {
+  color: #8B5CF6;
+}
+
+.board-table tr[data-post-type="중고거래"] .post-number {
+  color: #EF4444;
+}
+
+.board-table tr[data-post-type="사고팔고"] .post-number {
+  color: #F97316;
+}
+
+.board-table tr[data-post-type="모임"] .post-number {
+  color: #06B6D4;
+}
+
+.board-table tr[data-post-type="공지"] .post-number {
+  color: #DC2626;
+  font-weight: 700;
+}
+
+.board-table tr[data-post-type="기타"] .post-number {
+  color: #6B7280;
 }
 
 .board-table .post-title {
@@ -389,32 +431,7 @@
   cursor: not-allowed;
 }
 
-/* 글쓰기 버튼 개선 */
-.write-btn {
-  background-color: var(--accent-red);
-  color: var(--white);
-  padding: 12px 24px;
-  border-radius: var(--btn-radius);
-  text-decoration: none;
-  font-weight: 700;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-family);
-  font-size: var(--font-size-base);
-}
 
-.write-btn:hover {
-  background-color: var(--accent-red-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
-}
-
-.write-btn:focus {
-  outline: var(--focus-outline);
-  outline-offset: var(--focus-outline-offset);
-}
 
 /* 로딩 상태 개선 */
 .loading-container {
@@ -471,23 +488,159 @@
 /* 모바일 카드 뷰 */
 .mobile-card-view {
   display: none;
+  width: 100%;
+  max-width: 100%;
 }
 
 .mobile-card {
   background-color: var(--white);
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color);
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
   cursor: pointer;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  width: calc(100% - 32px);
+  box-sizing: border-box;
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+/* 글종류별 카드 테두리 색상 */
+.mobile-card[data-post-type="생활정보"] {
+  border-color: #3B82F6;
+  border-left: 4px solid #3B82F6;
+}
+
+.mobile-card[data-post-type="부동산"] {
+  border-color: #10B981;
+  border-left: 4px solid #10B981;
+}
+
+.mobile-card[data-post-type="취업"] {
+  border-color: #F59E0B;
+  border-left: 4px solid #F59E0B;
+}
+
+.mobile-card[data-post-type="커뮤니티"] {
+  border-color: #8B5CF6;
+  border-left: 4px solid #8B5CF6;
+}
+
+.mobile-card[data-post-type="중고거래"] {
+  border-color: #EF4444;
+  border-left: 4px solid #EF4444;
+}
+
+.mobile-card[data-post-type="기타"] {
+  border-color: #6B7280;
+  border-left: 4px solid #6B7280;
+}
+
+.mobile-card[data-post-type="사고팔고"] {
+  border-color: #F97316;
+  border-left: 4px solid #F97316;
+}
+
+.mobile-card[data-post-type="모임"] {
+  border-color: #06B6D4;
+  border-left: 4px solid #06B6D4;
+}
+
+.mobile-card[data-post-type="공지"] {
+  border-color: #DC2626;
+  border-left: 4px solid #DC2626;
 }
 
 .mobile-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid var(--accent-blue);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 글종류별 호버 효과 */
+.mobile-card[data-post-type="생활정보"]:hover {
+  border-color: #2563EB;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.mobile-card[data-post-type="생활정보"]:hover .mobile-card-number {
+  color: #2563EB;
+}
+
+.mobile-card[data-post-type="부동산"]:hover {
+  border-color: #059669;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.mobile-card[data-post-type="부동산"]:hover .mobile-card-number {
+  color: #059669;
+}
+
+.mobile-card[data-post-type="취업"]:hover {
+  border-color: #D97706;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.mobile-card[data-post-type="취업"]:hover .mobile-card-number {
+  color: #D97706;
+}
+
+.mobile-card[data-post-type="커뮤니티"]:hover {
+  border-color: #7C3AED;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+}
+
+.mobile-card[data-post-type="커뮤니티"]:hover .mobile-card-number {
+  color: #7C3AED;
+}
+
+.mobile-card[data-post-type="중고거래"]:hover {
+  border-color: #DC2626;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.mobile-card[data-post-type="중고거래"]:hover .mobile-card-number {
+  color: #DC2626;
+}
+
+.mobile-card[data-post-type="기타"]:hover {
+  border-color: #4B5563;
+  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.2);
+}
+
+.mobile-card[data-post-type="기타"]:hover .mobile-card-number {
+  color: #4B5563;
+}
+
+.mobile-card[data-post-type="사고팔고"]:hover {
+  border-color: #EA580C;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+}
+
+.mobile-card[data-post-type="사고팔고"]:hover .mobile-card-number {
+  color: #EA580C;
+}
+
+.mobile-card[data-post-type="모임"]:hover {
+  border-color: #0891B2;
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+}
+
+.mobile-card[data-post-type="모임"]:hover .mobile-card-number {
+  color: #0891B2;
+}
+
+.mobile-card[data-post-type="공지"]:hover {
+  border-color: #B91C1C;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+}
+
+.mobile-card[data-post-type="공지"]:hover .mobile-card-number {
+  color: #B91C1C;
 }
 
 .mobile-card:focus {
@@ -498,52 +651,130 @@
 .mobile-card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 12px;
+  width: 100%;
 }
 
 .mobile-card-number {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--accent-blue);
-  font-size: var(--font-size-base);
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  text-align: left;
+  min-width: 70px;
+  margin-left: -10px;
+}
+
+/* 글종류별 태그 색상 */
+.mobile-card[data-post-type="생활정보"] .mobile-card-number {
+  color: #3B82F6;
+  text-align: left;
+}
+
+.mobile-card[data-post-type="부동산"] .mobile-card-number {
+  color: #10B981;
+  text-align: left;
+}
+
+.mobile-card[data-post-type="취업"] .mobile-card-number {
+  color: #F59E0B;
+  text-align: left;
+}
+
+.mobile-card[data-post-type="커뮤니티"] .mobile-card-number {
+  color: #8B5CF6;
+  text-align: left;
+}
+
+.mobile-card[data-post-type="중고거래"] .mobile-card-number {
+  color: #EF4444;
+  text-align: left;
+}
+
+.mobile-card[data-post-type="기타"] .mobile-card-number {
+  color: #6B7280;
+  text-align: left;
+}
+
+.mobile-card[data-post-type="사고팔고"] .mobile-card-number {
+  color: #F97316;
+  text-align: left;
+}
+
+.mobile-card[data-post-type="모임"] .mobile-card-number {
+  color: #06B6D4;
+  text-align: left;
+}
+
+.mobile-card[data-post-type="공지"] .mobile-card-number {
+  color: #DC2626;
+  font-weight: 700;
+  text-align: left;
 }
 
 .mobile-card-views {
   color: var(--gray-medium);
-  font-size: var(--font-size-sm);
+  font-size: 0.85rem;
   font-weight: 500;
+  text-align: right;
 }
 
 .mobile-card-title {
   font-weight: 600;
   color: var(--primary-text);
   margin-bottom: 12px;
-  font-size: var(--font-size-base);
+  font-size: 1.1rem;
   line-height: 1.4;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  width: 100%;
+  text-align: left;
+  padding: 0;
 }
 
 .mobile-card-footer {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: var(--font-size-sm);
+  align-items: flex-end;
+  font-size: 0.9rem;
   color: var(--secondary-text);
+  width: 100%;
+  padding: 8px 0;
+  border-top: 1px solid var(--border-color);
+  margin-top: 8px;
 }
 
 .mobile-card-author {
   font-weight: 500;
-  font-style: italic;
+  color: var(--accent-blue);
+  display: inline-block;
+  text-align: center;
+  flex: 0 0 auto;
 }
 
 .mobile-card-region {
   font-weight: 500;
   color: var(--secondary-text);
-  font-size: var(--font-size-sm);
+  font-size: 0.9rem;
+  display: inline-block;
+  text-align: left;
+  flex: 0 0 auto;
 }
 
 .mobile-card-date {
-  opacity: 0.8;
+  opacity: 0.7;
+  font-size: 0.9rem;
+  display: inline-block;
+  text-align: right;
+  flex: 0 0 auto;
 }
+
+
 
 /* 접근성 개선 */
 .sr-only {
@@ -583,7 +814,9 @@
 /* 반응형 디자인을 위한 미디어 쿼리 */
 @media (max-width: 768px) {
   .board-list-container {
-    padding: 0 15px;
+    padding: 0 8px;
+    width: 100%;
+    max-width: 100%;
   }
   
   /* 모바일에서 테이블 숨기고 카드 뷰 표시 */
@@ -593,6 +826,8 @@
   
   .mobile-card-view {
     display: block;
+    width: 100%;
+    padding: 0;
   }
   
   .user-info {
@@ -612,23 +847,87 @@
     min-width: 35px;
   }
   
-  /* 모바일에서 글쓰기 버튼 전체 너비 */
-  .write-btn {
-    width: 100%;
-    justify-content: center;
+
+  
+
+  
+  /* 모바일 카드 추가 최적화 */
+  .mobile-card {
+    padding: 14px;
+    margin-bottom: 10px;
+    width: calc(100% - 28px);
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+  
+  .mobile-card-title {
+    font-size: 1rem;
+    line-height: 1.3;
+    padding: 0;
+  }
+  
+  .mobile-card-header {
+    margin-bottom: 10px;
+  }
+  
+  .mobile-card-footer {
     margin-top: 10px;
+    padding: 6px 0;
+  }
+}
+
+/* 작은 모바일 화면 */
+@media (max-width: 480px) {
+  .board-list-container {
+    padding: 0 4px;
+    width: 100%;
   }
   
-  /* 모바일에서 페이지당 글 개수 선택 영역 개선 */
-  .posts-per-page-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  .mobile-card {
+    padding: 12px;
+    margin-bottom: 8px;
+    width: calc(100% - 24px);
+    margin-left: 12px;
+    margin-right: 12px;
   }
   
-  .posts-per-page-container > div {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  .mobile-card-title {
+    font-size: 0.95rem;
+    width: 100%;
+    padding: 0;
   }
+  
+  .mobile-card-number {
+    font-size: 0.85rem;
+    padding: 4px 8px;
+  }
+  
+  .mobile-card-views {
+    font-size: 0.8rem;
+  }
+  
+  .mobile-card-author,
+  .mobile-card-region,
+  .mobile-card-date {
+    font-size: 0.85rem;
+  }
+}
+
+/* 터치 디바이스 최적화 */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-card {
+    min-height: 60px;
+  }
+  
+  .mobile-card:active {
+    transform: scale(0.98);
+    background-color: rgba(37, 99, 235, 0.05);
+  }
+  
+  .pagination-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+
 }

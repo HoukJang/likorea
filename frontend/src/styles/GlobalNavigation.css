@@ -95,6 +95,18 @@
   border-color: var(--accent-blue-dark);
 }
 
+.write-button {
+  background: var(--accent-red);
+  color: var(--white);
+  border-color: var(--accent-red);
+  margin-left: 10px;
+}
+
+.write-button:hover {
+  background: var(--accent-red-dark);
+  border-color: var(--accent-red-dark);
+}
+
 .user-button {
   background: var(--gray-light);
   color: var(--secondary-text);
@@ -149,5 +161,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  
+  .write-button {
+    margin-left: 8px;
+    font-size: var(--font-size-xs);
   }
 } 

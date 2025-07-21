@@ -132,3 +132,138 @@
 .nav-right a {
   margin-right: 0;
 }
+
+/* 모바일 반응형 스타일 */
+@media (max-width: 768px) {
+  .banner {
+    padding: 20px 15px;
+  }
+  
+  .banner h1 {
+    font-size: var(--font-size-lg);
+  }
+  
+  .main-nav {
+    padding: 10px 0;
+  }
+  
+  .main-nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .main-nav li {
+    margin: 0 15px;
+  }
+  
+  .main-nav a {
+    font-size: var(--font-size-sm);
+    padding: 8px 12px;
+  }
+  
+  .header-nav {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .nav-left a,
+  .nav-right a {
+    margin-right: 15px;
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* 태블릿 반응형 스타일 */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .main-nav li {
+    margin: 0 20px;
+  }
+  
+  .main-nav a {
+    font-size: var(--font-size-sm);
+    padding: 8px 14px;
+  }
+}
+
+/* 터치 인터페이스 최적화 */
+@media (hover: none) and (pointer: coarse) {
+  .main-nav a,
+  .nav-left a,
+  .nav-right a {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .main-nav a:active,
+  .nav-left a:active,
+  .nav-right a:active {
+    background-color: rgba(37, 99, 235, 0.2);
+    transform: scale(0.95);
+  }
+}
+
+/* 작은 화면에서 텍스트 크기 조정 */
+@media (max-width: 480px) {
+  .banner h1 {
+    font-size: var(--font-size-base);
+  }
+  
+  .main-nav a {
+    font-size: var(--font-size-xs);
+    padding: 6px 10px;
+  }
+  
+  .nav-left a,
+  .nav-right a {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* iPhone 안전 영역 지원 */
+@supports (padding: max(0px)) {
+  .banner {
+    padding-left: max(30px, env(safe-area-inset-left));
+    padding-right: max(30px, env(safe-area-inset-right));
+  }
+  
+  .main-nav {
+    padding-left: max(15px, env(safe-area-inset-left));
+    padding-right: max(15px, env(safe-area-inset-right));
+  }
+  
+  .header-nav {
+    padding-left: max(30px, env(safe-area-inset-left));
+    padding-right: max(30px, env(safe-area-inset-right));
+  }
+}
+
+/* iPhone 특정 최적화 */
+@media screen and (max-width: 428px) {
+  /* iPhone 14 Pro Max, 13 Pro Max 등 */
+  .banner h1 {
+    font-size: var(--font-size-lg);
+  }
+}
+
+@media screen and (max-width: 390px) {
+  /* iPhone 14, 13, 12 등 */
+  .banner h1 {
+    font-size: var(--font-size-base);
+  }
+}
+
+@media screen and (max-width: 375px) {
+  /* iPhone SE, 12 mini 등 */
+  .banner h1 {
+    font-size: var(--font-size-sm);
+  }
+  
+  .main-nav a {
+    font-size: var(--font-size-xs);
+    padding: 4px 8px;
+  }
+}

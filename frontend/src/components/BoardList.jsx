@@ -14,16 +14,10 @@ function BoardList() {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(20);
   const [filters, setFilters] = useState({ type: '', region: '' });
   const [isMobile, setIsMobile] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [tagList, setTagList] = useState(null);
-
-  // 컴포넌트 마운트 시 postsPerPage를 20으로 강제 설정
-  useEffect(() => {
-    setPostsPerPage(20);
-  }, []);
 
   // 로그인 상태 확인
   useEffect(() => {
@@ -69,7 +63,7 @@ function BoardList() {
         
         const apiParams = {
           page: currentPage,
-          limit: postsPerPage,
+          limit: 25,
           ...filters
         };
         
@@ -79,14 +73,8 @@ function BoardList() {
         
         const processedPosts = processPostsList(postsData);
         
-        // 게시글을 수정일(updatedAt) 기준으로 내림차순 정렬
-        const sortedPosts = [...processedPosts].sort((a, b) => {
-          const dateA = a.updatedAt || a.createdAt;
-          const dateB = b.updatedAt || b.createdAt;
-          return new Date(dateB) - new Date(dateA);
-        });
-
-        setPosts(sortedPosts);
+        // 백엔드에서 이미 정렬된 데이터를 그대로 사용
+        setPosts(processedPosts);
         setTotalPages(data.totalPages || 1);
       } catch (error) {
         console.error('게시글 목록 조회 오류:', error);
@@ -96,19 +84,14 @@ function BoardList() {
       }
     };
     fetchPosts();
-  }, [currentPage, postsPerPage, filters]);
+  }, [currentPage, filters]);
 
   // const indexOfLast = currentPage * postsPerPage;
   // const indexOfFirst = indexOfLast - postsPerPage;
   // const currentPosts = posts.slice(indexOfFirst, indexOfLast);
   const currentPosts = posts;
 
-  // 페이지당 글 개수 변경 핸들러
-  const handlePostsPerPageChange = (e) => {
-    const value = parseInt(e.target.value);
-    setPostsPerPage(value);
-    setCurrentPage(1); // 페이지당 글 개수 변경 시 첫 페이지로 이동
-  };
+
 
   // 필터 변경 핸들러
   const handleFilterChange = (newFilters) => {
@@ -134,38 +117,7 @@ function BoardList() {
         />
       </div>
       
-      <div className="posts-per-page-container" style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        margin: '20px 0' 
-      }} role="region" aria-label="페이지 설정">
-        <div>
-          <label htmlFor="postsPerPage" style={{ marginRight: '10px', fontSize: '1rem', fontWeight: '600' }}>페이지당 글 개수:</label>
-          <select 
-            id="postsPerPage" 
-            value={postsPerPage} 
-            onChange={handlePostsPerPageChange}
-            style={{ padding: '8px 12px', fontSize: '1rem', borderRadius: '8px', border: '1px solid #e5e7eb' }}
-            aria-label="페이지당 표시할 게시글 개수 선택"
-          >
-            <option value="20">20개</option>
-            <option value="50">50개</option>
-            <option value="100">100개</option>
-            <option value="200">200개</option>
-          </select>
-        </div>
-        
-        {isLoggedIn && (
-          <Link 
-            to="/boards/new" 
-            className="write-btn"
-            aria-label="새 게시글 작성"
-          >
-            ✏️ 글쓰기
-          </Link>
-        )}
-      </div>
+
       
       {loading ? (
         <div className="loading-container" role="status" aria-live="polite">
@@ -197,14 +149,20 @@ function BoardList() {
                 </tr>
               </thead>
               <tbody>
-                {currentPosts.map((post, idx) => (
-                  <tr 
-                    key={post._id || post.id || idx}
-                    role="row"
-                    tabIndex={0}
-                    aria-label={`게시글 ${post.postNumber}: ${post.title}`}
-                    onKeyDown={(e) => handleKeyDown(e, () => navigate(`/boards/${post.id}`))}
-                  >
+                {currentPosts.map((post, idx) => {
+                  const postType = tagList && post.tags && post.tags.type 
+                    ? getTagDisplayName(post.tags.type, tagList, 'type')
+                    : (post.type || '일반');
+                  
+                  return (
+                    <tr 
+                      key={post._id || post.id || idx}
+                      role="row"
+                      tabIndex={0}
+                      data-post-type={postType}
+                      aria-label={`게시글 ${post.postNumber}: ${post.title}`}
+                      onKeyDown={(e) => handleKeyDown(e, () => navigate(`/boards/${post.id}`))}
+                    >
                     <td className="post-number" style={{ textAlign: "center" }} role="cell">
                       {tagList && post.tags && post.tags.type 
                         ? getTagDisplayName(post.tags.type, tagList, 'type')
@@ -241,23 +199,34 @@ function BoardList() {
                       {post.viewCount ?? 0}
                     </td>
                   </tr>
-                ))}
+                );
+                })}
               </tbody>
             </table>
           </div>
 
           {/* 모바일 카드 뷰 */}
           <div className="mobile-card-view" role="region" aria-label="게시글 목록 카드">
-            {currentPosts.map((post, idx) => (
-              <Link 
-                key={post._id || post.id || idx} 
-                to={`/boards/${post.id}`} 
-                className="mobile-card"
-                style={{ textDecoration: 'none', color: 'inherit' }}
-                aria-label={`게시글 ${post.postNumber}: ${post.title}, 작성자: ${getAuthorId(post.author)}, 조회수: ${post.viewCount ?? 0}`}
-              >
+            {currentPosts.map((post, idx) => {
+              const postType = tagList && post.tags && post.tags.type 
+                ? getTagDisplayName(post.tags.type, tagList, 'type')
+                : (post.type || '일반');
+              
+              return (
+                <Link 
+                  key={post._id || post.id || idx} 
+                  to={`/boards/${post.id}`} 
+                  className="mobile-card"
+                  data-post-type={postType}
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  aria-label={`게시글 ${post.postNumber}: ${post.title}, 작성자: ${getAuthorId(post.author)}, 조회수: ${post.viewCount ?? 0}`}
+                >
                 <div className="mobile-card-header">
-                  <span className="mobile-card-number">#{post.postNumber}</span>
+                  <span className="mobile-card-number">
+                    {tagList && post.tags && post.tags.type 
+                      ? getTagDisplayName(post.tags.type, tagList, 'type')
+                      : (post.type || '일반')}
+                  </span>
                   <span className="mobile-card-views">조회 {post.viewCount ?? 0}</span>
                 </div>
                 <div className="mobile-card-title">
@@ -276,7 +245,8 @@ function BoardList() {
                   <span className="mobile-card-date">{formatDate(post.createdAt)}</span>
                 </div>
               </Link>
-            ))}
+            );
+            })}
           </div>
         </>
       )}

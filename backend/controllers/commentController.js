@@ -59,8 +59,11 @@ exports.createComment = asyncHandler(async (req, res) => {
   
   console.log('댓글 작성 컨트롤러 - 댓글 생성 성공:', comment._id);
   
-  // BoardPost의 댓글 배열에 새 댓글 추가
-  await BoardPost.findByIdAndUpdate(postId, { $push: { comments: comment._id } });
+  // BoardPost의 댓글 배열에 새 댓글 추가하고 modifiedAt 업데이트
+  await BoardPost.findByIdAndUpdate(postId, { 
+    $push: { comments: comment._id },
+    modifiedAt: new Date()
+  });
   
   res.status(201).json({ 
     success: true,
@@ -102,6 +105,11 @@ exports.updateComment = asyncHandler(async (req, res) => {
   
   comment.content = content || comment.content;
   await comment.save();
+  
+  // 게시글의 modifiedAt 업데이트
+  await BoardPost.findByIdAndUpdate(postId, { 
+    modifiedAt: new Date()
+  });
   
   res.json({ 
     success: true,

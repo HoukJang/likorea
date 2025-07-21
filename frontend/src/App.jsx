@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Banner from './components/Banner';
 import GlobalNavigation from './components/GlobalNavigation';
@@ -13,6 +13,61 @@ import ErrorBoundary from './components/ErrorBoundary';
 import './styles/App.css';
 
 function App() {
+  useEffect(() => {
+    // iPhone 크기 자동 감지 및 설정
+    const setViewportForDevice = () => {
+      const userAgent = navigator.userAgent;
+      const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+      
+      if (isIOS) {
+        // iPhone 크기별 viewport 설정
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
+        
+        let viewportWidth = 'device-width';
+        let initialScale = 1;
+        
+        // iPhone 모델별 최적화
+        if (screenWidth === 428) {
+          // iPhone 14 Pro Max, 13 Pro Max
+          viewportWidth = '428px';
+        } else if (screenWidth === 390) {
+          // iPhone 14, 13, 12
+          viewportWidth = '390px';
+        } else if (screenWidth === 375) {
+          // iPhone SE, 12 mini
+          viewportWidth = '375px';
+        } else if (screenWidth === 414) {
+          // iPhone Plus 모델들
+          viewportWidth = '414px';
+        }
+        
+        // viewport 메타 태그 업데이트
+        const viewport = document.querySelector('meta[name="viewport"]');
+        if (viewport) {
+          viewport.setAttribute('content', 
+            `width=${viewportWidth}, initial-scale=${initialScale}, maximum-scale=1, user-scalable=no, viewport-fit=cover`
+          );
+        }
+      }
+    };
+    
+    setViewportForDevice();
+    
+    // 화면 회전 시 재설정
+    window.addEventListener('orientationchange', () => {
+      setTimeout(setViewportForDevice, 100);
+    });
+    
+    // 리사이즈 시 재설정
+    window.addEventListener('resize', setViewportForDevice);
+    
+    return () => {
+      window.removeEventListener('orientationchange', setViewportForDevice);
+      window.removeEventListener('resize', setViewportForDevice);
+    };
+  }, []);
+
   return (
     <ErrorBoundary>
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>

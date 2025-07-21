@@ -91,6 +91,15 @@ function GlobalNavigation() {
           >
             메인으로
           </button>
+          {isLoggedIn && (
+            <button 
+              onClick={() => navigate('/boards/new')}
+              className="nav-button write-button"
+              aria-label="새 게시글 작성"
+            >
+              ✏️ 글쓰기
+            </button>
+          )}
         </div>
         
         <div className="nav-right">

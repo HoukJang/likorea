@@ -30,7 +30,9 @@ const boardPostSchema = new mongoose.Schema(
       // 등등...
     },
     // 댓글 배열
-    comments: [commentSchema]
+    comments: [commentSchema],
+    // 최근 업데이트 시간 (댓글 추가/수정 시 업데이트)
+    modifiedAt: { type: Date, default: Date.now }
   },
   { timestamps: true }
 );
