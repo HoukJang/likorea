@@ -1,7 +1,7 @@
 .traffic-dashboard {
-  padding: 20px;
-  background-color: #f8f9fa;
-  min-height: 100vh;
+  padding: 0;
+  background-color: transparent;
+  min-height: auto;
 }
 
 .traffic-header {
@@ -296,6 +296,18 @@
 }
 
 /* 반응형 디자인 */
+@media (max-width: 1200px) {
+  .summary-stats {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
+  
+  .traffic-item {
+    grid-template-columns: 100px 70px 1fr 70px 90px 100px;
+    gap: 8px;
+  }
+}
+
 @media (max-width: 768px) {
   .traffic-header {
     flex-direction: column;
@@ -303,14 +315,37 @@
     text-align: center;
   }
   
+  .traffic-header h2 {
+    font-size: var(--font-size-lg);
+  }
+  
+  .period-selector select {
+    width: 100%;
+    max-width: 200px;
+  }
+  
   .summary-stats {
     grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .stat-card {
+    padding: 20px;
+  }
+  
+  .stat-card h3 {
+    font-size: var(--font-size-sm);
+  }
+  
+  .stat-card p {
+    font-size: var(--font-size-lg);
   }
   
   .traffic-item {
     grid-template-columns: 1fr;
     gap: 5px;
     text-align: center;
+    padding: 10px;
   }
   
   .traffic-item > div {
@@ -318,12 +353,67 @@
   }
   
   .path-table {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
   
   .path-table th,
   .path-table td {
     padding: 8px 4px;
+  }
+  
+  .status-code-stats,
+  .method-stats,
+  .error-stats,
+  .authority-stats {
+    gap: 8px;
+  }
+  
+  .status-code-item,
+  .method-item,
+  .error-item,
+  .authority-item {
+    padding: 6px 10px;
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .traffic-header h2 {
+    font-size: var(--font-size-base);
+  }
+  
+  .stat-card {
+    padding: 15px;
+  }
+  
+  .stat-card h3 {
+    font-size: var(--font-size-xs);
+  }
+  
+  .stat-card p {
+    font-size: var(--font-size-base);
+  }
+  
+  .traffic-item {
+    padding: 8px;
+    font-size: var(--font-size-xs);
+  }
+  
+  .path-table {
+    font-size: var(--font-size-xs);
+  }
+  
+  .path-table th,
+  .path-table td {
+    padding: 6px 3px;
+  }
+  
+  .status-code-item,
+  .method-item,
+  .error-item,
+  .authority-item {
+    padding: 4px 8px;
+    font-size: var(--font-size-xs);
   }
 }
 

@@ -307,60 +307,62 @@ function Admin() {
             <>
               {users.length > 0 ? (
                 <>
-                  <table className="users-table">
-                    <thead>
-                      <tr>
-                        <th>아이디</th>
-                        <th>이메일</th>
-                        <th>권한</th>
-                        <th>가입일</th>
-                        <th>작업</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {users.map(user => (
-                        <tr key={user._id}>
-                          <td>{user.id}</td>
-                          <td>{user.email}</td>
-                          <td>
-                            <select 
-                              value={user.authority}
-                              onChange={(e) => handleAuthorityChange(user._id, parseInt(e.target.value))}
-                              disabled={user.authority === 5}
-                            >
-                              <option value={1}>게스트 (1)</option>
-                              <option value={2}>제한 사용자 (2)</option>
-                              <option value={3}>일반 사용자 (3)</option>
-                              <option value={4}>매니저 (4)</option>
-                              <option value={5}>관리자 (5)</option>
-                            </select>
-                          </td>
-                          <td>{new Date(user.createdAt).toLocaleDateString()}</td>
-                          <td>
-                            <button 
-                              onClick={() => handleViewDetails(user._id)}
-                              className="view-btn"
-                            >
-                              상세보기
-                            </button>
-                            <button 
-                              onClick={() => handleEditClick(user)}
-                              className="edit-btn"
-                            >
-                              수정
-                            </button>
-                            <button 
-                              onClick={() => handleDeleteUser(user._id)}
-                              className="delete-btn"
-                              disabled={user.authority === 5}
-                            >
-                              삭제
-                            </button>
-                          </td>
+                  <div className="table-responsive">
+                    <table className="users-table">
+                      <thead>
+                        <tr>
+                          <th>아이디</th>
+                          <th>이메일</th>
+                          <th>권한</th>
+                          <th>가입일</th>
+                          <th>작업</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {users.map(user => (
+                          <tr key={user._id}>
+                            <td>{user.id}</td>
+                            <td>{user.email}</td>
+                            <td>
+                              <select 
+                                value={user.authority}
+                                onChange={(e) => handleAuthorityChange(user._id, parseInt(e.target.value))}
+                                disabled={user.authority === 5}
+                              >
+                                <option value={1}>게스트 (1)</option>
+                                <option value={2}>제한 사용자 (2)</option>
+                                <option value={3}>일반 사용자 (3)</option>
+                                <option value={4}>매니저 (4)</option>
+                                <option value={5}>관리자 (5)</option>
+                              </select>
+                            </td>
+                            <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+                            <td>
+                              <button 
+                                onClick={() => handleViewDetails(user._id)}
+                                className="view-btn"
+                              >
+                                상세보기
+                              </button>
+                              <button 
+                                onClick={() => handleEditClick(user)}
+                                className="edit-btn"
+                              >
+                                수정
+                              </button>
+                              <button 
+                                onClick={() => handleDeleteUser(user._id)}
+                                className="delete-btn"
+                                disabled={user.authority === 5}
+                              >
+                                삭제
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                   
                   {totalPages > 1 && (
                     <div className="pagination">
