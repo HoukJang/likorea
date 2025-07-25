@@ -9,6 +9,7 @@ function GlobalNavigation() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [fontSize, setFontSize] = useState('14px');
+  const [userButtonStyle, setUserButtonStyle] = useState({});
 
   // 로그인 상태 확인
   const checkLoginStatus = () => {
@@ -45,6 +46,94 @@ function GlobalNavigation() {
     setFontSize(newFontSize);
   };
 
+  // 사용자 버튼 스타일 조정 (아이디 길이 기반)
+  const adjustUserButtonStyle = () => {
+    if (!userInfo?.id) {
+      setUserButtonStyle({ fontSize });
+      return;
+    }
+
+    const userId = userInfo.id;
+    const screenWidth = window.innerWidth;
+    let userFontSize = fontSize;
+    let maxWidth = 'auto';
+    let padding = '10px 18px';
+
+    // 아이디 길이에 따른 글자 크기 조정
+    if (userId.length > 12) {
+      // 매우 긴 아이디 (13자 이상)
+      if (screenWidth <= 360) {
+        userFontSize = '8px';
+        maxWidth = '80px';
+        padding = '8px 10px';
+      } else if (screenWidth <= 480) {
+        userFontSize = '9px';
+        maxWidth = '90px';
+        padding = '8px 12px';
+      } else if (screenWidth <= 768) {
+        userFontSize = '10px';
+        maxWidth = '100px';
+        padding = '9px 14px';
+      } else {
+        userFontSize = '11px';
+        maxWidth = '120px';
+        padding = '10px 16px';
+      }
+    } else if (userId.length > 8) {
+      // 긴 아이디 (9-12자)
+      if (screenWidth <= 360) {
+        userFontSize = '9px';
+        maxWidth = '85px';
+        padding = '8px 12px';
+      } else if (screenWidth <= 480) {
+        userFontSize = '10px';
+        maxWidth = '95px';
+        padding = '9px 14px';
+      } else if (screenWidth <= 768) {
+        userFontSize = '11px';
+        maxWidth = '110px';
+        padding = '10px 16px';
+      } else {
+        userFontSize = '12px';
+        maxWidth = '130px';
+        padding = '10px 18px';
+      }
+    } else if (userId.length > 5) {
+      // 중간 길이 아이디 (6-8자)
+      if (screenWidth <= 360) {
+        userFontSize = '10px';
+        maxWidth = '90px';
+        padding = '8px 14px';
+      } else if (screenWidth <= 480) {
+        userFontSize = '11px';
+        maxWidth = '100px';
+        padding = '9px 16px';
+      } else if (screenWidth <= 768) {
+        userFontSize = '12px';
+        maxWidth = '120px';
+        padding = '10px 18px';
+      } else {
+        userFontSize = '13px';
+        maxWidth = '140px';
+        padding = '10px 20px';
+      }
+    } else {
+      // 짧은 아이디 (5자 이하) - 기본 크기 사용
+      userFontSize = fontSize;
+      maxWidth = 'auto';
+      padding = '10px 18px';
+    }
+
+    setUserButtonStyle({
+      fontSize: userFontSize,
+      maxWidth: maxWidth,
+      padding: padding,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap'
+    });
+  };
+
   // 라우트 변경, 컴포넌트 마운트 시 로그인 상태 확인
   useEffect(() => {
     checkLoginStatus();
@@ -55,11 +144,15 @@ function GlobalNavigation() {
   useEffect(() => {
     const handleResize = () => {
       adjustFontSize();
+      adjustUserButtonStyle();
     };
 
     window.addEventListener('resize', handleResize);
     window.addEventListener('orientationchange', () => {
-      setTimeout(adjustFontSize, 100);
+      setTimeout(() => {
+        adjustFontSize();
+        adjustUserButtonStyle();
+      }, 100);
     });
 
     return () => {
@@ -67,6 +160,11 @@ function GlobalNavigation() {
       window.removeEventListener('orientationchange', handleResize);
     };
   }, []);
+
+  // 사용자 정보 변경 시 버튼 스타일 조정
+  useEffect(() => {
+    adjustUserButtonStyle();
+  }, [userInfo, fontSize]);
 
   // localStorage 변경 이벤트 리스너
   useEffect(() => {
@@ -152,7 +250,7 @@ function GlobalNavigation() {
               <button 
                 onClick={handleUserClick}
                 className="nav-button user-button"
-                style={buttonStyle}
+                style={userButtonStyle}
                 aria-label={`사용자: ${userInfo?.id}, 권한 레벨: ${userInfo?.authority}`}
               >
                 {userInfo?.id} (Lv.{userInfo?.authority})

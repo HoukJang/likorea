@@ -155,15 +155,58 @@
 }
 
 .user-button {
-  background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%) !important;
+  background: var(--gray-100) !important;
   color: var(--gray-700) !important;
-  font-size: 14px !important;
+  border-color: var(--gray-300) !important;
+  font-weight: 500 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  min-width: fit-content !important;
 }
 
 .user-button:hover {
-  background: linear-gradient(135deg, var(--gray-200) 0%, var(--gray-300) 100%) !important;
+  background: var(--gray-200) !important;
+  border-color: var(--gray-400) !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 아이디 길이별 동적 크기 조정 */
+.user-button[style*="font-size: 8px"] {
+  max-width: 80px !important;
+  padding: 8px 10px !important;
+}
+
+.user-button[style*="font-size: 9px"] {
+  max-width: 90px !important;
+  padding: 8px 12px !important;
+}
+
+.user-button[style*="font-size: 10px"] {
+  max-width: 100px !important;
+  padding: 9px 14px !important;
+}
+
+.user-button[style*="font-size: 11px"] {
+  max-width: 110px !important;
+  padding: 10px 16px !important;
+}
+
+.user-button[style*="font-size: 12px"] {
+  max-width: 120px !important;
+  padding: 10px 18px !important;
+}
+
+.user-button[style*="font-size: 13px"] {
+  max-width: 140px !important;
+  padding: 10px 20px !important;
+}
+
+.user-button[style*="font-size: 14px"] {
+  max-width: auto !important;
+  padding: 10px 18px !important;
 }
 
 /* 현대화된 로그아웃 버튼 */
@@ -218,11 +261,11 @@
     font-size: clamp(11px, 3vw, 13px) !important;
   }
   
+  /* 사용자 버튼은 JavaScript에서 동적으로 크기 조정됨 */
   .user-button {
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
   }
   
   .write-button {
@@ -250,8 +293,11 @@
     min-height: 36px !important;
   }
   
+  /* 사용자 버튼은 JavaScript에서 동적으로 크기 조정됨 */
   .user-button {
-    max-width: 80px;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
   }
   
   .write-button {
@@ -259,7 +305,7 @@
   }
 }
 
-/* 매우 작은 화면 (360px 이하) */
+/* 매우 작은 모바일 화면 (360px 이하) */
 @media (max-width: 360px) {
   .nav-container {
     padding: 0 10px;
@@ -271,8 +317,15 @@
     min-height: 34px !important;
   }
   
+  /* 사용자 버튼은 JavaScript에서 동적으로 크기 조정됨 */
   .user-button {
-    max-width: 70px;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+  
+  .write-button {
+    margin-left: 2px;
   }
 }
 
