@@ -8,6 +8,7 @@ function GlobalNavigation() {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const [fontSize, setFontSize] = useState('14px');
 
   // 로그인 상태 확인
   const checkLoginStatus = () => {
@@ -26,10 +27,46 @@ function GlobalNavigation() {
     }
   };
 
+  // 동적 글자 크기 조정
+  const adjustFontSize = () => {
+    const screenWidth = window.innerWidth;
+    let newFontSize = '14px';
+    
+    if (screenWidth <= 360) {
+      newFontSize = '10px';
+    } else if (screenWidth <= 480) {
+      newFontSize = '11px';
+    } else if (screenWidth <= 768) {
+      newFontSize = '12px';
+    } else {
+      newFontSize = '14px';
+    }
+    
+    setFontSize(newFontSize);
+  };
+
   // 라우트 변경, 컴포넌트 마운트 시 로그인 상태 확인
   useEffect(() => {
     checkLoginStatus();
+    adjustFontSize();
   }, [location.pathname]);
+
+  // 화면 크기 변경 시 글자 크기 조정
+  useEffect(() => {
+    const handleResize = () => {
+      adjustFontSize();
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(adjustFontSize, 100);
+    });
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+    };
+  }, []);
 
   // localStorage 변경 이벤트 리스너
   useEffect(() => {
@@ -80,6 +117,11 @@ function GlobalNavigation() {
     return null;
   }
 
+  // 동적 스타일 객체
+  const buttonStyle = {
+    fontSize: fontSize,
+  };
+
   return (
     <nav className="global-navigation">
       <div className="nav-container">
@@ -87,6 +129,7 @@ function GlobalNavigation() {
           <button 
             onClick={() => navigate('/boards')}
             className="nav-button main-button"
+            style={buttonStyle}
             aria-label="게시판으로 이동"
           >
             메인으로
@@ -95,6 +138,7 @@ function GlobalNavigation() {
             <button 
               onClick={() => navigate('/boards/new')}
               className="nav-button write-button"
+              style={buttonStyle}
               aria-label="새 게시글 작성"
             >
               ✏️ 글쓰기
@@ -108,6 +152,7 @@ function GlobalNavigation() {
               <button 
                 onClick={handleUserClick}
                 className="nav-button user-button"
+                style={buttonStyle}
                 aria-label={`사용자: ${userInfo?.id}, 권한 레벨: ${userInfo?.authority}`}
               >
                 {userInfo?.id} (Lv.{userInfo?.authority})
@@ -115,6 +160,7 @@ function GlobalNavigation() {
               <button 
                 onClick={handleLogout}
                 className="nav-button logout-button"
+                style={buttonStyle}
                 aria-label="로그아웃"
               >
                 로그아웃
@@ -124,6 +170,7 @@ function GlobalNavigation() {
             <button 
               onClick={() => navigate('/login')}
               className="nav-button login-button"
+              style={buttonStyle}
               aria-label="로그인 페이지로 이동"
             >
               로그인

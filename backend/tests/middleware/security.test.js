@@ -6,7 +6,7 @@ describe('Security Middleware Tests', () => {
     it('should allow requests within rate limit', async () => {
       // 첫 번째 요청은 성공해야 함
       const response1 = await request(app)
-        .get('/api/boards/general')
+        .get('/api/boards')
         .expect(200);
 
       expect(response1.body.success).toBe(true);
@@ -18,7 +18,7 @@ describe('Security Middleware Tests', () => {
       for (let i = 0; i < 10; i++) {
         promises.push(
           request(app)
-            .get('/api/boards/general')
+            .get('/api/boards')
             .expect(429)
         );
       }
@@ -33,7 +33,7 @@ describe('Security Middleware Tests', () => {
   describe('Security Headers', () => {
     it('should include security headers', async () => {
       const response = await request(app)
-        .get('/api/boards/general')
+        .get('/api/boards')
         .expect(200);
 
       // 보안 헤더 확인
@@ -68,7 +68,7 @@ describe('Security Middleware Tests', () => {
       };
 
       const response = await request(app)
-        .post('/api/boards/general')
+        .post('/api/boards')
         .send(invalidData)
         .expect(400);
 
@@ -80,11 +80,11 @@ describe('Security Middleware Tests', () => {
   describe('CORS', () => {
     it('should handle CORS preflight requests', async () => {
       const response = await request(app)
-        .options('/api/boards/general')
+        .options('/api/boards')
         .set('Origin', 'http://localhost:3000')
         .set('Access-Control-Request-Method', 'GET')
         .set('Access-Control-Request-Headers', 'Content-Type')
-        .expect(200);
+        .expect(204);
 
       expect(response.headers['access-control-allow-origin']).toBeDefined();
       expect(response.headers['access-control-allow-methods']).toBeDefined();

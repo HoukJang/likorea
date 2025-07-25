@@ -1,6 +1,33 @@
 /* 기본 스타일 초기화 */
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* iPhone 안전 영역 지원 */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* 모바일에서 스크롤바 숨기기 */
+@media (max-width: 768px) {
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Webkit 브라우저에서 스크롤바 숨기기 */
+  ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
 }

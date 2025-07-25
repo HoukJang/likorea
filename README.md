@@ -76,6 +76,10 @@ cd backend
 npm install
 cp .env.example .env
 # .env 파일 편집하여 환경변수 설정
+# 필수 환경변수:
+# - MONGO_URI: MongoDB 연결 문자열
+# - JWT_SECRET: JWT 토큰 시크릿 키
+# - ALLOWED_ORIGINS: CORS 허용 도메인
 npm start
 ```
 
@@ -85,6 +89,8 @@ cd ../frontend
 npm install
 cp .env.example .env
 # .env 파일 편집하여 백엔드 URL 설정
+# 필수 환경변수:
+# - REACT_APP_BACKEND_URL: 백엔드 API URL
 npm start
 ```
 
@@ -127,18 +133,33 @@ likorea/
 
 **백엔드 (.env)**
 ```env
+# 서버 설정
 NODE_ENV=development
 PORT=5001
-MONGODB_URI=mongodb://localhost:27017/likorea
-JWT_SECRET=your-super-secret-jwt-key
-ALLOWED_ORIGINS=http://localhost:3000
+
+# MongoDB 연결 정보 (MongoDB Atlas 또는 로컬 MongoDB)
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority
+
+# JWT 시크릿 키 (보안을 위해 강력한 랜덤 문자열 사용)
+JWT_SECRET=your-super-secret-jwt-key-here
+
+# CORS 허용 도메인
+ALLOWED_ORIGINS=http://localhost:3000,https://yourdomain.com
 ```
 
 **프론트엔드 (.env)**
 ```env
+# 백엔드 API URL
 REACT_APP_BACKEND_URL=http://localhost:5001
+
+# 환경 설정
 REACT_APP_ENV=development
 ```
+
+**⚠️ 보안 주의사항**
+- `.env` 파일은 절대 Git에 커밋하지 마세요
+- 프로덕션 환경에서는 강력한 JWT_SECRET을 사용하세요
+- MongoDB 연결 문자열에 민감한 정보가 포함되어 있습니다
 
 ### 테스트 실행
 

@@ -195,7 +195,11 @@
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .nav-container {
-    padding: 0 15px;
+    padding: 0 16px;
+  }
+  
+  .nav-left {
+    gap: 8px;
   }
   
   .nav-right {
@@ -203,20 +207,93 @@
   }
   
   .nav-button {
-    padding: 8px 14px;
-    font-size: 14px;
-    min-height: 40px;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    min-height: 38px !important;
+    white-space: nowrap !important;
+  }
+  
+  /* 더 작은 화면에서 글자 크기 조정 */
+  .nav-button {
+    font-size: clamp(11px, 3vw, 13px) !important;
   }
   
   .user-button {
-    max-width: 120px;
+    max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
   
   .write-button {
-    margin-left: 6px;
-    font-size: 14px;
+    margin-left: 4px;
+  }
+}
+
+/* 작은 모바일 화면 (480px 이하) */
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 0 12px;
+  }
+  
+  .nav-left {
+    gap: 6px;
+  }
+  
+  .nav-right {
+    gap: 6px;
+  }
+  
+  .nav-button {
+    padding: 6px 10px !important;
+    font-size: clamp(10px, 2.8vw, 12px) !important;
+    min-height: 36px !important;
+  }
+  
+  .user-button {
+    max-width: 80px;
+  }
+  
+  .write-button {
+    margin-left: 2px;
+  }
+}
+
+/* 매우 작은 화면 (360px 이하) */
+@media (max-width: 360px) {
+  .nav-container {
+    padding: 0 10px;
+  }
+  
+  .nav-button {
+    padding: 5px 8px !important;
+    font-size: clamp(9px, 2.5vw, 11px) !important;
+    min-height: 34px !important;
+  }
+  
+  .user-button {
+    max-width: 70px;
+  }
+}
+
+/* iPhone 안전 영역 지원 */
+@supports (padding: max(0px)) {
+  .nav-container {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  
+  @media (max-width: 480px) {
+    .nav-container {
+      padding-left: max(12px, env(safe-area-inset-left));
+      padding-right: max(12px, env(safe-area-inset-right));
+    }
+  }
+  
+  @media (max-width: 360px) {
+    .nav-container {
+      padding-left: max(10px, env(safe-area-inset-left));
+      padding-right: max(10px, env(safe-area-inset-right));
+    }
   }
 } 

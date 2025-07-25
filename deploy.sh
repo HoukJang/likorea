@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # 🚀 Likorea 배포 스크립트
-# 사용법: ./deploy.sh [environment]
+# 사용법: ./deploy.sh [environment] [--force]
 # 예시: ./deploy.sh production
+# 예시: ./deploy.sh production --force (테스트 실패 시에도 배포)
 
 set -e
 
@@ -36,8 +37,15 @@ log_step() {
 # 환경 확인
 if [ "$ENVIRONMENT" != "development" ] && [ "$ENVIRONMENT" != "production" ]; then
     log_error "지원하지 않는 환경입니다: $ENVIRONMENT"
-    log_error "사용법: ./deploy.sh [development|production]"
+    log_error "사용법: ./deploy.sh [development|production] [--force]"
     exit 1
+fi
+
+# Force 옵션 확인
+FORCE_DEPLOY=false
+if [ "$2" = "--force" ]; then
+    FORCE_DEPLOY=true
+    log_warn "Force 모드로 배포합니다. 테스트 실패 시에도 배포가 계속됩니다."
 fi
 
 log_info "배포를 시작합니다..."
@@ -87,10 +95,34 @@ fi
 
 # 4. 테스트 실행
 log_step "4. 테스트 실행"
+
+# 백엔드 테스트 (원격 MongoDB Atlas 사용)
+log_info "백엔드 테스트 실행 (원격 MongoDB Atlas 연결)..."
 cd backend
-npm test || log_warn "백엔드 테스트 실패 (무시됨)"
-cd ../frontend
-npm test || log_warn "프론트엔드 테스트 실패 (무시됨)"
+npm test || {
+    log_warn "백엔드 테스트 실패"
+    if [ "$FORCE_DEPLOY" = true ]; then
+        log_warn "Force 모드로 인해 테스트 실패를 무시하고 배포를 계속합니다."
+    else
+        log_warn "테스트 실패로 인한 배포 중단을 원하지 않으면 --force 옵션을 사용하세요"
+        log_error "배포가 중단되었습니다. 테스트를 수정하거나 --force 옵션을 사용하세요."
+        exit 1
+    fi
+}
+cd ..
+
+# 프론트엔드 테스트
+cd frontend
+npm test -- --watchAll=false --passWithNoTests || {
+    log_warn "프론트엔드 테스트 실패"
+    if [ "$FORCE_DEPLOY" = true ]; then
+        log_warn "Force 모드로 인해 테스트 실패를 무시하고 배포를 계속합니다."
+    else
+        log_warn "테스트 실패로 인한 배포 중단을 원하지 않으면 --force 옵션을 사용하세요"
+        log_error "배포가 중단되었습니다. 테스트를 수정하거나 --force 옵션을 사용하세요."
+        exit 1
+    fi
+}
 cd ..
 
 # 5. 프론트엔드 빌드

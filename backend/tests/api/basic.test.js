@@ -5,7 +5,7 @@ describe('Basic API Tests', () => {
   describe('Server Health', () => {
     it('should respond to basic requests', async () => {
       const response = await request(app)
-        .get('/api/boards/general')
+        .get('/api/boards')
         .expect(200);
 
       expect(response.body).toBeDefined();
@@ -15,7 +15,7 @@ describe('Basic API Tests', () => {
   describe('CORS', () => {
     it('should handle CORS headers', async () => {
       const response = await request(app)
-        .get('/api/boards/general')
+        .get('/api/boards')
         .set('Origin', 'http://localhost:3000')
         .expect(200);
 

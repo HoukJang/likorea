@@ -41,19 +41,21 @@ describe('Board API Tests', () => {
 
     // 테스트 게시글 생성
     testPost = new BoardPost({
-      boardType: 'general',
       title: '테스트 게시글',
       content: '테스트 내용',
       author: testUser._id,
-      postNumber: 1
+      tags: {
+        type: '생활정보',
+        region: '롱아일랜드'
+      }
     });
     await testPost.save();
   });
 
-  describe('GET /api/boards/:boardType', () => {
+  describe('GET /api/boards', () => {
     it('should return board posts successfully', async () => {
       const response = await request(app)
-        .get('/api/boards/general')
+        .get('/api/boards')
         .expect(200);
 
       expect(response.body.success).toBe(true);
@@ -63,8 +65,11 @@ describe('Board API Tests', () => {
     });
 
     it('should return empty array for non-existent board', async () => {
+      // 모든 게시글 삭제
+      await BoardPost.deleteMany({});
+      
       const response = await request(app)
-        .get('/api/boards/nonexistent')
+        .get('/api/boards')
         .expect(200);
 
       expect(response.body.success).toBe(true);
@@ -74,10 +79,10 @@ describe('Board API Tests', () => {
     });
   });
 
-  describe('GET /api/boards/:boardType/:postId', () => {
+  describe('GET /api/boards/:postId', () => {
     it('should return specific post successfully', async () => {
       const response = await request(app)
-        .get(`/api/boards/general/${testPost._id}`)
+        .get(`/api/boards/${testPost._id}`)
         .expect(200);
 
       expect(response.body.success).toBe(true);
@@ -89,7 +94,7 @@ describe('Board API Tests', () => {
     it('should return 404 for non-existent post', async () => {
       const fakeId = new mongoose.Types.ObjectId();
       const response = await request(app)
-        .get(`/api/boards/general/${fakeId}`)
+        .get(`/api/boards/${fakeId}`)
         .expect(404);
 
       expect(response.body.success).toBe(false);
@@ -97,16 +102,19 @@ describe('Board API Tests', () => {
     });
   });
 
-  describe('POST /api/boards/:boardType', () => {
+  describe('POST /api/boards', () => {
     it('should create new post successfully', async () => {
       const postData = {
         title: '새 게시글',
         content: '새 내용',
-        author: testUser._id
+        tags: {
+          type: '생활정보',
+          region: '롱아일랜드'
+        }
       };
 
       const response = await request(app)
-        .post('/api/boards/general')
+        .post('/api/boards')
         .send(postData)
         .expect(201);
 
@@ -124,7 +132,7 @@ describe('Board API Tests', () => {
       };
 
       const response = await request(app)
-        .post('/api/boards/general')
+        .post('/api/boards')
         .send(postData)
         .expect(400);
 
@@ -132,7 +140,7 @@ describe('Board API Tests', () => {
     });
   });
 
-  describe('PUT /api/boards/:boardType/:postId', () => {
+  describe('PUT /api/boards/:postId', () => {
     it('should update post successfully', async () => {
       const updateData = {
         title: '수정된 제목',
@@ -140,7 +148,7 @@ describe('Board API Tests', () => {
       };
 
       const response = await request(app)
-        .put(`/api/boards/general/${testPost._id}`)
+        .put(`/api/boards/${testPost._id}`)
         .send(updateData)
         .expect(200);
 
@@ -158,7 +166,7 @@ describe('Board API Tests', () => {
       };
 
       const response = await request(app)
-        .put(`/api/boards/general/${fakeId}`)
+        .put(`/api/boards/${fakeId}`)
         .send(updateData)
         .expect(404);
 
@@ -167,10 +175,10 @@ describe('Board API Tests', () => {
     });
   });
 
-  describe('DELETE /api/boards/:boardType/:postId', () => {
+  describe('DELETE /api/boards/:postId', () => {
     it('should delete post successfully', async () => {
       const response = await request(app)
-        .delete(`/api/boards/general/${testPost._id}`)
+        .delete(`/api/boards/${testPost._id}`)
         .expect(200);
 
       expect(response.body.success).toBe(true);
@@ -180,7 +188,7 @@ describe('Board API Tests', () => {
     it('should return 404 for non-existent post', async () => {
       const fakeId = new mongoose.Types.ObjectId();
       const response = await request(app)
-        .delete(`/api/boards/general/${fakeId}`)
+        .delete(`/api/boards/${fakeId}`)
         .expect(404);
 
       expect(response.body.success).toBe(false);
