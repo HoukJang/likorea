@@ -14,11 +14,13 @@ const {
   ipWhitelist, 
   requestSizeLimit 
 } = require('./middleware/security');
+const trafficLogger = require('./middleware/trafficLogger');
 
 const userRoutes = require('./routes/userRoutes');
 const boardRoutes = require('./routes/boardRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const tagRoutes = require('./routes/tagRoutes');
+const trafficRoutes = require('./routes/trafficRoutes');
 
 // Swagger 설정
 const swaggerUi = require('swagger-ui-express');
@@ -52,6 +54,9 @@ app.use(cors({
 // 로깅 미들웨어
 app.use(logger.request);
 
+// 트래픽 로깅 미들웨어 (모든 요청에 대해 트래픽 데이터 수집)
+app.use(trafficLogger);
+
 // Rate Limiting 설정
 const { generalLimiter, loginLimiter, signupLimiter, postLimiter } = createRateLimiters();
 
@@ -73,6 +78,7 @@ app.use('/api/users', generalLimiter, userRoutes);
 app.use('/api/boards', generalLimiter, boardRoutes);
 app.use('/api/admin', generalLimiter, adminRoutes);
 app.use('/api/tags', generalLimiter, tagRoutes);
+app.use('/api/traffic', generalLimiter, trafficRoutes);
 
 // 404 에러 처리 (라우트 설정 후에 위치)
 app.use(notFound);

@@ -9,6 +9,7 @@ import {
   getUserDetails 
 } from '../api/admin';
 import Profile from './Profile';
+import TrafficDashboard from './TrafficDashboard';
 import '../styles/Admin.css';
 
 function Admin() {
@@ -200,6 +201,12 @@ function Admin() {
           통계
         </button>
         <button 
+          className={activeTab === 'traffic' ? 'active' : ''} 
+          onClick={() => setActiveTab('traffic')}
+        >
+          트래픽 대시보드
+        </button>
+        <button 
           className={activeTab === 'profile' ? 'active' : ''} 
           onClick={() => setActiveTab('profile')}
         >
@@ -208,6 +215,12 @@ function Admin() {
       </div>
 
       {message && <div className="admin-message">{message}</div>}
+
+      {activeTab === 'traffic' && (
+        <section className="admin-section">
+          <TrafficDashboard />
+        </section>
+      )}
 
       {activeTab === 'profile' && (
         <section className="admin-section">
