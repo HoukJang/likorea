@@ -131,6 +131,7 @@ function GlobalNavigation() {
           )}
         </div>
       </div>
+      <div style={{marginTop: '12px', marginBottom: '12px', borderBottom: '1.5px solid #e5e7eb', width: '100%', maxWidth: '1200px', marginLeft: 'auto', marginRight: 'auto'}} />
     </nav>
   );
 }

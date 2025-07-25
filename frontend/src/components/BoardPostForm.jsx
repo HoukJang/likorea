@@ -231,10 +231,6 @@ function BoardPostForm() {
           />
         </div>
         
-        <div className="user-info">
-          작성자: {currentUser.id} (ID: {currentUser.id})
-        </div>
-        
         {/* 태그 선택 컴포넌트 */}
         <div className="form-group">
           <TagSelector 

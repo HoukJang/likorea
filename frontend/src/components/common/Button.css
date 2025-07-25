@@ -5,77 +5,84 @@
   justify-content: center;
   gap: 8px;
   border: none;
-  border-radius: 4px;
-  font-weight: 500;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
   position: relative;
   overflow: hidden;
+  font-family: var(--font-family);
 }
 
-/* 버튼 크기 */
+/* 통일된 버튼 크기 시스템 */
 .common-button--small {
-  padding: 6px 12px;
-  font-size: 12px;
-  min-height: 32px;
-}
-
-.common-button--medium {
   padding: 8px 16px;
   font-size: 14px;
   min-height: 40px;
 }
 
-.common-button--large {
-  padding: 12px 24px;
+.common-button--medium {
+  padding: 12px 20px;
   font-size: 16px;
   min-height: 48px;
 }
 
-/* 버튼 변형 */
+.common-button--large {
+  padding: 16px 24px;
+  font-size: 18px;
+  min-height: 56px;
+}
+
+/* 현대화된 버튼 변형 */
 .common-button--primary {
-  background-color: #337ab7;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
   color: white;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
 
 .common-button--primary:hover:not(.common-button--disabled) {
-  background-color: #286090;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, var(--primary-blue-dark) 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
 }
 
 .common-button--secondary {
-  background-color: #f8f9fa;
-  color: #333;
-  border: 1px solid #ddd;
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border: 1px solid var(--gray-300);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .common-button--secondary:hover:not(.common-button--disabled) {
-  background-color: #e9ecef;
-  border-color: #adb5bd;
+  background: var(--gray-200);
+  border-color: var(--gray-400);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .common-button--danger {
-  background-color: #dc3545;
+  background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-red-dark) 100%);
   color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
 }
 
 .common-button--danger:hover:not(.common-button--disabled) {
-  background-color: #c82333;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+  background: linear-gradient(135deg, var(--accent-red-dark) 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
 }
 
 .common-button--success {
-  background-color: #28a745;
+  background: linear-gradient(135deg, var(--secondary-green) 0%, var(--secondary-green-dark) 100%);
   color: white;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
 }
 
 .common-button--success:hover:not(.common-button--disabled) {
-  background-color: #218838;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+  background: linear-gradient(135deg, var(--secondary-green-dark) 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
 }
 
 /* 비활성화 상태 */
@@ -116,34 +123,35 @@
   100% { transform: rotate(360deg); }
 }
 
-/* 포커스 상태 */
+/* 현대화된 포커스 상태 */
 .common-button:focus {
-  outline: 2px solid #337ab7;
+  outline: 2px solid var(--primary-blue);
   outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
 /* 활성 상태 */
 .common-button:active:not(.common-button--disabled) {
   transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* 모바일 반응형 스타일 */
 @media (max-width: 768px) {
   .common-button--small {
-    padding: 8px 16px;
-    font-size: 14px;
+    padding: 10px 18px;
+    font-size: 15px;
     min-height: 44px;
   }
   
   .common-button--medium {
-    padding: 10px 20px;
+    padding: 14px 22px;
     font-size: 16px;
     min-height: 48px;
   }
   
   .common-button--large {
-    padding: 14px 28px;
+    padding: 18px 26px;
     font-size: 18px;
     min-height: 52px;
   }

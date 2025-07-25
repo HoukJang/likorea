@@ -398,7 +398,7 @@ function BoardPostView() {
             </button>
             <button 
               onClick={handleDelete}
-              className="action-button"
+              className="action-button delete-button"
             >
               삭제
             </button>
@@ -412,18 +412,17 @@ function BoardPostView() {
         </span>
         <span className="post-date">
           <strong>작성일:</strong> {new Date(post.createdAt).toLocaleString()}
-          {post.updatedAt && post.updatedAt !== post.createdAt && (
-            <span className="update-date"> 
-              (수정일: {new Date(post.updatedAt).toLocaleString()})
-            </span>
-          )}
         </span>
+        {post.updatedAt && post.updatedAt !== post.createdAt && (
+          <span className="update-date">
+            <strong>수정일:</strong> {new Date(post.updatedAt).toLocaleString()}
+          </span>
+        )}
         <span className="post-views">
           <strong>조회수:</strong> {post.viewCount || 0}
         </span>
         {post.tags && (
           <div className="post-tags">
-            <strong>태그:</strong>
             {createTagDisplayData(post.tags, tagList).map((tag, index) => (
               <span key={index} className={`tag ${tag.category}-tag`}>
                 {tag.category === 'type' ? 'Type' : 'Region'}: {tag.displayName}
@@ -480,14 +479,20 @@ function BoardPostView() {
                         value={editCommentText}
                         onChange={(e) => setEditCommentText(e.target.value)}
                       />
-                      <div className="comment-edit-buttons">
+                      <div className="comment-edit-actions">
                         <button 
                           onClick={() => handleUpdateComment(commentId)} 
                           disabled={loading}
+                          className="comment-edit-button"
                         >
                           저장
                         </button>
-                        <button onClick={handleCancelEditComment}>취소</button>
+                        <button 
+                          onClick={handleCancelEditComment}
+                          className="comment-cancel-button"
+                        >
+                          취소
+                        </button>
                       </div>
                     </div>
                   ) : (
@@ -504,13 +509,13 @@ function BoardPostView() {
                         {hasPermission && (
                           <div className="comment-actions">
                             <button 
-                              className="comment-action-btn"
+                              className="comment-action-button edit-button"
                               onClick={() => handleEditComment(comment)}
                             >
                               수정
                             </button>
                             <button 
-                              className="comment-action-btn"
+                              className="comment-action-button delete-button"
                               onClick={() => handleDeleteComment(commentId)}
                             >
                               삭제
@@ -540,7 +545,7 @@ function BoardPostView() {
             />
             <button 
               type="submit" 
-              className="action-button"
+              className="comment-submit-button"
               disabled={loading}
             >
               {loading ? '작성 중...' : '댓글 달기'}

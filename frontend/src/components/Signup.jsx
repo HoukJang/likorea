@@ -158,7 +158,7 @@ function Signup() {
           size="large"
           loading={loading}
           disabled={loading}
-          className="signup-btn"
+          className="signup-button"
         >
           회원가입
         </Button>

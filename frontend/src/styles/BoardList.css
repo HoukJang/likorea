@@ -1,37 +1,53 @@
-.board-list-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
-}
-
-.page-header {
-  margin-bottom: 20px;
-}
-
-.table-responsive {
-  overflow-x: auto;
-  margin-bottom: 20px;
-}
-
-/* 태극 테마 색상 체계 */
+/* 현대화된 색상 체계 */
 :root {
   --primary-bg: #ffffff;
   --secondary-bg: #111111;
   --primary-text: #111111;
   --secondary-text: #6b7280;
-  --accent-red: #dc2626;
-  --accent-red-dark: #b91c1c;
-  --accent-blue: #2563eb;
-  --accent-blue-dark: #1d4ed8;
-  --gray-light: #f8fafc;
-  --gray-medium: #6b7280;
-  --gray-dark: #374151;
-  --border-color: #e5e7eb;
-  --text-primary: #111111;
-  --text-secondary: #6b7280;
-  --white: #ffffff;
-  --focus-outline: 2px solid var(--accent-blue);
+  
+  /* 현대화된 Primary Colors */
+  --primary-blue: #3b82f6;
+  --primary-blue-dark: #2563eb;
+  --primary-blue-light: #60a5fa;
+  
+  /* 현대화된 Secondary Colors */
+  --secondary-green: #10b981;
+  --secondary-green-dark: #059669;
+  --secondary-green-light: #34d399;
+  
+  /* 현대화된 Danger Colors */
+  --accent-red: #ef4444;
+  --accent-red-dark: #dc2626;
+  
+  /* 세밀한 Gray Scale */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  
+  /* Semantic Colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+  
+  /* Legacy Support (기존 코드 호환성) */
+  --accent-blue: var(--primary-blue);
+  --accent-blue-dark: var(--primary-blue-dark);
+  --gray-light: var(--gray-100);
+  --gray-medium: var(--gray-500);
+  --gray-dark: var(--gray-700);
+  --border-color: var(--gray-200);
+  --text-primary: var(--primary-text);
+  --text-secondary: var(--secondary-text);
+  --white: var(--primary-bg);
+  --focus-outline: 2px solid var(--primary-blue);
   --focus-outline-offset: 2px;
   --btn-radius: 8px;
   --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
@@ -44,87 +60,119 @@
   --font-size-xl: 1.25rem;    /* 20px - 매우 큰 텍스트 */
 }
 
-/* 통일된 버튼 스타일 */
-.btn {
-  display: inline-block;
-  padding: 8px 16px;
-  border: none;
-  border-radius: var(--btn-radius);
-  font-size: var(--font-size-base);
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  line-height: 1.5;
+/* 현대화된 글 리스트 컨테이너 */
+.board-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
   font-family: var(--font-family);
 }
 
+.page-header {
+  margin-bottom: 20px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+/* 통일된 현대화된 버튼 스타일 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  line-height: 1.5;
+  font-family: var(--font-family);
+  min-height: 44px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .btn-primary {
-  background-color: var(--accent-blue);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
   color: var(--white);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
 
 .btn-primary:hover {
-  background-color: var(--accent-blue-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+  background: linear-gradient(135deg, var(--primary-blue-dark) 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
 }
 
 .btn-primary:focus {
   outline: var(--focus-outline);
   outline-offset: var(--focus-outline-offset);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
 .btn-secondary {
-  background-color: var(--accent-red);
+  background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-red-dark) 100%);
   color: var(--white);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
 }
 
 .btn-secondary:hover {
-  background-color: var(--accent-red-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+  background: linear-gradient(135deg, var(--accent-red-dark) 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
 }
 
 .btn-secondary:focus {
   outline: var(--focus-outline);
   outline-offset: var(--focus-outline-offset);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
 }
 
 .btn-danger {
-  background-color: var(--accent-red);
+  background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-red-dark) 100%);
   color: var(--white);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
 }
 
 .btn-danger:hover {
-  background-color: var(--accent-red-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+  background: linear-gradient(135deg, var(--accent-red-dark) 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
 }
 
 .btn-danger:focus {
   outline: var(--focus-outline);
   outline-offset: var(--focus-outline-offset);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
 }
 
 .btn-outline {
-  background-color: transparent;
-  color: var(--accent-blue);
-  border: 2px solid var(--accent-blue);
+  background: transparent;
+  color: var(--primary-blue);
+  border: 2px solid var(--primary-blue);
+  box-shadow: none;
 }
 
 .btn-outline:hover {
-  background-color: var(--accent-blue);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
   color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 .btn-outline:focus {
   outline: var(--focus-outline);
   outline-offset: var(--focus-outline-offset);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
-/* 테이블 스타일 개선 */
+/* 원래 테이블 스타일 복원 */
 .board-table {
   width: 100%;
   border-collapse: collapse;
@@ -175,7 +223,7 @@
   border-bottom: none;
 }
 
-/* 중요 정보 강조 */
+/* 원래 포스트 번호 스타일 복원 */
 .board-table .post-number {
   font-weight: 600;
   color: var(--accent-blue);
@@ -185,7 +233,7 @@
   min-width: 60px;
 }
 
-/* 글종류별 테이블 태그 색상 */
+/* 원래 글종류별 테이블 태그 색상 복원 */
 .board-table tr[data-post-type="생활정보"] .post-number {
   color: #3B82F6;
 }
@@ -223,6 +271,7 @@
   color: #6B7280;
 }
 
+/* 원래 포스트 제목 스타일 복원 */
 .board-table .post-title {
   font-weight: 600;
   color: var(--primary-text);
@@ -233,9 +282,10 @@
 }
 
 .board-table tbody tr:hover .post-title {
-  color: var(--accent-blue);
+  color: var(--primary-text);
 }
 
+/* 원래 댓글 수 스타일 복원 */
 .comment-count {
   color: var(--secondary-text);
   font-size: var(--font-size-sm);
@@ -250,31 +300,60 @@
   margin-left: 6px;
 }
 
+/* 원래 포스트 메타 정보 스타일 복원 */
 .board-table .post-author {
   color: var(--primary-text);
   font-size: var(--font-size-base);
   font-style: normal;
-  background-color: var(--white);
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+  cursor: default;
+  transition: none;
 }
 
 .board-table .post-region {
   color: var(--primary-text);
   font-size: var(--font-size-base);
   font-weight: 500;
-  background-color: var(--white);
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+  cursor: default;
+  transition: none;
 }
 
 .board-table .post-date {
   color: var(--primary-text);
   font-size: var(--font-size-base);
-  background-color: var(--white);
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+  cursor: default;
+  transition: none;
 }
 
 .board-table .post-views {
   color: var(--primary-text);
   font-size: var(--font-size-base);
   font-weight: 500;
-  background-color: var(--white);
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+  cursor: default;
+  transition: none;
 }
 
 /* 사용자 컨트롤 영역 개선 - 텍스트 형식 */

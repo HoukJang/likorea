@@ -98,7 +98,7 @@ function Login() {
           size="large"
           loading={loading}
           disabled={loading}
-          className="login-btn"
+          className="login-button"
         >
           로그인
         </Button>

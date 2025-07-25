@@ -1,21 +1,53 @@
-/* 태극 테마 색상 체계 */
+/* 현대화된 색상 체계 */
 :root {
   --primary-bg: #ffffff;
   --secondary-bg: #111111;
   --primary-text: #111111;
   --secondary-text: #6b7280;
-  --accent-red: #dc2626;
-  --accent-red-dark: #b91c1c;
-  --accent-blue: #2563eb;
-  --accent-blue-dark: #1d4ed8;
-  --gray-light: #f8fafc;
-  --gray-medium: #6b7280;
-  --gray-dark: #374151;
-  --border-color: #e5e7eb;
-  --text-primary: #111111;
-  --text-secondary: #6b7280;
-  --white: #ffffff;
-  --focus-outline: 2px solid var(--accent-blue);
+  
+  /* 현대화된 Primary Colors */
+  --primary-blue: #3b82f6;
+  --primary-blue-dark: #2563eb;
+  --primary-blue-light: #60a5fa;
+  
+  /* 현대화된 Secondary Colors */
+  --secondary-green: #10b981;
+  --secondary-green-dark: #059669;
+  --secondary-green-light: #34d399;
+  
+  /* 현대화된 Danger Colors */
+  --accent-red: #ef4444;
+  --accent-red-dark: #dc2626;
+  
+  /* 세밀한 Gray Scale */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  
+  /* Semantic Colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+  
+  /* Legacy Support (기존 코드 호환성) */
+  --accent-blue: var(--primary-blue);
+  --accent-blue-dark: var(--primary-blue-dark);
+  --gray-light: var(--gray-100);
+  --gray-medium: var(--gray-500);
+  --gray-dark: var(--gray-700);
+  --border-color: var(--gray-200);
+  --text-primary: var(--primary-text);
+  --text-secondary: var(--secondary-text);
+  --white: var(--primary-bg);
+  --focus-outline: 2px solid var(--primary-blue);
   --focus-outline-offset: 2px;
   --btn-radius: 8px;
   --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
@@ -48,97 +80,116 @@
 .nav-left {
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
+/* 통일된 네비게이션 버튼 */
 .nav-button {
-  padding: 8px 16px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--btn-radius);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: var(--font-family);
-  background: var(--white);
-  color: var(--primary-text);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+  padding: 10px 18px !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-family: var(--font-family) !important;
+  min-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 더 강력한 선택자로 글자 크기 강제 적용 */
+.global-navigation .nav-button,
+.global-navigation .main-button,
+.global-navigation .write-button,
+.global-navigation .user-button,
+.global-navigation .logout-button,
+.global-navigation .login-button {
+  font-size: 14px !important;
 }
 
 .nav-button:hover {
   background: var(--gray-light);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .nav-button:focus {
   outline: var(--focus-outline);
   outline-offset: var(--focus-outline-offset);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
+/* 현대화된 메인 버튼 */
 .main-button {
-  background: var(--accent-blue);
-  color: var(--white);
-  border-color: var(--accent-blue);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%) !important;
+  color: var(--white) !important;
+  font-size: 14px !important;
 }
 
 .main-button:hover {
-  background: var(--accent-blue-dark);
-  border-color: var(--accent-blue-dark);
+  background: linear-gradient(135deg, var(--primary-blue-dark) 0%, #1d4ed8 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3) !important;
 }
 
+/* 현대화된 글쓰기 버튼 - 그린 계열로 변경 */
 .write-button {
-  background: var(--accent-red);
-  color: var(--white);
-  border-color: var(--accent-red);
-  margin-left: 10px;
+  background: linear-gradient(135deg, var(--secondary-green) 0%, var(--secondary-green-dark) 100%) !important;
+  color: var(--white) !important;
+  font-size: 14px !important;
 }
 
 .write-button:hover {
-  background: var(--accent-red-dark);
-  border-color: var(--accent-red-dark);
+  background: linear-gradient(135deg, var(--secondary-green-dark) 0%, #047857 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3) !important;
 }
 
 .user-button {
-  background: var(--gray-light);
-  color: var(--secondary-text);
-  text-decoration: underline;
-  cursor: pointer;
+  background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%) !important;
+  color: var(--gray-700) !important;
+  font-size: 14px !important;
 }
 
 .user-button:hover {
-  background: var(--border-color);
-  color: var(--primary-text);
+  background: linear-gradient(135deg, var(--gray-200) 0%, var(--gray-300) 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
+/* 현대화된 로그아웃 버튼 */
 .logout-button {
-  background: var(--accent-red);
-  color: var(--white);
-  border-color: var(--accent-red);
+  background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-red-dark) 100%) !important;
+  color: var(--white) !important;
+  font-size: 14px !important;
 }
 
 .logout-button:hover {
-  background: var(--accent-red-dark);
-  border-color: var(--accent-red-dark);
+  background: linear-gradient(135deg, var(--accent-red-dark) 0%, #b91c1c 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3) !important;
 }
 
+/* 현대화된 로그인 버튼 */
 .login-button {
-  background: var(--accent-blue);
-  color: var(--white);
-  border-color: var(--accent-blue);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%) !important;
+  color: var(--white) !important;
+  font-size: 14px !important;
 }
 
 .login-button:hover {
-  background: var(--accent-blue-dark);
-  border-color: var(--accent-blue-dark);
+  background: linear-gradient(135deg, var(--primary-blue-dark) 0%, #1d4ed8 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3) !important;
 }
 
 /* 반응형 디자인 */
@@ -148,12 +199,13 @@
   }
   
   .nav-right {
-    gap: 10px;
+    gap: 8px;
   }
   
   .nav-button {
-    padding: 6px 12px;
-    font-size: var(--font-size-xs);
+    padding: 8px 14px;
+    font-size: 14px;
+    min-height: 40px;
   }
   
   .user-button {
@@ -164,7 +216,7 @@
   }
   
   .write-button {
-    margin-left: 8px;
-    font-size: var(--font-size-xs);
+    margin-left: 6px;
+    font-size: 14px;
   }
 } 
