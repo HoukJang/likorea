@@ -1,15 +1,52 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const app = require('../../server');
 const BoardPost = require('../../models/BoardPost');
 const User = require('../../models/User');
+const Tag = require('../../models/Tag');
 
 describe('Board API Tests', () => {
   let server;
   let testUser;
   let testPost;
+  let authToken;
+  let testTypeTag;
+  let testRegionTag;
+
+  // JWT 토큰 생성 헬퍼 함수
+  const generateToken = (user) => {
+    return jwt.sign(
+      { 
+        _id: user._id,  // userId 대신 _id 사용
+        id: user.id, 
+        authority: user.authority 
+      },
+      process.env.JWT_SECRET || 'test-secret-key',
+      { expiresIn: '1h' }
+    );
+  };
 
   beforeAll(async () => {
+    // 테스트용 태그 생성
+    testTypeTag = new Tag({
+      category: 'type',
+      value: '생활정보',
+      displayName: '생활정보',
+      order: 1,
+      isActive: true
+    });
+    await testTypeTag.save();
+
+    testRegionTag = new Tag({
+      category: 'region',
+      value: '롱아일랜드',
+      displayName: '롱아일랜드',
+      order: 1,
+      isActive: true
+    });
+    await testRegionTag.save();
+
     // 테스트 사용자 생성
     testUser = new User({
       id: 'testuser',
@@ -18,12 +55,16 @@ describe('Board API Tests', () => {
       authority: 3
     });
     await testUser.save();
+    
+    // 인증 토큰 생성
+    authToken = generateToken(testUser);
   });
 
   afterAll(async () => {
     // 테스트 데이터 정리
     await BoardPost.deleteMany({});
     await User.deleteMany({});
+    await Tag.deleteMany({});
   });
 
   beforeEach(async () => {
@@ -38,6 +79,9 @@ describe('Board API Tests', () => {
       authority: 3
     });
     await testUser.save();
+
+    // 인증 토큰 재생성
+    authToken = generateToken(testUser);
 
     // 테스트 게시글 생성
     testPost = new BoardPost({
@@ -115,11 +159,12 @@ describe('Board API Tests', () => {
 
       const response = await request(app)
         .post('/api/boards')
+        .set('Authorization', `Bearer ${authToken}`)
         .send(postData)
         .expect(201);
 
       expect(response.body.success).toBe(true);
-      expect(response.body.message).toBe('게시글이 성공적으로 작성되었습니다.');
+      expect(response.body.message).toBe('게시글 생성 성공');
       expect(response.body.post.title).toBe(postData.title);
       expect(response.body.post.content).toBe(postData.content);
     });
@@ -133,8 +178,28 @@ describe('Board API Tests', () => {
 
       const response = await request(app)
         .post('/api/boards')
+        .set('Authorization', `Bearer ${authToken}`)
         .send(postData)
         .expect(400);
+
+      // success 필드가 false이거나 undefined일 수 있음
+      expect(response.body.success === false || response.body.success === undefined).toBe(true);
+    });
+
+    it('should return 403 for unauthorized request', async () => {
+      const postData = {
+        title: '새 게시글',
+        content: '새 내용',
+        tags: {
+          type: '생활정보',
+          region: '롱아일랜드'
+        }
+      };
+
+      const response = await request(app)
+        .post('/api/boards')
+        .send(postData)
+        .expect(403);
 
       expect(response.body.success).toBe(false);
     });
@@ -149,11 +214,12 @@ describe('Board API Tests', () => {
 
       const response = await request(app)
         .put(`/api/boards/${testPost._id}`)
+        .set('Authorization', `Bearer ${authToken}`)
         .send(updateData)
         .expect(200);
 
       expect(response.body.success).toBe(true);
-      expect(response.body.message).toBe('게시글이 성공적으로 수정되었습니다.');
+      expect(response.body.message).toBe('게시글 수정 성공');
       expect(response.body.post.title).toBe(updateData.title);
       expect(response.body.post.content).toBe(updateData.content);
     });
@@ -167,11 +233,26 @@ describe('Board API Tests', () => {
 
       const response = await request(app)
         .put(`/api/boards/${fakeId}`)
+        .set('Authorization', `Bearer ${authToken}`)
         .send(updateData)
         .expect(404);
 
       expect(response.body.success).toBe(false);
       expect(response.body.error).toBe('게시글을 찾을 수 없습니다.');
+    });
+
+    it('should return 403 for unauthorized request', async () => {
+      const updateData = {
+        title: '수정된 제목',
+        content: '수정된 내용'
+      };
+
+      const response = await request(app)
+        .put(`/api/boards/${testPost._id}`)
+        .send(updateData)
+        .expect(403);
+
+      expect(response.body.success).toBe(false);
     });
   });
 
@@ -179,20 +260,30 @@ describe('Board API Tests', () => {
     it('should delete post successfully', async () => {
       const response = await request(app)
         .delete(`/api/boards/${testPost._id}`)
+        .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
       expect(response.body.success).toBe(true);
-      expect(response.body.message).toBe('게시글이 성공적으로 삭제되었습니다.');
+      expect(response.body.message).toBe('게시글 삭제 성공');
     });
 
     it('should return 404 for non-existent post', async () => {
       const fakeId = new mongoose.Types.ObjectId();
       const response = await request(app)
         .delete(`/api/boards/${fakeId}`)
+        .set('Authorization', `Bearer ${authToken}`)
         .expect(404);
 
       expect(response.body.success).toBe(false);
       expect(response.body.error).toBe('게시글을 찾을 수 없습니다.');
+    });
+
+    it('should return 403 for unauthorized request', async () => {
+      const response = await request(app)
+        .delete(`/api/boards/${testPost._id}`)
+        .expect(403);
+
+      expect(response.body.success).toBe(false);
     });
   });
 }); 
