@@ -34,6 +34,35 @@ class ApiClient {
   }
 
   /**
+   * 토큰 만료 감지 및 자동 로그아웃
+   */
+  handleTokenExpiration() {
+    console.log('토큰이 만료되었습니다. 자동 로그아웃을 실행합니다.');
+    
+    // 사용자에게 알림
+    if (typeof window !== 'undefined' && window.alert) {
+      alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
+    }
+    
+    // 로컬스토리지에서 인증 정보 제거
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userAuthority');
+    
+    // 로그아웃 이벤트 발생
+    window.dispatchEvent(new Event('logout'));
+    
+    // 현재 페이지가 로그인이 필요한 페이지인 경우 로그인 페이지로 리다이렉트
+    const currentPath = window.location.pathname;
+    const loginRequiredPaths = ['/boards/new', '/boards/edit', '/admin', '/profile'];
+    
+    if (loginRequiredPaths.some(path => currentPath.includes(path))) {
+      window.location.href = '/login';
+    }
+  }
+
+  /**
    * API 요청 실행
    * @param {string} endpoint - API 엔드포인트
    * @param {Object} options - fetch 옵션
@@ -64,6 +93,14 @@ class ApiClient {
       }
 
       if (!response.ok) {
+        // 토큰 만료 에러 처리
+        if (response.status === 401 && data.error && 
+            (data.error.includes('토큰이 만료되었습니다') || 
+             data.error.includes('유효하지 않은 토큰입니다') ||
+             data.error.includes('인증 토큰이 필요합니다'))) {
+          this.handleTokenExpiration();
+        }
+        
         const errorMessage = data.error || data.message || `API 요청 실패: ${response.status}`;
         const error = new Error(errorMessage);
         error.response = response;
@@ -73,6 +110,14 @@ class ApiClient {
 
       return data;
     } catch (error) {
+      // 네트워크 에러나 기타 에러에서도 토큰 만료 확인
+      if (error.message && 
+          (error.message.includes('토큰이 만료되었습니다') || 
+           error.message.includes('유효하지 않은 토큰입니다') ||
+           error.message.includes('인증 토큰이 필요합니다'))) {
+        this.handleTokenExpiration();
+      }
+      
       throw handleApiError(error);
     }
   }
