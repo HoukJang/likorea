@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAllTags } from '../api/tags';
+import { SUB_CATEGORIES } from '../utils/tagUtils';
 import '../styles/TagFilter.css';
 
 const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
@@ -9,6 +10,7 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
   const [filters, setFilters] = useState({
     type: currentFilters.type || '',
     region: currentFilters.region || '',
+    subcategory: currentFilters.subcategory || '',
     search: currentFilters.search || ''
   });
 
@@ -34,6 +36,12 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
       ...filters,
       [key]: value
     };
+    
+    // 글종류가 변경되면 소주제 초기화
+    if (key === 'type') {
+      newFilters.subcategory = '';
+    }
+    
     setFilters(newFilters);
     onFilterChange(newFilters);
   };
@@ -42,13 +50,14 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
     const clearedFilters = {
       type: '',
       region: '',
+      subcategory: '',
       search: ''
     };
     setFilters(clearedFilters);
     onFilterChange(clearedFilters);
   };
 
-  const hasActiveFilters = filters.type || filters.region || filters.search;
+  const hasActiveFilters = filters.type || filters.region || filters.subcategory || filters.search;
 
   if (loading) {
     return <div className="tag-filter-loading">필터를 불러오는 중...</div>;
@@ -76,6 +85,24 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
             ))}
           </select>
         </div>
+
+        {filters.type && SUB_CATEGORIES[filters.type] && (
+          <div className="filter-group">
+            <label className="filter-label">소주제</label>
+            <select
+              className="filter-select"
+              value={filters.subcategory}
+              onChange={(e) => handleFilterChange('subcategory', e.target.value)}
+            >
+              <option value="">전체</option>
+              {SUB_CATEGORIES[filters.type].map(subcategory => (
+                <option key={subcategory} value={subcategory}>
+                  {subcategory}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <div className="filter-group">
           <label className="filter-label">지역</label>
@@ -117,6 +144,17 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
               글종류: {tags.type?.find(t => t.value === filters.type)?.displayName}
               <button 
                 onClick={() => handleFilterChange('type', '')}
+                className="remove-filter-btn"
+              >
+                ×
+              </button>
+            </span>
+          )}
+          {filters.subcategory && (
+            <span className="filter-tag">
+              소주제: {filters.subcategory}
+              <button 
+                onClick={() => handleFilterChange('subcategory', '')}
                 className="remove-filter-btn"
               >
                 ×

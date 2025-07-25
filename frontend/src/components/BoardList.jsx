@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getBoards } from '../api/boards';
 import { getAllTags } from '../api/tags';
 import { processPostsList, formatDate, getAuthorId } from '../utils/dataUtils';
-import { getTagDisplayName } from '../utils/tagUtils';
+import { getTagDisplayName, getTagDisplayText } from '../utils/tagUtils';
 import TagFilter from './TagFilter';
 import '../styles/BoardList.css';
 
@@ -165,7 +165,7 @@ function BoardList() {
                     >
                     <td className="post-number" style={{ textAlign: "center" }} role="cell">
                       {tagList && post.tags && post.tags.type 
-                        ? getTagDisplayName(post.tags.type, tagList, 'type')
+                        ? getTagDisplayText(post.tags)
                         : (post.type || '일반')}
                     </td>
                     <td style={{ textAlign: "left" }} role="cell">
@@ -224,7 +224,7 @@ function BoardList() {
                 <div className="mobile-card-header">
                   <span className="mobile-card-number">
                     {tagList && post.tags && post.tags.type 
-                      ? getTagDisplayName(post.tags.type, tagList, 'type')
+                      ? getTagDisplayText(post.tags)
                       : (post.type || '일반')}
                   </span>
                   <span className="mobile-card-views">조회 {post.viewCount ?? 0}</span>

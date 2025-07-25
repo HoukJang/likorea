@@ -42,7 +42,7 @@ function BoardPostForm() {
           const data = await getBoardPost(postId);
           setTitle(data.post.title);
           setContent(data.post.content);
-          setTags(data.post.tags || { type: '', region: '0' });
+          setTags(data.post.tags || { type: '', region: '0', subcategory: '' });
           if (contentRef.current) {
             contentRef.current.innerHTML = data.post.content;
           }
@@ -139,7 +139,10 @@ function BoardPostForm() {
         console.log('수정 요청 데이터:', {
           title,
           content: currentContent,
-          tags
+          tags,
+          tagsType: tags.type,
+          tagsRegion: tags.region,
+          tagsSubcategory: tags.subcategory
         });
 
         response = await updateBoard(postId, {

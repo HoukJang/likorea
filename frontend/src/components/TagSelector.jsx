@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAllTags } from '../api/tags';
+import { SUB_CATEGORIES } from '../utils/tagUtils';
 import '../styles/TagSelector.css';
 
 const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
@@ -36,6 +37,12 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
       ...selectedTags,
       [category]: value
     };
+    
+    // 글종류가 변경되면 소주제 초기화
+    if (category === 'type') {
+      newTags.subcategory = '';
+    }
+    
     onTagChange(newTags);
   };
 
@@ -73,6 +80,26 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
           })}
         </select>
       </div>
+
+      {selectedTags.type && SUB_CATEGORIES[selectedTags.type] && (
+        <div className="tag-group">
+          <label className="tag-label">
+            소주제
+          </label>
+          <select
+            className="tag-select"
+            value={selectedTags.subcategory || ''}
+            onChange={(e) => handleTagChange('subcategory', e.target.value)}
+          >
+            <option value="">소주제 선택 (선택사항)</option>
+            {SUB_CATEGORIES[selectedTags.type].map(subcategory => (
+              <option key={subcategory} value={subcategory}>
+                {subcategory}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className="tag-group">
         <label className="tag-label">

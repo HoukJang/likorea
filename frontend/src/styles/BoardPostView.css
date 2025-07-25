@@ -273,6 +273,17 @@
   background: var(--accent-red);
 }
 
+.subcategory-tag {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin-left: 8px;
+  box-shadow: 0 2px 4px rgba(139, 92, 246, 0.2);
+}
+
 .post-divider {
   display: none;
 }

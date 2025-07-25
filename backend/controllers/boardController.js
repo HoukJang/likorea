@@ -3,6 +3,7 @@ const User = require('../models/User');
 const Tag = require('../models/Tag');
 const Comment = require('../models/Comment');
 const sanitizeHtml = require('sanitize-html');
+const { SUB_CATEGORIES } = require('../utils/initTags');
 const { 
   asyncHandler, 
   ValidationError, 
@@ -150,6 +151,14 @@ exports.createPost = asyncHandler(async (req, res) => {
     throw new ValidationError('유효하지 않은 글종류 태그입니다.');
   }
   
+  // 소주제 유효성 검증 (선택사항)
+  if (tags.subcategory) {
+    const validSubCategories = SUB_CATEGORIES[tags.type];
+    if (!validSubCategories || !validSubCategories.includes(tags.subcategory)) {
+      throw new ValidationError('유효하지 않은 소주제입니다.');
+    }
+  }
+  
   // 지역 태그는 선택사항 (없으면 '0'으로 설정)
   if (!tags.region) {
     tags.region = '0';
@@ -184,7 +193,7 @@ exports.createPost = asyncHandler(async (req, res) => {
 
 // 게시글 목록 조회
 exports.getPosts = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, type, region, search } = req.query;
+  const { page = 1, limit = 10, type, region, subcategory, search } = req.query;
   
   const skip = (Number(page) - 1) * Number(limit);
   
@@ -193,6 +202,10 @@ exports.getPosts = asyncHandler(async (req, res) => {
   
   if (type) {
     filter['tags.type'] = type;
+  }
+  
+  if (subcategory) {
+    filter['tags.subcategory'] = subcategory;
   }
   
   if (region) {
@@ -283,9 +296,12 @@ exports.updatePost = asyncHandler(async (req, res) => {
   const { postId } = req.params;
   let { title, content, tags } = req.body;
   
-  console.log('게시글 수정 컨트롤러 - 요청 데이터:', { postId, title, content, tags });
-  console.log('게시글 수정 컨트롤러 - 전체 req.body:', req.body);
-  console.log('게시글 수정 컨트롤러 - 사용자 정보:', req.user);
+  console.log('게시글 수정 요청 데이터:', {
+    postId,
+    title,
+    content: content ? content.substring(0, 100) + '...' : null,
+    tags
+  });
   
   // 인증된 사용자 정보 사용
   const userId = req.user.id;
@@ -324,7 +340,7 @@ exports.updatePost = asyncHandler(async (req, res) => {
   
   // 태그 수정
   if (tags) {
-    if (tags.type || tags.region) {
+    if (tags.type || tags.region || tags.subcategory) {
       // 태그 유효성 검증
       if (tags.type) {
         const typeTag = await Tag.findOne({ category: 'type', value: tags.type, isActive: true });
@@ -340,6 +356,23 @@ exports.updatePost = asyncHandler(async (req, res) => {
           throw new ValidationError('유효하지 않은 Region 태그입니다.');
         }
         updateData['tags.region'] = tags.region;
+      }
+      
+      // 소주제 업데이트
+      if (tags.subcategory !== undefined) {
+        // 소주제가 빈 문자열이면 삭제, 아니면 업데이트
+        if (tags.subcategory === '') {
+          updateData['tags.subcategory'] = undefined;
+        } else {
+          // 소주제 유효성 검증
+          if (tags.type && tags.subcategory) {
+            const validSubCategories = SUB_CATEGORIES[tags.type];
+            if (!validSubCategories || !validSubCategories.includes(tags.subcategory)) {
+              throw new ValidationError('유효하지 않은 소주제입니다.');
+            }
+          }
+          updateData['tags.subcategory'] = tags.subcategory;
+        }
       }
     }
   }
@@ -399,5 +432,24 @@ exports.deletePost = asyncHandler(async (req, res) => {
   res.json({ 
     success: true,
     message: '게시글 삭제 성공' 
+  });
+});
+
+// 소주제 정보 조회
+exports.getSubCategories = asyncHandler(async (req, res) => {
+  const { type } = req.query;
+  
+  if (!type) {
+    return res.json({
+      success: true,
+      subCategories: SUB_CATEGORIES
+    });
+  }
+  
+  const subCategories = SUB_CATEGORIES[type] || [];
+  
+  res.json({
+    success: true,
+    subCategories
   });
 });

@@ -111,6 +111,11 @@ router.post('/', authenticateToken, requireAuthority(1), postLimiter, validatePo
  *           type: string
  *         description: 지역 태그 필터
  *       - in: query
+ *         name: subcategory
+ *         schema:
+ *           type: string
+ *         description: 소주제 필터
+ *       - in: query
  *         name: search
  *         schema:
  *           type: string
@@ -139,6 +144,34 @@ router.post('/', authenticateToken, requireAuthority(1), postLimiter, validatePo
  *                   type: object
  */
 router.get('/', boardController.getPosts);
+
+/**
+ * @swagger
+ * /api/boards/subcategories:
+ *   get:
+ *     summary: 소주제 정보 조회
+ *     tags: [Boards]
+ *     parameters:
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *         description: 글종류 (선택사항, 없으면 전체 소주제 반환)
+ *     responses:
+ *       200:
+ *         description: 소주제 정보 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 subCategories:
+ *                   type: object
+ *                   description: 글종류별 소주제 목록
+ */
+router.get('/subcategories', boardController.getSubCategories);
 
 /**
  * @swagger

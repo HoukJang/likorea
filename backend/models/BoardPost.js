@@ -23,6 +23,7 @@ const boardPostSchema = new mongoose.Schema(
     tags: {
       type: { type: String, required: true }, // 필수 태그
       region: { type: String, required: true }, // 필수 태그
+      subcategory: { type: String }, // 소주제 (선택사항)
       // 추후 추가될 수 있는 태그들
       // category: String,
       // location: String,

@@ -200,10 +200,30 @@ const deactivateTag = async (category, value) => {
   }
 };
 
+// 태그 초기화 유틸리티
+
+// 글종류별 소주제 분류
+const SUB_CATEGORIES = {
+  '공지': ['일반', '긴급'],
+  '사고팔고': ['나눔', '중고'],
+  '부동산': ['렌트', '룸메이트'],
+  '생활정보': ['맛집', '업체정보'],
+  '모임': ['번개', '정기'],
+  '기타': ['구인구직', '기타']
+};
+
+// 기본 태그들
+const DEFAULT_TAGS = {
+  types: ['공지', '사고팔고', '부동산', '생활정보', '모임', '기타'],
+  regions: ['전체', '맨해튼', '브루클린', '퀸즈', '브롱크스', '스태튼아일랜드', '롱아일랜드', '뉴저지', '기타']
+};
+
 module.exports = {
   initializeTags,
   getTagsByCategory,
   getAllActiveTags,
   addTag,
-  deactivateTag
+  deactivateTag,
+  DEFAULT_TAGS,
+  SUB_CATEGORIES
 }; 

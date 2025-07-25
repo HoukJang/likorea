@@ -12,11 +12,12 @@ import apiClient from './client';
  * @param {number} options.limit - 페이지당 항목 수 (기본값: 10)
  * @param {string} options.type - 타입 태그 필터
  * @param {string} options.region - 지역 태그 필터
+ * @param {string} options.subcategory - 소주제 필터
  * @param {string} options.search - 검색어
  * @returns {Promise} 게시글 목록
  */
 export const getBoards = async (options = {}) => {
-  const { page = 1, limit = 10, type, region, search } = options;
+  const { page = 1, limit = 10, type, region, subcategory, search } = options;
   const params = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString()
@@ -24,6 +25,7 @@ export const getBoards = async (options = {}) => {
   
   if (type) params.append('type', type);
   if (region) params.append('region', region);
+  if (subcategory) params.append('subcategory', subcategory);
   if (search) params.append('search', search);
   
   return apiClient.get(`/api/boards?${params.toString()}`);
@@ -137,4 +139,16 @@ export const getComments = async (postId) => {
     // 에러 발생 시 빈 댓글 목록 반환
     return { success: true, comments: [] };
   }
+};
+
+/**
+ * 소주제 정보 조회
+ * @param {string} type - 글종류 (선택사항, 없으면 전체 소주제 반환)
+ * @returns {Promise} 소주제 정보
+ */
+export const getSubCategories = async (type = null) => {
+  const params = new URLSearchParams();
+  if (type) params.append('type', type);
+  
+  return apiClient.get(`/api/boards/subcategories?${params.toString()}`);
 };

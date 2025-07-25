@@ -11,7 +11,7 @@ import {
 import { getUser } from '../api/auth';
 import { getAllTags } from '../api/tags';
 import { processPostData, processCommentsList, formatDate, getAuthorId } from '../utils/dataUtils';
-import { createTagDisplayData } from '../utils/tagUtils';
+import { createTagDisplayData, getTagDisplayText } from '../utils/tagUtils';
 import { usePermission } from '../hooks/usePermission';
 import { useErrorHandler } from '../utils/errorHandler';
 import '../styles/BoardPostView.css';
@@ -423,11 +423,17 @@ function BoardPostView() {
         </span>
         {post.tags && (
           <div className="post-tags">
+            {console.log('글보기 태그 데이터:', post.tags)}
             {createTagDisplayData(post.tags, tagList).map((tag, index) => (
               <span key={index} className={`tag ${tag.category}-tag`}>
                 {tag.category === 'type' ? 'Type' : 'Region'}: {tag.displayName}
               </span>
             ))}
+            {post.tags.subcategory && (
+              <span className="tag subcategory-tag">
+                Sub: {post.tags.subcategory}
+              </span>
+            )}
           </div>
         )}
       </div>
