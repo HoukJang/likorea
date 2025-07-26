@@ -1,0 +1,58 @@
+{
+  "name": "longisland-korea",
+  "version": "1.1.1",
+  "description": "Long Island Korea Community Website",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm start",
+    "start": "npm run start:backend",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "build": "npm run build:frontend",
+    "build:frontend": "cd frontend && npm run build",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test -- --watchAll=false",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:fix": "npm run lint:fix:backend && npm run lint:fix:frontend",
+    "lint:fix:backend": "cd backend && npm run lint:fix",
+    "lint:fix:frontend": "cd frontend && npm run lint:fix",
+    "clean": "npm run clean:backend && npm run clean:frontend",
+    "clean:backend": "cd backend && rm -rf node_modules && rm -f package-lock.json",
+    "clean:frontend": "cd frontend && rm -rf node_modules && rm -f package-lock.json && rm -rf build",
+    "deploy:dev": "./deploy.sh development",
+    "deploy:prod": "./deploy.sh production",
+    "setup:dev": "cd backend && node utils/setupDevDB.js",
+    "version:sync": "node scripts/sync-version.js",
+    "version:bump": "node scripts/bump-version.js",
+    "version:bump:major": "node scripts/bump-version.js major",
+    "version:bump:minor": "node scripts/bump-version.js minor",
+    "version:bump:patch": "node scripts/bump-version.js patch"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HoukJang/likorea.git"
+  },
+  "keywords": [
+    "longisland",
+    "korea",
+    "community",
+    "react",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "HoukJang",
+  "license": "MIT"
+}

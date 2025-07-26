@@ -1,6 +1,6 @@
 {
   "name": "longisland-korea-frontend",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "dependencies": {
     "chart.js": "^4.5.0",
     "react": "^18.0.0",
@@ -13,7 +13,8 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "prettier": "^3.0.0"
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -21,8 +22,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src --ext .js,.jsx",
-    "lint:fix": "eslint src --ext .js,.jsx --fix",
-    "format": "prettier --write src"
+    "lint:fix": "eslint src --ext .js,.jsx --fix"
   },
   "browserslist": {
     "production": [
@@ -35,9 +35,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0"
   }
 }

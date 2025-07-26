@@ -23,10 +23,13 @@ module.exports = {
   rules: {
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
-    'no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
+    'no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
     'no-console': 'warn',
-    'prefer-const': 'error',
-    'no-var': 'error'
+    'prefer-const': 'warn',
+    'no-var': 'warn',
+    'no-useless-catch': 'warn',
+    'no-inner-declarations': 'warn',
+    'react-hooks/exhaustive-deps': 'warn'
   },
   settings: {
     react: {

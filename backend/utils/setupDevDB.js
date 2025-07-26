@@ -17,17 +17,11 @@ async function setupDevDB() {
 
     console.log('🔧 개발 환경 확인 완료. DB 설정을 시작합니다...');
 
-    // 데이터베이스 연결
-    if (!process.env.MONGO_URI) {
-      console.error('MONGO_URI 환경변수가 설정되지 않았습니다.');
+    // 데이터베이스가 이미 연결되어 있는지 확인
+    if (mongoose.connection.readyState !== 1) {
+      console.log('데이터베이스 연결이 필요합니다.');
       return;
     }
-
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('데이터베이스 연결 성공');
 
     // 기존 데이터 정리
     await User.deleteMany({});
@@ -315,8 +309,11 @@ async function setupDevDB() {
   } catch (error) {
     console.error('DB 설정 중 오류 발생:', error);
   } finally {
-    await mongoose.disconnect();
-    console.log('데이터베이스 연결 종료');
+    // server.js에서 호출될 때는 연결을 끊지 않음
+    if (require.main === module) {
+      await mongoose.disconnect();
+      console.log('데이터베이스 연결 종료');
+    }
   }
 }
 
