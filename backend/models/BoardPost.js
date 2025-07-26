@@ -6,7 +6,7 @@ const commentSchema = new mongoose.Schema(
   {
     content: { type: String, required: true },
     // 댓글 작성자 (User 모델의 ObjectId, populate로 별명 활용 가능)
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   },
   { timestamps: true }
 );
@@ -33,21 +33,23 @@ const boardPostSchema = new mongoose.Schema(
     // 댓글 배열
     comments: [commentSchema],
     // 최근 업데이트 시간 (댓글 추가/수정 시 업데이트)
-    modifiedAt: { type: Date, default: Date.now }
+    modifiedAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
 
 // 추가: _id를 활용한 가상 id 필드 생성
-boardPostSchema.virtual('id').get(function() {
+boardPostSchema.virtual('id').get(function () {
   return this._id.toHexString();
 });
 boardPostSchema.set('toJSON', { virtuals: true, versionKey: false });
 
 // 새 게시글 생성 시 postNumber 자동 증가 처리
-boardPostSchema.pre('save', async function(next) {
-  if (!this.isNew) return next();
-  
+boardPostSchema.pre('save', async function (next) {
+  if (!this.isNew) {
+    return next();
+  }
+
   try {
     let counter = await Counter.findById('board');
     if (!counter) {

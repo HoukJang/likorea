@@ -5,14 +5,14 @@ import '../styles/CommentForm.css'; // Import the CSS file
 function CommentForm({ boardType, postId, onCommentAdded }) {
   const [comment, setComment] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     const author = localStorage.getItem('userEmail');
     try {
       const res = await fetch(`http://localhost:5000/api/boards/${boardType}/${postId}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ comment, author })
+        body: JSON.stringify({ comment, author }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -23,22 +23,24 @@ function CommentForm({ boardType, postId, onCommentAdded }) {
         alert(data.message);
       }
     } catch (error) {
-      console.error('댓글 작성 실패', error);
+      // 댓글 작성 실패 시 조용히 처리
     }
   };
 
   return (
-    <form className="comment-form" onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label className="form-label">댓글:</label>
-        <textarea 
-          className="comment-textarea"
-          value={comment} 
-          onChange={(e) => setComment(e.target.value)} 
-          required 
+    <form className='comment-form' onSubmit={handleSubmit}>
+      <div className='form-group'>
+        <label className='form-label'>댓글:</label>
+        <textarea
+          className='comment-textarea'
+          value={comment}
+          onChange={e => setComment(e.target.value)}
+          required
         />
       </div>
-      <button type="submit" className="submit-button">댓글 작성</button>
+      <button type='submit' className='submit-button'>
+        댓글 작성
+      </button>
     </form>
   );
 }

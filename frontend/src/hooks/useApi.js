@@ -16,37 +16,32 @@ export const useApi = () => {
    * @returns {Promise} API 호출 결과
    */
   const execute = useCallback(async (apiCall, options = {}) => {
-    const { 
-      onSuccess, 
-      onError, 
-      resetError = true,
-      resetData = false 
-    } = options;
+    const { onSuccess, onError, resetData = false } = options;
 
     try {
       setLoading(true);
       setError(null);
-      
+
       if (resetData) {
         setData(null);
       }
 
       const result = await apiCall();
       setData(result);
-      
+
       if (onSuccess) {
         onSuccess(result);
       }
-      
+
       return result;
     } catch (err) {
       const errorMessage = err.message || 'API 호출 중 오류가 발생했습니다.';
       setError(errorMessage);
-      
+
       if (onError) {
         onError(err);
       }
-      
+
       throw err;
     } finally {
       setLoading(false);
@@ -87,13 +82,16 @@ export const useApi = () => {
  */
 export const useApiCall = (apiCall, options = {}) => {
   const api = useApi();
-  
-  const execute = useCallback(async (...args) => {
-    return api.execute(() => apiCall(...args), options);
-  }, [apiCall, api, options]);
+
+  const execute = useCallback(
+    async (...args) => {
+      return api.execute(() => apiCall(...args), options);
+    },
+    [apiCall, api, options]
+  );
 
   return {
     ...api,
     execute,
   };
-}; 
+};

@@ -6,7 +6,7 @@ import Input from './common/Input';
 import '../styles/Login.css';
 
 // 권한 레벨에 따른 텍스트 반환 함수
-const getAuthorityText = (authority) => {
+const getAuthorityText = authority => {
   return parseInt(authority) === 5 ? '관리자' : '일반 사용자';
 };
 
@@ -17,9 +17,9 @@ function Login() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    
+
     if (!id.trim() || !password) {
       setMessage('아이디와 비밀번호를 모두 입력해주세요.');
       return;
@@ -30,75 +30,78 @@ function Login() {
 
     try {
       const data = await login({ id, password });
-      
+
       const authorityText = getAuthorityText(data.user.authority);
-      setMessage(`로그인 성공! ${authorityText} 권한으로 로그인되었습니다. 메인 페이지로 이동합니다.`);
-      
+      setMessage(
+        `로그인 성공! ${authorityText} 권한으로 로그인되었습니다. 메인 페이지로 이동합니다.`
+      );
+
       // 홈페이지로 리디렉션
       setTimeout(() => {
         navigate('/');
       }, 2000); // 메시지를 더 오래 표시하기 위해 2초로 증가
-      
     } catch (error) {
       let errorMessage = '로그인에 실패했습니다.';
-      
+
       if (error.message) {
-        if (error.message.includes('비밀번호가 틀렸습니다')) {
+        // 백엔드에서 반환하는 정확한 에러 메시지 매칭
+        if (error.message.includes('잘못된 비밀번호입니다')) {
           errorMessage = '비밀번호가 틀렸습니다. 다시 확인해주세요.';
-        } else if (error.message.includes('존재하지 않는 사용자')) {
+        } else if (error.message.includes('잘못된 아이디입니다')) {
           errorMessage = '존재하지 않는 아이디입니다. 아이디를 확인해주세요.';
-        } else if (error.message.includes('입력 정보를 확인해주세요')) {
-          errorMessage = '아이디와 비밀번호를 올바르게 입력해주세요.';
-        } else if (error.message.includes('토큰이 만료되었습니다')) {
-          errorMessage = '로그인이 만료되었습니다. 다시 로그인해주세요.';
-        } else if (error.message.includes('인증 토큰이 필요합니다')) {
-          errorMessage = '로그인이 필요합니다. 아이디와 비밀번호를 입력해주세요.';
+        } else if (error.message.includes('아이디와 비밀번호는 필수입니다')) {
+          errorMessage = '아이디와 비밀번호를 모두 입력해주세요.';
+        } else if (error.message.includes('네트워크')) {
+          errorMessage = '서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.';
+        } else if (error.message.includes('서버 오류')) {
+          errorMessage = '서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.';
         } else {
+          // 기타 모든 에러는 그대로 표시 (개발 중에는 정확한 에러 확인을 위해)
           errorMessage = error.message;
         }
       }
-      
+
       setMessage(errorMessage);
     }
   };
 
   return (
-    <div className="login-container">
-      <form className="login-box" onSubmit={handleSubmit}>
+    <div className='login-container'>
+      <form className='login-box' onSubmit={handleSubmit}>
         <h2>로그인</h2>
-        <div className="form-group">
+        <div className='form-group'>
           <Input
-            type="text"
-            id="id"
-            name="id"
+            type='text'
+            id='id'
+            name='id'
             value={id}
-            onChange={(e) => setId(e.target.value)}
+            onChange={e => setId(e.target.value)}
             required
             disabled={loading}
-            placeholder="아이디 입력"
-            label="아이디"
+            placeholder='아이디 입력'
+            label='아이디'
           />
         </div>
-        <div className="form-group">
+        <div className='form-group'>
           <Input
-            type="password"
-            id="password"
-            name="password"
+            type='password'
+            id='password'
+            name='password'
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             required
             disabled={loading}
-            placeholder="비밀번호 입력"
-            label="비밀번호"
+            placeholder='비밀번호 입력'
+            label='비밀번호'
           />
         </div>
         <Button
-          type="submit"
-          variant="primary"
-          size="large"
+          type='submit'
+          variant='primary'
+          size='large'
           loading={loading}
           disabled={loading}
-          className="login-button"
+          className='login-button'
         >
           로그인
         </Button>
@@ -107,8 +110,8 @@ function Login() {
             {message || error}
           </div>
         )}
-        <div className="signup-link">
-          계정이 없으신가요? <Link to="/signup">회원가입</Link>
+        <div className='signup-link'>
+          계정이 없으신가요? <Link to='/signup'>회원가입</Link>
         </div>
       </form>
     </div>

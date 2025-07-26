@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { login as loginApi, logout as logoutApi, getCurrentUser, isAuthenticated, isAdmin } from '../api/auth';
+import {
+  login as loginApi,
+  logout as logoutApi,
+  isAuthenticated,
+  isAdmin,
+  verifyToken,
+} from '../api/auth';
 
 /**
  * 인증 상태를 관리하는 커스텀 훅
@@ -10,19 +16,59 @@ export const useAuth = () => {
   const [error, setError] = useState(null);
 
   /**
-   * 초기 인증 상태 확인
+   * 로그아웃 함수
+   */
+  const logout = useCallback(() => {
+    try {
+      // 로컬 스토리지에서 사용자 정보 제거
+      logoutApi();
+
+      // 사용자 상태 초기화
+      setUser(null);
+      setError(null);
+
+      // 로그아웃 이벤트 발생
+      window.dispatchEvent(new Event('logout'));
+    } catch (err) {
+      // 로그아웃 오류 시 조용히 처리
+    }
+  }, []);
+
+  /**
+   * 토큰 유효성 검증
+   */
+  const validateToken = useCallback(async () => {
+    try {
+      if (!isAuthenticated()) {
+        setUser(null);
+        return false;
+      }
+
+      const response = await verifyToken();
+      if (response.valid) {
+        // 토큰이 유효하면 사용자 정보 업데이트
+        setUser(response.user);
+        return true;
+      } else {
+        // 토큰이 유효하지 않으면 로그아웃
+        logout();
+        return false;
+      }
+    } catch (error) {
+      logout();
+      return false;
+    }
+  }, [logout]);
+
+  /**
+   * 초기 인증 상태 확인 및 주기적 검증
    */
   useEffect(() => {
-    const checkAuth = () => {
+    const checkAuth = async () => {
       try {
-        const currentUser = getCurrentUser();
-        if (currentUser && isAuthenticated()) {
-          setUser(currentUser);
-        } else {
-          setUser(null);
-        }
+        setLoading(true);
+        await validateToken();
       } catch (err) {
-        console.error('인증 상태 확인 오류:', err);
         setUser(null);
       } finally {
         setLoading(false);
@@ -30,26 +76,31 @@ export const useAuth = () => {
     };
 
     checkAuth();
-  }, []);
+
+    // 5분마다 토큰 유효성 검증
+    const interval = setInterval(validateToken, 5 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, [validateToken]);
 
   /**
    * 로그인 함수
    * @param {Object} credentials - 로그인 정보
    * @returns {Promise} 로그인 결과
    */
-  const login = useCallback(async (credentials) => {
+  const login = useCallback(async credentials => {
     try {
       setLoading(true);
       setError(null);
 
       const data = await loginApi(credentials);
-      
+
       // 로컬 스토리지에 사용자 정보 저장
       localStorage.setItem('authToken', data.token);
       localStorage.setItem('userId', data.user.id);
       localStorage.setItem('userEmail', data.user.email);
       localStorage.setItem('userAuthority', data.user.authority);
-      
+
       // 사용자 상태 업데이트
       setUser({
         id: data.user.id,
@@ -59,7 +110,7 @@ export const useAuth = () => {
 
       // 로그인 이벤트 발생
       window.dispatchEvent(new Event('login'));
-      
+
       return data;
     } catch (err) {
       const errorMessage = err.message || '로그인에 실패했습니다.';
@@ -67,25 +118,6 @@ export const useAuth = () => {
       throw err;
     } finally {
       setLoading(false);
-    }
-  }, []);
-
-  /**
-   * 로그아웃 함수
-   */
-  const logout = useCallback(() => {
-    try {
-      // 로컬 스토리지에서 사용자 정보 제거
-      logoutApi();
-      
-      // 사용자 상태 초기화
-      setUser(null);
-      setError(null);
-      
-      // 로그아웃 이벤트 발생
-      window.dispatchEvent(new Event('logout'));
-    } catch (err) {
-      console.error('로그아웃 오류:', err);
     }
   }, []);
 
@@ -120,4 +152,4 @@ export const useAuth = () => {
     authenticated,
     admin,
   };
-}; 
+};

@@ -4,21 +4,21 @@
   --secondary-bg: #111111;
   --primary-text: #111111;
   --secondary-text: #6b7280;
-  
+
   /* 현대화된 Primary Colors */
   --primary-blue: #3b82f6;
   --primary-blue-dark: #2563eb;
   --primary-blue-light: #60a5fa;
-  
+
   /* 현대화된 Secondary Colors */
   --secondary-green: #10b981;
   --secondary-green-dark: #059669;
   --secondary-green-light: #34d399;
-  
+
   /* 현대화된 Danger Colors */
   --accent-red: #ef4444;
   --accent-red-dark: #dc2626;
-  
+
   /* 세밀한 Gray Scale */
   --gray-50: #f9fafb;
   --gray-100: #f3f4f6;
@@ -30,13 +30,13 @@
   --gray-700: #374151;
   --gray-800: #1f2937;
   --gray-900: #111827;
-  
+
   /* Semantic Colors */
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
   --info: #3b82f6;
-  
+
   /* Legacy Support (기존 코드 호환성) */
   --accent-blue: var(--primary-blue);
   --accent-blue-dark: var(--primary-blue-dark);
@@ -51,13 +51,13 @@
   --focus-outline-offset: 2px;
   --btn-radius: 8px;
   --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
-  
+
   /* 통일된 글자 크기 체계 */
-  --font-size-xs: 0.75rem;    /* 12px - 매우 작은 텍스트 */
-  --font-size-sm: 0.875rem;   /* 14px - 작은 텍스트 */
-  --font-size-base: 1rem;     /* 16px - 기본 텍스트 */
-  --font-size-lg: 1.125rem;   /* 18px - 큰 텍스트 */
-  --font-size-xl: 1.25rem;    /* 20px - 매우 큰 텍스트 */
+  --font-size-xs: 0.75rem; /* 12px - 매우 작은 텍스트 */
+  --font-size-sm: 0.875rem; /* 14px - 작은 텍스트 */
+  --font-size-base: 1rem; /* 16px - 기본 텍스트 */
+  --font-size-lg: 1.125rem; /* 18px - 큰 텍스트 */
+  --font-size-xl: 1.25rem; /* 20px - 매우 큰 텍스트 */
 }
 
 /* 현대화된 글쓰기 폼 컨테이너 */
@@ -175,7 +175,9 @@
   outline: var(--focus-outline);
   outline-offset: var(--focus-outline-offset);
   border-color: var(--primary-blue);
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 4px 16px rgba(59, 130, 246, 0.1);
+  box-shadow:
+    0 0 0 4px rgba(59, 130, 246, 0.1),
+    0 4px 16px rgba(59, 130, 246, 0.1);
   background: var(--white);
 }
 
@@ -207,7 +209,9 @@
   outline: var(--focus-outline);
   outline-offset: var(--focus-outline-offset);
   border-color: var(--primary-blue);
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 4px 16px rgba(59, 130, 246, 0.1);
+  box-shadow:
+    0 0 0 4px rgba(59, 130, 246, 0.1),
+    0 4px 16px rgba(59, 130, 246, 0.1);
   background: var(--white);
 }
 
@@ -263,7 +267,9 @@
 .submit-button:focus {
   outline: var(--focus-outline);
   outline-offset: var(--focus-outline-offset);
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1), 0 6px 16px rgba(16, 185, 129, 0.3);
+  box-shadow:
+    0 0 0 4px rgba(16, 185, 129, 0.1),
+    0 6px 16px rgba(16, 185, 129, 0.3);
 }
 
 .submit-button:disabled {
@@ -326,38 +332,38 @@
     margin: 10px;
     border-radius: 12px;
   }
-  
+
   .form-header {
     flex-direction: column;
     gap: 15px;
     text-align: center;
   }
-  
+
   .form-title {
     font-size: var(--font-size-lg);
   }
-  
+
   .content-editor {
     min-height: 300px;
     padding: 16px;
   }
-  
+
   .title-input,
   .content-editor {
     font-size: var(--font-size-base);
   }
-  
+
   .submit-button {
     padding: 14px 20px;
     font-size: var(--font-size-base);
     min-height: 48px;
   }
-  
+
   .user-info {
     padding: 16px 20px;
     font-size: var(--font-size-xs);
   }
-  
+
   .back-button {
     padding: 10px 16px;
     font-size: 14px;

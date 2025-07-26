@@ -131,23 +131,23 @@
     font-size: 16px;
     min-height: 44px;
   }
-  
+
   .common-input--medium {
     padding: 12px 16px;
     font-size: 16px;
     min-height: 48px;
   }
-  
+
   .common-input--large {
     padding: 14px 18px;
     font-size: 18px;
     min-height: 52px;
   }
-  
+
   .common-input__label {
     font-size: 16px;
   }
-  
+
   .common-input__error,
   .common-input__helper {
     font-size: 14px;
@@ -159,4 +159,4 @@
   .common-input {
     font-size: 16px; /* iOS에서 줌 방지 */
   }
-} 
+}

@@ -178,7 +178,7 @@
     gap: 8px;
     flex-wrap: wrap;
   }
-  
+
   .filter-group {
     min-width: auto;
     flex: 1;
@@ -195,14 +195,14 @@
   .filter-group:nth-child(3) {
     flex: 1;
   }
-  
+
   .filter-label {
     font-size: 0.75rem;
     font-weight: 600;
     color: #374151;
     margin-bottom: 4px;
   }
-  
+
   .filter-select,
   .filter-input {
     min-width: auto;
@@ -212,7 +212,7 @@
     padding: 4px 8px;
     border-radius: 6px;
   }
-  
+
   .clear-filters-btn {
     align-self: flex-end;
     font-size: 0.7rem;
@@ -220,7 +220,7 @@
     height: 32px;
     white-space: nowrap;
   }
-  
+
   .active-filters {
     flex-direction: row;
     align-items: center;
@@ -294,4 +294,4 @@
   .remove-filter-btn {
     font-size: 0.75rem;
   }
-} 
+}

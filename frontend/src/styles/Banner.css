@@ -19,13 +19,13 @@
   --focus-outline-offset: 2px;
   --btn-radius: 8px;
   --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
-  
+
   /* 통일된 글자 크기 체계 */
-  --font-size-xs: 0.75rem;    /* 12px - 매우 작은 텍스트 */
-  --font-size-sm: 0.875rem;   /* 14px - 작은 텍스트 */
-  --font-size-base: 1rem;     /* 16px - 기본 텍스트 */
-  --font-size-lg: 1.125rem;   /* 18px - 큰 텍스트 */
-  --font-size-xl: 1.25rem;    /* 20px - 매우 큰 텍스트 */
+  --font-size-xs: 0.75rem; /* 12px - 매우 작은 텍스트 */
+  --font-size-sm: 0.875rem; /* 14px - 작은 텍스트 */
+  --font-size-base: 1rem; /* 16px - 기본 텍스트 */
+  --font-size-lg: 1.125rem; /* 18px - 큰 텍스트 */
+  --font-size-xl: 1.25rem; /* 20px - 매우 큰 텍스트 */
 }
 
 .banner-container {

@@ -4,21 +4,21 @@
   --secondary-bg: #111111;
   --primary-text: #111111;
   --secondary-text: #6b7280;
-  
+
   /* 현대화된 Primary Colors */
   --primary-blue: #3b82f6;
   --primary-blue-dark: #2563eb;
   --primary-blue-light: #60a5fa;
-  
+
   /* 현대화된 Secondary Colors */
   --secondary-green: #10b981;
   --secondary-green-dark: #059669;
   --secondary-green-light: #34d399;
-  
+
   /* 현대화된 Danger Colors */
   --accent-red: #ef4444;
   --accent-red-dark: #dc2626;
-  
+
   /* 세밀한 Gray Scale */
   --gray-50: #f9fafb;
   --gray-100: #f3f4f6;
@@ -30,13 +30,13 @@
   --gray-700: #374151;
   --gray-800: #1f2937;
   --gray-900: #111827;
-  
+
   /* Semantic Colors */
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
   --info: #3b82f6;
-  
+
   /* Legacy Support (기존 코드 호환성) */
   --accent-blue: var(--primary-blue);
   --accent-blue-dark: var(--primary-blue-dark);
@@ -51,13 +51,13 @@
   --focus-outline-offset: 2px;
   --btn-radius: 8px;
   --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
-  
+
   /* 통일된 글자 크기 체계 */
-  --font-size-xs: 0.75rem;    /* 12px - 매우 작은 텍스트 */
-  --font-size-sm: 0.875rem;   /* 14px - 작은 텍스트 */
-  --font-size-base: 1rem;     /* 16px - 기본 텍스트 */
-  --font-size-lg: 1.125rem;   /* 18px - 큰 텍스트 */
-  --font-size-xl: 1.25rem;    /* 20px - 매우 큰 텍스트 */
+  --font-size-xs: 0.75rem; /* 12px - 매우 작은 텍스트 */
+  --font-size-sm: 0.875rem; /* 14px - 작은 텍스트 */
+  --font-size-base: 1rem; /* 16px - 기본 텍스트 */
+  --font-size-lg: 1.125rem; /* 18px - 큰 텍스트 */
+  --font-size-xl: 1.25rem; /* 20px - 매우 큰 텍스트 */
 }
 
 .global-navigation {
@@ -130,7 +130,11 @@
 
 /* 현대화된 메인 버튼 */
 .main-button {
-  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    var(--primary-blue) 0%,
+    var(--primary-blue-dark) 100%
+  ) !important;
   color: var(--white) !important;
   font-size: 14px !important;
 }
@@ -143,7 +147,11 @@
 
 /* 현대화된 글쓰기 버튼 - 그린 계열로 변경 */
 .write-button {
-  background: linear-gradient(135deg, var(--secondary-green) 0%, var(--secondary-green-dark) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    var(--secondary-green) 0%,
+    var(--secondary-green-dark) 100%
+  ) !important;
   color: var(--white) !important;
   font-size: 14px !important;
 }
@@ -174,37 +182,37 @@
 }
 
 /* 아이디 길이별 동적 크기 조정 */
-.user-button[style*="font-size: 8px"] {
+.user-button[style*='font-size: 8px'] {
   max-width: 80px !important;
   padding: 8px 10px !important;
 }
 
-.user-button[style*="font-size: 9px"] {
+.user-button[style*='font-size: 9px'] {
   max-width: 90px !important;
   padding: 8px 12px !important;
 }
 
-.user-button[style*="font-size: 10px"] {
+.user-button[style*='font-size: 10px'] {
   max-width: 100px !important;
   padding: 9px 14px !important;
 }
 
-.user-button[style*="font-size: 11px"] {
+.user-button[style*='font-size: 11px'] {
   max-width: 110px !important;
   padding: 10px 16px !important;
 }
 
-.user-button[style*="font-size: 12px"] {
+.user-button[style*='font-size: 12px'] {
   max-width: 120px !important;
   padding: 10px 18px !important;
 }
 
-.user-button[style*="font-size: 13px"] {
+.user-button[style*='font-size: 13px'] {
   max-width: 140px !important;
   padding: 10px 20px !important;
 }
 
-.user-button[style*="font-size: 14px"] {
+.user-button[style*='font-size: 14px'] {
   max-width: auto !important;
   padding: 10px 18px !important;
 }
@@ -224,7 +232,11 @@
 
 /* 현대화된 로그인 버튼 */
 .login-button {
-  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    var(--primary-blue) 0%,
+    var(--primary-blue-dark) 100%
+  ) !important;
   color: var(--white) !important;
   font-size: 14px !important;
 }
@@ -240,34 +252,34 @@
   .nav-container {
     padding: 0 16px;
   }
-  
+
   .nav-left {
     gap: 8px;
   }
-  
+
   .nav-right {
     gap: 8px;
   }
-  
+
   .nav-button {
     padding: 8px 12px !important;
     font-size: 13px !important;
     min-height: 38px !important;
     white-space: nowrap !important;
   }
-  
+
   /* 더 작은 화면에서 글자 크기 조정 */
   .nav-button {
     font-size: clamp(11px, 3vw, 13px) !important;
   }
-  
+
   /* 사용자 버튼은 JavaScript에서 동적으로 크기 조정됨 */
   .user-button {
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
   }
-  
+
   .write-button {
     margin-left: 4px;
   }
@@ -278,28 +290,28 @@
   .nav-container {
     padding: 0 12px;
   }
-  
+
   .nav-left {
     gap: 6px;
   }
-  
+
   .nav-right {
     gap: 6px;
   }
-  
+
   .nav-button {
     padding: 6px 10px !important;
     font-size: clamp(10px, 2.8vw, 12px) !important;
     min-height: 36px !important;
   }
-  
+
   /* 사용자 버튼은 JavaScript에서 동적으로 크기 조정됨 */
   .user-button {
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
   }
-  
+
   .write-button {
     margin-left: 2px;
   }
@@ -310,20 +322,20 @@
   .nav-container {
     padding: 0 10px;
   }
-  
+
   .nav-button {
     padding: 5px 8px !important;
     font-size: clamp(9px, 2.5vw, 11px) !important;
     min-height: 34px !important;
   }
-  
+
   /* 사용자 버튼은 JavaScript에서 동적으로 크기 조정됨 */
   .user-button {
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
   }
-  
+
   .write-button {
     margin-left: 2px;
   }
@@ -335,18 +347,18 @@
     padding-left: max(16px, env(safe-area-inset-left));
     padding-right: max(16px, env(safe-area-inset-right));
   }
-  
+
   @media (max-width: 480px) {
     .nav-container {
       padding-left: max(12px, env(safe-area-inset-left));
       padding-right: max(12px, env(safe-area-inset-right));
     }
   }
-  
+
   @media (max-width: 360px) {
     .nav-container {
       padding-left: max(10px, env(safe-area-inset-left));
       padding-right: max(10px, env(safe-area-inset-right));
     }
   }
-} 
+}
