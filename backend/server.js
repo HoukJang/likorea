@@ -87,12 +87,12 @@ app.use(trafficLogger);
 // Rate Limiting 설정
 const { generalLimiter } = createRateLimiters();
 
-// 데이터베이스 연결 및 태그 초기화 (테스트 환경 제외)
+// 데이터베이스 연결 및 태그 초기화 (개발 환경에서만)
 connectDB().then(async () => {
   try {
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.NODE_ENV === 'development') {
       await initializeTags();
-      logger.info('태그 시스템 초기화 완료');
+      logger.info('태그 시스템 초기화 완료 (개발 환경)');
     }
   } catch (error) {
     logger.error('태그 시스템 초기화 실패:', error);
