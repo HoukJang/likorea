@@ -24,7 +24,7 @@ body {
   body {
     -webkit-overflow-scrolling: touch;
   }
-  
+
   /* Webkit 브라우저에서 스크롤바 숨기기 */
   ::-webkit-scrollbar {
     width: 0px;

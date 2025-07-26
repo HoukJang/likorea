@@ -7,7 +7,7 @@ class AppError extends Error {
     this.statusCode = statusCode;
     this.isOperational = isOperational;
     this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
-    
+
     Error.captureStackTrace(this, this.constructor);
   }
 }
@@ -48,13 +48,15 @@ class ConflictError extends AppError {
 }
 
 // 에러 처리 미들웨어
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, _next) => {
   let error = { ...err };
   error.message = err.message || '알 수 없는 오류가 발생했습니다';
 
   // Mongoose validation error
   if (err.name === 'ValidationError' && err.errors) {
-    const message = Object.values(err.errors).map(val => val.message).join(', ');
+    const message = Object.values(err.errors)
+      .map(val => val.message)
+      .join(', ');
     error = new ValidationError(message);
   }
 
@@ -87,7 +89,7 @@ const errorHandler = (err, req, res, next) => {
     url: req.originalUrl,
     method: req.method,
     ip: req.ip,
-    userAgent: req.get('User-Agent')
+    userAgent: req.get('User-Agent'),
   });
 
   // Development vs Production error response
@@ -96,7 +98,7 @@ const errorHandler = (err, req, res, next) => {
       success: false,
       error: error.message,
       stack: error.stack,
-      statusCode: error.statusCode || 500
+      statusCode: error.statusCode || 500,
     });
   }
 
@@ -104,7 +106,7 @@ const errorHandler = (err, req, res, next) => {
   return res.status(error.statusCode || 500).json({
     success: false,
     error: error.isOperational ? error.message : '서버 내부 오류가 발생했습니다',
-    statusCode: error.statusCode || 500
+    statusCode: error.statusCode || 500,
   });
 };
 
@@ -115,7 +117,7 @@ const notFound = (req, res, next) => {
 };
 
 // 비동기 에러 래퍼
-const asyncHandler = (fn) => {
+const asyncHandler = fn => {
   return (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
@@ -130,5 +132,5 @@ module.exports = {
   ConflictError,
   errorHandler,
   notFound,
-  asyncHandler
-}; 
+  asyncHandler,
+};

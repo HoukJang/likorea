@@ -9,7 +9,7 @@ import apiClient from './client';
  * @param {Object} credentials - 로그인 정보 { id, password }
  * @returns {Promise} 로그인 결과
  */
-export const login = async (credentials) => {
+export const login = async credentials => {
   return apiClient.post('/api/users/login', credentials);
 };
 
@@ -18,7 +18,7 @@ export const login = async (credentials) => {
  * @param {Object} userData - 회원가입 정보
  * @returns {Promise} 회원가입 결과
  */
-export const signup = async (userData) => {
+export const signup = async userData => {
   return apiClient.post('/api/users', userData);
 };
 
@@ -27,7 +27,7 @@ export const signup = async (userData) => {
  * @param {string} userId - 사용자 ID
  * @returns {Promise} 사용자 정보
  */
-export const getUser = async (userId) => {
+export const getUser = async userId => {
   return apiClient.get(`/api/users/${userId}`);
 };
 
@@ -46,17 +46,16 @@ export const updateUser = async (userId, userData) => {
  * @param {string} userId - 사용자 ID
  * @returns {Promise} 삭제 결과
  */
-export const deleteUser = async (userId) => {
+export const deleteUser = async userId => {
   return apiClient.delete(`/api/users/${userId}`);
 };
 
 /**
  * 토큰 검증
- * @param {string} token - 검증할 토큰
  * @returns {Promise} 검증 결과
  */
-export const verifyToken = async (token) => {
-  return apiClient.post('/api/users/verify-token', { token });
+export const verifyToken = async () => {
+  return apiClient.get('/api/users/verify');
 };
 
 /**
@@ -67,7 +66,7 @@ export const logout = () => {
   localStorage.removeItem('userId');
   localStorage.removeItem('userEmail');
   localStorage.removeItem('userAuthority');
-  
+
   // 로그아웃 이벤트 발생
   window.dispatchEvent(new Event('logout'));
 };
@@ -80,9 +79,9 @@ export const getCurrentUser = () => {
   const userId = localStorage.getItem('userId');
   const userEmail = localStorage.getItem('userEmail');
   const userAuthority = localStorage.getItem('userAuthority');
-  
+
   if (!userId) return null;
-  
+
   return {
     id: userId,
     email: userEmail,
@@ -105,4 +104,4 @@ export const isAuthenticated = () => {
 export const isAdmin = () => {
   const authority = localStorage.getItem('userAuthority');
   return authority === '5';
-}; 
+};

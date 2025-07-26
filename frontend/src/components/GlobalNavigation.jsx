@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getCurrentUser, isAuthenticated } from '../api/auth';
 import '../styles/GlobalNavigation.css';
 
 function GlobalNavigation() {
@@ -16,12 +15,12 @@ function GlobalNavigation() {
     const token = localStorage.getItem('authToken');
     const userId = localStorage.getItem('userId');
     const userAuthority = localStorage.getItem('userAuthority');
-    
+
     setIsLoggedIn(!!token);
     if (token && userId && userAuthority) {
       setUserInfo({
         id: userId,
-        authority: parseInt(userAuthority)
+        authority: parseInt(userAuthority),
       });
     } else {
       setUserInfo(null);
@@ -32,7 +31,7 @@ function GlobalNavigation() {
   const adjustFontSize = () => {
     const screenWidth = window.innerWidth;
     let newFontSize = '14px';
-    
+
     if (screenWidth <= 360) {
       newFontSize = '10px';
     } else if (screenWidth <= 480) {
@@ -42,7 +41,7 @@ function GlobalNavigation() {
     } else {
       newFontSize = '14px';
     }
-    
+
     setFontSize(newFontSize);
   };
 
@@ -130,7 +129,7 @@ function GlobalNavigation() {
       padding: padding,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
     });
   };
 
@@ -168,8 +167,13 @@ function GlobalNavigation() {
 
   // localStorage 변경 이벤트 리스너
   useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === 'authToken' || e.key === 'userId' || e.key === 'userAuthority' || e.key === null) {
+    const handleStorageChange = e => {
+      if (
+        e.key === 'authToken' ||
+        e.key === 'userId' ||
+        e.key === 'userAuthority' ||
+        e.key === null
+      ) {
         checkLoginStatus();
       }
     };
@@ -194,10 +198,10 @@ function GlobalNavigation() {
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userAuthority');
-    
+
     setIsLoggedIn(false);
     setUserInfo(null);
-    
+
     window.dispatchEvent(new Event('logout'));
     navigate('/');
   };
@@ -221,64 +225,74 @@ function GlobalNavigation() {
   };
 
   return (
-    <nav className="global-navigation">
-      <div className="nav-container">
-        <div className="nav-left">
-          <button 
+    <nav className='global-navigation'>
+      <div className='nav-container'>
+        <div className='nav-left'>
+          <button
             onClick={() => navigate('/boards')}
-            className="nav-button main-button"
+            className='nav-button main-button'
             style={buttonStyle}
-            aria-label="게시판으로 이동"
+            aria-label='게시판으로 이동'
           >
             메인으로
           </button>
           {isLoggedIn && (
-            <button 
+            <button
               onClick={() => navigate('/boards/new')}
-              className="nav-button write-button"
+              className='nav-button write-button'
               style={buttonStyle}
-              aria-label="새 게시글 작성"
+              aria-label='새 게시글 작성'
             >
               ✏️ 글쓰기
             </button>
           )}
         </div>
-        
-        <div className="nav-right">
+
+        <div className='nav-right'>
           {isLoggedIn ? (
             <>
-              <button 
+              <button
                 onClick={handleUserClick}
-                className="nav-button user-button"
+                className='nav-button user-button'
                 style={userButtonStyle}
                 aria-label={`사용자: ${userInfo?.id}, 권한 레벨: ${userInfo?.authority}`}
               >
                 {userInfo?.id} (Lv.{userInfo?.authority})
               </button>
-              <button 
+              <button
                 onClick={handleLogout}
-                className="nav-button logout-button"
+                className='nav-button logout-button'
                 style={buttonStyle}
-                aria-label="로그아웃"
+                aria-label='로그아웃'
               >
                 로그아웃
               </button>
             </>
           ) : (
-            <button 
+            <button
               onClick={() => navigate('/login')}
-              className="nav-button login-button"
+              className='nav-button login-button'
               style={buttonStyle}
-              aria-label="로그인 페이지로 이동"
+              aria-label='로그인 페이지로 이동'
             >
               로그인
             </button>
           )}
         </div>
       </div>
-      <div style={{marginTop: '12px', marginBottom: '12px', borderBottom: '1.5px solid #e5e7eb', width: '100%', maxWidth: '1200px', marginLeft: 'auto', marginRight: 'auto'}} />
+      <div
+        style={{
+          marginTop: '12px',
+          marginBottom: '12px',
+          borderBottom: '1.5px solid #e5e7eb',
+          width: '100%',
+          maxWidth: '1200px',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }}
+      />
     </nav>
   );
 }
 
-export default GlobalNavigation; 
+export default GlobalNavigation;

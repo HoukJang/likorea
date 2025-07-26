@@ -3,7 +3,11 @@ const router = express.Router();
 const boardController = require('../controllers/boardController');
 const commentController = require('../controllers/commentController');
 const { createRateLimiters } = require('../middleware/security');
-const { validatePostInput, validateCommentInput, validateParams } = require('../middleware/validation');
+const {
+  validatePostInput,
+  validateCommentInput,
+  validateParams,
+} = require('../middleware/validation');
 const { authenticateToken, requireAuthority } = require('../middleware/auth');
 
 /**
@@ -79,7 +83,14 @@ const { postLimiter } = createRateLimiters();
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post('/', authenticateToken, requireAuthority(1), postLimiter, validatePostInput, boardController.createPost);
+router.post(
+  '/',
+  authenticateToken,
+  requireAuthority(1),
+  postLimiter,
+  validatePostInput,
+  boardController.createPost
+);
 
 /**
  * @swagger
@@ -271,7 +282,14 @@ router.get('/:postId', validateParams, boardController.getPost);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.put('/:postId', validateParams, authenticateToken, requireAuthority(1), validatePostInput, boardController.updatePost);
+router.put(
+  '/:postId',
+  validateParams,
+  authenticateToken,
+  requireAuthority(1),
+  validatePostInput,
+  boardController.updatePost
+);
 
 /**
  * @swagger
@@ -313,12 +331,36 @@ router.put('/:postId', validateParams, authenticateToken, requireAuthority(1), v
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.delete('/:postId', validateParams, authenticateToken, requireAuthority(1), boardController.deletePost);
+router.delete(
+  '/:postId',
+  validateParams,
+  authenticateToken,
+  requireAuthority(1),
+  boardController.deletePost
+);
 
 // 댓글 관련 라우트
 router.get('/:postId/comments', validateParams, commentController.getComments);
-router.post('/:postId/comments', validateParams, authenticateToken, commentController.createComment);
-router.put('/:postId/comments/:commentId', validateParams, authenticateToken, requireAuthority(1), validateCommentInput, commentController.updateComment);
-router.delete('/:postId/comments/:commentId', validateParams, authenticateToken, requireAuthority(1), commentController.deleteComment);
+router.post(
+  '/:postId/comments',
+  validateParams,
+  authenticateToken,
+  commentController.createComment
+);
+router.put(
+  '/:postId/comments/:commentId',
+  validateParams,
+  authenticateToken,
+  requireAuthority(1),
+  validateCommentInput,
+  commentController.updateComment
+);
+router.delete(
+  '/:postId/comments/:commentId',
+  validateParams,
+  authenticateToken,
+  requireAuthority(1),
+  commentController.deleteComment
+);
 
 module.exports = router;

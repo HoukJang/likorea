@@ -1,48 +1,49 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const { 
-  asyncHandler, 
-  ValidationError, 
-  AuthenticationError, 
-  NotFoundError, 
-  ConflictError 
+const {
+  asyncHandler,
+  ValidationError,
+  AuthenticationError,
+  ConflictError,
 } = require('../middleware/errorHandler');
 
 // 회원가입
 exports.signup = asyncHandler(async (req, res) => {
   const { id, email, password, authority } = req.body;
-  
-  console.log('회원가입 요청 데이터:', { id, email, authority });
-  console.log('전체 req.body:', req.body);
-  
+
+  // 개발 환경에서만 로깅
+  if (process.env.NODE_ENV === 'development') {
+    console.log('회원가입 요청 데이터:', { id, email, authority });
+  }
+
   // 필수 필드 검증
   if (!id || !email || !password) {
     throw new ValidationError('아이디, 이메일, 비밀번호는 필수입니다.');
   }
-  
+
   // 아이디 중복 체크
   const existingId = await User.findOne({ id });
   if (existingId) {
     throw new ConflictError('이미 존재하는 아이디입니다.');
   }
-  
+
   // 이메일 중복 체크
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     throw new ConflictError('이미 존재하는 이메일입니다.');
   }
-  
+
   // 회원가입: id, email, password, authority (미제공시 authority는 기본 3)
   const user = await User.create({ id, email, password, authority });
-  res.status(201).json({ 
+  res.status(201).json({
     success: true,
-    message: '회원가입 성공', 
+    message: '회원가입 성공',
     user: {
       id: user.id,
       email: user.email,
       authority: user.authority,
-      createdAt: user.createdAt
-    }
+      createdAt: user.createdAt,
+    },
   });
 });
 
@@ -59,26 +60,26 @@ exports.login = asyncHandler(async (req, res) => {
   if (!user) {
     throw new AuthenticationError('잘못된 아이디입니다.');
   }
-  
+
   const isMatch = await user.comparePassword(password);
   if (!isMatch) {
     throw new AuthenticationError('잘못된 비밀번호입니다.');
   }
-  
+
   const token = jwt.sign(
     { _id: user._id, id: user.id, email: user.email, authority: user.authority },
     process.env.JWT_SECRET,
     { expiresIn: '1d' }
   );
-  
+
   const userObj = user.toObject();
   delete userObj.password; // password 필드 제거
-  
-  res.json({ 
+
+  res.json({
     success: true,
-    message: '로그인 성공', 
-    token, 
-    user: userObj 
+    message: '로그인 성공',
+    token,
+    user: userObj,
   });
 });
 
@@ -100,7 +101,10 @@ exports.getUsers = async (req, res) => {
 // 사용자 상세 정보 조회 (id, email, authority, createdAt, updatedAt 반환)
 exports.getUser = async (req, res) => {
   try {
-    const user = await User.findOne({ id: req.params.id }, 'id email authority createdAt updatedAt');
+    const user = await User.findOne(
+      { id: req.params.id },
+      'id email authority createdAt updatedAt'
+    );
     if (!user) {
       return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
     }
@@ -148,25 +152,31 @@ exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { email, authority, password } = req.body;
-    
+
     const user = await User.findOne({ id });
     if (!user) {
       return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
     }
-    
+
     // 수정할 필드들 업데이트
-    if (email) user.email = email;
-    if (authority !== undefined) user.authority = authority;
-    if (password) user.password = password;
-    
+    if (email) {
+      user.email = email;
+    }
+    if (authority !== undefined) {
+      user.authority = authority;
+    }
+    if (password) {
+      user.password = password;
+    }
+
     await user.save();
-    
+
     const userObj = user.toObject();
     delete userObj.password;
-    
-    res.json({ 
-      message: '사용자 정보 수정 성공', 
-      user: userObj 
+
+    res.json({
+      message: '사용자 정보 수정 성공',
+      user: userObj,
     });
   } catch (error) {
     res.status(400).json({ message: '사용자 정보 수정 실패', error: error.message });
@@ -177,12 +187,12 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     const user = await User.findOne({ id });
     if (!user) {
       return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
     }
-    
+
     await User.findByIdAndDelete(user._id);
     res.json({ message: '사용자 삭제 성공' });
   } catch (error) {
@@ -197,23 +207,28 @@ exports.verifyToken = async (req, res) => {
     if (!token) {
       return res.status(401).json({ valid: false, message: '토큰이 제공되지 않았습니다.' });
     }
-    
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded._id, 'id email authority');
-    
+
     if (!user) {
       return res.status(401).json({ valid: false, message: '유효하지 않은 토큰입니다.' });
     }
-    
-    res.json({ 
-      valid: true, 
+
+    res.json({
+      valid: true,
       user: {
         id: user.id,
         email: user.email,
-        authority: user.authority
-      }
+        authority: user.authority,
+      },
     });
   } catch (error) {
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ valid: false, error: 'invalid token' });
+    } else if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ valid: false, error: 'jwt expired' });
+    }
     res.status(401).json({ valid: false, message: '토큰 검증 실패', error: error.message });
   }
 };

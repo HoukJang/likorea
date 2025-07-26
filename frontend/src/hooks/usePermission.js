@@ -44,58 +44,55 @@ export const usePermission = () => {
    * @param {Object} target - 대상 객체 (게시글 또는 댓글)
    * @returns {boolean} 수정/삭제 권한 여부
    */
-  const canModify = useCallback((target) => {
-    if (!isAuthenticated() || !target) return false;
-    
-    const currentUserId = getCurrentUserId();
-    const currentAuthority = getCurrentAuthority();
-    
-    // 작성자 정보 추출 - 댓글과 게시글의 author 구조가 다름
-    let targetAuthorId;
-    let targetAuthority = 0;
-    
-    if (target.author) {
-      if (typeof target.author === 'object') {
-        // 게시글의 경우: author가 객체 {id: "likorea", authority: 5}
-        targetAuthorId = target.author.id;
-        targetAuthority = target.author.authority || 0;
+  const canModify = useCallback(
+    target => {
+      if (!isAuthenticated() || !target) return false;
+
+      const currentUserId = getCurrentUserId();
+      const currentAuthority = getCurrentAuthority();
+
+      // 작성자 정보 추출 - 댓글과 게시글의 author 구조가 다름
+      let targetAuthorId;
+      let targetAuthority = 0;
+
+      if (target.author) {
+        if (typeof target.author === 'object') {
+          // 게시글의 경우: author가 객체 {id: "likorea", authority: 5}
+          targetAuthorId = target.author.id;
+          targetAuthority = target.author.authority || 0;
+        } else {
+          // 댓글의 경우: author가 문자열 "likorea"
+          targetAuthorId = target.author;
+          // 댓글 작성자의 권한은 기본적으로 3 (일반 사용자)
+          targetAuthority = 3;
+        }
       } else {
-        // 댓글의 경우: author가 문자열 "likorea"
-        targetAuthorId = target.author;
-        // 댓글 작성자의 권한은 기본적으로 3 (일반 사용자)
-        targetAuthority = 3;
+        return false;
       }
-    } else {
-      return false;
-    }
-    
-    console.log('권한 확인 상세:', {
-      targetAuthorId,
-      currentUserId,
-      targetAuthority,
-      currentAuthority,
-      isSameUser: targetAuthorId === currentUserId,
-      isHigherAuthority: currentAuthority > targetAuthority
-    });
-    
-    // 1. 본인 작성물인 경우 항상 수정/삭제 가능
-    if (targetAuthorId === currentUserId) {
-      return true;
-    }
-    
-    // 2. 현재 사용자의 권한이 작성자보다 높은 경우 수정/삭제 가능
-    return currentAuthority > targetAuthority;
-  }, [isAuthenticated, getCurrentUserId, getCurrentAuthority]);
+
+      // 1. 본인 작성물인 경우 항상 수정/삭제 가능
+      if (targetAuthorId === currentUserId) {
+        return true;
+      }
+
+      // 2. 현재 사용자의 권한이 작성자보다 높은 경우 수정/삭제 가능
+      return currentAuthority > targetAuthority;
+    },
+    [isAuthenticated, getCurrentUserId, getCurrentAuthority]
+  );
 
   /**
    * 특정 권한 레벨 이상인지 확인
    * @param {number} requiredAuthority - 필요한 권한 레벨
    * @returns {boolean} 권한 충족 여부
    */
-  const hasAuthority = useCallback((requiredAuthority) => {
-    const currentAuthority = getCurrentAuthority();
-    return currentAuthority >= requiredAuthority;
-  }, [getCurrentAuthority]);
+  const hasAuthority = useCallback(
+    requiredAuthority => {
+      const currentAuthority = getCurrentAuthority();
+      return currentAuthority >= requiredAuthority;
+    },
+    [getCurrentAuthority]
+  );
 
   /**
    * 사용자 권한 비교
@@ -106,7 +103,7 @@ export const usePermission = () => {
   const compareAuthority = useCallback((user1, user2) => {
     const authority1 = getAuthority(user1);
     const authority2 = getAuthority(user2);
-    
+
     if (authority1 < authority2) return -1;
     if (authority1 > authority2) return 1;
     return 0;
@@ -119,6 +116,6 @@ export const usePermission = () => {
     isAdmin,
     canModify,
     hasAuthority,
-    compareAuthority
+    compareAuthority,
   };
-}; 
+};

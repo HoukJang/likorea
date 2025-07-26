@@ -4,9 +4,7 @@ const app = require('../../server');
 describe('Basic API Tests', () => {
   describe('Server Health', () => {
     it('should respond to basic requests', async () => {
-      const response = await request(app)
-        .get('/api/boards')
-        .expect(200);
+      const response = await request(app).get('/api/boards').expect(200);
 
       expect(response.body).toBeDefined();
     });
@@ -25,11 +23,9 @@ describe('Basic API Tests', () => {
 
   describe('404 Handling', () => {
     it('should return 404 for non-existent routes', async () => {
-      const response = await request(app)
-        .get('/api/nonexistent')
-        .expect(404);
+      const response = await request(app).get('/api/nonexistent').expect(404);
 
       expect(response.body.success).toBe(false);
     });
   });
-}); 
+});

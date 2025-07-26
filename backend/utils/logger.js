@@ -12,7 +12,7 @@ const LOG_LEVELS = {
   ERROR: 0,
   WARN: 1,
   INFO: 2,
-  DEBUG: 3
+  DEBUG: 3,
 };
 
 // 현재 로그 레벨 설정
@@ -26,14 +26,14 @@ const formatLog = (level, message, meta = {}) => {
     timestamp,
     level: level.toUpperCase(),
     message,
-    ...meta
+    ...meta,
   };
-  
+
   return JSON.stringify(logEntry);
 };
 
 // 로그 파일에 쓰기
-const writeToFile = (logEntry) => {
+const writeToFile = logEntry => {
   const logFile = path.join(logDir, `${process.env.NODE_ENV || 'development'}.log`);
   fs.appendFileSync(logFile, logEntry + '\n');
 };
@@ -43,14 +43,14 @@ const writeToConsole = (level, message, meta = {}) => {
   const timestamp = new Date().toISOString();
   const color = {
     error: '\x1b[31m', // 빨강
-    warn: '\x1b[33m',  // 노랑
-    info: '\x1b[36m',  // 청록
-    debug: '\x1b[35m'  // 보라
+    warn: '\x1b[33m', // 노랑
+    info: '\x1b[36m', // 청록
+    debug: '\x1b[35m', // 보라
   };
-  
+
   const reset = '\x1b[0m';
   console.log(`${color[level]}${timestamp} [${level.toUpperCase()}]${reset} ${message}`);
-  
+
   if (Object.keys(meta).length > 0) {
     console.log(`${color[level]}${JSON.stringify(meta, null, 2)}${reset}`);
   }
@@ -93,7 +93,7 @@ const logger = {
   // HTTP 요청 로깅
   request: (req, res, next) => {
     const start = Date.now();
-    
+
     res.on('finish', () => {
       const duration = Date.now() - start;
       const logData = {
@@ -102,18 +102,18 @@ const logger = {
         statusCode: res.statusCode,
         duration: `${duration}ms`,
         ip: req.ip,
-        userAgent: req.get('User-Agent')
+        userAgent: req.get('User-Agent'),
       };
-      
+
       if (res.statusCode >= 400) {
         logger.error(`HTTP ${req.method} ${req.originalUrl}`, logData);
       } else {
         logger.info(`HTTP ${req.method} ${req.originalUrl}`, logData);
       }
     });
-    
+
     next();
-  }
+  },
 };
 
-module.exports = logger; 
+module.exports = logger;

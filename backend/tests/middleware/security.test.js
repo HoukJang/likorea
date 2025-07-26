@@ -7,19 +7,15 @@ describe('Security Middleware Tests', () => {
       // Rate limiter가 제대로 설정되어 있지 않을 수 있으므로
       // 실제로는 rate limiter가 작동하는지 확인하는 테스트
       // 현재는 rate limiter가 비활성화되어 있을 수 있음
-      
+
       // 여러 요청을 연속으로 보내기
       const promises = [];
       for (let i = 0; i < 10; i++) {
-        promises.push(
-          request(app)
-            .get('/api/boards')
-            .expect(200)
-        );
+        promises.push(request(app).get('/api/boards').expect(200));
       }
-      
+
       await Promise.all(promises);
-      
+
       // Rate limiter가 활성화되어 있다면 마지막 요청에서 429를 받아야 함
       // 하지만 현재는 모든 요청이 200을 반환할 수 있음
       // 이는 rate limiter 설정에 따라 달라짐
@@ -46,13 +42,10 @@ describe('Security Middleware Tests', () => {
       const invalidData = {
         id: '', // 빈 ID
         email: 'invalid-email', // 잘못된 이메일 형식
-        password: '123' // 너무 짧은 비밀번호
+        password: '123', // 너무 짧은 비밀번호
       };
 
-      const response = await request(app)
-        .post('/api/users')
-        .send(invalidData)
-        .expect(400);
+      const response = await request(app).post('/api/users').send(invalidData).expect(400);
 
       // success 필드가 false이거나 undefined일 수 있음
       expect(response.body.success === false || response.body.success === undefined).toBe(true);
@@ -63,14 +56,11 @@ describe('Security Middleware Tests', () => {
       const invalidData = {
         title: '', // 빈 제목
         content: '', // 빈 내용
-        tags: {} // 잘못된 태그 형식
+        tags: {}, // 잘못된 태그 형식
       };
 
       // 인증 토큰 없이 요청하면 403을 받아야 함
-      const response = await request(app)
-        .post('/api/boards')
-        .send(invalidData)
-        .expect(403);
+      const response = await request(app).post('/api/boards').send(invalidData).expect(403);
 
       expect(response.body.success).toBe(false);
     });
@@ -81,14 +71,14 @@ describe('Security Middleware Tests', () => {
       const testUser = {
         _id: '507f1f77bcf86cd799439011',
         id: 'testuser',
-        authority: 3
+        authority: 3,
       };
-      
+
       const token = jwt.sign(
-        { 
-          _id: testUser._id,  // userId 대신 _id 사용
-          id: testUser.id, 
-          authority: testUser.authority 
+        {
+          _id: testUser._id, // userId 대신 _id 사용
+          id: testUser.id,
+          authority: testUser.authority,
         },
         process.env.JWT_SECRET || 'test-secret-key',
         { expiresIn: '1h' }
@@ -97,7 +87,7 @@ describe('Security Middleware Tests', () => {
       const invalidData = {
         title: '', // 빈 제목
         content: '', // 빈 내용
-        tags: {} // 잘못된 태그 형식
+        tags: {}, // 잘못된 태그 형식
       };
 
       const response = await request(app)
@@ -114,22 +104,20 @@ describe('Security Middleware Tests', () => {
 
   describe('Security Headers', () => {
     it('should include security headers', async () => {
-      const response = await request(app)
-        .get('/api/boards')
-        .expect(200);
+      const response = await request(app).get('/api/boards').expect(200);
 
       // Helmet이 설정되어 있다면 보안 헤더들이 포함되어야 함
       expect(response.headers).toBeDefined();
-      
+
       // X-Content-Type-Options 헤더 확인 (Helmet에서 설정)
       if (response.headers['x-content-type-options']) {
         expect(response.headers['x-content-type-options']).toBe('nosniff');
       }
-      
+
       // X-Frame-Options 헤더 확인 (Helmet에서 설정)
       if (response.headers['x-frame-options']) {
         expect(response.headers['x-frame-options']).toBeDefined();
       }
     });
   });
-}); 
+});

@@ -10,7 +10,7 @@ export const useLoading = (initialState = false) => {
   /**
    * 로딩 상태 설정
    */
-  const setLoadingState = useCallback((isLoading) => {
+  const setLoadingState = useCallback(isLoading => {
     setLoading(isLoading);
   }, []);
 
@@ -20,16 +20,19 @@ export const useLoading = (initialState = false) => {
   const setTaskLoading = useCallback((taskName, isLoading) => {
     setLoadingStates(prev => ({
       ...prev,
-      [taskName]: isLoading
+      [taskName]: isLoading,
     }));
   }, []);
 
   /**
    * 특정 작업의 로딩 상태 확인
    */
-  const isTaskLoading = useCallback((taskName) => {
-    return loadingStates[taskName] || false;
-  }, [loadingStates]);
+  const isTaskLoading = useCallback(
+    taskName => {
+      return loadingStates[taskName] || false;
+    },
+    [loadingStates]
+  );
 
   /**
    * 모든 작업의 로딩 상태 확인
@@ -41,15 +44,18 @@ export const useLoading = (initialState = false) => {
   /**
    * 비동기 작업을 로딩 상태와 함께 실행
    */
-  const withLoading = useCallback(async (asyncFn, taskName = 'default') => {
-    try {
-      setTaskLoading(taskName, true);
-      const result = await asyncFn();
-      return result;
-    } finally {
-      setTaskLoading(taskName, false);
-    }
-  }, [setTaskLoading]);
+  const withLoading = useCallback(
+    async (asyncFn, taskName = 'default') => {
+      try {
+        setTaskLoading(taskName, true);
+        const result = await asyncFn();
+        return result;
+      } finally {
+        setTaskLoading(taskName, false);
+      }
+    },
+    [setTaskLoading]
+  );
 
   /**
    * 로딩 상태 초기화
@@ -67,6 +73,6 @@ export const useLoading = (initialState = false) => {
     isTaskLoading,
     isAnyTaskLoading,
     withLoading,
-    clearLoading
+    clearLoading,
   };
-}; 
+};

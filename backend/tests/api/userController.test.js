@@ -1,36 +1,24 @@
 const request = require('supertest');
-const mongoose = require('mongoose');
 const app = require('../../server');
 const User = require('../../models/User');
 
 describe('User API Tests', () => {
-  let server;
   let testUser;
+  let uniqueId = 0;
 
-  beforeAll(async () => {
-    // 테스트 사용자 생성
-    testUser = new User({
-      id: 'testuser',
-      email: 'test@test.com',
-      password: 'password123',
-      authority: 3
-    });
-    await testUser.save();
-  });
-
-  afterAll(async () => {
-    // 테스트 데이터 정리
-    await User.deleteMany({});
-  });
+  const getUniqueUserId = () => `user${++uniqueId}`;
+  const getUniqueEmail = () => `test${uniqueId}@test.com`;
 
   beforeEach(async () => {
-    // 각 테스트 전에 사용자 데이터 초기화
-    await User.deleteMany({});
+    // 각 테스트 전에 고유한 사용자 생성
+    const uniqueUserId = 'testuser'; // 3-20자 범위의 고정 ID
+    const uniqueEmail = getUniqueEmail();
+
     testUser = new User({
-      id: 'testuser',
-      email: 'test@test.com',
+      id: uniqueUserId,
+      email: uniqueEmail,
       password: 'password123',
-      authority: 3
+      authority: 3,
     });
     await testUser.save();
   });
@@ -38,16 +26,12 @@ describe('User API Tests', () => {
   describe('POST /api/users', () => {
     it('should create a new user successfully', async () => {
       const userData = {
-        id: 'newuser',
-        email: 'new@test.com',
-        password: 'newpassword123'
+        id: getUniqueUserId(),
+        email: getUniqueEmail(),
+        password: 'newpassword123',
       };
 
-      const response = await request(app)
-        .post('/api/users')
-        .send(userData)
-        .expect(201);
-
+      const response = await request(app).post('/api/users').send(userData).expect(201);
       expect(response.body.success).toBe(true);
       expect(response.body.message).toBe('회원가입 성공');
       expect(response.body.user.id).toBe(userData.id);
@@ -58,13 +42,10 @@ describe('User API Tests', () => {
       const userData = {
         id: 'testuser', // 이미 존재하는 ID
         email: 'duplicate@test.com',
-        password: 'password123'
+        password: 'password123',
       };
 
-      const response = await request(app)
-        .post('/api/users')
-        .send(userData)
-        .expect(409);
+      const response = await request(app).post('/api/users').send(userData).expect(409);
 
       expect(response.body.success).toBe(false);
       expect(response.body.error).toContain('이미 존재하는 아이디입니다.');
@@ -74,13 +55,10 @@ describe('User API Tests', () => {
       const userData = {
         id: '', // 빈 ID
         email: 'invalid@test.com',
-        password: '123' // 너무 짧은 비밀번호
+        password: '123', // 너무 짧은 비밀번호
       };
 
-      const response = await request(app)
-        .post('/api/users')
-        .send(userData)
-        .expect(400);
+      const response = await request(app).post('/api/users').send(userData).expect(400);
 
       // success 필드가 false이거나 undefined일 수 있음
       expect(response.body.success === false || response.body.success === undefined).toBe(true);
@@ -91,13 +69,10 @@ describe('User API Tests', () => {
     it('should login successfully with valid credentials', async () => {
       const loginData = {
         id: 'testuser',
-        password: 'password123'
+        password: 'password123',
       };
 
-      const response = await request(app)
-        .post('/api/users/login')
-        .send(loginData)
-        .expect(200);
+      const response = await request(app).post('/api/users/login').send(loginData).expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.message).toBe('로그인 성공');
@@ -108,13 +83,10 @@ describe('User API Tests', () => {
     it('should return error for non-existent user', async () => {
       const loginData = {
         id: 'nonexistent',
-        password: 'password123'
+        password: 'password123',
       };
 
-      const response = await request(app)
-        .post('/api/users/login')
-        .send(loginData)
-        .expect(401);
+      const response = await request(app).post('/api/users/login').send(loginData).expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.error).toBe('잘못된 아이디입니다.');
@@ -123,13 +95,10 @@ describe('User API Tests', () => {
     it('should return error for wrong password', async () => {
       const loginData = {
         id: 'testuser',
-        password: 'wrongpassword'
+        password: 'wrongpassword',
       };
 
-      const response = await request(app)
-        .post('/api/users/login')
-        .send(loginData)
-        .expect(401);
+      const response = await request(app).post('/api/users/login').send(loginData).expect(401);
 
       expect(response.body.success).toBe(false);
       expect(response.body.error).toBe('잘못된 비밀번호입니다.');
@@ -138,13 +107,10 @@ describe('User API Tests', () => {
     it('should return error for invalid input', async () => {
       const loginData = {
         id: '',
-        password: ''
+        password: '',
       };
 
-      const response = await request(app)
-        .post('/api/users/login')
-        .send(loginData)
-        .expect(400);
+      const response = await request(app).post('/api/users/login').send(loginData).expect(400);
 
       // success 필드가 false이거나 undefined일 수 있음
       expect(response.body.success === false || response.body.success === undefined).toBe(true);
@@ -175,4 +141,4 @@ describe('User API Tests', () => {
     });
   });
   */
-}); 
+});

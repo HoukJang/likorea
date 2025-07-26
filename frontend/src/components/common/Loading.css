@@ -65,8 +65,12 @@
   animation: dots 1.4s ease-in-out infinite both;
 }
 
-.common-loading__dots .dot:nth-child(1) { animation-delay: -0.32s; }
-.common-loading__dots .dot:nth-child(2) { animation-delay: -0.16s; }
+.common-loading__dots .dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.common-loading__dots .dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
 
 .common-loading--small .common-loading__dots .dot {
   width: 6px;
@@ -111,9 +115,15 @@
   animation: skeleton 1.5s ease-in-out infinite;
 }
 
-.common-loading__skeleton .skeleton-line:nth-child(1) { animation-delay: 0s; }
-.common-loading__skeleton .skeleton-line:nth-child(2) { animation-delay: 0.2s; }
-.common-loading__skeleton .skeleton-line:nth-child(3) { animation-delay: 0.4s; }
+.common-loading__skeleton .skeleton-line:nth-child(1) {
+  animation-delay: 0s;
+}
+.common-loading__skeleton .skeleton-line:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.common-loading__skeleton .skeleton-line:nth-child(3) {
+  animation-delay: 0.4s;
+}
 
 .common-loading--small .common-loading__skeleton .skeleton-line {
   height: 8px;
@@ -140,12 +150,18 @@
 
 /* 애니메이션 */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes dots {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: scale(0);
     opacity: 0.5;
   }
@@ -156,7 +172,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(0.8);
     opacity: 0.5;
   }
@@ -176,4 +193,4 @@
   100% {
     opacity: 0.3;
   }
-} 
+}
