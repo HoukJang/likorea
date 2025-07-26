@@ -25,4 +25,4 @@ export const getRealtimeTraffic = async () => {
  */
 export const getPathAnalysis = async (path, period = '24h') => {
   return apiClient.get(`/api/traffic/analysis/${encodeURIComponent(path)}?period=${period}`);
-}; 
+};

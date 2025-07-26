@@ -18,14 +18,14 @@ function Profile() {
     email: '',
     password: '',
     newPassword: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
 
   // 현재 사용자 정보 확인
   useEffect(() => {
     const user = getCurrentUser();
     const authenticated = isAuthenticated();
-    
+
     if (!authenticated || !user) {
       setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
       setTimeout(() => {
@@ -33,13 +33,13 @@ function Profile() {
       }, 2000);
       return;
     }
-    
+
     setCurrentUser(user);
     fetchUserData(user.id);
   }, [navigate]);
 
   // 사용자 상세 정보 가져오기
-  const fetchUserData = async (userId) => {
+  const fetchUserData = async userId => {
     try {
       setLoading(true);
       const data = await getUser(userId);
@@ -48,11 +48,10 @@ function Profile() {
         email: data.email || '',
         password: '',
         newPassword: '',
-        confirmPassword: ''
+        confirmPassword: '',
       });
     } catch (error) {
       setError('사용자 정보를 불러오는데 실패했습니다.');
-      console.error('사용자 정보 조회 오류:', error);
     } finally {
       setLoading(false);
     }
@@ -71,15 +70,15 @@ function Profile() {
       email: userData?.email || '',
       password: '',
       newPassword: '',
-      confirmPassword: ''
+      confirmPassword: '',
     });
     setMessage('');
   };
 
   // 프로필 업데이트
-  const handleUpdate = async (e) => {
+  const handleUpdate = async e => {
     e.preventDefault();
-    
+
     if (!editForm.password) {
       setMessage('현재 비밀번호를 입력해주세요.');
       return;
@@ -94,7 +93,7 @@ function Profile() {
       setLoading(true);
       const updateData = {
         email: editForm.email,
-        password: editForm.password
+        password: editForm.password,
       };
 
       if (editForm.newPassword) {
@@ -104,12 +103,11 @@ function Profile() {
       await updateUser(currentUser.id, updateData);
       setMessage('프로필이 성공적으로 업데이트되었습니다.');
       setIsEditing(false);
-      
+
       // 업데이트된 정보 다시 불러오기
       fetchUserData(currentUser.id);
     } catch (error) {
       setMessage(error.message || '프로필 업데이트에 실패했습니다.');
-      console.error('프로필 업데이트 오류:', error);
     } finally {
       setLoading(false);
     }
@@ -117,125 +115,125 @@ function Profile() {
 
   if (loading && !userData) {
     return (
-      <div className="profile-container">
-        <div className="loading">사용자 정보를 불러오는 중...</div>
+      <div className='profile-container'>
+        <div className='loading'>사용자 정보를 불러오는 중...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="profile-container">
-        <div className="error">오류: {error}</div>
+      <div className='profile-container'>
+        <div className='error'>오류: {error}</div>
       </div>
     );
   }
 
   return (
-    <div className="profile-container">
-      <div className="profile-header">
-        <h2 className="profile-title">프로필</h2>
+    <div className='profile-container'>
+      <div className='profile-header'>
+        <h2 className='profile-title'>프로필</h2>
       </div>
 
-      <div className="profile-content">
+      <div className='profile-content'>
         {!isEditing ? (
-          <div className="profile-info">
-            <div className="info-group">
+          <div className='profile-info'>
+            <div className='info-group'>
               <label>사용자 ID:</label>
               <span>{userData?.id}</span>
             </div>
-            <div className="info-group">
+            <div className='info-group'>
               <label>이메일:</label>
               <span>{userData?.email}</span>
             </div>
-            <div className="info-group">
+            <div className='info-group'>
               <label>권한 레벨:</label>
               <span>Lv.{userData?.authority}</span>
             </div>
-            <div className="info-group">
+            <div className='info-group'>
               <label>가입일:</label>
-              <span>{userData?.createdAt ? new Date(userData.createdAt).toLocaleDateString() : '알 수 없음'}</span>
+              <span>
+                {userData?.createdAt
+                  ? new Date(userData.createdAt).toLocaleDateString()
+                  : '알 수 없음'}
+              </span>
             </div>
-            
-            <div className="profile-actions">
-              <Button 
-                onClick={handleEdit}
-                variant="primary"
-                size="medium"
-              >
+
+            <div className='profile-actions'>
+              <Button onClick={handleEdit} variant='primary' size='medium'>
                 프로필 수정
               </Button>
             </div>
           </div>
         ) : (
-          <form onSubmit={handleUpdate} className="profile-edit-form">
-            <div className="form-group">
+          <form onSubmit={handleUpdate} className='profile-edit-form'>
+            <div className='form-group'>
               <Input
-                type="text"
-                label="사용자 ID"
+                type='text'
+                label='사용자 ID'
                 value={userData?.id || ''}
                 disabled
-                placeholder="사용자 ID"
+                placeholder='사용자 ID'
               />
             </div>
-            
-            <div className="form-group">
+
+            <div className='form-group'>
               <Input
-                type="email"
-                label="이메일"
+                type='email'
+                label='이메일'
                 value={editForm.email}
-                onChange={(e) => setEditForm({...editForm, email: e.target.value})}
+                onChange={e => setEditForm({ ...editForm, email: e.target.value })}
                 required
-                placeholder="이메일 주소"
+                placeholder='이메일 주소'
               />
             </div>
-            
-            <div className="form-group">
+
+            <div className='form-group'>
               <Input
-                type="password"
-                label="현재 비밀번호"
+                type='password'
+                label='현재 비밀번호'
                 value={editForm.password}
-                onChange={(e) => setEditForm({...editForm, password: e.target.value})}
+                onChange={e => setEditForm({ ...editForm, password: e.target.value })}
                 required
-                placeholder="현재 비밀번호"
+                placeholder='현재 비밀번호'
               />
             </div>
-            
-            <div className="form-group">
+
+            <div className='form-group'>
               <Input
-                type="password"
-                label="새 비밀번호 (선택사항)"
+                type='password'
+                label='새 비밀번호 (선택사항)'
                 value={editForm.newPassword}
-                onChange={(e) => setEditForm({...editForm, newPassword: e.target.value})}
-                placeholder="새 비밀번호"
+                onChange={e => setEditForm({ ...editForm, newPassword: e.target.value })}
+                placeholder='새 비밀번호'
               />
             </div>
-            
-            <div className="form-group">
+
+            <div className='form-group'>
               <Input
-                type="password"
-                label="새 비밀번호 확인"
+                type='password'
+                label='새 비밀번호 확인'
                 value={editForm.confirmPassword}
-                onChange={(e) => setEditForm({...editForm, confirmPassword: e.target.value})}
-                placeholder="새 비밀번호 확인"
+                onChange={e => setEditForm({ ...editForm, confirmPassword: e.target.value })}
+                placeholder='새 비밀번호 확인'
               />
             </div>
-            
-            <div className="form-actions">
-              <Button 
-                type="submit"
-                variant="primary"
-                size="medium"
+
+            <div className='form-actions'>
+              <Button
+                type='submit'
+                variant='primary'
+                size='medium'
                 loading={loading}
                 disabled={loading}
               >
                 저장
               </Button>
-              <Button 
-                type="button"
+              <Button
+                type='button'
                 onClick={handleCancel}
-                variant="secondary"
-                size="medium"
+                variant='secondary'
+                size='medium'
                 disabled={loading}
               >
                 취소
@@ -243,7 +241,7 @@ function Profile() {
             </div>
           </form>
         )}
-        
+
         {message && (
           <div className={`message ${message.includes('성공') ? 'success' : 'error'}`}>
             {message}
@@ -254,4 +252,4 @@ function Profile() {
   );
 }
 
-export default Profile; 
+export default Profile;

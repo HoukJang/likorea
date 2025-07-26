@@ -1,17 +1,10 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-// Mock User model
-const User = {
-  findOne: jest.fn(),
-  create: jest.fn(),
-  findById: jest.fn()
-};
-
 // Mock bcrypt
 jest.mock('bcryptjs', () => ({
   hash: jest.fn(),
-  compare: jest.fn()
+  compare: jest.fn(),
 }));
 
 describe('Authentication Unit Tests', () => {
@@ -25,12 +18,12 @@ describe('Authentication Unit Tests', () => {
       _id: 'test-user-id',
       id: 'testuser',
       email: 'test@example.com',
-      authority: 3
+      authority: 3,
     };
 
     it('should create valid JWT token', () => {
       const token = jwt.sign(payload, secret, { expiresIn: '1h' });
-      
+
       expect(token).toBeDefined();
       expect(typeof token).toBe('string');
       expect(token.split('.')).toHaveLength(3); // JWT has 3 parts
@@ -39,7 +32,7 @@ describe('Authentication Unit Tests', () => {
     it('should verify valid JWT token', () => {
       const token = jwt.sign(payload, secret, { expiresIn: '1h' });
       const decoded = jwt.verify(token, secret);
-      
+
       expect(decoded._id).toBe(payload._id);
       expect(decoded.id).toBe(payload.id);
       expect(decoded.email).toBe(payload.email);
@@ -48,7 +41,7 @@ describe('Authentication Unit Tests', () => {
 
     it('should reject expired token', () => {
       const token = jwt.sign(payload, secret, { expiresIn: '1s' });
-      
+
       // Wait for token to expire
       setTimeout(() => {
         expect(() => {
@@ -68,11 +61,11 @@ describe('Authentication Unit Tests', () => {
     it('should hash password correctly', async () => {
       const password = 'testpassword123';
       const hashedPassword = 'hashedpassword123';
-      
+
       bcrypt.hash.mockResolvedValue(hashedPassword);
-      
+
       const result = await bcrypt.hash(password, 10);
-      
+
       expect(result).toBe(hashedPassword);
       expect(bcrypt.hash).toHaveBeenCalledWith(password, 10);
     });
@@ -80,11 +73,11 @@ describe('Authentication Unit Tests', () => {
     it('should compare password correctly', async () => {
       const password = 'testpassword123';
       const hashedPassword = 'hashedpassword123';
-      
+
       bcrypt.compare.mockResolvedValue(true);
-      
+
       const result = await bcrypt.compare(password, hashedPassword);
-      
+
       expect(result).toBe(true);
       expect(bcrypt.compare).toHaveBeenCalledWith(password, hashedPassword);
     });
@@ -92,11 +85,11 @@ describe('Authentication Unit Tests', () => {
     it('should reject wrong password', async () => {
       const password = 'wrongpassword';
       const hashedPassword = 'hashedpassword123';
-      
+
       bcrypt.compare.mockResolvedValue(false);
-      
+
       const result = await bcrypt.compare(password, hashedPassword);
-      
+
       expect(result).toBe(false);
       expect(bcrypt.compare).toHaveBeenCalledWith(password, hashedPassword);
     });
@@ -107,10 +100,10 @@ describe('Authentication Unit Tests', () => {
       const errorMessages = [
         '토큰이 만료되었습니다.',
         '유효하지 않은 토큰입니다.',
-        '인증 토큰이 필요합니다.'
+        '인증 토큰이 필요합니다.',
       ];
 
-      const isTokenExpired = (message) => {
+      const isTokenExpired = message => {
         return errorMessages.some(msg => message.includes(msg));
       };
 
@@ -124,8 +117,8 @@ describe('Authentication Unit Tests', () => {
   describe('Protected Route Path Detection', () => {
     it('should identify protected routes correctly', () => {
       const loginRequiredPaths = ['/boards/new', '/boards/edit', '/admin', '/profile'];
-      
-      const isProtectedRoute = (pathname) => {
+
+      const isProtectedRoute = pathname => {
         return loginRequiredPaths.some(path => pathname.includes(path));
       };
 
@@ -137,4 +130,4 @@ describe('Authentication Unit Tests', () => {
       expect(isProtectedRoute('/boards')).toBe(false);
     });
   });
-}); 
+});

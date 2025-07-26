@@ -7,12 +7,11 @@ const connectDB = require('./config/db');
 const logger = require('./utils/logger');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 const { initializeTags } = require('./utils/initTags');
-const { 
-  createRateLimiters, 
-  configureHelmet, 
-  additionalSecurity, 
-  ipWhitelist, 
-  requestSizeLimit 
+const {
+  createRateLimiters,
+  configureHelmet,
+  additionalSecurity,
+  requestSizeLimit,
 } = require('./middleware/security');
 const trafficLogger = require('./middleware/trafficLogger');
 
@@ -40,16 +39,44 @@ app.use(requestSizeLimit);
 // 요청 본문 파싱 및 CORS 설정
 app.use(express.json());
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',') 
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
   : ['http://localhost:3000'];
 
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,
+// Production에서 likorea.com과 www.likorea.com 모두 허용
+const corsOptions = {
+  origin: (origin, callback) => {
+    // origin이 없는 경우 (모바일 앱, Postman 등) 허용
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    // development 환경에서는 모든 localhost 허용
+    if (process.env.NODE_ENV !== 'production') {
+      if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        return callback(null, true);
+      }
+    }
+
+    // production에서 likorea.com 도메인들 허용
+    if (process.env.NODE_ENV === 'production') {
+      if (origin.includes('likorea.com')) {
+        return callback(null, true);
+      }
+    }
+
+    // 설정된 허용 도메인 목록 확인
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    callback(new Error('CORS에 의해 차단됨'));
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+};
+
+app.use(cors(corsOptions));
 
 // 로깅 미들웨어
 app.use(logger.request);
@@ -58,13 +85,15 @@ app.use(logger.request);
 app.use(trafficLogger);
 
 // Rate Limiting 설정
-const { generalLimiter, loginLimiter, signupLimiter, postLimiter } = createRateLimiters();
+const { generalLimiter } = createRateLimiters();
 
-// 데이터베이스 연결 및 태그 초기화
+// 데이터베이스 연결 및 태그 초기화 (테스트 환경 제외)
 connectDB().then(async () => {
   try {
-    await initializeTags();
-    logger.info('태그 시스템 초기화 완료');
+    if (process.env.NODE_ENV !== 'test') {
+      await initializeTags();
+      logger.info('태그 시스템 초기화 완료');
+    }
   } catch (error) {
     logger.error('태그 시스템 초기화 실패:', error);
   }

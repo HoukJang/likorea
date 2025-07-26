@@ -1,13 +1,13 @@
 const express = require('express');
-const { 
-  getAllUsers, 
-  getStats, 
-  getAllBoards, 
+const {
+  getAllUsers,
+  getStats,
+  getAllBoards,
   createBoardType,
   updateUserAuthority,
   updateUserInfo,
   deleteUser,
-  getUserDetails
+  getUserDetails,
 } = require('../controllers/adminController');
 const router = express.Router();
 

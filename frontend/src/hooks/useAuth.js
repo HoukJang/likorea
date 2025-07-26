@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { login as loginApi, logout as logoutApi, getCurrentUser, isAuthenticated, isAdmin, verifyToken } from '../api/auth';
+import {
+  login as loginApi,
+  logout as logoutApi,
+  isAuthenticated,
+  isAdmin,
+  verifyToken,
+} from '../api/auth';
 
 /**
  * 인증 상태를 관리하는 커스텀 훅
@@ -16,15 +22,15 @@ export const useAuth = () => {
     try {
       // 로컬 스토리지에서 사용자 정보 제거
       logoutApi();
-      
+
       // 사용자 상태 초기화
       setUser(null);
       setError(null);
-      
+
       // 로그아웃 이벤트 발생
       window.dispatchEvent(new Event('logout'));
     } catch (err) {
-      console.error('로그아웃 오류:', err);
+      // 로그아웃 오류 시 조용히 처리
     }
   }, []);
 
@@ -49,7 +55,6 @@ export const useAuth = () => {
         return false;
       }
     } catch (error) {
-      console.error('토큰 검증 오류:', error);
       logout();
       return false;
     }
@@ -64,7 +69,6 @@ export const useAuth = () => {
         setLoading(true);
         await validateToken();
       } catch (err) {
-        console.error('인증 상태 확인 오류:', err);
         setUser(null);
       } finally {
         setLoading(false);
@@ -84,19 +88,19 @@ export const useAuth = () => {
    * @param {Object} credentials - 로그인 정보
    * @returns {Promise} 로그인 결과
    */
-  const login = useCallback(async (credentials) => {
+  const login = useCallback(async credentials => {
     try {
       setLoading(true);
       setError(null);
 
       const data = await loginApi(credentials);
-      
+
       // 로컬 스토리지에 사용자 정보 저장
       localStorage.setItem('authToken', data.token);
       localStorage.setItem('userId', data.user.id);
       localStorage.setItem('userEmail', data.user.email);
       localStorage.setItem('userAuthority', data.user.authority);
-      
+
       // 사용자 상태 업데이트
       setUser({
         id: data.user.id,
@@ -106,7 +110,7 @@ export const useAuth = () => {
 
       // 로그인 이벤트 발생
       window.dispatchEvent(new Event('login'));
-      
+
       return data;
     } catch (err) {
       const errorMessage = err.message || '로그인에 실패했습니다.';
@@ -116,8 +120,6 @@ export const useAuth = () => {
       setLoading(false);
     }
   }, []);
-
-
 
   /**
    * 에러 초기화
@@ -150,4 +152,4 @@ export const useAuth = () => {
     authenticated,
     admin,
   };
-}; 
+};

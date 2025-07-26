@@ -20,14 +20,14 @@ export const getBoards = async (options = {}) => {
   const { page = 1, limit = 10, type, region, subcategory, search } = options;
   const params = new URLSearchParams({
     page: page.toString(),
-    limit: limit.toString()
+    limit: limit.toString(),
   });
-  
+
   if (type) params.append('type', type);
   if (region) params.append('region', region);
   if (subcategory) params.append('subcategory', subcategory);
   if (search) params.append('search', search);
-  
+
   return apiClient.get(`/api/boards?${params.toString()}`);
 };
 
@@ -41,11 +41,11 @@ export const getBoards = async (options = {}) => {
  * @param {string} boardData.tags.region - 지역 태그
  * @returns {Promise} 생성된 게시글
  */
-export const createBoard = async (boardData) => {
+export const createBoard = async boardData => {
   return apiClient.post('/api/boards', {
     title: boardData.title,
     content: boardData.content,
-    tags: boardData.tags
+    tags: boardData.tags,
   });
 };
 
@@ -62,7 +62,7 @@ export const updateBoard = async (postId, boardData) => {
   return apiClient.put(`/api/boards/${postId}`, {
     title: boardData.title,
     content: boardData.content,
-    tags: boardData.tags
+    tags: boardData.tags,
   });
 };
 
@@ -71,7 +71,7 @@ export const updateBoard = async (postId, boardData) => {
  * @param {string} postId - 게시글 ID
  * @returns {Promise} 삭제 결과
  */
-export const deleteBoard = async (postId) => {
+export const deleteBoard = async postId => {
   return apiClient.delete(`/api/boards/${postId}`);
 };
 
@@ -80,7 +80,7 @@ export const deleteBoard = async (postId) => {
  * @param {string} postId - 게시글 ID
  * @returns {Promise} 게시글 정보
  */
-export const getBoardPost = async (postId) => {
+export const getBoardPost = async postId => {
   return apiClient.get(`/api/boards/${postId}`);
 };
 
@@ -95,7 +95,7 @@ export const getBoardPost = async (postId) => {
 export const addComment = async (postId, commentData) => {
   return apiClient.post(`/api/boards/${postId}/comments`, {
     content: commentData.content,
-    id: commentData.id
+    id: commentData.id,
   });
 };
 
@@ -111,7 +111,7 @@ export const addComment = async (postId, commentData) => {
 export const updateComment = async (postId, commentId, commentData) => {
   return apiClient.put(`/api/boards/${postId}/comments/${commentId}`, {
     content: commentData.content,
-    id: commentData.id
+    id: commentData.id,
   });
 };
 
@@ -131,11 +131,10 @@ export const deleteComment = async (postId, commentId, userId) => {
  * @param {string} postId - 게시글 ID
  * @returns {Promise} 댓글 목록
  */
-export const getComments = async (postId) => {
+export const getComments = async postId => {
   try {
     return await apiClient.get(`/api/boards/${postId}/comments`);
   } catch (error) {
-    console.error('댓글 조회 오류:', error);
     // 에러 발생 시 빈 댓글 목록 반환
     return { success: true, comments: [] };
   }
@@ -149,6 +148,6 @@ export const getComments = async (postId) => {
 export const getSubCategories = async (type = null) => {
   const params = new URLSearchParams();
   if (type) params.append('type', type);
-  
+
   return apiClient.get(`/api/boards/subcategories?${params.toString()}`);
 };

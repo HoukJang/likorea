@@ -12,7 +12,7 @@
   padding: 20px;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .traffic-header h2 {
@@ -53,7 +53,7 @@
   background: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
@@ -68,7 +68,7 @@
   margin: 0;
   font-size: 32px;
   font-weight: bold;
-  color: #2196F3;
+  color: #2196f3;
 }
 
 /* 통계 섹션 */
@@ -76,7 +76,7 @@
   background: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
@@ -178,7 +178,7 @@
 
 .path-count {
   font-weight: 500;
-  color: #2196F3;
+  color: #2196f3;
 }
 
 .path-response-time {
@@ -235,7 +235,7 @@
 
 .authority-count {
   font-weight: bold;
-  color: #2196F3;
+  color: #2196f3;
 }
 
 /* 실시간 트래픽 */
@@ -258,7 +258,7 @@
   padding: 12px;
   background: #f8f9fa;
   border-radius: 6px;
-  border-left: 4px solid #2196F3;
+  border-left: 4px solid #2196f3;
   font-size: 14px;
 }
 
@@ -295,16 +295,69 @@
   text-align: center;
 }
 
+/* 차트 섹션 */
+.charts-section {
+  margin-bottom: 30px;
+}
+
+.chart-container {
+  background-color: var(--white);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+}
+
+.chart-container h3 {
+  margin-bottom: 15px;
+  color: var(--primary-text);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+.chart-container canvas {
+  height: 300px !important;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.charts-grid .chart-container {
+  margin-bottom: 0;
+}
+
+.charts-grid .chart-container canvas {
+  height: 250px !important;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 1200px) {
   .summary-stats {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
   }
-  
+
   .traffic-item {
     grid-template-columns: 100px 70px 1fr 70px 90px 100px;
     gap: 8px;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .chart-container canvas {
+    height: 250px !important;
+  }
+
+  .charts-grid .chart-container canvas {
+    height: 200px !important;
   }
 }
 
@@ -314,60 +367,60 @@
     gap: 15px;
     text-align: center;
   }
-  
+
   .traffic-header h2 {
     font-size: var(--font-size-lg);
   }
-  
+
   .period-selector select {
     width: 100%;
     max-width: 200px;
   }
-  
+
   .summary-stats {
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   .stat-card {
     padding: 20px;
   }
-  
+
   .stat-card h3 {
     font-size: var(--font-size-sm);
   }
-  
+
   .stat-card p {
     font-size: var(--font-size-lg);
   }
-  
+
   .traffic-item {
     grid-template-columns: 1fr;
     gap: 5px;
     text-align: center;
     padding: 10px;
   }
-  
+
   .traffic-item > div {
     padding: 2px 0;
   }
-  
+
   .path-table {
     font-size: var(--font-size-xs);
   }
-  
+
   .path-table th,
   .path-table td {
     padding: 8px 4px;
   }
-  
+
   .status-code-stats,
   .method-stats,
   .error-stats,
   .authority-stats {
     gap: 8px;
   }
-  
+
   .status-code-item,
   .method-item,
   .error-item,
@@ -375,45 +428,85 @@
     padding: 6px 10px;
     font-size: var(--font-size-xs);
   }
+
+  .charts-section {
+    margin-bottom: 20px;
+  }
+
+  .chart-container {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .chart-container h3 {
+    font-size: var(--font-size-base);
+    margin-bottom: 10px;
+  }
+
+  .chart-container canvas {
+    height: 200px !important;
+  }
+
+  .charts-grid .chart-container canvas {
+    height: 180px !important;
+  }
 }
 
 @media (max-width: 480px) {
   .traffic-header h2 {
     font-size: var(--font-size-base);
   }
-  
+
   .stat-card {
     padding: 15px;
   }
-  
+
   .stat-card h3 {
     font-size: var(--font-size-xs);
   }
-  
+
   .stat-card p {
     font-size: var(--font-size-base);
   }
-  
+
   .traffic-item {
     padding: 8px;
     font-size: var(--font-size-xs);
   }
-  
+
   .path-table {
     font-size: var(--font-size-xs);
   }
-  
+
   .path-table th,
   .path-table td {
     padding: 6px 3px;
   }
-  
+
   .status-code-item,
   .method-item,
   .error-item,
   .authority-item {
     padding: 4px 8px;
     font-size: var(--font-size-xs);
+  }
+
+  .chart-container {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .chart-container h3 {
+    font-size: var(--font-size-sm);
+    margin-bottom: 8px;
+  }
+
+  .chart-container canvas {
+    height: 180px !important;
+  }
+
+  .charts-grid .chart-container canvas {
+    height: 150px !important;
   }
 }
 
@@ -434,4 +527,4 @@
 
 .realtime-traffic::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
-} 
+}

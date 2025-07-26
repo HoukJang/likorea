@@ -31,16 +31,11 @@ const Button = ({
   const disabledClass = disabled || loading ? 'common-button--disabled' : '';
   const loadingClass = loading ? 'common-button--loading' : '';
 
-  const buttonClass = [
-    baseClass,
-    variantClass,
-    sizeClass,
-    disabledClass,
-    loadingClass,
-    className
-  ].filter(Boolean).join(' ');
+  const buttonClass = [baseClass, variantClass, sizeClass, disabledClass, loadingClass, className]
+    .filter(Boolean)
+    .join(' ');
 
-  const handleClick = (e) => {
+  const handleClick = e => {
     if (!disabled && !loading && onClick) {
       onClick(e);
     }
@@ -56,15 +51,13 @@ const Button = ({
       {...props}
     >
       {loading && (
-        <span className="common-button__spinner">
-          <div className="spinner"></div>
+        <span className='common-button__spinner'>
+          <div className='spinner'></div>
         </span>
       )}
-      <span className="common-button__content">
-        {children}
-      </span>
+      <span className='common-button__content'>{children}</span>
     </button>
   );
 };
 
-export default Button; 
+export default Button;

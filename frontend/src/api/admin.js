@@ -35,7 +35,7 @@ export const getBoardInfo = async () => {
  * @param {Object} boardTypeData - 게시판 타입 데이터
  * @returns {Promise} 생성된 게시판 타입
  */
-export const createBoardType = async (boardTypeData) => {
+export const createBoardType = async boardTypeData => {
   return apiClient.post('/api/admin/boards', boardTypeData);
 };
 
@@ -64,7 +64,7 @@ export const updateUserInfo = async (userId, userData) => {
  * @param {string} userId - 사용자 ID
  * @returns {Promise} 삭제 결과
  */
-export const deleteUser = async (userId) => {
+export const deleteUser = async userId => {
   return apiClient.delete(`/api/admin/users/${userId}`);
 };
 
@@ -73,7 +73,7 @@ export const deleteUser = async (userId) => {
  * @param {string} userId - 사용자 ID
  * @returns {Promise} 사용자 상세 정보
  */
-export const getUserDetails = async (userId) => {
+export const getUserDetails = async userId => {
   return apiClient.get(`/api/admin/users/${userId}`);
 };
 
@@ -96,4 +96,4 @@ export const deleteBoardAsAdmin = async (boardType, postId) => {
  */
 export const deleteCommentAsAdmin = async (boardType, postId, commentId) => {
   return apiClient.delete(`/api/admin/boards/${boardType}/${postId}/comments/${commentId}`);
-}; 
+};

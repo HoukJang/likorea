@@ -8,16 +8,13 @@ describe('Authentication Tests', () => {
   let validToken;
   let expiredToken;
 
-  beforeAll(async () => {
-    // 기존 테스트 사용자 삭제 (중복 방지)
-    await User.findOneAndDelete({ id: 'testuser' });
-    
+  beforeEach(async () => {
     // 테스트 사용자 생성
     testUser = await User.create({
       id: 'testuser',
       email: 'test@example.com',
       password: 'password123',
-      authority: 3
+      authority: 3,
     });
 
     // 유효한 토큰 생성
@@ -27,19 +24,12 @@ describe('Authentication Tests', () => {
       { expiresIn: '1h' }
     );
 
-    // 만료된 토큰 생성 (1초 후 만료)
+    // 만료된 토큰 생성
     expiredToken = jwt.sign(
       { _id: testUser._id, id: testUser.id, email: testUser.email, authority: testUser.authority },
       process.env.JWT_SECRET,
-      { expiresIn: '1s' }
+      { expiresIn: '-1s' } // 이미 만료된 토큰
     );
-
-    // 토큰이 만료될 때까지 대기
-    await new Promise(resolve => setTimeout(resolve, 2000));
-  });
-
-  afterAll(async () => {
-    await User.findByIdAndDelete(testUser._id);
   });
 
   describe('POST /api/users/login', () => {
@@ -48,7 +38,7 @@ describe('Authentication Tests', () => {
         .post('/api/users/login')
         .send({
           id: 'testuser',
-          password: 'password123'
+          password: 'password123',
         })
         .expect(200);
 
@@ -63,7 +53,7 @@ describe('Authentication Tests', () => {
         .post('/api/users/login')
         .send({
           id: 'testuser',
-          password: 'wrongpassword'
+          password: 'wrongpassword',
         })
         .expect(401);
 
@@ -104,9 +94,7 @@ describe('Authentication Tests', () => {
     });
 
     it('should reject request without token', async () => {
-      const response = await request(app)
-        .get('/api/users/verify')
-        .expect(401);
+      const response = await request(app).get('/api/users/verify').expect(401);
 
       expect(response.body.valid).toBe(false);
       expect(response.body.message).toBe('토큰이 제공되지 않았습니다.');
@@ -133,11 +121,9 @@ describe('Authentication Tests', () => {
     });
 
     it('should allow public access without token for GET requests', async () => {
-      const response = await request(app)
-        .get('/api/boards')
-        .expect(200);
+      const response = await request(app).get('/api/boards').expect(200);
 
       expect(response.body.success).toBe(true);
     });
   });
-}); 
+});

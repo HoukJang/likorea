@@ -13,7 +13,6 @@ export const getAllTags = async () => {
     const response = await apiClient.get('/api/tags');
     return response;
   } catch (error) {
-    console.error('태그 조회 오류:', error);
     throw error;
   }
 };
@@ -23,12 +22,25 @@ export const getAllTags = async () => {
  * @param {string} category - 태그 카테고리 (type, region, category)
  * @returns {Promise} 해당 카테고리의 태그 목록
  */
-export const getTagsByCategory = async (category) => {
+export const getTagsByCategory = async category => {
   try {
     const response = await apiClient.get(`/api/tags/category/${category}`);
     return response;
   } catch (error) {
-    console.error('카테고리별 태그 조회 오류:', error);
+    throw error;
+  }
+};
+
+/**
+ * 상위 카테고리별 하위 카테고리 태그 조회
+ * @param {string} parentCategory - 상위 카테고리 (공지, 사고팔고, 부동산, 생활정보, 모임, 기타)
+ * @returns {Promise} 해당 상위 카테고리의 하위 카테고리 목록
+ */
+export const getSubCategoriesByParent = async parentCategory => {
+  try {
+    const response = await apiClient.get(`/api/tags/subcategories/${parentCategory}`);
+    return response;
+  } catch (error) {
     throw error;
   }
 };
@@ -48,7 +60,7 @@ export const getAllTagsForAdmin = async (category = '') => {
  * @param {Object} tagData - 태그 데이터
  * @returns {Promise} 생성된 태그
  */
-export const addTag = async (tagData) => {
+export const addTag = async tagData => {
   return apiClient.post('/api/tags', tagData);
 };
 
@@ -67,7 +79,7 @@ export const updateTag = async (tagId, tagData) => {
  * @param {string} tagId - 태그 ID
  * @returns {Promise} 비활성화 결과
  */
-export const deactivateTag = async (tagId) => {
+export const deactivateTag = async tagId => {
   return apiClient.delete(`/api/tags/${tagId}`);
 };
 
@@ -76,6 +88,6 @@ export const deactivateTag = async (tagId) => {
  * @param {string} tagId - 태그 ID
  * @returns {Promise} 재활성화 결과
  */
-export const activateTag = async (tagId) => {
+export const activateTag = async tagId => {
   return apiClient.patch(`/api/tags/${tagId}/activate`);
-}; 
+};

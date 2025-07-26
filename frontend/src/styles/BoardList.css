@@ -4,21 +4,21 @@
   --secondary-bg: #111111;
   --primary-text: #111111;
   --secondary-text: #6b7280;
-  
+
   /* 현대화된 Primary Colors */
   --primary-blue: #3b82f6;
   --primary-blue-dark: #2563eb;
   --primary-blue-light: #60a5fa;
-  
+
   /* 현대화된 Secondary Colors */
   --secondary-green: #10b981;
   --secondary-green-dark: #059669;
   --secondary-green-light: #34d399;
-  
+
   /* 현대화된 Danger Colors */
   --accent-red: #ef4444;
   --accent-red-dark: #dc2626;
-  
+
   /* 세밀한 Gray Scale */
   --gray-50: #f9fafb;
   --gray-100: #f3f4f6;
@@ -30,13 +30,13 @@
   --gray-700: #374151;
   --gray-800: #1f2937;
   --gray-900: #111827;
-  
+
   /* Semantic Colors */
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
   --info: #3b82f6;
-  
+
   /* Legacy Support (기존 코드 호환성) */
   --accent-blue: var(--primary-blue);
   --accent-blue-dark: var(--primary-blue-dark);
@@ -51,13 +51,13 @@
   --focus-outline-offset: 2px;
   --btn-radius: 8px;
   --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
-  
+
   /* 통일된 글자 크기 체계 */
-  --font-size-xs: 0.75rem;    /* 12px - 매우 작은 텍스트 */
-  --font-size-sm: 0.875rem;   /* 14px - 작은 텍스트 */
-  --font-size-base: 1rem;     /* 16px - 기본 텍스트 */
-  --font-size-lg: 1.125rem;   /* 18px - 큰 텍스트 */
-  --font-size-xl: 1.25rem;    /* 20px - 매우 큰 텍스트 */
+  --font-size-xs: 0.75rem; /* 12px - 매우 작은 텍스트 */
+  --font-size-sm: 0.875rem; /* 14px - 작은 텍스트 */
+  --font-size-base: 1rem; /* 16px - 기본 텍스트 */
+  --font-size-lg: 1.125rem; /* 18px - 큰 텍스트 */
+  --font-size-xl: 1.25rem; /* 20px - 매우 큰 텍스트 */
 }
 
 /* 현대화된 글 리스트 컨테이너 */
@@ -234,41 +234,41 @@
 }
 
 /* 원래 글종류별 테이블 태그 색상 복원 */
-.board-table tr[data-post-type="생활정보"] .post-number {
-  color: #3B82F6;
+.board-table tr[data-post-type='생활정보'] .post-number {
+  color: #3b82f6;
 }
 
-.board-table tr[data-post-type="부동산"] .post-number {
-  color: #10B981;
+.board-table tr[data-post-type='부동산'] .post-number {
+  color: #10b981;
 }
 
-.board-table tr[data-post-type="취업"] .post-number {
-  color: #F59E0B;
+.board-table tr[data-post-type='취업'] .post-number {
+  color: #f59e0b;
 }
 
-.board-table tr[data-post-type="커뮤니티"] .post-number {
-  color: #8B5CF6;
+.board-table tr[data-post-type='커뮤니티'] .post-number {
+  color: #8b5cf6;
 }
 
-.board-table tr[data-post-type="중고거래"] .post-number {
-  color: #EF4444;
+.board-table tr[data-post-type='중고거래'] .post-number {
+  color: #ef4444;
 }
 
-.board-table tr[data-post-type="사고팔고"] .post-number {
-  color: #F97316;
+.board-table tr[data-post-type='사고팔고'] .post-number {
+  color: #f97316;
 }
 
-.board-table tr[data-post-type="모임"] .post-number {
-  color: #06B6D4;
+.board-table tr[data-post-type='모임'] .post-number {
+  color: #06b6d4;
 }
 
-.board-table tr[data-post-type="공지"] .post-number {
-  color: #DC2626;
+.board-table tr[data-post-type='공지'] .post-number {
+  color: #dc2626;
   font-weight: 700;
 }
 
-.board-table tr[data-post-type="기타"] .post-number {
-  color: #6B7280;
+.board-table tr[data-post-type='기타'] .post-number {
+  color: #6b7280;
 }
 
 /* 원래 포스트 제목 스타일 복원 */
@@ -510,8 +510,6 @@
   cursor: not-allowed;
 }
 
-
-
 /* 로딩 상태 개선 */
 .loading-container {
   display: flex;
@@ -534,8 +532,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 에러 상태 개선 */
@@ -590,49 +592,49 @@
 }
 
 /* 글종류별 카드 테두리 색상 */
-.mobile-card[data-post-type="생활정보"] {
-  border-color: #3B82F6;
-  border-left: 4px solid #3B82F6;
+.mobile-card[data-post-type='생활정보'] {
+  border-color: #3b82f6;
+  border-left: 4px solid #3b82f6;
 }
 
-.mobile-card[data-post-type="부동산"] {
-  border-color: #10B981;
-  border-left: 4px solid #10B981;
+.mobile-card[data-post-type='부동산'] {
+  border-color: #10b981;
+  border-left: 4px solid #10b981;
 }
 
-.mobile-card[data-post-type="취업"] {
-  border-color: #F59E0B;
-  border-left: 4px solid #F59E0B;
+.mobile-card[data-post-type='취업'] {
+  border-color: #f59e0b;
+  border-left: 4px solid #f59e0b;
 }
 
-.mobile-card[data-post-type="커뮤니티"] {
-  border-color: #8B5CF6;
-  border-left: 4px solid #8B5CF6;
+.mobile-card[data-post-type='커뮤니티'] {
+  border-color: #8b5cf6;
+  border-left: 4px solid #8b5cf6;
 }
 
-.mobile-card[data-post-type="중고거래"] {
-  border-color: #EF4444;
-  border-left: 4px solid #EF4444;
+.mobile-card[data-post-type='중고거래'] {
+  border-color: #ef4444;
+  border-left: 4px solid #ef4444;
 }
 
-.mobile-card[data-post-type="기타"] {
-  border-color: #6B7280;
-  border-left: 4px solid #6B7280;
+.mobile-card[data-post-type='기타'] {
+  border-color: #6b7280;
+  border-left: 4px solid #6b7280;
 }
 
-.mobile-card[data-post-type="사고팔고"] {
-  border-color: #F97316;
-  border-left: 4px solid #F97316;
+.mobile-card[data-post-type='사고팔고'] {
+  border-color: #f97316;
+  border-left: 4px solid #f97316;
 }
 
-.mobile-card[data-post-type="모임"] {
-  border-color: #06B6D4;
-  border-left: 4px solid #06B6D4;
+.mobile-card[data-post-type='모임'] {
+  border-color: #06b6d4;
+  border-left: 4px solid #06b6d4;
 }
 
-.mobile-card[data-post-type="공지"] {
-  border-color: #DC2626;
-  border-left: 4px solid #DC2626;
+.mobile-card[data-post-type='공지'] {
+  border-color: #dc2626;
+  border-left: 4px solid #dc2626;
 }
 
 .mobile-card:hover {
@@ -641,85 +643,85 @@
 }
 
 /* 글종류별 호버 효과 */
-.mobile-card[data-post-type="생활정보"]:hover {
-  border-color: #2563EB;
+.mobile-card[data-post-type='생활정보']:hover {
+  border-color: #2563eb;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
-.mobile-card[data-post-type="생활정보"]:hover .mobile-card-number {
-  color: #2563EB;
+.mobile-card[data-post-type='생활정보']:hover .mobile-card-number {
+  color: #2563eb;
 }
 
-.mobile-card[data-post-type="부동산"]:hover {
+.mobile-card[data-post-type='부동산']:hover {
   border-color: #059669;
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
 
-.mobile-card[data-post-type="부동산"]:hover .mobile-card-number {
+.mobile-card[data-post-type='부동산']:hover .mobile-card-number {
   color: #059669;
 }
 
-.mobile-card[data-post-type="취업"]:hover {
-  border-color: #D97706;
+.mobile-card[data-post-type='취업']:hover {
+  border-color: #d97706;
   box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
 }
 
-.mobile-card[data-post-type="취업"]:hover .mobile-card-number {
-  color: #D97706;
+.mobile-card[data-post-type='취업']:hover .mobile-card-number {
+  color: #d97706;
 }
 
-.mobile-card[data-post-type="커뮤니티"]:hover {
-  border-color: #7C3AED;
+.mobile-card[data-post-type='커뮤니티']:hover {
+  border-color: #7c3aed;
   box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
 }
 
-.mobile-card[data-post-type="커뮤니티"]:hover .mobile-card-number {
-  color: #7C3AED;
+.mobile-card[data-post-type='커뮤니티']:hover .mobile-card-number {
+  color: #7c3aed;
 }
 
-.mobile-card[data-post-type="중고거래"]:hover {
-  border-color: #DC2626;
+.mobile-card[data-post-type='중고거래']:hover {
+  border-color: #dc2626;
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 }
 
-.mobile-card[data-post-type="중고거래"]:hover .mobile-card-number {
-  color: #DC2626;
+.mobile-card[data-post-type='중고거래']:hover .mobile-card-number {
+  color: #dc2626;
 }
 
-.mobile-card[data-post-type="기타"]:hover {
-  border-color: #4B5563;
+.mobile-card[data-post-type='기타']:hover {
+  border-color: #4b5563;
   box-shadow: 0 4px 12px rgba(107, 114, 128, 0.2);
 }
 
-.mobile-card[data-post-type="기타"]:hover .mobile-card-number {
-  color: #4B5563;
+.mobile-card[data-post-type='기타']:hover .mobile-card-number {
+  color: #4b5563;
 }
 
-.mobile-card[data-post-type="사고팔고"]:hover {
-  border-color: #EA580C;
+.mobile-card[data-post-type='사고팔고']:hover {
+  border-color: #ea580c;
   box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
 }
 
-.mobile-card[data-post-type="사고팔고"]:hover .mobile-card-number {
-  color: #EA580C;
+.mobile-card[data-post-type='사고팔고']:hover .mobile-card-number {
+  color: #ea580c;
 }
 
-.mobile-card[data-post-type="모임"]:hover {
-  border-color: #0891B2;
+.mobile-card[data-post-type='모임']:hover {
+  border-color: #0891b2;
   box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
 }
 
-.mobile-card[data-post-type="모임"]:hover .mobile-card-number {
-  color: #0891B2;
+.mobile-card[data-post-type='모임']:hover .mobile-card-number {
+  color: #0891b2;
 }
 
-.mobile-card[data-post-type="공지"]:hover {
-  border-color: #B91C1C;
+.mobile-card[data-post-type='공지']:hover {
+  border-color: #b91c1c;
   box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
 }
 
-.mobile-card[data-post-type="공지"]:hover .mobile-card-number {
-  color: #B91C1C;
+.mobile-card[data-post-type='공지']:hover .mobile-card-number {
+  color: #b91c1c;
 }
 
 .mobile-card:focus {
@@ -747,48 +749,48 @@
 }
 
 /* 글종류별 태그 색상 */
-.mobile-card[data-post-type="생활정보"] .mobile-card-number {
-  color: #3B82F6;
+.mobile-card[data-post-type='생활정보'] .mobile-card-number {
+  color: #3b82f6;
   text-align: left;
 }
 
-.mobile-card[data-post-type="부동산"] .mobile-card-number {
-  color: #10B981;
+.mobile-card[data-post-type='부동산'] .mobile-card-number {
+  color: #10b981;
   text-align: left;
 }
 
-.mobile-card[data-post-type="취업"] .mobile-card-number {
-  color: #F59E0B;
+.mobile-card[data-post-type='취업'] .mobile-card-number {
+  color: #f59e0b;
   text-align: left;
 }
 
-.mobile-card[data-post-type="커뮤니티"] .mobile-card-number {
-  color: #8B5CF6;
+.mobile-card[data-post-type='커뮤니티'] .mobile-card-number {
+  color: #8b5cf6;
   text-align: left;
 }
 
-.mobile-card[data-post-type="중고거래"] .mobile-card-number {
-  color: #EF4444;
+.mobile-card[data-post-type='중고거래'] .mobile-card-number {
+  color: #ef4444;
   text-align: left;
 }
 
-.mobile-card[data-post-type="기타"] .mobile-card-number {
-  color: #6B7280;
+.mobile-card[data-post-type='기타'] .mobile-card-number {
+  color: #6b7280;
   text-align: left;
 }
 
-.mobile-card[data-post-type="사고팔고"] .mobile-card-number {
-  color: #F97316;
+.mobile-card[data-post-type='사고팔고'] .mobile-card-number {
+  color: #f97316;
   text-align: left;
 }
 
-.mobile-card[data-post-type="모임"] .mobile-card-number {
-  color: #06B6D4;
+.mobile-card[data-post-type='모임'] .mobile-card-number {
+  color: #06b6d4;
   text-align: left;
 }
 
-.mobile-card[data-post-type="공지"] .mobile-card-number {
-  color: #DC2626;
+.mobile-card[data-post-type='공지'] .mobile-card-number {
+  color: #dc2626;
   font-weight: 700;
   text-align: left;
 }
@@ -853,8 +855,6 @@
   flex: 0 0 auto;
 }
 
-
-
 /* 접근성 개선 */
 .sr-only {
   position: absolute;
@@ -875,7 +875,7 @@
     --text-primary: #000;
     --text-secondary: #333;
   }
-  
+
   .board-table tbody tr:hover {
     background-color: #000;
     color: #fff;
@@ -897,39 +897,35 @@
     width: 100%;
     max-width: 100%;
   }
-  
+
   /* 모바일에서 테이블 숨기고 카드 뷰 표시 */
   .table-responsive {
     display: none;
   }
-  
+
   .mobile-card-view {
     display: block;
     width: 100%;
     padding: 0;
   }
-  
+
   .user-info {
     flex-direction: column;
     align-items: flex-end;
     gap: 8px;
   }
-  
+
   .pagination {
     flex-wrap: wrap;
     gap: 5px;
   }
-  
+
   .pagination-btn {
     padding: 8px 12px;
     font-size: 0.8rem;
     min-width: 35px;
   }
-  
 
-  
-
-  
   /* 모바일 카드 추가 최적화 */
   .mobile-card {
     padding: 14px;
@@ -938,17 +934,17 @@
     margin-left: 14px;
     margin-right: 14px;
   }
-  
+
   .mobile-card-title {
     font-size: 1rem;
     line-height: 1.3;
     padding: 0;
   }
-  
+
   .mobile-card-header {
     margin-bottom: 10px;
   }
-  
+
   .mobile-card-footer {
     margin-top: 10px;
     padding: 6px 0;
@@ -961,7 +957,7 @@
     padding: 0 4px;
     width: 100%;
   }
-  
+
   .mobile-card {
     padding: 12px;
     margin-bottom: 8px;
@@ -969,22 +965,22 @@
     margin-left: 12px;
     margin-right: 12px;
   }
-  
+
   .mobile-card-title {
     font-size: 0.95rem;
     width: 100%;
     padding: 0;
   }
-  
+
   .mobile-card-number {
     font-size: 0.85rem;
     padding: 4px 8px;
   }
-  
+
   .mobile-card-views {
     font-size: 0.8rem;
   }
-  
+
   .mobile-card-author,
   .mobile-card-region,
   .mobile-card-date {
@@ -997,16 +993,14 @@
   .mobile-card {
     min-height: 60px;
   }
-  
+
   .mobile-card:active {
     transform: scale(0.98);
     background-color: rgba(37, 99, 235, 0.05);
   }
-  
+
   .pagination-btn {
     min-height: 44px;
     min-width: 44px;
   }
-  
-
 }

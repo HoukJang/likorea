@@ -45,21 +45,16 @@ const Input = ({
   const disabledClass = disabled ? 'common-input--disabled' : '';
   const readonlyClass = readOnly ? 'common-input--readonly' : '';
 
-  const inputClass = [
-    baseClass,
-    sizeClass,
-    variantClass,
-    disabledClass,
-    readonlyClass,
-    className
-  ].filter(Boolean).join(' ');
+  const inputClass = [baseClass, sizeClass, variantClass, disabledClass, readonlyClass, className]
+    .filter(Boolean)
+    .join(' ');
 
   const inputId = id || name;
 
   return (
-    <div className="common-input-wrapper">
+    <div className='common-input-wrapper'>
       {label && (
-        <label htmlFor={inputId} className="common-input__label">
+        <label htmlFor={inputId} className='common-input__label'>
           {label}
         </label>
       )}
@@ -78,18 +73,10 @@ const Input = ({
         readOnly={readOnly}
         {...props}
       />
-      {error && (
-        <div className="common-input__error">
-          {error}
-        </div>
-      )}
-      {helperText && !error && (
-        <div className="common-input__helper">
-          {helperText}
-        </div>
-      )}
+      {error && <div className='common-input__error'>{error}</div>}
+      {helperText && !error && <div className='common-input__helper'>{helperText}</div>}
     </div>
   );
 };
 
-export default Input; 
+export default Input;

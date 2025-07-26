@@ -1,5 +1,16 @@
 const express = require('express');
-const { signup, login, logout, getUsers, getUser, checkEmailExists, checkIdExists, updateUser, deleteUser, verifyToken } = require('../controllers/userController');
+const {
+  signup,
+  login,
+  logout,
+  getUsers,
+  getUser,
+  checkEmailExists,
+  checkIdExists,
+  updateUser,
+  deleteUser,
+  verifyToken,
+} = require('../controllers/userController');
 const { createRateLimiters } = require('../middleware/security');
 const { validateUserInput, validateLoginInput } = require('../middleware/validation');
 const router = express.Router();

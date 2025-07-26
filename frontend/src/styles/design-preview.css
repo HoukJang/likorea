@@ -296,14 +296,26 @@
 }
 
 /* 현재 색상 */
-.current-blue { background-color: #2563eb; }
-.current-red { background-color: #dc2626; }
-.current-gray { background-color: #6b7280; }
+.current-blue {
+  background-color: #2563eb;
+}
+.current-red {
+  background-color: #dc2626;
+}
+.current-gray {
+  background-color: #6b7280;
+}
 
 /* 개선된 색상 */
-.improved-blue { background-color: #3b82f6; }
-.improved-green { background-color: #10b981; }
-.improved-gray { background-color: #6b7280; }
+.improved-blue {
+  background-color: #3b82f6;
+}
+.improved-green {
+  background-color: #10b981;
+}
+.improved-gray {
+  background-color: #6b7280;
+}
 
 /* 설명 텍스트 */
 .description {
@@ -330,4 +342,4 @@
   margin-bottom: 8px;
   color: #374151;
   line-height: 1.5;
-} 
+}

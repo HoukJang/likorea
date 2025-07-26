@@ -19,13 +19,13 @@
   --focus-outline-offset: 2px;
   --btn-radius: 8px;
   --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
-  
+
   /* 통일된 글자 크기 체계 */
-  --font-size-xs: 0.75rem;    /* 12px - 매우 작은 텍스트 */
-  --font-size-sm: 0.875rem;   /* 14px - 작은 텍스트 */
-  --font-size-base: 1rem;     /* 16px - 기본 텍스트 */
-  --font-size-lg: 1.125rem;   /* 18px - 큰 텍스트 */
-  --font-size-xl: 1.25rem;    /* 20px - 매우 큰 텍스트 */
+  --font-size-xs: 0.75rem; /* 12px - 매우 작은 텍스트 */
+  --font-size-sm: 0.875rem; /* 14px - 작은 텍스트 */
+  --font-size-base: 1rem; /* 16px - 기본 텍스트 */
+  --font-size-lg: 1.125rem; /* 18px - 큰 텍스트 */
+  --font-size-xl: 1.25rem; /* 20px - 매우 큰 텍스트 */
 }
 
 .profile-container {
@@ -123,10 +123,16 @@
   justify-content: center;
 }
 
-.profile-edit-form {
+.profile-edit-form,
+.password-change-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 25px;
+  background: linear-gradient(135deg, var(--gray-light) 0%, var(--white) 100%);
+  border-radius: 12px;
+  border: 2px solid var(--accent-blue);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
 }
 
 .form-group {
@@ -183,22 +189,22 @@
     margin: 10px;
     padding: 30px 20px;
   }
-  
+
   .profile-title {
     font-size: var(--font-size-lg);
   }
-  
+
   .info-group {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
-  
+
   .profile-actions {
     flex-direction: column;
   }
-  
+
   .form-actions {
     flex-direction: column;
   }
-} 
+}

@@ -26,13 +26,13 @@ beforeAll(async () => {
     if (mongoose.connection.readyState !== 0) {
       await mongoose.disconnect();
     }
-    
+
     // 테스트 데이터베이스에 연결
     await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    
+
     console.log('✅ 테스트 데이터베이스 연결 성공');
   } catch (error) {
     console.error('❌ 테스트 데이터베이스 연결 실패:', error.message);
@@ -40,15 +40,29 @@ beforeAll(async () => {
   }
 });
 
-afterAll(async () => {
+// 각 테스트 후 데이터베이스 정리
+afterEach(async () => {
   try {
-    // 모든 컬렉션 삭제
     const collections = mongoose.connection.collections;
     for (const key in collections) {
       const collection = collections[key];
       await collection.deleteMany();
     }
-    
+
+    // 카운터 초기화
+    const Counter = require('../models/Counter');
+    await Counter.create({ _id: 'board', seq: 0 });
+
+    // 태그 초기화
+    const { initializeTags } = require('../utils/initTags');
+    await initializeTags();
+  } catch (error) {
+    console.error('❌ 테스트 데이터 정리 실패:', error.message);
+  }
+});
+
+afterAll(async () => {
+  try {
     // 연결 종료
     await mongoose.disconnect();
     console.log('✅ 테스트 데이터베이스 연결 종료');
@@ -65,4 +79,4 @@ global.console = {
   info: jest.fn(),
   warn: jest.fn(),
   error: jest.fn(),
-}; 
+};

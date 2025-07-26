@@ -119,8 +119,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 현대화된 포커스 상태 */
@@ -143,13 +147,13 @@
     font-size: 15px;
     min-height: 44px;
   }
-  
+
   .common-button--medium {
     padding: 14px 22px;
     font-size: 16px;
     min-height: 48px;
   }
-  
+
   .common-button--large {
     padding: 18px 26px;
     font-size: 18px;
@@ -163,8 +167,8 @@
     min-height: 44px;
     min-width: 44px;
   }
-  
+
   .common-button:active:not(.common-button--disabled) {
     transform: scale(0.95);
   }
-} 
+}

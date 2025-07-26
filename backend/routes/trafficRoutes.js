@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { 
-  getTrafficDashboard, 
-  getRealtimeTraffic, 
-  getPathAnalysis 
+const {
+  getTrafficDashboard,
+  getRealtimeTraffic,
+  getPathAnalysis,
 } = require('../controllers/trafficController');
 const { authenticateToken, requireAdmin } = require('../middleware/auth');
 
@@ -22,7 +22,7 @@ const { authenticateToken, requireAdmin } = require('../middleware/auth');
  *         schema:
  *           type: string
  *           enum: [1h, 6h, 24h, 7d, 30d]
- *         description: 조회 기간 (기본값: 24h)
+ *         description: 조회 기간 (기본값 24h)
  *     responses:
  *       200:
  *         description: 트래픽 대시보드 데이터
@@ -94,7 +94,7 @@ router.get('/realtime', authenticateToken, requireAdmin, getRealtimeTraffic);
  *         schema:
  *           type: string
  *           enum: [24h, 7d]
- *         description: 조회 기간 (기본값: 24h)
+ *         description: 조회 기간 (기본값 24h)
  *     responses:
  *       200:
  *         description: 경로별 트래픽 분석 데이터
@@ -105,4 +105,4 @@ router.get('/realtime', authenticateToken, requireAdmin, getRealtimeTraffic);
  */
 router.get('/analysis/:path', authenticateToken, requireAdmin, getPathAnalysis);
 
-module.exports = router; 
+module.exports = router;
