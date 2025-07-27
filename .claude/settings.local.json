@@ -8,7 +8,8 @@
       "Bash(npm start)",
       "Bash(NODE_ENV=development npm run dev)",
       "Bash(node:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(pm2 logs:*)"
     ],
     "deny": []
   }
