@@ -80,3 +80,37 @@ dump/
 # Documentation build
 docs/_build/
 docs/.doctrees/
+
+# Claude AI related files
+.claude/
+.claude/**/*
+!.claude/settings.json
+
+# Package lock files (auto-generated)
+**/node_modules/.package-lock.json
+**/package-lock.json.bak
+
+# AWS SDK cache files
+**/node_modules/@aws-*/
+**/node_modules/@smithy/
+
+# Build tool cache
+**/.cache/
+**/node_modules/.cache/
+frontend/node_modules/.cache/**/*
+backend/node_modules/.cache/**/*
+
+# React build cache
+frontend/build/static/js/*.chunk.js.map
+frontend/build/static/css/*.chunk.css.map
+
+# Development logs that are auto-generated
+docs/logs/
+!docs/logs/.gitkeep
+
+# Prettier and ESLint cache
+.prettierrc
+.prettierignore
+
+# Stash related temp files
+.git/refs/stash*
