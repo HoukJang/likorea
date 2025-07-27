@@ -1,9 +1,11 @@
 #!/bin/bash
 
 # 🚀 Likorea 배포 스크립트
-# 사용법: ./deploy.sh [environment] [--force]
+# 사용법: ./deploy.sh [environment] [--force] [--init-db]
 # 예시: ./deploy.sh production
 # 예시: ./deploy.sh production --force (테스트 실패 시에도 배포)
+# 예시: ./deploy.sh production --init-db (DB 초기화와 함께 배포)
+# 예시: ./deploy.sh production --force --init-db (강제 배포 + DB 초기화)
 
 set -e
 
@@ -37,15 +39,38 @@ log_step() {
 # 환경 확인
 if [ "$ENVIRONMENT" != "development" ] && [ "$ENVIRONMENT" != "production" ]; then
     log_error "지원하지 않는 환경입니다: $ENVIRONMENT"
-    log_error "사용법: ./deploy.sh [development|production] [--force]"
+    log_error "사용법: ./deploy.sh [development|production] [--force] [--init-db]"
     exit 1
 fi
 
-# Force 옵션 확인
+# 옵션 확인
 FORCE_DEPLOY=false
-if [ "$2" = "--force" ]; then
-    FORCE_DEPLOY=true
-    log_warn "Force 모드로 배포합니다. 테스트 실패 시에도 배포가 계속됩니다."
+INIT_DB=false
+
+# 모든 매개변수를 순회하면서 옵션 확인
+for arg in "$@"; do
+    case $arg in
+        --force)
+            FORCE_DEPLOY=true
+            log_warn "Force 모드로 배포합니다. 테스트 실패 시에도 배포가 계속됩니다."
+            ;;
+        --init-db)
+            INIT_DB=true
+            log_warn "데이터베이스 초기화 모드입니다. 모든 데이터가 삭제됩니다!"
+            ;;
+    esac
+done
+
+# DB 초기화 경고 및 확인
+if [ "$INIT_DB" = true ]; then
+    log_error "⚠️  경고: 데이터베이스를 초기화하면 모든 기존 데이터가 삭제됩니다!"
+    log_error "⚠️  이 작업은 되돌릴 수 없습니다!"
+    read -p "정말로 데이터베이스를 초기화하시겠습니까? (DELETE/n): " -r
+    if [ "$REPLY" != "DELETE" ]; then
+        log_info "데이터베이스 초기화가 취소되었습니다."
+        exit 1
+    fi
+    log_warn "데이터베이스 초기화가 확인되었습니다."
 fi
 
 log_info "배포를 시작합니다..."
@@ -185,8 +210,31 @@ if [ "$ENVIRONMENT" = "production" ]; then
 fi
 cd ..
 
-# 6. 백엔드 서버 시작
-log_step "6. 백엔드 서버 시작"
+# 6. 데이터베이스 초기화 (옵션)
+if [ "$INIT_DB" = true ]; then
+    log_step "6. 데이터베이스 초기화"
+    log_info "데이터베이스를 초기화하고 있습니다..."
+    cd backend
+    
+    # 환경에 따라 다른 초기화 스크립트 실행
+    if [ "$ENVIRONMENT" = "production" ]; then
+        NODE_ENV=production node utils/initDB.js || {
+            log_error "데이터베이스 초기화 실패"
+            exit 1
+        }
+    else
+        node utils/initDB.js || {
+            log_error "데이터베이스 초기화 실패"
+            exit 1
+        }
+    fi
+    
+    log_info "데이터베이스 초기화가 완료되었습니다."
+    cd ..
+fi
+
+# 7. 백엔드 서버 시작
+log_step "7. 백엔드 서버 시작"
 cd backend
 
 if [ "$ENVIRONMENT" = "production" ]; then
@@ -208,9 +256,9 @@ else
 fi
 cd ..
 
-# 7. Nginx 설정 확인 (프로덕션 환경에서만)
+# 8. Nginx 설정 확인 (프로덕션 환경에서만)
 if [ "$ENVIRONMENT" = "production" ]; then
-    log_step "7. Nginx 설정 확인"
+    log_step "8. Nginx 설정 확인"
     if command -v nginx &> /dev/null; then
         log_info "Nginx 설정 테스트..."
         nginx -t || {
@@ -233,9 +281,9 @@ else
     log_info "개발 환경에서는 Nginx 설정을 건너뜁니다."
 fi
 
-# 8. SSL 인증서 설정 (프로덕션)
+# 9. SSL 인증서 설정 (프로덕션)
 if [ "$ENVIRONMENT" = "production" ]; then
-    log_step "8. SSL 인증서 설정"
+    log_step "9. SSL 인증서 설정"
     if command -v certbot &> /dev/null; then
         log_info "SSL 인증서 확인 중..."
         certbot certificates | grep -q "likorea.com" || {
@@ -247,8 +295,8 @@ if [ "$ENVIRONMENT" = "production" ]; then
     fi
 fi
 
-# 9. 서비스 상태 확인
-log_step "9. 서비스 상태 확인"
+# 10. 서비스 상태 확인
+log_step "10. 서비스 상태 확인"
 
 if [ "$ENVIRONMENT" = "production" ]; then
     if command -v pm2 &> /dev/null; then
@@ -267,8 +315,13 @@ else
     log_info "  프론트엔드: cd frontend && npm start"
 fi
 
-# 10. 배포 완료
+# 11. 배포 완료
 log_info "🎉 배포가 완료되었습니다!"
+
+if [ "$INIT_DB" = true ]; then
+    log_info "📊 데이터베이스가 초기화되었습니다."
+    log_info "🔧 초기 데이터 및 태그가 생성되었습니다."
+fi
 
 if [ "$ENVIRONMENT" = "production" ]; then
     log_info "🌐 웹사이트: https://likorea.com"
@@ -278,6 +331,7 @@ if [ "$ENVIRONMENT" = "production" ]; then
     log_info "  - PM2 재시작: pm2 restart likorea-backend"
     log_info "  - Nginx 재시작: sudo systemctl reload nginx"
     log_info "  - SSL 갱신: sudo certbot renew"
+    log_info "  - DB 초기화: ./deploy.sh production --init-db"
 else
     log_info "🌐 개발 서버 URL:"
     log_info "  - 프론트엔드: http://localhost:3000"
@@ -287,4 +341,5 @@ else
     log_info "  - 프론트엔드 개발 서버: cd frontend && npm start"
     log_info "  - 테스트 실행: npm test (각 디렉토리에서)"
     log_info "  - 코드 포맷: npm run format (각 디렉토리에서)"
+    log_info "  - DB 초기화: ./deploy.sh development --init-db"
 fi 

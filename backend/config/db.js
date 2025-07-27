@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+// mongoose 8 설정
+mongoose.set('strictQuery', false);
+
 const connectDB = async () => {
   try {
     if (!process.env.MONGO_URI) {
@@ -7,10 +10,7 @@ const connectDB = async () => {
       return;
     }
     
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose.connect(process.env.MONGO_URI);
     console.log("MongoDB 연결 성공");
   } catch (error) {
     console.error("MongoDB 연결 실패", error);

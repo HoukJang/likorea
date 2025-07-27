@@ -1,9 +1,14 @@
 const request = require('supertest');
 const app = require('../../server');
+const { setupTestEnvironment, cleanupTestData } = require('../helpers/testHelpers');
 
 describe('Tag API Tests', () => {
-  beforeEach(async () => {
-    // 태그는 setup.js에서 initializeTags로 자동 생성됨
+  beforeAll(async () => {
+    await setupTestEnvironment();
+  });
+
+  afterAll(async () => {
+    await cleanupTestData();
   });
 
   describe('GET /api/tags', () => {

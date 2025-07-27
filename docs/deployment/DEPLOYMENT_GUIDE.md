@@ -87,7 +87,23 @@ cd likorea
 
 # 개발 환경 배포
 ./deploy.sh development
+
+# 데이터베이스 초기화와 함께 배포
+./deploy.sh production --init-db
+
+# 강제 배포 (테스트 실패 시에도 배포)
+./deploy.sh production --force
+
+# 옵션 조합 (강제 배포 + DB 초기화)
+./deploy.sh production --force --init-db
 ```
+
+#### 배포 옵션 설명
+
+- `--force`: 테스트나 린트 실패 시에도 배포를 강행합니다
+- `--init-db`: 데이터베이스를 초기화하고 기본 데이터를 생성합니다
+  - ⚠️ **경고**: 모든 기존 데이터가 삭제됩니다!
+  - 확인을 위해 "DELETE"를 입력해야 합니다
 
 ### 2. 수동 배포
 
@@ -606,6 +622,9 @@ git pull origin main
 
 # 자동 배포
 ./deploy.sh production
+
+# 데이터베이스 초기화가 필요한 경우
+./deploy.sh production --init-db
 ```
 
 ### 2. 환경변수 업데이트
@@ -664,6 +683,10 @@ pm2 status
 pm2 restart all
 sudo systemctl restart nginx
 sudo systemctl restart mongod
+
+# 데이터베이스 초기화 (주의!)
+./deploy.sh production --init-db
+./deploy.sh development --init-db
 ```
 
 ### 문제 발생 시 체크리스트

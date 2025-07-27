@@ -1,35 +1,51 @@
 const request = require('supertest');
 const app = require('../../server');
-const User = require('../../models/User');
-const jwt = require('jsonwebtoken');
+const { 
+  setupTestEnvironment, 
+  cleanupTestData, 
+  createTestUser, 
+  generateToken, 
+  generateExpiredToken,
+  removeTestUserIfExists 
+} = require('../helpers/testHelpers');
 
 describe('Authentication Tests', () => {
   let testUser;
   let validToken;
   let expiredToken;
 
+  beforeAll(async () => {
+    await setupTestEnvironment();
+  });
+
+  afterEach(async () => {
+    // 이 테스트에서 생성한 사용자만 정리
+    if (testUser && testUser._id) {
+      const User = require('../../models/User');
+      await User.deleteOne({ _id: testUser._id });
+    }
+  });
+
+  afterAll(async () => {
+    await cleanupTestData();
+  });
+
   beforeEach(async () => {
-    // 테스트 사용자 생성
-    testUser = await User.create({
-      id: 'testuser',
-      email: 'test@example.com',
-      password: 'password123',
+    // 8자리 랜덤 ID로 격리 보장
+    const uniqueId = Math.random().toString(36).substring(2, 10);
+    
+    testUser = await createTestUser({
+      id: uniqueId,
+      email: `${uniqueId}@test.com`,
       authority: 3,
     });
 
-    // 유효한 토큰 생성
-    validToken = jwt.sign(
-      { _id: testUser._id, id: testUser.id, email: testUser.email, authority: testUser.authority },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    // 만료된 토큰 생성
-    expiredToken = jwt.sign(
-      { _id: testUser._id, id: testUser.id, email: testUser.email, authority: testUser.authority },
-      process.env.JWT_SECRET,
-      { expiresIn: '-1s' } // 이미 만료된 토큰
-    );
+    // 토큰 생성
+    validToken = generateToken(testUser);
+    expiredToken = generateExpiredToken(testUser);
+    
+    // 만료된 토큰이 실제로 만료되도록 잠시 대기
+    await new Promise(resolve => setTimeout(resolve, 1100));
   });
 
   describe('POST /api/users/login', () => {
@@ -37,7 +53,7 @@ describe('Authentication Tests', () => {
       const response = await request(app)
         .post('/api/users/login')
         .send({
-          id: 'testuser',
+          id: testUser.id,
           password: 'password123',
         })
         .expect(200);
@@ -45,14 +61,14 @@ describe('Authentication Tests', () => {
       expect(response.body.success).toBe(true);
       expect(response.body.message).toBe('로그인 성공');
       expect(response.body.token).toBeDefined();
-      expect(response.body.user.id).toBe('testuser');
+      expect(response.body.user.id).toBe(testUser.id);
     });
 
     it('should return error for invalid credentials', async () => {
       const response = await request(app)
         .post('/api/users/login')
         .send({
-          id: 'testuser',
+          id: testUser.id,
           password: 'wrongpassword',
         })
         .expect(401);
@@ -70,7 +86,7 @@ describe('Authentication Tests', () => {
         .expect(200);
 
       expect(response.body.valid).toBe(true);
-      expect(response.body.user.id).toBe('testuser');
+      expect(response.body.user.id).toBe(testUser.id);
     });
 
     it('should reject expired token', async () => {

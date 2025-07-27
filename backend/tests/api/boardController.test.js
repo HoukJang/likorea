@@ -1,58 +1,85 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
 const app = require('../../server');
 const BoardPost = require('../../models/BoardPost');
 const User = require('../../models/User');
+const { 
+  setupTestEnvironment, 
+  cleanupTestData, 
+  createTestUser, 
+  createTestAdmin,
+  createTestPost,
+  generateToken,
+  ensureBoardCounter,
+  removeTestUserIfExists 
+} = require('../helpers/testHelpers');
 
 describe('Board API Tests', () => {
   let testUser;
   let testPost;
   let authToken;
-  let uniqueId = 0;
+  let anotherUser;
+  let anotherToken;
 
-  const getUniqueUserId = () => `boardtest${Date.now()}_${++uniqueId}`;
-  const getUniqueEmail = () => `boardtest${Date.now()}_${uniqueId}@test.com`;
+  beforeAll(async () => {
+    await setupTestEnvironment();
+  });
 
-  // JWT 토큰 생성 헬퍼 함수
-  const generateToken = user => {
-    return jwt.sign(
-      {
-        _id: user._id,
-        id: user.id,
-        authority: user.authority,
-      },
-      process.env.JWT_SECRET || 'test-secret-key',
-      { expiresIn: '1h' }
-    );
-  };
+  afterEach(async () => {
+    // 이 테스트에서 생성한 데이터만 정리
+    const BoardPost = require('../../models/BoardPost');
+    const User = require('../../models/User');
+    
+    if (testUser && testUser._id) {
+      await User.deleteOne({ _id: testUser._id });
+    }
+    if (anotherUser && anotherUser._id) {
+      await User.deleteOne({ _id: anotherUser._id });
+    }
+    if (testPost && testPost._id) {
+      await BoardPost.deleteOne({ _id: testPost._id });
+    }
+  });
+
+  afterAll(async () => {
+    await cleanupTestData();
+  });
 
   beforeEach(async () => {
-    // 테스트용 태그는 setup.js에서 initializeTags로 생성됨
+    // Counter 확인
+    await ensureBoardCounter();
 
-    // 테스트 사용자 생성
-    testUser = new User({
-      id: getUniqueUserId(),
-      email: getUniqueEmail(),
-      password: 'password123',
+    // 8자리 랜덤 ID로 사용자 생성
+    const userId = Math.random().toString(36).substring(2, 10);
+    const anotherUserId = Math.random().toString(36).substring(2, 10);
+
+    testUser = await createTestUser({
+      id: userId,
+      email: `${userId}@test.com`,
       authority: 3,
     });
-    await testUser.save();
+
+    // 다른 사용자 생성 (권한 테스트용)
+    anotherUser = await createTestUser({
+      id: anotherUserId,
+      email: `${anotherUserId}@test.com`,
+      authority: 3,
+    });
 
     // 인증 토큰 생성
     authToken = generateToken(testUser);
+    anotherToken = generateToken(anotherUser);
 
     // 테스트 게시글 생성
-    testPost = new BoardPost({
+    testPost = await createTestPost(testUser._id, {
       title: '테스트 게시글',
       content: '테스트 내용',
-      author: testUser._id,
       tags: {
         type: '생활정보',
+        subcategory: '할인정보',
         region: '24',
       },
     });
-    await testPost.save();
   });
 
   describe('GET /api/boards', () => {
@@ -114,17 +141,18 @@ describe('Board API Tests', () => {
       expect(response.body.post.title).toBe('새로운 게시글');
     });
 
-    it('should return 401 for unauthorized request', async () => {
+    it('should return 403 for unauthorized request', async () => {
       const newPost = {
         title: '새로운 게시글',
         content: '새로운 내용',
         tags: {
           type: '생활정보',
+          subcategory: '할인정보',
           region: '24',
         },
       };
 
-      const response = await request(app).post('/api/boards').send(newPost).expect(401);
+      const response = await request(app).post('/api/boards').send(newPost).expect(403);
 
       expect(response.body.success).toBe(false);
     });
@@ -172,16 +200,7 @@ describe('Board API Tests', () => {
     });
 
     it('should return 403 for unauthorized request', async () => {
-      // 다른 사용자 생성
-      const anotherUser = new User({
-        id: 'anotheruser',
-        email: 'another@test.com',
-        password: 'password123',
-        authority: 3,
-      });
-      await anotherUser.save();
-
-      const anotherToken = generateToken(anotherUser);
+      // beforeEach에서 생성한 anotherUser와 anotherToken 사용
 
       const updateData = {
         title: '수정된 제목',
@@ -223,17 +242,7 @@ describe('Board API Tests', () => {
     });
 
     it('should return 403 for unauthorized request', async () => {
-      // 다른 사용자 생성
-      const anotherUser = new User({
-        id: 'anotheruser2',
-        email: 'another2@test.com',
-        password: 'password123',
-        authority: 3,
-      });
-      await anotherUser.save();
-
-      const anotherToken = generateToken(anotherUser);
-
+      // beforeEach에서 생성한 anotherUser와 anotherToken 사용
       const response = await request(app)
         .delete(`/api/boards/${testPost._id}`)
         .set('Authorization', `Bearer ${anotherToken}`)

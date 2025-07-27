@@ -374,12 +374,10 @@ function BoardPostView() {
           <div className='post-tags'>
             {createTagDisplayData(post.tags, tagList).map((tag, index) => (
               <span key={index} className={`tag ${tag.category}-tag`}>
-                {tag.category === 'type' ? 'Type' : 'Region'}: {tag.displayName}
+                {tag.category === 'type' ? 'Type' : 
+                 tag.category === 'subcategory' ? 'Sub' : 'Region'}: {tag.displayName}
               </span>
             ))}
-            {post.tags.subcategory && (
-              <span className='tag subcategory-tag'>Sub: {post.tags.subcategory}</span>
-            )}
           </div>
         )}
       </div>

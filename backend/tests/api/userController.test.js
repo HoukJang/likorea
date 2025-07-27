@@ -4,15 +4,18 @@ const User = require('../../models/User');
 
 describe('User API Tests', () => {
   let testUser;
-  let uniqueId = 0;
 
-  const getUniqueUserId = () => `user${++uniqueId}`;
-  const getUniqueEmail = () => `test${uniqueId}@test.com`;
+  afterEach(async () => {
+    // 이 테스트에서 생성한 사용자만 정리
+    if (testUser && testUser._id) {
+      await User.deleteOne({ _id: testUser._id });
+    }
+  });
 
   beforeEach(async () => {
-    // 각 테스트 전에 고유한 사용자 생성
-    const uniqueUserId = 'testuser'; // 3-20자 범위의 고정 ID
-    const uniqueEmail = getUniqueEmail();
+    // 8자리 랜덤 ID로 격리 보장
+    const uniqueUserId = Math.random().toString(36).substring(2, 10);
+    const uniqueEmail = `${uniqueUserId}@test.com`;
 
     testUser = new User({
       id: uniqueUserId,
@@ -25,9 +28,10 @@ describe('User API Tests', () => {
 
   describe('POST /api/users', () => {
     it('should create a new user successfully', async () => {
+      const newUserId = Math.random().toString(36).substring(2, 10);
       const userData = {
-        id: getUniqueUserId(),
-        email: getUniqueEmail(),
+        id: newUserId,
+        email: `${newUserId}@test.com`,
         password: 'newpassword123',
       };
 
@@ -40,7 +44,7 @@ describe('User API Tests', () => {
 
     it('should return error for duplicate user ID', async () => {
       const userData = {
-        id: 'testuser', // 이미 존재하는 ID
+        id: testUser.id, // 이미 존재하는 ID
         email: 'duplicate@test.com',
         password: 'password123',
       };
@@ -68,7 +72,7 @@ describe('User API Tests', () => {
   describe('POST /api/users/login', () => {
     it('should login successfully with valid credentials', async () => {
       const loginData = {
-        id: 'testuser',
+        id: testUser.id,
         password: 'password123',
       };
 
@@ -94,7 +98,7 @@ describe('User API Tests', () => {
 
     it('should return error for wrong password', async () => {
       const loginData = {
-        id: 'testuser',
+        id: testUser.id,
         password: 'wrongpassword',
       };
 
@@ -127,7 +131,7 @@ describe('User API Tests', () => {
         .expect(200);
 
       expect(response.body.success).toBe(true);
-      expect(response.body.user.id).toBe('testuser');
+      expect(response.body.user.id).toBe(testUser.id);
     });
 
     it('should return 404 for non-existent user', async () => {

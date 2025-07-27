@@ -61,10 +61,13 @@ coverage/
 
 # Frontend specific
 frontend/node_modules/.cache/
+frontend/node_modules/.cache/**/*
 
 # Backend specific
 backend/logs/
 backend/*.log
+backend/node_modules/.cache/
+backend/node_modules/.cache/**/*
 
 # MongoDB dump files
 dump/

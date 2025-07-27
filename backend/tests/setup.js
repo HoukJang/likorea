@@ -27,39 +27,25 @@ beforeAll(async () => {
       await mongoose.disconnect();
     }
 
+    // mongoose 8 설정
+    mongoose.set('strictQuery', false);
+    
     // 테스트 데이터베이스에 연결
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGODB_URI);
 
     console.log('✅ 테스트 데이터베이스 연결 성공');
+
+    // 한 번만 태그 초기화
+    const { initializeTags } = require('../utils/initTags');
+    await initializeTags();
+    console.log('✅ 태그 초기화 완료');
   } catch (error) {
     console.error('❌ 테스트 데이터베이스 연결 실패:', error.message);
     throw error;
   }
 });
 
-// 각 테스트 후 데이터베이스 정리
-afterEach(async () => {
-  try {
-    const collections = mongoose.connection.collections;
-    for (const key in collections) {
-      const collection = collections[key];
-      await collection.deleteMany();
-    }
-
-    // 카운터 초기화
-    const Counter = require('../models/Counter');
-    await Counter.create({ _id: 'board', seq: 0 });
-
-    // 태그 초기화
-    const { initializeTags } = require('../utils/initTags');
-    await initializeTags();
-  } catch (error) {
-    console.error('❌ 테스트 데이터 정리 실패:', error.message);
-  }
-});
+// 전역 afterEach 제거 - 각 테스트 파일에서 자체 관리
 
 afterAll(async () => {
   try {
