@@ -1,6 +1,6 @@
 {
   "name": "longisland-korea-frontend",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "dependencies": {
     "chart.js": "^4.5.0",
     "react": "^18.0.0",

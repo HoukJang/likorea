@@ -2,11 +2,8 @@ import apiClient from '../api/client';
 
 describe('ApiClient', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    // Set default test token for most tests
     localStorage.getItem.mockReturnValue('test-token');
-    localStorage.setItem.mockImplementation(() => {});
-    localStorage.removeItem.mockImplementation(() => {});
-    global.fetch.mockClear();
   });
 
   describe('Token Management', () => {

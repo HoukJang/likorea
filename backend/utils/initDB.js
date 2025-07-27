@@ -3,6 +3,7 @@ const User = require('../models/User');
 const BoardPost = require('../models/BoardPost');
 const Comment = require('../models/Comment');
 const Counter = require('../models/Counter');
+const Tag = require('../models/Tag');
 const { initializeTags } = require('./initTags');
 require('dotenv').config();
 
@@ -28,6 +29,7 @@ async function initDB() {
     await BoardPost.deleteMany({});
     await Comment.deleteMany({});
     await Counter.deleteMany({});
+    await Tag.deleteMany({});
     console.log('✅ 기존 데이터 정리 완료');
 
     // 1. Counter 초기화

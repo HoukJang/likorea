@@ -1,14 +1,7 @@
 // jest-dom adds custom jest matchers for asserting on DOM nodes.
-// allows you to do things like:
-// expect(element).toHaveTextContent(/react/i)
-// learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 
-// Mock window.alert for tests
-Object.defineProperty(window, 'alert', {
-  writable: true,
-  value: jest.fn(),
-});
+// Global mocks setup
 
 // Mock localStorage
 const localStorageMock = {
@@ -18,19 +11,93 @@ const localStorageMock = {
   clear: jest.fn(),
 };
 Object.defineProperty(window, 'localStorage', {
-  writable: true,
   value: localStorageMock,
+  writable: true
 });
 
-// Mock fetch for API calls
+// Mock window.alert
+Object.defineProperty(window, 'alert', {
+  value: jest.fn(),
+  writable: true
+});
+
+// Mock window.confirm
+Object.defineProperty(window, 'confirm', {
+  value: jest.fn(() => true),
+  writable: true
+});
+
+// Mock window.prompt
+Object.defineProperty(window, 'prompt', {
+  value: jest.fn(),
+  writable: true
+});
+
+// Mock window.dispatchEvent
+Object.defineProperty(window, 'dispatchEvent', {
+  value: jest.fn(),
+  writable: true
+});
+
+// Mock window.location
+const mockLocation = {
+  href: '',
+  pathname: '/',
+  search: '',
+  hash: '',
+  host: 'localhost:3000',
+  hostname: 'localhost',
+  port: '3000',
+  protocol: 'http:',
+  origin: 'http://localhost:3000',
+  assign: jest.fn(),
+  replace: jest.fn(),
+  reload: jest.fn(),
+};
+Object.defineProperty(window, 'location', {
+  value: mockLocation,
+  writable: true
+});
+
+// Mock fetch
 global.fetch = jest.fn();
+
+// Mock console methods to reduce noise in tests
+const originalConsole = global.console;
+global.console = {
+  ...originalConsole,
+  log: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+};
 
 // Reset all mocks before each test
 beforeEach(() => {
   jest.clearAllMocks();
-  localStorageMock.getItem.mockClear();
-  localStorageMock.setItem.mockClear();
-  localStorageMock.removeItem.mockClear();
-  localStorageMock.clear.mockClear();
+  
+  // Reset localStorage mock
+  localStorageMock.getItem.mockReturnValue(null);
+  localStorageMock.setItem.mockImplementation(() => {});
+  localStorageMock.removeItem.mockImplementation(() => {});
+  localStorageMock.clear.mockImplementation(() => {});
+  
+  // Reset window mocks
+  window.alert.mockImplementation(() => {});
+  window.confirm.mockReturnValue(true);
+  window.prompt.mockReturnValue('');
+  window.dispatchEvent.mockImplementation(() => true);
+  
+  // Reset location mock
+  mockLocation.href = '';
+  mockLocation.pathname = '/';
+  mockLocation.search = '';
+  mockLocation.hash = '';
+  
+  // Reset fetch mock
   global.fetch.mockClear();
+});
+
+// Clean up after each test
+afterEach(() => {
+  jest.resetAllMocks();
 });

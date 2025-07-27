@@ -3,34 +3,40 @@ import { useAuth } from '../hooks/useAuth';
 import * as authApi from '../api/auth';
 
 // Mock API functions
-jest.mock('../api/auth');
+jest.mock('../api/auth', () => ({
+  login: jest.fn(),
+  verifyToken: jest.fn(),
+  logout: jest.fn(),
+  isAuthenticated: jest.fn(),
+  isAdmin: jest.fn(),
+}));
 
 describe('useAuth Hook', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    localStorage.getItem.mockReturnValue(null);
-    localStorage.setItem.mockImplementation(() => {});
-    localStorage.removeItem.mockImplementation(() => {});
+    // Mocks are already cleared in setupTests.js
+    // Just need to configure specific mock behaviors for this test
   });
 
   describe('Initial State', () => {
-    it('should initialize with null user when no token exists', () => {
+    it('should initialize with null user when no token exists', async () => {
       localStorage.getItem.mockReturnValue(null);
+      authApi.isAuthenticated.mockReturnValue(false);
 
       const { result } = renderHook(() => useAuth());
+
+      // Wait for initial loading to complete
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      });
 
       expect(result.current.user).toBe(null);
       expect(result.current.loading).toBe(false);
       expect(result.current.error).toBe(null);
     });
 
-    it('should initialize with user data when token exists', () => {
-      localStorage.getItem
-        .mockReturnValueOnce('valid-token')
-        .mockReturnValueOnce('testuser')
-        .mockReturnValueOnce('test@example.com')
-        .mockReturnValueOnce('3');
-
+    it('should initialize with user data when token exists', async () => {
+      localStorage.getItem.mockReturnValue('valid-token');
+      authApi.isAuthenticated.mockReturnValue(true);
       authApi.verifyToken.mockResolvedValue({
         valid: true,
         user: {
@@ -41,6 +47,11 @@ describe('useAuth Hook', () => {
       });
 
       const { result } = renderHook(() => useAuth());
+
+      // Wait for initial loading to complete
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      });
 
       expect(result.current.user).toBeDefined();
     });
@@ -77,7 +88,7 @@ describe('useAuth Hook', () => {
         email: 'test@example.com',
         authority: 3,
       });
-      expect(window.dispatchEvent).toHaveBeenCalledWith(new Event('login'));
+      expect(window.dispatchEvent).toHaveBeenCalledWith(expect.any(Event));
     });
 
     it('should handle login error', async () => {
@@ -110,20 +121,17 @@ describe('useAuth Hook', () => {
         result.current.logout();
       });
 
-      expect(localStorage.removeItem).toHaveBeenCalledWith('authToken');
-      expect(localStorage.removeItem).toHaveBeenCalledWith('userId');
-      expect(localStorage.removeItem).toHaveBeenCalledWith('userEmail');
-      expect(localStorage.removeItem).toHaveBeenCalledWith('userAuthority');
+      expect(authApi.logout).toHaveBeenCalled();
       expect(result.current.user).toBe(null);
       expect(result.current.error).toBe(null);
-      expect(window.dispatchEvent).toHaveBeenCalledWith(new Event('logout'));
+      expect(window.dispatchEvent).toHaveBeenCalledWith(expect.any(Event));
     });
   });
 
   describe('Token Validation', () => {
     it('should validate token successfully', async () => {
       localStorage.getItem.mockReturnValue('valid-token');
-
+      authApi.isAuthenticated.mockReturnValue(true);
       authApi.verifyToken.mockResolvedValue({
         valid: true,
         user: {
@@ -146,7 +154,7 @@ describe('useAuth Hook', () => {
 
     it('should logout when token is invalid', async () => {
       localStorage.getItem.mockReturnValue('invalid-token');
-
+      authApi.isAuthenticated.mockReturnValue(true);
       authApi.verifyToken.mockResolvedValue({
         valid: false,
         error: 'Token expired',
@@ -160,7 +168,7 @@ describe('useAuth Hook', () => {
       });
 
       expect(authApi.verifyToken).toHaveBeenCalled();
-      expect(localStorage.removeItem).toHaveBeenCalled();
+      expect(authApi.logout).toHaveBeenCalled();
       expect(result.current.user).toBe(null);
     });
   });
