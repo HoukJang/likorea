@@ -132,15 +132,8 @@ npm run lint || {
     fi
 }
 
-npm run format:check || {
-    log_warn "백엔드 Prettier 포맷 검사 실패. 자동 수정을 시도합니다..."
-    npm run format || {
-        log_error "포맷 자동 수정 실패"
-        if [ "$FORCE_DEPLOY" = false ]; then
-            exit 1
-        fi
-    }
-}
+# Prettier 제거됨 - 포맷 검사 건너뛰기
+log_info "백엔드 포맷 검사: Prettier 제거됨 (ESLint만 사용)"
 
 # 백엔드 테스트 (원격 MongoDB Atlas 사용)
 log_info "백엔드 테스트 실행 (원격 MongoDB Atlas 연결)..."
@@ -167,15 +160,8 @@ npm run lint || {
     fi
 }
 
-npm run format:check || {
-    log_warn "프론트엔드 Prettier 포맷 검사 실패. 자동 수정을 시도합니다..."
-    npm run format || {
-        log_error "포맷 자동 수정 실패"
-        if [ "$FORCE_DEPLOY" = false ]; then
-            exit 1
-        fi
-    }
-}
+# Prettier 제거됨 - 포맷 검사 건너뛰기
+log_info "프론트엔드 포맷 검사: Prettier 제거됨 (ESLint만 사용)"
 
 # 프론트엔드 테스트
 log_info "프론트엔드 테스트 실행..."
@@ -340,6 +326,6 @@ else
     log_info "  - 백엔드 개발 서버: cd backend && npm run dev"
     log_info "  - 프론트엔드 개발 서버: cd frontend && npm start"
     log_info "  - 테스트 실행: npm test (각 디렉토리에서)"
-    log_info "  - 코드 포맷: npm run format (각 디렉토리에서)"
+    log_info "  - 코드 린트: npm run lint (각 디렉토리에서)"
     log_info "  - DB 초기화: ./deploy.sh development --init-db"
 fi 
