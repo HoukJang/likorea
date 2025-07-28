@@ -20,6 +20,7 @@ const boardRoutes = require('./routes/boardRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const tagRoutes = require('./routes/tagRoutes');
 const trafficRoutes = require('./routes/trafficRoutes');
+const botRoutes = require('./routes/botRoutes');
 
 // Swagger 설정
 const swaggerUi = require('swagger-ui-express');
@@ -116,6 +117,7 @@ app.use('/api/boards', generalLimiter, boardRoutes);
 app.use('/api/admin', generalLimiter, adminRoutes);
 app.use('/api/tags', generalLimiter, tagRoutes);
 app.use('/api/traffic', generalLimiter, trafficRoutes);
+app.use('/api', generalLimiter, botRoutes);
 
 // 404 에러 처리 (라우트 설정 후에 위치)
 app.use(notFound);

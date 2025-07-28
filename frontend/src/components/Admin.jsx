@@ -15,6 +15,10 @@ import '../styles/Admin.css';
 function Admin() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('users');
+  const [bots, setBots] = useState([]);
+  const [selectedBot, setSelectedBot] = useState(null);
+  const [botTask, setBotTask] = useState('');
+  const [botLoading, setBotLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -86,11 +90,72 @@ function Admin() {
     }
   };
 
+  // 봇 목록 불러오기
+  const fetchBots = async () => {
+    try {
+      setBotLoading(true);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/bots`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('봇 목록을 불러오는데 실패했습니다');
+      }
+      
+      const data = await response.json();
+      setBots(data.bots || []);
+      setBotLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setBotLoading(false);
+    }
+  };
+
+  // 봇으로 게시글 작성
+  const handleBotPost = async () => {
+    if (!selectedBot || !botTask) {
+      setMessage('봇과 작업 내용을 선택해주세요.');
+      return;
+    }
+
+    try {
+      setBotLoading(true);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/bots/post`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          botId: selectedBot,
+          task: botTask
+        })
+      });
+
+      if (response.ok) {
+        setMessage('봇이 게시글을 작성했습니다!');
+        setBotTask('');
+        setSelectedBot(null);
+      } else {
+        throw new Error('게시글 작성 실패');
+      }
+    } catch (err) {
+      setMessage(`오류: ${err.message}`);
+    } finally {
+      setBotLoading(false);
+    }
+  };
+
   // 초기 데이터 로드
   useEffect(() => {
     fetchUsers();
     fetchStats();
-  }, []);
+    if (activeTab === 'bots') {
+      fetchBots();
+    }
+  }, [activeTab]);
 
   // 검색 처리
   const handleSearch = () => {
@@ -252,6 +317,16 @@ function Admin() {
         >
           <span className='tab-icon'>📊</span>
           <span className='tab-text'>통계</span>
+        </button>
+        <button
+          className={activeTab === 'bots' ? 'active' : ''}
+          onClick={() => setActiveTab('bots')}
+          role='tab'
+          aria-selected={activeTab === 'bots'}
+          aria-controls='bots-panel'
+        >
+          <span className='tab-icon'>🤖</span>
+          <span className='tab-text'>봇 관리</span>
         </button>
         <button
           className={activeTab === 'traffic' ? 'active' : ''}
@@ -555,6 +630,76 @@ function Admin() {
           ) : (
             <p>통계 정보를 불러오는 중...</p>
           )}
+        </section>
+      )}
+
+      {/* 봇 관리 패널 */}
+      {activeTab === 'bots' && (
+        <section
+          className='admin-section'
+          id='bots-panel'
+          role='tabpanel'
+          aria-labelledby='bots-tab'
+        >
+          <div className='section-header'>
+            <h2>봇 관리</h2>
+            <p className='section-description'>AI 봇을 통한 게시글 자동 작성</p>
+          </div>
+          <div className='bots-management'>
+            <h3>봇 게시글 작성</h3>
+              
+              <div className='bot-form'>
+                <div className='form-group'>
+                  <label htmlFor='bot-select'>봇 선택:</label>
+                  <select
+                    id='bot-select'
+                    value={selectedBot || ''}
+                    onChange={(e) => setSelectedBot(e.target.value)}
+                    disabled={botLoading}
+                  >
+                    <option value=''>봇을 선택하세요</option>
+                    {bots.map(bot => (
+                      <option key={bot.id} value={bot.id}>
+                        {bot.name} (마지막 게시: {bot.lastPost})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className='form-group'>
+                  <label htmlFor='bot-task'>작업 내용:</label>
+                  <textarea
+                    id='bot-task'
+                    value={botTask}
+                    onChange={(e) => setBotTask(e.target.value)}
+                    placeholder='예: 오늘 스토니브룩 근처 맛집 추천'
+                    rows='4'
+                    disabled={botLoading}
+                  />
+                </div>
+
+                <button
+                  onClick={handleBotPost}
+                  disabled={botLoading || !selectedBot || !botTask}
+                  className='submit-btn'
+                >
+                  {botLoading ? '처리 중...' : '게시글 작성'}
+                </button>
+              </div>
+
+              <div className='bot-list'>
+                <h3>활성 봇 목록</h3>
+                <div className='bot-cards'>
+                  {bots.map(bot => (
+                    <div key={bot.id} className='bot-card'>
+                      <h4>{bot.name}</h4>
+                      <p>상태: {bot.status === 'active' ? '활성' : '비활성'}</p>
+                      <p>마지막 게시: {bot.lastPost}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
         </section>
       )}
 

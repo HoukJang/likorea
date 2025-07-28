@@ -1,0 +1,47 @@
+
+> likorea-bots@1.0.0 start
+> node src/index.js 2
+
+[DEBUG]  web-api:WebClient:0 initialized
+[DEBUG]  bolt-app Initializing SocketModeReceiver
+[DEBUG]  web-api:WebClient:1 initialized
+[DEBUG]  socket-mode:SocketModeClient:0 Transitioning to state: disconnected
+[DEBUG]  socket-mode:SocketModeClient:0 The Socket Mode client is successfully initialized
+[DEBUG]  web-api:WebClient:0 apiCall('auth.test') start
+[DEBUG]  web-api:WebClient:0 http request url: https://slack.com/api/auth.test
+[DEBUG]  web-api:WebClient:0 http request body: {"token":"[[REDACTED]]"}
+[DEBUG]  web-api:WebClient:0 http request headers: {"Authorization":"[[REDACTED]]"}
+[DEBUG]  socket-mode:SocketModeClient:0 Starting a Socket Mode client ...
+[DEBUG]  socket-mode:SocketModeClient:0 Transitioning to state: connecting
+[INFO]  socket-mode:SocketModeClient:0 Going to establish a new connection to Slack ...
+[DEBUG]  socket-mode:SocketModeClient:0 Transitioning to state: connecting:authenticating
+[DEBUG]  socket-mode:SocketModeClient:0 Going to retrieve a new WSS URL ...
+[DEBUG]  web-api:WebClient:1 apiCall('apps.connections.open') start
+[DEBUG]  web-api:WebClient:1 http request url: https://slack.com/api/apps.connections.open
+[DEBUG]  web-api:WebClient:1 http request body: {}
+[DEBUG]  web-api:WebClient:1 http request headers: {}
+[DEBUG]  web-api:WebClient:1 http response received
+[DEBUG]  web-api:WebClient:1 http request result: {"ok":true,"url":"wss://wss-primary.slack.com/link/?ticket=5103ceac-d7ec-46b0-a85b-116dff016de4&app_id=40e11e58ab99201df3d787ef180767485d793e88d676ba749411264f6f3b6268","response_metadata":{"scopes":["connections:write"],"acceptedScopes":["connections:write"]}}
+[DEBUG]  web-api:WebClient:1 apiCall('apps.connections.open') end
+[DEBUG]  socket-mode:SocketModeClient:0 Transitioning to state: connecting:authenticated
+[DEBUG]  web-api:WebClient:0 http response received
+[DEBUG]  web-api:WebClient:0 http request result: {"ok":true,"url":"https://likorea.slack.com/","team":"likorea","user":"likorea","team_id":"T097NNTU5LM","user_id":"U097JR6CHT5","bot_id":"B097JR6C76X","is_enterprise_install":false,"response_metadata":{"scopes":["chat:write","commands","im:history","im:write","channels:history","groups:history","mpim:history","app_mentions:read"]}}
+[DEBUG]  web-api:WebClient:0 apiCall('auth.test') end
+⚡️ Bot app is running!
+Initializing bots...
+Google Maps service will be initialized on demand
+[DEBUG]  socket-mode:SocketModeClient:0 Primary WebSocket open event received (connection established)
+[DEBUG]  socket-mode:SocketModeClient:0 Transitioning to state: connecting:handshaking
+[DEBUG]  socket-mode:SocketModeClient:0 Received a message on the WebSocket: {"type":"hello","num_connections":1,"debug_info":{"host":"applink-2","build_number":122,"approximate_connection_time":18060},"connection_info":{"app_id":"A098C2N7DNC"}}
+[DEBUG]  socket-mode:SocketModeClient:0 Transitioning to state: connected
+[INFO]  socket-mode:SocketModeClient:0 Now connected to Slack
+[DEBUG]  socket-mode:SocketModeClient:0 Transitioning to state: connected:preparing
+[DEBUG]  socket-mode:SocketModeClient:0 Started running a new heart beat job
+[DEBUG]  socket-mode:SocketModeClient:0 Transitioning to state: connected:ready
+⚠️  Continuing without bot initialization...
+✅ All commands registered
+📋 Registered slash commands:
+  - /bot-post
+  - /bot-restaurant
+  - /bot-list
+  - /bot-status
