@@ -39,11 +39,6 @@ export const useAuth = () => {
    */
   const validateToken = useCallback(async () => {
     try {
-      if (!isAuthenticated()) {
-        setUser(null);
-        return false;
-      }
-
       const response = await verifyToken();
       if (response.valid) {
         // 토큰이 유효하면 사용자 정보 업데이트
@@ -51,11 +46,11 @@ export const useAuth = () => {
         return true;
       } else {
         // 토큰이 유효하지 않으면 로그아웃
-        logout();
+        await logout();
         return false;
       }
     } catch (error) {
-      logout();
+      await logout();
       return false;
     }
   }, [logout]);
@@ -95,11 +90,13 @@ export const useAuth = () => {
 
       const data = await loginApi(credentials);
 
-      // 로컬 스토리지에 사용자 정보 저장
-      localStorage.setItem('authToken', data.token);
-      localStorage.setItem('userId', data.user.id);
-      localStorage.setItem('userEmail', data.user.email);
-      localStorage.setItem('userAuthority', data.user.authority);
+      // 서버에서 httpOnly 쿠키로 토큰 저장함
+      // 호환성을 위해 localStorage에도 사용자 정보 저장 (임시)
+      if (data.user) {
+        localStorage.setItem('userId', data.user.id);
+        localStorage.setItem('userEmail', data.user.email);
+        localStorage.setItem('userAuthority', data.user.authority);
+      }
 
       // 사용자 상태 업데이트
       setUser({
@@ -131,15 +128,15 @@ export const useAuth = () => {
   /**
    * 인증 상태 확인
    */
-  const authenticated = useCallback(() => {
-    return isAuthenticated();
+  const authenticated = useCallback(async () => {
+    return await isAuthenticated();
   }, []);
 
   /**
    * 관리자 권한 확인
    */
-  const admin = useCallback(() => {
-    return isAdmin();
+  const admin = useCallback(async () => {
+    return await isAdmin();
   }, []);
 
   return {

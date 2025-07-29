@@ -4,6 +4,8 @@ const Board = require('../../models/BoardPost');
 const Tag = require('../../models/Tag');
 const Counter = require('../../models/Counter');
 const { initializeTags } = require('../../utils/initTags');
+const testConfig = require('../../config/test.config');
+const authHelpers = require('./authHelpers');
 
 // 테스트에서 생성한 데이터 추적
 const testData = {
@@ -19,7 +21,7 @@ const createTestUser = async (userData = {}) => {
   const defaultUser = {
     id: 'testuser',
     email: 'test@example.com',
-    password: 'password123',
+    password: 'Test1234!@',
     authority: 3 // 일반 사용자 권한
   };
 
@@ -40,6 +42,7 @@ const createTestAdmin = async (userData = {}) => {
   const adminData = {
     id: 'admin',
     email: 'admin@example.com',
+    password: 'Admin1234!@',
     authority: 5, // 관리자 권한
     ...userData
   };
@@ -48,39 +51,17 @@ const createTestAdmin = async (userData = {}) => {
 };
 
 /**
- * JWT 토큰 생성 (실제 로그인과 동일한 구조)
+ * JWT 토큰 생성 (authHelpers의 함수 사용)
  */
 const generateToken = (user) => {
-  const userObj = typeof user === 'object' ? user : { id: user, authority: 3 };
-  
-  return jwt.sign(
-    { 
-      _id: userObj._id || userObj.id,
-      id: userObj.id,
-      email: userObj.email || 'test@example.com',
-      authority: userObj.authority || 3
-    },
-    process.env.JWT_SECRET || 'test-secret',
-    { expiresIn: '24h' }
-  );
+  return authHelpers.generateTestToken(user);
 };
 
 /**
- * 만료된 JWT 토큰 생성 (테스트용)
+ * 만료된 JWT 토큰 생성 (authHelpers의 함수 사용)
  */
 const generateExpiredToken = (user) => {
-  const userObj = typeof user === 'object' ? user : { id: user, authority: 3 };
-  
-  return jwt.sign(
-    { 
-      _id: userObj._id || userObj.id,
-      id: userObj.id,
-      email: userObj.email || 'test@example.com',
-      authority: userObj.authority || 3
-    },
-    process.env.JWT_SECRET || 'test-secret',
-    { expiresIn: '1s' } // 1초 후 만료
-  );
+  return authHelpers.generateExpiredTestToken(user);
 };
 
 /**
@@ -186,5 +167,7 @@ module.exports = {
   ensureTestTags,
   setupTestEnvironment,
   cleanupTestData,
-  removeTestUserIfExists
+  removeTestUserIfExists,
+  // Re-export authHelpers for convenience
+  ...authHelpers
 };

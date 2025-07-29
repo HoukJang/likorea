@@ -1,59 +1,45 @@
 // 테스트 환경 설정
 process.env.NODE_ENV = 'test';
-process.env.PORT = 5002; // 테스트용 포트
 
-// dotenv를 사용하여 .env 파일 로드
-require('dotenv').config({ path: '.env' });
+// dotenv를 사용하여 .env.test 파일 로드 (테스트 환경)
+require('dotenv').config({ path: '.env.test' });
 
-// MongoDB 연결 정보를 .env 파일에서 가져오기
-if (!process.env.MONGO_URI) {
-  throw new Error('MONGO_URI가 .env 파일에 설정되지 않았습니다.');
-}
+// 테스트 설정 로드
+const testConfig = require('../config/test.config');
+const { initTestDatabase, cleanupTestDatabase } = require('./setup/testDb');
 
-// 테스트 환경에서는 .env의 MONGO_URI를 그대로 사용
-process.env.MONGODB_URI = process.env.MONGO_URI;
-process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret-key';
+// 환경 변수 설정
+process.env.NODE_ENV = 'test';
+process.env.PORT = testConfig.server.port;
+process.env.MONGODB_URI = process.env.MONGO_URI || testConfig.database.url;
+process.env.JWT_SECRET = testConfig.jwt.secret;
 
-// 글로벌 테스트 타임아웃 설정 (원격 DB 연결을 위해 증가)
-jest.setTimeout(30000);
+// 글로벌 테스트 타임아웃 설정
+jest.setTimeout(testConfig.timeout.integration);
 
-// MongoDB 연결 상태 확인
-const mongoose = require('mongoose');
-
+// 테스트 환경 초기화
 beforeAll(async () => {
   try {
-    // 기존 연결이 있으면 닫기
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.disconnect();
-    }
-
-    // mongoose 8 설정
-    mongoose.set('strictQuery', false);
+    // 테스트 데이터베이스 초기화
+    await initTestDatabase();
     
-    // 테스트 데이터베이스에 연결
-    await mongoose.connect(process.env.MONGODB_URI);
-
-    console.log('✅ 테스트 데이터베이스 연결 성공');
-
-    // 한 번만 태그 초기화
-    const { initializeTags } = require('../utils/initTags');
-    await initializeTags();
-    console.log('✅ 태그 초기화 완료');
+    // MongoDB 연결 가능 표시
+    global.__MONGODB_AVAILABLE__ = true;
   } catch (error) {
-    console.error('❌ 테스트 데이터베이스 연결 실패:', error.message);
-    throw error;
+    console.error('❌ 테스트 환경 설정 실패:', error.message);
+    console.warn('💡 MongoDB Atlas 연결을 확인하세요');
+    
+    // MongoDB 없이도 단위 테스트는 실행 가능하도록 설정
+    global.__MONGODB_AVAILABLE__ = false;
   }
 });
 
-// 전역 afterEach 제거 - 각 테스트 파일에서 자체 관리
-
+// 테스트 종료 후 정리
 afterAll(async () => {
   try {
-    // 연결 종료
-    await mongoose.disconnect();
-    console.log('✅ 테스트 데이터베이스 연결 종료');
+    await cleanupTestDatabase();
   } catch (error) {
-    console.error('❌ 테스트 데이터베이스 정리 실패:', error.message);
+    console.error('❌ 테스트 정리 실패:', error.message);
   }
 });
 

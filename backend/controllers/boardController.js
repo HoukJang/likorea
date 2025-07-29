@@ -2,8 +2,9 @@ const BoardPost = require('../models/BoardPost');
 const User = require('../models/User');
 const Tag = require('../models/Tag');
 const Comment = require('../models/Comment');
-// HTML 새니타이징은 필요시 추가
+const sanitizeHtml = require('sanitize-html');
 const { SUB_CATEGORIES } = require('../utils/initTags');
+const { escapeRegex, safeParseInt } = require('../utils/security');
 const {
   asyncHandler,
   ValidationError,
@@ -84,11 +85,13 @@ const parseRegionFilter = regionFilter => {
     const startNum = parseInt(start);
     const endNum = parseInt(end);
 
-    if (!isNaN(startNum) && !isNaN(endNum) && startNum > 0 && endNum > 0 && startNum <= endNum) {
-      return {
-        $gte: startNum.toString(),
-        $lte: endNum.toString(),
-      };
+    if (!isNaN(startNum) && !isNaN(endNum) && startNum >= 0 && endNum >= 0 && startNum <= endNum) {
+      // 범위 내의 모든 값을 배열로 생성
+      const values = [];
+      for (let i = startNum; i <= endNum; i++) {
+        values.push(i.toString());
+      }
+      return { $in: values };
     }
   }
 
@@ -180,9 +183,18 @@ exports.createPost = asyncHandler(async (req, res) => {
     }
   }
 
+  // HTML sanitization
+  const sanitizedContent = sanitizeHtml(content, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+    allowedAttributes: {
+      ...sanitizeHtml.defaults.allowedAttributes,
+      img: ['src', 'alt', 'width', 'height']
+    }
+  });
+
   const post = await BoardPost.create({
     title,
-    content,
+    content: sanitizedContent,
     tags,
     author: user._id,
     modifiedAt: new Date(),
@@ -198,15 +210,19 @@ exports.createPost = asyncHandler(async (req, res) => {
       tags: post.tags,
       author: post.author,
       createdAt: post.createdAt,
+      postNumber: post.postNumber,
     },
   });
 });
 
-// 게시글 목록 조회
+// 게시글 목록 조회 (최적화된 버전)
 exports.getPosts = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10, type, region, subcategory, search } = req.query;
 
-  const skip = (Number(page) - 1) * Number(limit);
+  // 안전한 페이지네이션 파라미터 처리
+  const pageNum = safeParseInt(page, 1, 1, 1000);
+  const limitNum = safeParseInt(limit, 10, 1, 100);
+  const skip = (pageNum - 1) * limitNum;
 
   // 필터 조건 구성
   const filter = {};
@@ -220,7 +236,6 @@ exports.getPosts = asyncHandler(async (req, res) => {
   }
 
   if (region) {
-    // Region 필터링 처리 (parseRegionFilter에서 "0"과 양수 모두 처리)
     const regionFilter = parseRegionFilter(region);
     if (regionFilter) {
       filter['tags.region'] = regionFilter;
@@ -228,53 +243,82 @@ exports.getPosts = asyncHandler(async (req, res) => {
   }
 
   if (search) {
+    // Regex injection 방지
+    const escapedSearch = escapeRegex(search);
     filter.$or = [
-      { title: { $regex: search, $options: 'i' } },
-      { content: { $regex: search, $options: 'i' } },
+      { title: { $regex: escapedSearch, $options: 'i' } },
+      { content: { $regex: escapedSearch, $options: 'i' } },
     ];
   }
 
-  // 공지와 일반 게시글을 분리해서 가져오기
-  const noticeFilter = { ...filter, 'tags.type': '공지' };
-  const normalFilter = { ...filter, 'tags.type': { $ne: '공지' } };
+  // Aggregation Pipeline으로 최적화
+  const pipeline = [
+    { $match: filter },
+    {
+      // 공지사항을 우선 정렬
+      $addFields: {
+        isNotice: { $eq: ['$tags.type', '공지'] }
+      }
+    },
+    { $sort: { isNotice: -1, createdAt: -1 } },
+    { $skip: skip },
+    { $limit: limitNum },
+    // Author 정보 조인
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'author',
+        foreignField: '_id',
+        as: 'author',
+        pipeline: [
+          { $project: { id: 1, email: 1, authority: 1 } }
+        ]
+      }
+    },
+    { $unwind: '$author' },
+    // 댓글 수 계산 (효율적으로)
+    {
+      $lookup: {
+        from: 'comments',
+        let: { postId: '$_id' },
+        pipeline: [
+          { $match: { $expr: { $eq: ['$post', '$$postId'] } } },
+          { $count: 'count' }
+        ],
+        as: 'commentStats'
+      }
+    },
+    {
+      $addFields: {
+        commentCount: { 
+          $ifNull: [{ $first: '$commentStats.count' }, 0] 
+        }
+      }
+    },
+    // 불필요한 필드 제거
+    { 
+      $project: { 
+        commentStats: 0,
+        isNotice: 0
+      } 
+    }
+  ];
 
-  // 공지 게시글 가져오기 (최신순)
-  const notices = await BoardPost.find(noticeFilter)
-    .populate('author', 'id email authority')
-    .sort({ createdAt: -1 });
+  // 병렬로 실행
+  const [posts, totalPosts] = await Promise.all([
+    BoardPost.aggregate(pipeline),
+    BoardPost.countDocuments(filter)
+  ]);
 
-  // 일반 게시글 가져오기 (최신순)
-  const normalPosts = await BoardPost.find(normalFilter)
-    .populate('author', 'id email authority')
-    .sort({ createdAt: -1 });
-
-  // 공지를 먼저, 그 다음 일반 게시글
-  const allPosts = [...notices, ...normalPosts];
-
-  // 페이지네이션 적용
-  const posts = allPosts.slice(skip, skip + Number(limit));
-
-  // 각 게시글의 댓글 수 계산
-  const postsWithCommentCount = await Promise.all(
-    posts.map(async post => {
-      const commentCount = await Comment.countDocuments({ post: post._id });
-      return {
-        ...post.toObject(),
-        commentCount,
-      };
-    })
-  );
-
-  const totalPosts = await BoardPost.countDocuments(filter);
-  const totalPages = Math.ceil(totalPosts / Number(limit));
+  const totalPages = Math.ceil(totalPosts / limitNum);
 
   res.json({
     success: true,
-    posts: postsWithCommentCount,
+    posts,
     totalPosts,
     totalPages,
-    currentPage: Number(page),
-    filters: { type, region, search },
+    currentPage: pageNum,
+    filters: { type, region, subcategory, search },
   });
 });
 
@@ -334,7 +378,14 @@ exports.updatePost = asyncHandler(async (req, res) => {
     updateData.title = title;
   }
   if (content) {
-    updateData.content = content;
+    // HTML sanitization
+    updateData.content = sanitizeHtml(content, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+      allowedAttributes: {
+        ...sanitizeHtml.defaults.allowedAttributes,
+        img: ['src', 'alt', 'width', 'height']
+      }
+    });
   }
 
   // 태그 수정
@@ -388,7 +439,7 @@ exports.updatePost = asyncHandler(async (req, res) => {
   const updatedPost = await BoardPost.findByIdAndUpdate(postId, updateData, {
     new: true,
     runValidators: false,
-  });
+  }).populate('author', 'id email authority');
 
   if (!updatedPost) {
     throw new NotFoundError('게시글 수정에 실패했습니다.');
@@ -452,6 +503,6 @@ exports.getSubCategories = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    subCategories,
+    subCategories: type ? { [type]: subCategories } : {},
   });
 });

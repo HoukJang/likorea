@@ -1,29 +1,37 @@
 // src/components/CommentForm.jsx
 import React, { useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { addComment } from '../api/boards';
 import '../styles/CommentForm.css'; // Import the CSS file
 
-function CommentForm({ boardType, postId, onCommentAdded }) {
-  const [comment, setComment] = useState('');
+function CommentForm({ postId, parentComment, onCommentAdded }) {
+  const [content, setContent] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const author = localStorage.getItem('userEmail');
+    
+    if (!user) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    
+    setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/boards/${boardType}/${postId}/comments`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ comment, author }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        alert('댓글 작성 성공!');
-        setComment('');
-        onCommentAdded(); // 부모에게 전달해 리스트 업데이트 요청
-      } else {
-        alert(data.message);
-      }
+      const commentData = {
+        content,
+        parentComment
+      };
+      
+      await addComment(postId, commentData);
+      alert('댓글 작성 성공!');
+      setContent('');
+      onCommentAdded(); // 부모에게 전달해 리스트 업데이트 요청
     } catch (error) {
-      // 댓글 작성 실패 시 조용히 처리
+      alert(error.message || '댓글 작성에 실패했습니다.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -33,13 +41,19 @@ function CommentForm({ boardType, postId, onCommentAdded }) {
         <label className='form-label'>댓글:</label>
         <textarea
           className='comment-textarea'
-          value={comment}
-          onChange={e => setComment(e.target.value)}
+          value={content}
+          onChange={e => setContent(e.target.value)}
           required
+          disabled={isLoading || !user}
+          placeholder={!user ? '로그인이 필요합니다.' : '댓글을 입력하세요.'}
         />
       </div>
-      <button type='submit' className='submit-button'>
-        댓글 작성
+      <button 
+        type='submit' 
+        className='submit-button'
+        disabled={isLoading || !user || !content.trim()}
+      >
+        {isLoading ? '작성 중...' : '댓글 작성'}
       </button>
     </form>
   );

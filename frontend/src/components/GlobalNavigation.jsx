@@ -1,34 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import '../styles/GlobalNavigation.css';
 
-function GlobalNavigation() {
+const GlobalNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
+  const { user, logout } = useAuth();
   const [fontSize, setFontSize] = useState('14px');
-  const [userButtonStyle, setUserButtonStyle] = useState({});
-
-  // 로그인 상태 확인
-  const checkLoginStatus = () => {
-    const token = localStorage.getItem('authToken');
-    const userId = localStorage.getItem('userId');
-    const userAuthority = localStorage.getItem('userAuthority');
-
-    setIsLoggedIn(!!token);
-    if (token && userId && userAuthority) {
-      setUserInfo({
-        id: userId,
-        authority: parseInt(userAuthority),
-      });
-    } else {
-      setUserInfo(null);
-    }
-  };
 
   // 동적 글자 크기 조정
-  const adjustFontSize = () => {
+  const adjustFontSize = useCallback(() => {
     const screenWidth = window.innerWidth;
     let newFontSize = '14px';
 
@@ -43,16 +25,15 @@ function GlobalNavigation() {
     }
 
     setFontSize(newFontSize);
-  };
+  }, []);
 
-  // 사용자 버튼 스타일 조정 (아이디 길이 기반)
-  const adjustUserButtonStyle = () => {
-    if (!userInfo?.id) {
-      setUserButtonStyle({ fontSize });
-      return;
+  // 사용자 버튼 스타일 계산
+  const userButtonStyle = useMemo(() => {
+    if (!user?.id) {
+      return { fontSize };
     }
 
-    const userId = userInfo.id;
+    const userId = user.id;
     const screenWidth = window.innerWidth;
     let userFontSize = fontSize;
     let maxWidth = 'auto';
@@ -123,96 +104,47 @@ function GlobalNavigation() {
       padding = '10px 18px';
     }
 
-    setUserButtonStyle({
+    return {
       fontSize: userFontSize,
       maxWidth: maxWidth,
       padding: padding,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-    });
-  };
-
-  // 라우트 변경, 컴포넌트 마운트 시 로그인 상태 확인
-  useEffect(() => {
-    checkLoginStatus();
-    adjustFontSize();
-  }, [location.pathname]);
+    };
+  }, [user?.id, fontSize]);
 
   // 화면 크기 변경 시 글자 크기 조정
   useEffect(() => {
+    adjustFontSize();
+
     const handleResize = () => {
       adjustFontSize();
-      adjustUserButtonStyle();
     };
 
     window.addEventListener('resize', handleResize);
     window.addEventListener('orientationchange', () => {
-      setTimeout(() => {
-        adjustFontSize();
-        adjustUserButtonStyle();
-      }, 100);
+      setTimeout(handleResize, 100);
     });
 
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('orientationchange', handleResize);
     };
-  }, []);
+  }, [adjustFontSize]);
 
-  // 사용자 정보 변경 시 버튼 스타일 조정
-  useEffect(() => {
-    adjustUserButtonStyle();
-  }, [userInfo, fontSize]);
-
-  // localStorage 변경 이벤트 리스너
-  useEffect(() => {
-    const handleStorageChange = e => {
-      if (
-        e.key === 'authToken' ||
-        e.key === 'userId' ||
-        e.key === 'userAuthority' ||
-        e.key === null
-      ) {
-        checkLoginStatus();
-      }
-    };
-
-    const handleAuthEvent = () => {
-      checkLoginStatus();
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('login', handleAuthEvent);
-    window.addEventListener('logout', handleAuthEvent);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('login', handleAuthEvent);
-      window.removeEventListener('logout', handleAuthEvent);
-    };
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userAuthority');
-
-    setIsLoggedIn(false);
-    setUserInfo(null);
-
-    window.dispatchEvent(new Event('logout'));
+  const handleLogout = useCallback(async () => {
+    await logout();
     navigate('/');
-  };
+  }, [logout, navigate]);
 
-  const handleUserClick = () => {
-    if (userInfo?.authority >= 5) {
+  const handleUserClick = useCallback(() => {
+    if (user?.authority >= 5) {
       navigate('/admin');
     } else {
       navigate('/profile');
     }
-  };
+  }, [user?.authority, navigate]);
 
   // 로그인 페이지에서는 네비게이션 숨기기
   if (location.pathname === '/login' || location.pathname === '/signup') {
@@ -236,7 +168,7 @@ function GlobalNavigation() {
           >
             메인으로
           </button>
-          {isLoggedIn && (
+          {user && (
             <button
               onClick={() => navigate('/boards/new')}
               className='nav-button write-button'
@@ -247,17 +179,16 @@ function GlobalNavigation() {
             </button>
           )}
         </div>
-
         <div className='nav-right'>
-          {isLoggedIn ? (
+          {user ? (
             <>
               <button
                 onClick={handleUserClick}
                 className='nav-button user-button'
                 style={userButtonStyle}
-                aria-label={`사용자: ${userInfo?.id}, 권한 레벨: ${userInfo?.authority}`}
+                aria-label={user.authority >= 5 ? '관리자 페이지로 이동' : '프로필로 이동'}
               >
-                {userInfo?.id} (Lv.{userInfo?.authority})
+                {user.authority >= 5 && '👑'} {user.id}
               </button>
               <button
                 onClick={handleLogout}
@@ -269,30 +200,29 @@ function GlobalNavigation() {
               </button>
             </>
           ) : (
-            <button
-              onClick={() => navigate('/login')}
-              className='nav-button login-button'
-              style={buttonStyle}
-              aria-label='로그인 페이지로 이동'
-            >
-              로그인
-            </button>
+            <>
+              <button
+                onClick={() => navigate('/login')}
+                className='nav-button login-button'
+                style={buttonStyle}
+                aria-label='로그인 페이지로 이동'
+              >
+                로그인
+              </button>
+              <button
+                onClick={() => navigate('/signup')}
+                className='nav-button signup-button'
+                style={buttonStyle}
+                aria-label='회원가입 페이지로 이동'
+              >
+                회원가입
+              </button>
+            </>
           )}
         </div>
       </div>
-      <div
-        style={{
-          marginTop: '12px',
-          marginBottom: '12px',
-          borderBottom: '1.5px solid #e5e7eb',
-          width: '100%',
-          maxWidth: '1200px',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-        }}
-      />
     </nav>
   );
-}
+};
 
-export default GlobalNavigation;
+export default React.memo(GlobalNavigation);

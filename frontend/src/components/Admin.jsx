@@ -8,6 +8,7 @@ import {
   deleteUser,
   getUserDetails,
 } from '../api/admin';
+import { BACKEND_URL } from '../config';
 import Profile from './Profile';
 import TrafficDashboard from './TrafficDashboard';
 import '../styles/Admin.css';
@@ -94,9 +95,9 @@ function Admin() {
   const fetchBots = async () => {
     try {
       setBotLoading(true);
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/bots`, {
+      const response = await fetch(`${BACKEND_URL}/api/bots`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         }
       });
       
@@ -122,11 +123,11 @@ function Admin() {
 
     try {
       setBotLoading(true);
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/bots/post`, {
+      const response = await fetch(`${BACKEND_URL}/api/bots/post`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
           botId: selectedBot,
@@ -431,11 +432,11 @@ function Admin() {
               <div className='form-group'>
                 <label>권한:</label>
                 <select name='authority' value={editingUser.authority} onChange={handleEditChange}>
-                  <option value={1}>게스트 (1)</option>
-                  <option value={2}>제한 사용자 (2)</option>
-                  <option value={3}>일반 사용자 (3)</option>
-                  <option value={4}>매니저 (4)</option>
-                  <option value={5}>관리자 (5)</option>
+                  <option key={1} value={1}>게스트 (1)</option>
+                  <option key={2} value={2}>제한 사용자 (2)</option>
+                  <option key={3} value={3}>일반 사용자 (3)</option>
+                  <option key={4} value={4}>매니저 (4)</option>
+                  <option key={5} value={5}>관리자 (5)</option>
                 </select>
               </div>
               <div className='form-group'>
@@ -528,11 +529,11 @@ function Admin() {
                                 }
                                 disabled={user.authority === 5}
                               >
-                                <option value={1}>게스트 (1)</option>
-                                <option value={2}>제한 사용자 (2)</option>
-                                <option value={3}>일반 사용자 (3)</option>
-                                <option value={4}>매니저 (4)</option>
-                                <option value={5}>관리자 (5)</option>
+                                <option key={1} value={1}>게스트 (1)</option>
+                                <option key={2} value={2}>제한 사용자 (2)</option>
+                                <option key={3} value={3}>일반 사용자 (3)</option>
+                                <option key={4} value={4}>매니저 (4)</option>
+                                <option key={5} value={5}>관리자 (5)</option>
                               </select>
                             </td>
                             <td>{new Date(user.createdAt).toLocaleDateString()}</td>
@@ -659,8 +660,8 @@ function Admin() {
                   >
                     <option value=''>봇을 선택하세요</option>
                     {bots.map(bot => (
-                      <option key={bot.id} value={bot.id}>
-                        {bot.name} (마지막 게시: {bot.lastPost})
+                      <option key={bot._id} value={bot._id}>
+                        {bot.name} ({bot.status === 'active' ? '활성' : '비활성'})
                       </option>
                     ))}
                   </select>
@@ -691,10 +692,11 @@ function Admin() {
                 <h3>활성 봇 목록</h3>
                 <div className='bot-cards'>
                   {bots.map(bot => (
-                    <div key={bot.id} className='bot-card'>
+                    <div key={bot._id} className='bot-card'>
                       <h4>{bot.name}</h4>
+                      <p>{bot.description}</p>
                       <p>상태: {bot.status === 'active' ? '활성' : '비활성'}</p>
-                      <p>마지막 게시: {bot.lastPost}</p>
+                      <p>작성 게시글: {bot.stats?.postsCreated || 0}개</p>
                     </div>
                   ))}
                 </div>

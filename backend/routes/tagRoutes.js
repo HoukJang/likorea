@@ -10,13 +10,14 @@ const {
   getAllTagsForAdmin,
 } = require('../controllers/tagController');
 const { requireAdmin } = require('../middleware/auth');
+const { cache } = require('../middleware/cache');
 
 const router = express.Router();
 
 // 공개 API (모든 사용자 접근 가능)
-router.get('/', getAllTags);
-router.get('/category/:category', getTagsByCategory);
-router.get('/subcategories/:parentCategory', getSubCategoriesByParent);
+router.get('/', cache(), getAllTags);
+router.get('/category/:category', cache(), getTagsByCategory);
+router.get('/subcategories/:parentCategory', cache(), getSubCategoriesByParent);
 
 // 관리자 전용 API
 router.get('/admin', requireAdmin, getAllTagsForAdmin);

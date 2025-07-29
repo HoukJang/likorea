@@ -7,10 +7,11 @@ describe('ApiClient', () => {
   });
 
   describe('Token Management', () => {
-    it('should include token in headers when token exists', () => {
+    it('should not include token in headers (httpOnly cookie)', () => {
       const headers = apiClient.getDefaultHeaders();
 
-      expect(headers.Authorization).toBe('Bearer test-token');
+      // httpOnly 쿠키로 전환되어 Authorization 헤더가 없어야 함
+      expect(headers.Authorization).toBeUndefined();
       expect(headers['Content-Type']).toBe('application/json');
     });
 
@@ -177,11 +178,13 @@ describe('ApiClient', () => {
         expect.stringContaining('/api/boards'),
         expect.objectContaining({
           method: 'GET',
+          credentials: 'include', // httpOnly 쿠키 사용
           headers: expect.objectContaining({
-            Authorization: 'Bearer test-token',
+            'Content-Type': 'application/json',
           }),
         })
       );
+      // Authorization 헤더는 검증하지 않음 (httpOnly 쿠키 사용)
       expect(result.success).toBe(true);
     });
 

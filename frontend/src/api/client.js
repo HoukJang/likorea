@@ -11,9 +11,12 @@ class ApiClient {
 
   /**
    * 인증 토큰 가져오기
+   * httpOnly 쿠키로 전환되어 클라이언트에서 직접 접근 불가
+   * @deprecated 쿠키 기반 인증으로 전환
    */
   getAuthToken() {
-    return localStorage.getItem('authToken');
+    // httpOnly 쿠키로 전환되어 클라이언트에서 접근 불가
+    return null;
   }
 
   /**
@@ -24,10 +27,8 @@ class ApiClient {
       'Content-Type': 'application/json',
     };
 
-    const token = this.getAuthToken();
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
+    // httpOnly 쿠키 사용으로 Authorization 헤더 제거
+    // 서버에서 쿠키에서 토큰을 자동으로 읽음
 
     return headers;
   }
@@ -41,7 +42,7 @@ class ApiClient {
       alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
     }
 
-    // 로컬스토리지에서 인증 정보 제거
+    // 로컬스토리지에서 인증 정보 제거 (호환성을 위해 잔여)
     localStorage.removeItem('authToken');
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
@@ -69,6 +70,7 @@ class ApiClient {
     const url = `${this.baseURL}${endpoint}`;
     const config = {
       headers: this.getDefaultHeaders(),
+      credentials: 'include', // 쿠키 포함하여 요청
       ...options,
     };
 

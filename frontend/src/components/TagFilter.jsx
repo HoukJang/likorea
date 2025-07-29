@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { getAllTags } from '../api/tags';
 import { SUB_CATEGORIES } from '../utils/tagUtils';
 import '../styles/TagFilter.css';
@@ -30,7 +30,7 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
     fetchTags();
   }, []);
 
-  const handleFilterChange = (key, value) => {
+  const handleFilterChange = useCallback((key, value) => {
     const newFilters = {
       ...filters,
       [key]: value,
@@ -43,9 +43,9 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
 
     setFilters(newFilters);
     onFilterChange(newFilters);
-  };
+  }, [filters, onFilterChange]);
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     const clearedFilters = {
       type: '',
       region: '',
@@ -54,9 +54,12 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
     };
     setFilters(clearedFilters);
     onFilterChange(clearedFilters);
-  };
+  }, [onFilterChange]);
 
-  const hasActiveFilters = filters.type || filters.region || filters.subcategory || filters.search;
+  const hasActiveFilters = useMemo(
+    () => filters.type || filters.region || filters.subcategory || filters.search,
+    [filters.type, filters.region, filters.subcategory, filters.search]
+  );
 
   if (loading) {
     return <div className='tag-filter-loading'>필터를 불러오는 중...</div>;
@@ -183,4 +186,4 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
   );
 };
 
-export default TagFilter;
+export default React.memo(TagFilter);

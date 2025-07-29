@@ -6,6 +6,11 @@ const {
   AuthenticationError,
   ConflictError,
 } = require('../middleware/errorHandler');
+const { 
+  validatePassword, 
+  checkPasswordExpiration,
+  generateTemporaryPassword 
+} = require('../utils/passwordPolicy');
 
 // 회원가입
 exports.signup = asyncHandler(async (req, res) => {
@@ -19,6 +24,12 @@ exports.signup = asyncHandler(async (req, res) => {
   // 필수 필드 검증
   if (!id || !email || !password) {
     throw new ValidationError('아이디, 이메일, 비밀번호는 필수입니다.');
+  }
+
+  // 비밀번호 정책 검증
+  const passwordValidation = validatePassword(password);
+  if (!passwordValidation.isValid) {
+    throw new ValidationError(`비밀번호 정책 위반: ${passwordValidation.errors.join(', ')}`);
   }
 
   // 아이디 중복 체크
@@ -63,8 +74,33 @@ exports.login = asyncHandler(async (req, res) => {
 
   const isMatch = await user.comparePassword(password);
   if (!isMatch) {
-    throw new AuthenticationError('잘못된 비밀번호입니다.');
+    // 로그인 실패 횟수 증가
+    user.loginAttempts = (user.loginAttempts || 0) + 1;
+    user.lastFailedLogin = new Date();
+    
+    // 계정 잠금 확인
+    if (user.loginAttempts >= 5) {
+      user.lockedUntil = new Date(Date.now() + 30 * 60 * 1000); // 30분 잠금
+      await user.save();
+      throw new AuthenticationError('계정이 잠겼습니다. 30분 후에 다시 시도해주세요.');
+    }
+    
+    await user.save();
+    throw new AuthenticationError(`잘못된 비밀번호입니다. (${user.loginAttempts}/5 시도)`);
   }
+
+  // 계정 잠금 확인
+  if (user.lockedUntil && user.lockedUntil > new Date()) {
+    const remainingMinutes = Math.ceil((user.lockedUntil - new Date()) / 60000);
+    throw new AuthenticationError(`계정이 잠겼습니다. ${remainingMinutes}분 후에 다시 시도해주세요.`);
+  }
+
+  // 로그인 성공시 실패 횟수 초기화
+  user.loginAttempts = 0;
+  user.lastFailedLogin = null;
+  user.lockedUntil = null;
+  user.lastLogin = new Date();
+  await user.save();
 
   const token = jwt.sign(
     { _id: user._id, id: user.id, email: user.email, authority: user.authority },
@@ -75,10 +111,17 @@ exports.login = asyncHandler(async (req, res) => {
   const userObj = user.toObject();
   delete userObj.password; // password 필드 제거
 
+  // httpOnly 쿠키에 토큰 저장
+  res.cookie('authToken', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 24 * 60 * 60 * 1000, // 1일
+  });
+
   res.json({
     success: true,
     message: '로그인 성공',
-    token,
     user: userObj,
   });
 });
@@ -128,8 +171,15 @@ exports.checkEmailExists = async (req, res) => {
   }
 };
 
-// 로그아웃 (토큰 기반 인증의 경우 클라이언트에서 삭제 처리)
+// 로그아웃
 exports.logout = (req, res) => {
+  // httpOnly 쿠키 제거
+  res.clearCookie('authToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+  });
+  
   res.json({ message: '로그아웃 성공' });
 };
 
@@ -146,6 +196,26 @@ exports.checkIdExists = async (req, res) => {
     res.status(400).json({ message: '아이디 중복 여부 확인 실패', error: error.message });
   }
 };
+
+// 토큰 검증
+exports.verifyToken = asyncHandler(async (req, res) => {
+  // 인증 미들웨어를 통해 이미 사용자 정보가 설정됨
+  if (req.user) {
+    res.json({
+      valid: true,
+      user: {
+        id: req.user.id,
+        email: req.user.email,
+        authority: req.user.authority,
+      },
+    });
+  } else {
+    res.json({
+      valid: false,
+      message: '유효하지 않은 토큰입니다.',
+    });
+  }
+});
 
 // 사용자 정보 수정
 exports.updateUser = async (req, res) => {
@@ -166,7 +236,13 @@ exports.updateUser = async (req, res) => {
       user.authority = authority;
     }
     if (password) {
+      // 비밀번호 정책 검증
+      const passwordValidation = validatePassword(password);
+      if (!passwordValidation.isValid) {
+        throw new ValidationError(`비밀번호 정책 위반: ${passwordValidation.errors.join(', ')}`);
+      }
       user.password = password;
+      user.passwordChangedAt = new Date();
     }
 
     await user.save();
@@ -203,7 +279,17 @@ exports.deleteUser = async (req, res) => {
 // 토큰 유효성 검증
 exports.verifyToken = async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
+    // 쿠키 또는 헤더에서 토큰 확인
+    let token = req.cookies?.authToken;
+    
+    // 쿠키에 없으면 헤더에서 확인 (하위 호환성)
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (authHeader?.startsWith('Bearer ')) {
+        token = authHeader.split(' ')[1];
+      }
+    }
+    
     if (!token) {
       return res.status(401).json({ valid: false, message: '토큰이 제공되지 않았습니다.' });
     }

@@ -89,14 +89,19 @@ export const getBoardPost = async postId => {
  * @param {string} postId - 게시글 ID
  * @param {Object} commentData - 댓글 데이터
  * @param {string} commentData.content - 댓글 내용
- * @param {string} commentData.id - 사용자 ID
+ * @param {string} commentData.parentComment - 부모 댓글 ID (대댓글인 경우)
  * @returns {Promise} 생성된 댓글
  */
 export const addComment = async (postId, commentData) => {
-  return apiClient.post(`/api/boards/${postId}/comments`, {
+  const payload = {
     content: commentData.content,
-    id: commentData.id,
-  });
+  };
+  
+  if (commentData.parentComment) {
+    payload.parentComment = commentData.parentComment;
+  }
+  
+  return apiClient.post(`/api/boards/${postId}/comments`, payload);
 };
 
 /**

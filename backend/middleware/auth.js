@@ -1,14 +1,18 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const { AuthorizationError } = require('./errorHandler');
+const { AuthenticationError, AuthorizationError } = require('./errorHandler');
 
 /**
  * JWT 토큰 인증 미들웨어
  */
 const authenticateToken = async (req, res, next) => {
   try {
+    // Authorization 헤더 또는 쿠키에서 토큰 확인
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    const tokenFromHeader = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    const tokenFromCookie = req.cookies?.authToken;
+    
+    const token = tokenFromHeader || tokenFromCookie;
 
     // 개발 환경에서만 로깅
     if (process.env.NODE_ENV === 'development') {
@@ -21,7 +25,7 @@ const authenticateToken = async (req, res, next) => {
       if (req.method === 'GET') {
         return next();
       }
-      throw new AuthorizationError('인증 토큰이 필요합니다.');
+      throw new AuthenticationError('인증이 필요합니다.');
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -29,7 +33,7 @@ const authenticateToken = async (req, res, next) => {
     // 사용자 정보 확인
     const user = await User.findById(decoded._id);
     if (!user) {
-      throw new AuthorizationError('유효하지 않은 토큰입니다.');
+      throw new AuthenticationError('유효하지 않은 토큰입니다.');
     }
 
     // 요청 객체에 사용자 정보 추가
@@ -43,9 +47,9 @@ const authenticateToken = async (req, res, next) => {
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
-      next(new AuthorizationError('유효하지 않은 토큰입니다.'));
+      next(new AuthenticationError('유효하지 않은 토큰입니다.'));
     } else if (error.name === 'TokenExpiredError') {
-      next(new AuthorizationError('토큰이 만료되었습니다.'));
+      next(new AuthenticationError('토큰이 만료되었습니다.'));
     } else {
       next(error);
     }
@@ -57,7 +61,7 @@ const authenticateToken = async (req, res, next) => {
  */
 const requireAdmin = (req, res, next) => {
   if (!req.user) {
-    return next(new AuthorizationError('로그인이 필요합니다.'));
+    return next(new AuthenticationError('로그인이 필요합니다.'));
   }
 
   if (req.user.authority < 5) {
@@ -73,7 +77,7 @@ const requireAdmin = (req, res, next) => {
 const requireAuthority = (minAuthority = 1) => {
   return (req, res, next) => {
     if (!req.user) {
-      return next(new AuthorizationError('로그인이 필요합니다.'));
+      return next(new AuthenticationError('로그인이 필요합니다.'));
     }
 
     if (req.user.authority < minAuthority) {
@@ -88,8 +92,52 @@ const requireAuthority = (minAuthority = 1) => {
   };
 };
 
+/**
+ * 토큰 검증 전용 미들웨어 (GET 요청도 토큰 필수)
+ */
+const verifyTokenMiddleware = async (req, res, next) => {
+  try {
+    // Authorization 헤더 또는 쿠키에서 토큰 확인
+    const authHeader = req.headers['authorization'];
+    const tokenFromHeader = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    const tokenFromCookie = req.cookies?.authToken;
+    
+    const token = tokenFromHeader || tokenFromCookie;
+
+    if (!token) {
+      // 토큰이 없으면 req.user를 null로 설정
+      req.user = null;
+      return next();
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // 사용자 정보 확인
+    const user = await User.findById(decoded._id);
+    if (!user) {
+      req.user = null;
+      return next();
+    }
+
+    // 요청 객체에 사용자 정보 추가
+    req.user = {
+      _id: user._id,
+      id: user.id,
+      email: user.email,
+      authority: user.authority,
+    };
+
+    next();
+  } catch (error) {
+    // 토큰 오류 시에도 null로 설정하고 계속 진행
+    req.user = null;
+    next();
+  }
+};
+
 module.exports = {
   authenticateToken,
   requireAdmin,
   requireAuthority,
+  verifyTokenMiddleware,
 };

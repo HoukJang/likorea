@@ -59,9 +59,16 @@ export const verifyToken = async () => {
 };
 
 /**
- * 로그아웃 (클라이언트 측)
+ * 로그아웃
  */
-export const logout = () => {
+export const logout = async () => {
+  try {
+    await apiClient.post('/api/users/logout');
+  } catch (error) {
+    // 로그아웃 오류는 무시
+  }
+  
+  // 호환성을 위한 localStorage 제거
   localStorage.removeItem('authToken');
   localStorage.removeItem('userId');
   localStorage.removeItem('userEmail');
@@ -73,35 +80,59 @@ export const logout = () => {
 
 /**
  * 현재 로그인된 사용자 정보 가져오기
+ * 서버에서 현재 사용자 정보를 확인함
  * @returns {Object|null} 사용자 정보 또는 null
  */
-export const getCurrentUser = () => {
-  const userId = localStorage.getItem('userId');
-  const userEmail = localStorage.getItem('userEmail');
-  const userAuthority = localStorage.getItem('userAuthority');
-
-  if (!userId) return null;
-
-  return {
-    id: userId,
-    email: userEmail,
-    authority: userAuthority,
-  };
+export const getCurrentUser = async () => {
+  try {
+    const response = await verifyToken();
+    if (response.valid && response.user) {
+      return response.user;
+    }
+    return null;
+  } catch (error) {
+    // 호환성을 위한 localStorage 확인 (임시)
+    const userId = localStorage.getItem('userId');
+    const userEmail = localStorage.getItem('userEmail');
+    const userAuthority = localStorage.getItem('userAuthority');
+    
+    if (userId) {
+      return {
+        id: userId,
+        email: userEmail,
+        authority: userAuthority,
+      };
+    }
+    return null;
+  }
 };
 
 /**
  * 인증 상태 확인
+ * 서버에 토큰 검증 요청을 보내 확인
  * @returns {boolean} 로그인 여부
  */
-export const isAuthenticated = () => {
-  return !!localStorage.getItem('authToken');
+export const isAuthenticated = async () => {
+  try {
+    const response = await verifyToken();
+    return response.valid === true;
+  } catch (error) {
+    // 호환성을 위한 localStorage 확인 (임시)
+    return !!localStorage.getItem('authToken');
+  }
 };
 
 /**
  * 관리자 권한 확인
  * @returns {boolean} 관리자 여부
  */
-export const isAdmin = () => {
-  const authority = localStorage.getItem('userAuthority');
-  return authority === '5';
+export const isAdmin = async () => {
+  try {
+    const user = await getCurrentUser();
+    return user?.authority === 5 || user?.authority === '5';
+  } catch (error) {
+    // 호환성을 위한 localStorage 확인 (임시)
+    const authority = localStorage.getItem('userAuthority');
+    return authority === '5';
+  }
 };

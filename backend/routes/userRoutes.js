@@ -13,6 +13,7 @@ const {
 } = require('../controllers/userController');
 const { createRateLimiters } = require('../middleware/security');
 const { validateUserInput, validateLoginInput } = require('../middleware/validation');
+const { verifyTokenMiddleware } = require('../middleware/auth');
 const router = express.Router();
 
 /**
@@ -143,7 +144,7 @@ router.get('/exists-id', checkIdExists);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/verify', verifyToken);
+router.get('/verify', verifyTokenMiddleware, verifyToken);
 
 /**
  * @swagger

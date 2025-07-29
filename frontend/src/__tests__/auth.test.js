@@ -79,7 +79,7 @@ describe('useAuth Hook', () => {
         });
       });
 
-      expect(localStorage.setItem).toHaveBeenCalledWith('authToken', 'new-token');
+      // authToken은 httpOnly 쿠키로 저장되므로 localStorage에 저장하지 않음
       expect(localStorage.setItem).toHaveBeenCalledWith('userId', 'testuser');
       expect(localStorage.setItem).toHaveBeenCalledWith('userEmail', 'test@example.com');
       expect(localStorage.setItem).toHaveBeenCalledWith('userAuthority', 3);

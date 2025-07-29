@@ -1,5 +1,15 @@
 const Tag = require('../models/Tag');
 
+// 글종류별 소주제 분류
+const SUB_CATEGORIES = {
+  공지: ['일반', '긴급'],
+  사고팔고: ['생활용품', '가전제품', '의류', '가구', '기타'],
+  부동산: ['렌트', '룸메이트', '서블릿', '매매'],
+  문의: ['병원', '학교', '법률', '비자', '기타'],
+  잡담: ['일상', '고민', '질문', '정보'],
+  기타: ['구인구직', '홍보', '기타'],
+};
+
 /**
  * 태그 시스템 초기화
  * 서버 시작 시 또는 관리자가 수동으로 실행할 수 있음
@@ -138,7 +148,7 @@ const initializeTags = async () => {
     // 하위 카테고리 태그 생성/업데이트
     for (const tag of subCategoryTags) {
       await Tag.findOneAndUpdate(
-        { value: tag.value, category: tag.category, parentCategory: tag.parentCategory },
+        { value: tag.value, category: tag.category },
         tag,
         { upsert: true, new: true }
       );
@@ -225,19 +235,9 @@ const deactivateTag = async (category, value) => {
 
 // 태그 초기화 유틸리티
 
-// 글종류별 소주제 분류
-const SUB_CATEGORIES = {
-  공지: ['일반', '긴급'],
-  사고팔고: ['나눔', '중고'],
-  부동산: ['렌트', '룸메이트'],
-  생활정보: ['할인정보', '정착가이드', '맛집', '업체정보'],
-  모임: ['번개', '정기'],
-  기타: ['구인구직', '기타'],
-};
-
 // 기본 태그들
 const DEFAULT_TAGS = {
-  types: ['공지', '사고팔고', '부동산', '생활정보', '모임', '기타'],
+  types: ['공지', '사고팔고', '부동산', '문의', '잡담', '기타'],
   regions: [
     '전체',
     '맨해튼',

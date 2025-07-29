@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import { getBoardPost, createBoard, updateBoard } from '../api/boards';
 import { getCurrentUser, isAuthenticated } from '../api/auth';
 import TagSelector from './TagSelector';
@@ -18,18 +19,22 @@ function BoardPostForm() {
 
   // 현재 사용자 정보 확인
   useEffect(() => {
-    const user = getCurrentUser();
-    const authenticated = isAuthenticated();
+    const checkAuth = async () => {
+      const user = await getCurrentUser();
+      const authenticated = await isAuthenticated();
 
-    if (!authenticated || !user) {
-      setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
-      return;
-    }
+      if (!authenticated || !user) {
+        setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+        return;
+      }
 
-    setCurrentUser(user);
+      setCurrentUser(user);
+    };
+    
+    checkAuth();
   }, [navigate]);
 
   // If editing, fetch post data and update state
@@ -42,7 +47,13 @@ function BoardPostForm() {
           setContent(data.post.content);
           setTags(data.post.tags || { type: '', region: '0', subcategory: '' });
           if (contentRef.current) {
-            contentRef.current.innerHTML = data.post.content;
+            // DOMPurify로 HTML을 새니타이즈하여 안전하게 표시
+            const sanitizedContent = DOMPurify.sanitize(data.post.content, {
+              ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li'],
+              ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
+              ALLOW_DATA_ATTR: false
+            });
+            contentRef.current.innerHTML = sanitizedContent;
           }
           // 원 작성자 정보는 현재 사용하지 않음
         } catch (error) {
@@ -101,7 +112,8 @@ function BoardPostForm() {
     e.preventDefault();
 
     // 로그인 상태 재확인
-    if (!isAuthenticated() || !currentUser) {
+    const authenticated = await isAuthenticated();
+    if (!authenticated || !currentUser) {
       setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
       setTimeout(() => {
         navigate('/login');
@@ -124,7 +136,13 @@ function BoardPostForm() {
       return;
     }
 
-    const currentContent = contentRef.current ? contentRef.current.innerHTML : content;
+    // HTML 컨텐츠를 새니타이즈
+    const rawContent = contentRef.current ? contentRef.current.innerHTML : content;
+    const sanitizedContent = DOMPurify.sanitize(rawContent, {
+      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li'],
+      ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
+      ALLOW_DATA_ATTR: false
+    });
 
     try {
       let response;
@@ -132,14 +150,14 @@ function BoardPostForm() {
         // Update existing post
         response = await updateBoard(postId, {
           title,
-          content: currentContent,
+          content: sanitizedContent,
           tags,
         });
       } else {
         // Create new post
         response = await createBoard({
           title,
-          content: currentContent,
+          content: sanitizedContent,
           tags,
         });
       }

@@ -1,12 +1,20 @@
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const connectDB = require('./config/db');
+// 환경 변수 검증 (테스트 환경에서는 건너뛰기)
+if (process.env.NODE_ENV !== 'test') {
+  const { validateEnvironment } = require('./utils/validateEnv');
+  validateEnvironment();
+}
+
+const { connectDB } = require('./config/db');
 const logger = require('./utils/logger');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 const { initializeTags } = require('./utils/initTags');
+const { initializeBots } = require('./utils/initBots');
 const {
   createRateLimiters,
   configureHelmet,
@@ -36,6 +44,9 @@ if (process.env.NODE_ENV === 'production') {
 app.use(configureHelmet());
 app.use(additionalSecurity);
 app.use(requestSizeLimit);
+
+// Cookie parser 미들웨어
+app.use(cookieParser());
 
 // 요청 본문 파싱 및 CORS 설정
 app.use(express.json());
@@ -98,6 +109,12 @@ connectDB().then(async () => {
       logger.info('개발 환경 감지 - DB 초기화 시작...');
       await setupDevDB();
       logger.info('개발 환경 DB 설정 완료');
+      // 개발 환경에서도 태그 초기화 실행
+      await initializeTags();
+      logger.info('태그 시스템 초기화 완료 (개발 환경)');
+      // 봇 시스템 초기화
+      await initializeBots();
+      logger.info('봇 시스템 초기화 완료 (개발 환경)');
     } else {
       // 프로덕션 환경: 태그 시스템만 초기화 (기존 데이터 유지)
       await initializeTags();
@@ -117,7 +134,7 @@ app.use('/api/boards', generalLimiter, boardRoutes);
 app.use('/api/admin', generalLimiter, adminRoutes);
 app.use('/api/tags', generalLimiter, tagRoutes);
 app.use('/api/traffic', generalLimiter, trafficRoutes);
-app.use('/api', generalLimiter, botRoutes);
+app.use('/api/bots', generalLimiter, botRoutes);
 
 // 404 에러 처리 (라우트 설정 후에 위치)
 app.use(notFound);

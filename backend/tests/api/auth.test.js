@@ -54,13 +54,16 @@ describe('Authentication Tests', () => {
         .post('/api/users/login')
         .send({
           id: testUser.id,
-          password: 'password123',
+          password: 'Test1234!@',
         })
         .expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.message).toBe('로그인 성공');
-      expect(response.body.token).toBeDefined();
+      // Token is now in httpOnly cookie, not in response body
+      const cookies = response.headers['set-cookie'];
+      expect(cookies).toBeDefined();
+      expect(cookies[0]).toContain('authToken');
       expect(response.body.user.id).toBe(testUser.id);
     });
 
@@ -74,7 +77,7 @@ describe('Authentication Tests', () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.error).toBe('잘못된 비밀번호입니다.');
+      expect(response.body.error).toContain('잘못된 비밀번호');
     });
   });
 

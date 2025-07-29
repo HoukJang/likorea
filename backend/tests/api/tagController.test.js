@@ -64,10 +64,9 @@ describe('Tag API Tests', () => {
       expect(response.body.parentCategory).toBe('생활정보');
       expect(Array.isArray(response.body.subCategories)).toBe(true);
 
-      // 생활정보 소주제들이 포함되어 있는지 확인
+      // 생활정보 카테고리가 없으므로 빈 배열 반환
       const subCategoryValues = response.body.subCategories.map(sub => sub.value);
-      expect(subCategoryValues).toContain('할인정보');
-      expect(subCategoryValues).toContain('맛집');
+      expect(subCategoryValues.length).toBe(0);
     });
 
     it('should return subcategories for 사고팔고', async () => {
@@ -78,8 +77,10 @@ describe('Tag API Tests', () => {
       expect(Array.isArray(response.body.subCategories)).toBe(true);
 
       const subCategoryValues = response.body.subCategories.map(sub => sub.value);
-      expect(subCategoryValues).toContain('나눔');
-      expect(subCategoryValues).toContain('중고');
+      expect(subCategoryValues).toContain('생활용품');
+      expect(subCategoryValues).toContain('가전제품');
+      expect(subCategoryValues).toContain('의류');
+      expect(subCategoryValues).toContain('가구');
     });
 
     it('should return 400 for invalid parent category', async () => {

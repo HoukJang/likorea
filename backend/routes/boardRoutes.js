@@ -9,6 +9,7 @@ const {
   validateParams,
 } = require('../middleware/validation');
 const { authenticateToken, requireAuthority } = require('../middleware/auth');
+const { cache, invalidatePostCache } = require('../middleware/cache');
 
 /**
  * @swagger
@@ -89,6 +90,7 @@ router.post(
   requireAuthority(1),
   postLimiter,
   validatePostInput,
+  invalidatePostCache,
   boardController.createPost
 );
 
@@ -154,7 +156,7 @@ router.post(
  *                 filters:
  *                   type: object
  */
-router.get('/', boardController.getPosts);
+router.get('/', cache(), boardController.getPosts);
 
 /**
  * @swagger
@@ -182,7 +184,7 @@ router.get('/', boardController.getPosts);
  *                   type: object
  *                   description: 글종류별 소주제 목록
  */
-router.get('/subcategories', boardController.getSubCategories);
+router.get('/subcategories', cache(), boardController.getSubCategories);
 
 /**
  * @swagger
@@ -216,7 +218,7 @@ router.get('/subcategories', boardController.getSubCategories);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/:postId', validateParams, boardController.getPost);
+router.get('/:postId', validateParams, cache(), boardController.getPost);
 
 /**
  * @swagger
@@ -288,6 +290,7 @@ router.put(
   authenticateToken,
   requireAuthority(1),
   validatePostInput,
+  invalidatePostCache,
   boardController.updatePost
 );
 
@@ -336,6 +339,7 @@ router.delete(
   validateParams,
   authenticateToken,
   requireAuthority(1),
+  invalidatePostCache,
   boardController.deletePost
 );
 
