@@ -112,12 +112,18 @@ exports.login = asyncHandler(async (req, res) => {
   delete userObj.password; // password 필드 제거
 
   // httpOnly 쿠키에 토큰 저장
-  res.cookie('authToken', token, {
+  const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 24 * 60 * 60 * 1000, // 1일
-  });
+  };
+  
+  console.log('=== 로그인 쿠키 설정 ===');
+  console.log('쿠키 옵션:', cookieOptions);
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  
+  res.cookie('authToken', token, cookieOptions);
 
   res.json({
     success: true,
@@ -276,45 +282,3 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-// 토큰 유효성 검증
-exports.verifyToken = async (req, res) => {
-  try {
-    // 쿠키 또는 헤더에서 토큰 확인
-    let token = req.cookies?.authToken;
-    
-    // 쿠키에 없으면 헤더에서 확인 (하위 호환성)
-    if (!token) {
-      const authHeader = req.headers.authorization;
-      if (authHeader?.startsWith('Bearer ')) {
-        token = authHeader.split(' ')[1];
-      }
-    }
-    
-    if (!token) {
-      return res.status(401).json({ valid: false, message: '토큰이 제공되지 않았습니다.' });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded._id, 'id email authority');
-
-    if (!user) {
-      return res.status(401).json({ valid: false, message: '유효하지 않은 토큰입니다.' });
-    }
-
-    res.json({
-      valid: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        authority: user.authority,
-      },
-    });
-  } catch (error) {
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({ valid: false, error: 'invalid token' });
-    } else if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ valid: false, error: 'jwt expired' });
-    }
-    res.status(401).json({ valid: false, message: '토큰 검증 실패', error: error.message });
-  }
-};

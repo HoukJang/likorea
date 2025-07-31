@@ -97,6 +97,13 @@ const requireAuthority = (minAuthority = 1) => {
  */
 const verifyTokenMiddleware = async (req, res, next) => {
   try {
+    // 디버깅 로그 추가
+    console.log('=== verifyTokenMiddleware 디버깅 ===');
+    console.log('요청 URL:', req.url);
+    console.log('쿠키들:', req.cookies);
+    console.log('authToken 쿠키:', req.cookies?.authToken);
+    console.log('Authorization 헤더:', req.headers['authorization']);
+    
     // Authorization 헤더 또는 쿠키에서 토큰 확인
     const authHeader = req.headers['authorization'];
     const tokenFromHeader = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
@@ -105,6 +112,7 @@ const verifyTokenMiddleware = async (req, res, next) => {
     const token = tokenFromHeader || tokenFromCookie;
 
     if (!token) {
+      console.log('토큰이 없습니다!');
       // 토큰이 없으면 req.user를 null로 설정
       req.user = null;
       return next();
