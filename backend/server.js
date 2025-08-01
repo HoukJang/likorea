@@ -29,6 +29,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const tagRoutes = require('./routes/tagRoutes');
 const trafficRoutes = require('./routes/trafficRoutes');
 const botRoutes = require('./routes/botRoutes');
+const approvalRoutes = require('./routes/approvalRoutes');
 
 // Swagger 설정
 const swaggerUi = require('swagger-ui-express');
@@ -98,7 +99,8 @@ app.use(logger.request);
 app.use(trafficLogger);
 
 // Rate Limiting 설정
-const { generalLimiter } = createRateLimiters();
+const rateLimiters = createRateLimiters();
+const { generalLimiter, adminLimiter } = rateLimiters;
 
 // 데이터베이스 연결 및 초기화
 connectDB().then(async () => {
@@ -131,10 +133,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 // API 라우트 설정 (Rate Limiting 적용)
 app.use('/api/users', generalLimiter, userRoutes);
 app.use('/api/boards', generalLimiter, boardRoutes);
-app.use('/api/admin', generalLimiter, adminRoutes);
+app.use('/api/admin', adminLimiter, adminRoutes);  // 관리자 전용 limiter 사용
 app.use('/api/tags', generalLimiter, tagRoutes);
-app.use('/api/traffic', generalLimiter, trafficRoutes);
-app.use('/api/bots', generalLimiter, botRoutes);
+app.use('/api/traffic', adminLimiter, trafficRoutes);  // 트래픽도 관리자 전용
+app.use('/api/bots', adminLimiter, botRoutes);  // 봇 관리도 관리자 전용
+app.use('/api/approval', adminLimiter, approvalRoutes);  // 승인도 관리자 전용
 
 // 404 에러 처리 (라우트 설정 후에 위치)
 app.use(notFound);

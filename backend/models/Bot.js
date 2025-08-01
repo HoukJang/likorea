@@ -61,9 +61,22 @@ const botSchema = new mongoose.Schema({
     }
   },
   prompt: {
-    base: String,
+    base: {
+      type: String,
+      default: '당신은 롱아일랜드 한인 커뮤니티의 활발한 회원입니다.'
+    },
     postingStyle: String,
     restaurantReviewTemplate: String
+  },
+  username: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  aiModel: {
+    type: String,
+    enum: ['claude-3-haiku-20240307', 'claude-3-sonnet-20240229', 'claude-3-opus-20240229', 'claude-3-5-haiku-20241022', 'claude-3-5-sonnet-20241022'],
+    default: 'claude-3-haiku-20240307'
   }
 }, {
   timestamps: true

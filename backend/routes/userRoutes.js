@@ -23,7 +23,7 @@ const router = express.Router();
  *   description: 사용자 관리 API
  */
 
-const { loginLimiter, signupLimiter } = createRateLimiters();
+const { loginLimiter, signupLimiter, verifyLimiter } = createRateLimiters();
 
 /**
  * @swagger
@@ -144,7 +144,7 @@ router.get('/exists-id', checkIdExists);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.get('/verify', verifyTokenMiddleware, verifyToken);
+router.get('/verify', verifyLimiter, verifyTokenMiddleware, verifyToken);
 
 /**
  * @swagger
@@ -379,6 +379,6 @@ router.post('/login', loginLimiter, validateLoginInput, login);
  *                 message:
  *                   type: string
  */
-router.post('/logout', logout);
+router.post('/logout', verifyLimiter, logout);
 
 module.exports = router;

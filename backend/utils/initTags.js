@@ -3,11 +3,10 @@ const Tag = require('../models/Tag');
 // 글종류별 소주제 분류
 const SUB_CATEGORIES = {
   공지: ['일반', '긴급'],
-  사고팔고: ['생활용품', '가전제품', '의류', '가구', '기타'],
-  부동산: ['렌트', '룸메이트', '서블릿', '매매'],
-  문의: ['병원', '학교', '법률', '비자', '기타'],
-  잡담: ['일상', '고민', '질문', '정보'],
-  기타: ['구인구직', '홍보', '기타'],
+  사고팔고: ['나눔', '중고'],
+  부동산: ['렌트', '룸메이트'],
+  생활정보: ['맛집', '업체정보', '정착가이드', '뉴스'],
+  모임: ['번개', '정기'],
 };
 
 /**
@@ -31,6 +30,14 @@ const initializeTags = async () => {
     // 하위 카테고리 태그들 (category 타입으로 추가)
     const subCategoryTags = [];
 
+    // 먼저 각 parentCategory의 기존 소주제들을 비활성화
+    for (const parentCategory of Object.keys(SUB_CATEGORIES)) {
+      await Tag.updateMany(
+        { category: 'category', parentCategory: parentCategory },
+        { isActive: false }
+      );
+    }
+
     // SUB_CATEGORIES 객체를 사용하여 모든 하위 카테고리 생성
     Object.entries(SUB_CATEGORIES).forEach(([parentCategory, subcategories]) => {
       subcategories.forEach((subcategory, index) => {
@@ -40,6 +47,7 @@ const initializeTags = async () => {
           category: 'category',
           parentCategory: parentCategory,
           order: index,
+          isActive: true,
         });
       });
     });
@@ -237,7 +245,7 @@ const deactivateTag = async (category, value) => {
 
 // 기본 태그들
 const DEFAULT_TAGS = {
-  types: ['공지', '사고팔고', '부동산', '문의', '잡담', '기타'],
+  types: ['공지', '사고팔고', '부동산', '생활정보', '모임', '기타'],
   regions: [
     '전체',
     '맨해튼',

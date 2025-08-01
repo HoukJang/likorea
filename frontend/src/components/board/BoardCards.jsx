@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getTagDisplayName, getTagDisplayText } from '../../utils/tagUtils';
 import { formatDate, getAuthorId } from '../../utils/dataUtils';
 
-const BoardCards = React.memo(({ posts, tagList }) => {
+const BoardCards = React.memo(({ posts, tagList, pendingOnly = false }) => {
   return (
     <div className='mobile-card-view' role='region' aria-label='게시글 목록 카드'>
       {posts.map((post, idx) => {
@@ -15,7 +15,7 @@ const BoardCards = React.memo(({ posts, tagList }) => {
         return (
           <Link
             key={post._id || post.id || idx}
-            to={`/boards/${post.id}`}
+            to={pendingOnly ? `/boards/${post.id || post._id}/edit?pending=true` : `/boards/${post.id}`}
             className='mobile-card'
             data-post-type={postType}
             style={{ textDecoration: 'none', color: 'inherit' }}
@@ -31,10 +31,17 @@ const BoardCards = React.memo(({ posts, tagList }) => {
             </div>
             <div className='mobile-card-title'>
               {post.title}
+              {pendingOnly && <span style={{ marginLeft: '8px', padding: '2px 6px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.75em' }}>승인 대기</span>}
               <span className='mobile-comment-count'>[{post.commentCount || 0}]</span>
             </div>
             <div className='mobile-card-footer'>
-              <span className='mobile-card-author'>{getAuthorId(post.author)}</span>
+              <span className='mobile-card-author'>
+                {pendingOnly && post.botId?.name ? (
+                  <>🤖 {post.botId.name}</>
+                ) : (
+                  getAuthorId(post.author)
+                )}
+              </span>
               <span className='mobile-card-region'>
                 {tagList && post.tags && post.tags.region
                   ? post.tags.region === '0'

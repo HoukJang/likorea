@@ -37,7 +37,6 @@ const GlobalNavigation = () => {
     const screenWidth = window.innerWidth;
     let userFontSize = fontSize;
     let maxWidth = 'auto';
-    let padding = '10px 18px';
 
     // 아이디 길이에 따른 글자 크기 조정
     if (userId.length > 12) {
@@ -45,69 +44,55 @@ const GlobalNavigation = () => {
       if (screenWidth <= 360) {
         userFontSize = '8px';
         maxWidth = '80px';
-        padding = '8px 10px';
       } else if (screenWidth <= 480) {
         userFontSize = '9px';
         maxWidth = '90px';
-        padding = '8px 12px';
       } else if (screenWidth <= 768) {
         userFontSize = '10px';
         maxWidth = '100px';
-        padding = '9px 14px';
       } else {
         userFontSize = '11px';
         maxWidth = '120px';
-        padding = '10px 16px';
       }
     } else if (userId.length > 8) {
       // 긴 아이디 (9-12자)
       if (screenWidth <= 360) {
         userFontSize = '9px';
         maxWidth = '85px';
-        padding = '8px 12px';
       } else if (screenWidth <= 480) {
         userFontSize = '10px';
         maxWidth = '95px';
-        padding = '9px 14px';
       } else if (screenWidth <= 768) {
         userFontSize = '11px';
         maxWidth = '110px';
-        padding = '10px 16px';
       } else {
         userFontSize = '12px';
         maxWidth = '130px';
-        padding = '10px 18px';
       }
     } else if (userId.length > 5) {
       // 중간 길이 아이디 (6-8자)
       if (screenWidth <= 360) {
         userFontSize = '10px';
         maxWidth = '90px';
-        padding = '8px 14px';
       } else if (screenWidth <= 480) {
         userFontSize = '11px';
         maxWidth = '100px';
-        padding = '9px 16px';
       } else if (screenWidth <= 768) {
         userFontSize = '12px';
         maxWidth = '120px';
-        padding = '10px 18px';
       } else {
         userFontSize = '13px';
         maxWidth = '140px';
-        padding = '10px 20px';
       }
     } else {
       // 짧은 아이디 (5자 이하) - 기본 크기 사용
       userFontSize = fontSize;
       maxWidth = 'auto';
-      padding = '10px 18px';
     }
 
     return {
       fontSize: userFontSize,
       maxWidth: maxWidth,
-      padding: padding,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',

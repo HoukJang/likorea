@@ -11,7 +11,23 @@ import {
  * 인증 상태를 관리하는 커스텀 훅
  */
 export const useAuth = () => {
-  const [user, setUser] = useState(null);
+  // localStorage에서 초기 사용자 정보 가져오기
+  const getInitialUser = () => {
+    const userId = localStorage.getItem('userId');
+    const userEmail = localStorage.getItem('userEmail');
+    const userAuthority = localStorage.getItem('userAuthority');
+    
+    if (userId && userEmail && userAuthority) {
+      return {
+        id: userId,
+        email: userEmail,
+        authority: parseInt(userAuthority, 10)
+      };
+    }
+    return null;
+  };
+
+  const [user, setUser] = useState(getInitialUser());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -40,9 +56,13 @@ export const useAuth = () => {
   const validateToken = useCallback(async () => {
     try {
       const response = await verifyToken();
-      if (response.valid) {
+      if (response.valid && response.user) {
         // 토큰이 유효하면 사용자 정보 업데이트
         setUser(response.user);
+        // localStorage도 업데이트
+        localStorage.setItem('userId', response.user.id);
+        localStorage.setItem('userEmail', response.user.email);
+        localStorage.setItem('userAuthority', response.user.authority);
         return true;
       } else {
         // 토큰이 유효하지 않으면 로그아웃
@@ -96,6 +116,11 @@ export const useAuth = () => {
       try {
         setLoading(true);
         setError(null);
+        // localStorage에 사용자 정보가 있으면 검증 생략
+        if (user) {
+          setLoading(false);
+          return;
+        }
         await validateToken();
       } catch (err) {
         setUser(null);
@@ -107,12 +132,12 @@ export const useAuth = () => {
 
     checkAuth();
 
-    // 5분마다 토큰 유효성 검증
+    // 30분마다 토큰 유효성 검증 (5분은 너무 짧음)
     const interval = setInterval(() => {
       validateToken().catch(() => {
         // 자동 검증 실패 시 조용히 처리
       });
-    }, 5 * 60 * 1000);
+    }, 30 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, [validateToken]);

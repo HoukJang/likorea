@@ -19,6 +19,8 @@ const BoardPostView = lazy(() => import('./components/BoardPostView'));
 const Admin = lazy(() => import('./components/Admin'));
 const Profile = lazy(() => import('./components/Profile'));
 const DesignPreview = lazy(() => import('./components/DesignPreview'));
+const BotManagement = lazy(() => import('./pages/BotManagement'));
+const BotForm = lazy(() => import('./pages/BotForm'));
 
 function App() {
   // 전역 인증 상태 관리 - 앱 시작 시 토큰 검증 수행
@@ -54,6 +56,11 @@ function App() {
               <Route path='/' element={<Navigate to='/boards' replace />} />
               <Route path='/signup' element={<Signup />} />
               <Route path='/login' element={<Login />} />
+
+              {/* 봇 관리 페이지 - 구체적인 경로를 먼저 배치 */}
+              <Route path='/bots/new' element={<BotForm />} />
+              <Route path='/bots/edit/:botId' element={<BotForm />} />
+              <Route path='/bot-management' element={<BotManagement />} />
 
               {/* 게시판 관련 라우트 */}
               <Route path='/boards' element={<BoardList />} />

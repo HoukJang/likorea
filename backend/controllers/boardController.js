@@ -225,7 +225,14 @@ exports.getPosts = asyncHandler(async (req, res) => {
   const skip = (pageNum - 1) * limitNum;
 
   // 필터 조건 구성
-  const filter = {};
+  const filter = {
+    // 승인되지 않은 봇 게시글은 제외 (일반 사용자 게시글은 자동 승인이므로 표시됨)
+    $or: [
+      { isBot: false },
+      { isBot: true, isApproved: true },
+      { isBot: { $exists: false } } // 이전 게시글 호환성
+    ]
+  };
 
   if (type) {
     filter['tags.type'] = type;

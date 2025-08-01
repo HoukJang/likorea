@@ -142,6 +142,9 @@ export const processPostData = post => {
     postNumber: isValidNumber(post.postNumber) ? post.postNumber : 0,
     commentCount: isValidNumber(post.commentCount) ? post.commentCount : 0,
     tags: post.tags || {},
+    isApproved: post.isApproved !== undefined ? post.isApproved : true,
+    botId: post.botId || null,
+    isBot: post.isBot || false,
   };
 };
 
@@ -155,7 +158,7 @@ export const processCommentData = comment => {
     return {
       id: '',
       content: '내용 없음',
-      author: '익명',
+      author: { id: '익명' },
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -164,7 +167,8 @@ export const processCommentData = comment => {
   return {
     id: comment.id || comment._id || '',
     content: comment.content || '내용 없음',
-    author: getAuthorId(comment.author),
+    // author 정보를 객체로 유지하여 권한 정보도 포함
+    author: comment.author || { id: '익명' },
     createdAt: comment.createdAt || new Date(),
     updatedAt: comment.updatedAt || comment.createdAt || new Date(),
   };

@@ -41,7 +41,10 @@ exports.getTagsByCategory = asyncHandler(async (req, res) => {
 exports.getSubCategoriesByParent = asyncHandler(async (req, res) => {
   const { parentCategory } = req.params;
 
-  if (!['공지', '사고팔고', '부동산', '생활정보', '모임', '기타'].includes(parentCategory)) {
+  // DB에서 활성화된 type 태그 목록을 가져와서 유효성 검증
+  const validTypes = await Tag.find({ category: 'type', isActive: true }).distinct('value');
+  
+  if (!validTypes.includes(parentCategory)) {
     throw new ValidationError('유효하지 않은 상위 카테고리입니다.');
   }
 

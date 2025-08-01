@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getTagDisplayName, getTagDisplayText } from '../../utils/tagUtils';
 import { formatDate, getAuthorId } from '../../utils/dataUtils';
 
-const BoardTable = React.memo(({ posts, tagList }) => {
+const BoardTable = React.memo(({ posts, tagList, pendingOnly = false }) => {
   const navigate = useNavigate();
 
   // 키보드 이벤트 핸들러
@@ -53,7 +53,7 @@ const BoardTable = React.memo(({ posts, tagList }) => {
                 tabIndex={0}
                 data-post-type={postType}
                 aria-label={`게시글 ${post.postNumber}: ${post.title}`}
-                onKeyDown={e => handleKeyDown(e, () => navigate(`/boards/${post.id}`))}
+                onKeyDown={e => handleKeyDown(e, () => navigate(pendingOnly ? `/boards/${post.id || post._id}/edit?pending=true` : `/boards/${post.id}`))}
               >
                 <td className='post-number' style={{ textAlign: 'center' }} role='cell'>
                   {tagList && post.tags && post.tags.type
@@ -62,7 +62,7 @@ const BoardTable = React.memo(({ posts, tagList }) => {
                 </td>
                 <td style={{ textAlign: 'left' }} role='cell'>
                   <Link
-                    to={`/boards/${post.id}`}
+                    to={pendingOnly ? `/boards/${post.id || post._id}/edit?pending=true` : `/boards/${post.id}`}
                     className='post-title'
                     style={{
                       color: 'inherit',
@@ -71,6 +71,7 @@ const BoardTable = React.memo(({ posts, tagList }) => {
                     aria-label={`게시글 제목: ${post.title}`}
                   >
                     {post.title}
+                    {pendingOnly && <span style={{ marginLeft: '8px', padding: '2px 6px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.75em' }}>승인 대기</span>}
                     <span className='comment-count'>[{post.commentCount || 0}]</span>
                   </Link>
                 </td>
@@ -86,7 +87,11 @@ const BoardTable = React.memo(({ posts, tagList }) => {
                         : '전체'}
                 </td>
                 <td className='post-author' style={{ textAlign: 'center' }} role='cell'>
-                  {getAuthorId(post.author)}
+                  {pendingOnly && post.botId?.name ? (
+                    <span style={{ fontStyle: 'italic' }}>🤖 {post.botId.name}</span>
+                  ) : (
+                    getAuthorId(post.author)
+                  )}
                 </td>
                 <td className='post-date' style={{ textAlign: 'center' }} role='cell'>
                   {formatDate(post.createdAt)}

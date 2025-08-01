@@ -67,11 +67,37 @@ const createRateLimiters = () => {
     legacyHeaders: false,
   });
 
+  // 관리자 API 전용 제한 (더 관대함)
+  const adminLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15분
+    max: 500, // 최대 500개 요청 (관리자 페이지는 여러 API를 동시에 호출)
+    message: {
+      error: '너무 많은 요청이 발생했습니다. 잠시 후에 다시 시도해주세요.',
+      retryAfter: 15 * 60,
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  // 토큰 검증 요청 제한 (더 관대함)
+  const verifyLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15분
+    max: 300, // 최대 300개 요청 (자동 검증 고려)
+    message: {
+      error: '토큰 검증 요청이 너무 많습니다. 잠시 후에 다시 시도해주세요.',
+      retryAfter: 15 * 60,
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
   return {
     generalLimiter,
     loginLimiter,
     signupLimiter,
     postLimiter,
+    adminLimiter,
+    verifyLimiter,
   };
 };
 

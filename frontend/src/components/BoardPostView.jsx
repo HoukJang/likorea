@@ -9,6 +9,7 @@ import {
   getComments,
 } from '../api/boards';
 import { getAllTags } from '../api/tags';
+import { getPendingPost, approvePost, rejectPost } from '../api/approval';
 import { processPostData, processCommentsList } from '../utils/dataUtils';
 import { createTagDisplayData } from '../utils/tagUtils';
 import { usePermission } from '../hooks/usePermission';
@@ -29,6 +30,8 @@ function BoardPostView() {
   const [editCommentText, setEditCommentText] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [tagList, setTagList] = useState(null);
+  const [isPending, setIsPending] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const { canModify: checkCanModify } = usePermission();
   const { user } = useAuth();
@@ -44,8 +47,16 @@ function BoardPostView() {
       const tagResponse = await getAllTags();
       setTagList(tagResponse.tags);
 
+      // URL 경로에서 승인 대기 여부 확인
+      const isPendingPath = window.location.pathname.includes('pending');
+      
       // 게시글 데이터 가져오기
-      const response = await getBoardPost(postId);
+      let response;
+      if (isPendingPath) {
+        response = await getPendingPost(postId);
+      } else {
+        response = await getBoardPost(postId);
+      }
 
       // API 응답에서 post 필드 추출
       const data = response.post || response;
@@ -73,6 +84,14 @@ function BoardPostView() {
 
       // 권한 확인
       checkEditDeletePermission(processedPost);
+      
+      // 관리자 권한 및 승인 대기 상태 확인
+      console.log('User authority:', user?.authority);
+      console.log('Post isApproved:', processedPost.isApproved);
+      console.log('Is Admin:', user?.authority >= 5);
+      console.log('Is Pending:', processedPost.isApproved === false);
+      setIsAdmin(user?.authority >= 5);
+      setIsPending(processedPost.isApproved === false);
     } catch (error) {
       const processedError = handleError(error, '게시글 조회');
       setError(processedError.message);
@@ -100,7 +119,10 @@ function BoardPostView() {
       return;
     }
 
+    console.log('게시글 데이터:', postData);
+    console.log('현재 사용자:', user);
     const canModifyPost = checkCanModify(postData);
+    console.log('수정 권한:', canModifyPost);
     setCanModify(canModifyPost);
   };
 
@@ -113,6 +135,41 @@ function BoardPostView() {
       } catch (error) {
         alert('삭제 권한이 없거나 오류가 발생했습니다.');
       }
+    }
+  };
+
+  // 승인 처리
+  const handleApprove = async () => {
+    if (!window.confirm('이 게시글을 승인하시겠습니까?')) return;
+
+    try {
+      setLoading(true);
+      await approvePost(postId);
+      alert('게시글이 승인되었습니다.');
+      navigate('/admin'); // 관리자 페이지로 이동
+    } catch (error) {
+      const processedError = handleError(error, '게시글 승인');
+      alert(processedError.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 거절 처리
+  const handleReject = async () => {
+    const reason = window.prompt('거절 사유를 입력하세요 (선택사항):');
+    if (reason === null) return; // 취소 클릭
+
+    try {
+      setLoading(true);
+      await rejectPost(postId, reason);
+      alert('게시글이 거절되었습니다.');
+      navigate('/admin'); // 관리자 페이지로 이동
+    } catch (error) {
+      const processedError = handleError(error, '게시글 거절');
+      alert(processedError.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -340,25 +397,52 @@ function BoardPostView() {
   return (
     <div className='post-container'>
       <div className='post-header'>
-        <h1 className='post-title'>{post.title}</h1>
-        {canModify && (
-          <div className='post-actions'>
-            <button
-              onClick={() => navigate(`/boards/${postId}/edit`)}
-              className='action-button edit-button'
-            >
-              수정
-            </button>
-            <button onClick={handleDelete} className='action-button delete-button'>
-              삭제
-            </button>
-          </div>
-        )}
+        <h1 className='post-title'>
+          {post.title}
+          {isPending && <span style={{ marginLeft: '12px', padding: '4px 8px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.8em' }}>승인 대기</span>}
+        </h1>
+        <div className='post-actions'>
+          {canModify && (
+            <>
+              <button
+                onClick={() => navigate(`/boards/${postId}/edit`)}
+                className='action-button edit-button'
+              >
+                수정
+              </button>
+              <button onClick={handleDelete} className='action-button delete-button'>
+                삭제
+              </button>
+            </>
+          )}
+          {isAdmin && isPending && (
+            <>
+              <button 
+                onClick={handleApprove} 
+                className='action-button' 
+                style={{ backgroundColor: '#4caf50', color: 'white' }}
+                disabled={loading}
+              >
+                승인
+              </button>
+              <button 
+                onClick={handleReject} 
+                className='action-button' 
+                style={{ backgroundColor: '#f44336', color: 'white' }}
+                disabled={loading}
+              >
+                거절
+              </button>
+            </>
+          )}
+          {/* 디버깅 정보 */}
+          {console.log('Render - isAdmin:', isAdmin, 'isPending:', isPending)}
+        </div>
       </div>
 
       <div className='post-meta'>
         <span className='post-author'>
-          <strong>작성자:</strong> {post.author && post.author.id ? post.author.id : '알 수 없음'}
+          <strong>작성자:</strong> {post.botId?.name ? `🤖 ${post.botId.name}` : (post.author?.id || '알 수 없음')}
         </span>
         <span className='post-date'>
           <strong>작성일:</strong> {new Date(post.createdAt).toLocaleString()}
@@ -400,16 +484,8 @@ function BoardPostView() {
               const isEditing = editingCommentId === commentId;
               const commentDate = new Date(comment.createdAt);
 
-              // 작성자 ID 추출 로직
-              let authorId = '익명';
-
-              if (comment.author) {
-                if (typeof comment.author === 'object') {
-                  authorId = comment.author.id || '익명';
-                } else {
-                  authorId = comment.author;
-                }
-              }
+              // 작성자 ID 추출
+              const authorId = comment.author?.id || '익명';
 
               // 수정 삭제 권한 확인
               const hasPermission = canModifyComment(comment);

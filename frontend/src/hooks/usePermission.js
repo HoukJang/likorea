@@ -27,7 +27,8 @@ export const usePermission = () => {
    * @returns {boolean} 로그인 여부
    */
   const isAuthenticated = useCallback(() => {
-    return !!localStorage.getItem('authToken');
+    // authToken 또는 userId가 있으면 인증된 것으로 판단
+    return !!(localStorage.getItem('authToken') || localStorage.getItem('userId'));
   }, []);
 
   /**
@@ -46,6 +47,12 @@ export const usePermission = () => {
    */
   const canModify = useCallback(
     target => {
+      console.log('canModify 호출됨:', {
+        isAuth: isAuthenticated(),
+        hasTarget: !!target,
+        token: localStorage.getItem('authToken')
+      });
+      
       if (!isAuthenticated() || !target) return false;
 
       const currentUserId = getCurrentUserId();
@@ -57,18 +64,27 @@ export const usePermission = () => {
 
       if (target.author) {
         if (typeof target.author === 'object') {
-          // 게시글의 경우: author가 객체 {id: "likorea", authority: 5}
-          targetAuthorId = target.author.id;
-          targetAuthority = target.author.authority || 0;
+          // 게시글이나 댓글의 경우: author가 객체 {id: "likorea", authority: 5}
+          targetAuthorId = target.author.id || target.author._id;
+          targetAuthority = parseInt(target.author.authority || '0', 10);
         } else {
-          // 댓글의 경우: author가 문자열 "likorea"
+          // 구버전 댓글의 경우: author가 문자열 "likorea"
           targetAuthorId = target.author;
-          // 댓글 작성자의 권한은 기본적으로 3 (일반 사용자)
-          targetAuthority = 3;
+          // 권한 정보가 없는 경우 기본값 사용
+          targetAuthority = 0;
         }
       } else {
         return false;
       }
+
+      console.log('권한 체크:', {
+        현재사용자: currentUserId,
+        현재권한: currentAuthority,
+        작성자: targetAuthorId,
+        작성자권한: targetAuthority,
+        본인여부: targetAuthorId === currentUserId,
+        권한비교: currentAuthority > targetAuthority
+      });
 
       // 1. 본인 작성물인 경우 항상 수정/삭제 가능
       if (targetAuthorId === currentUserId) {

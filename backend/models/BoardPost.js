@@ -34,6 +34,13 @@ const boardPostSchema = new mongoose.Schema(
     comments: [commentSchema],
     // 최근 업데이트 시간 (댓글 추가/수정 시 업데이트)
     modifiedAt: { type: Date, default: Date.now },
+    // 승인 시스템 필드
+    isApproved: { type: Boolean, default: true }, // 일반 사용자는 자동 승인
+    approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    approvedAt: { type: Date },
+    // 봇이 작성한 글인지 여부
+    isBot: { type: Boolean, default: false },
+    botId: { type: mongoose.Schema.Types.ObjectId, ref: 'Bot' },
   },
   { timestamps: true }
 );

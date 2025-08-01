@@ -22,28 +22,34 @@
 }
 
 .clear-filters-btn {
-  padding: 8px 12px;
+  padding: 8px 16px;
   background-color: #dc2626;
   color: #ffffff;
   border: none;
   border-radius: 8px;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
   font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
+  margin-left: auto;
 }
 
 .clear-filters-btn:hover {
   background-color: #b91c1c;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
 .filter-controls {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 15px;
   flex-wrap: wrap;
 }
@@ -215,10 +221,12 @@
 
   .clear-filters-btn {
     align-self: flex-end;
-    font-size: 0.7rem;
-    padding: 4px 8px;
+    font-size: 0.875rem;
+    padding: 6px 12px;
     height: 32px;
     white-space: nowrap;
+    margin-left: 8px;
+    flex: 0 0 auto;
   }
 
   .active-filters {
@@ -272,9 +280,10 @@
   }
 
   .clear-filters-btn {
-    font-size: 0.65rem;
-    padding: 3px 6px;
+    font-size: 0.75rem;
+    padding: 4px 10px;
     height: 28px;
+    margin-left: 6px;
   }
 
   .active-filters {

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { getAllTags } from '../api/tags';
-import { SUB_CATEGORIES } from '../utils/tagUtils';
+import { getAllTags, getSubCategoriesByParent } from '../api/tags';
 import '../styles/TagFilter.css';
 
 const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
   const [tags, setTags] = useState({});
+  const [subCategories, setSubCategories] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
@@ -29,6 +29,29 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
 
     fetchTags();
   }, []);
+
+  // 글종류가 변경될 때 하위 카테고리 로드
+  useEffect(() => {
+    const fetchSubCategories = async () => {
+      if (filters.type) {
+        try {
+          const response = await getSubCategoriesByParent(filters.type);
+          
+          if (response && response.subCategories) {
+            setSubCategories(prev => ({
+              ...prev,
+              [filters.type]: response.subCategories,
+            }));
+          }
+        } catch (err) {
+          // 하위 카테고리 로드 실패 시 조용히 처리
+          console.error('Failed to load subcategories:', err);
+        }
+      }
+    };
+
+    fetchSubCategories();
+  }, [filters.type]);
 
   const handleFilterChange = useCallback((key, value) => {
     const newFilters = {
@@ -89,7 +112,7 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
           </select>
         </div>
 
-        {filters.type && SUB_CATEGORIES[filters.type] && (
+        {filters.type && subCategories[filters.type] && subCategories[filters.type].length > 0 && (
           <div className='filter-group'>
             <label className='filter-label'>소주제</label>
             <select
@@ -98,9 +121,9 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
               onChange={e => handleFilterChange('subcategory', e.target.value)}
             >
               <option value=''>전체</option>
-              {SUB_CATEGORIES[filters.type].map(subcategory => (
-                <option key={subcategory} value={subcategory}>
-                  {subcategory}
+              {subCategories[filters.type].map(subcategory => (
+                <option key={subcategory.value} value={subcategory.value}>
+                  {subcategory.displayName}
                 </option>
               ))}
             </select>

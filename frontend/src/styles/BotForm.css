@@ -1,0 +1,605 @@
+/* BotForm 페이지 스타일 - 프로젝트 디자인 시스템과 통일 */
+
+/* 색상 체계는 BoardPostForm.css와 동일하게 사용 */
+:root {
+  --primary-bg: #ffffff;
+  --secondary-bg: #111111;
+  --primary-text: #111111;
+  --secondary-text: #6b7280;
+
+  /* 현대화된 Primary Colors */
+  --primary-blue: #3b82f6;
+  --primary-blue-dark: #2563eb;
+  --primary-blue-light: #60a5fa;
+
+  /* 현대화된 Secondary Colors */
+  --secondary-green: #10b981;
+  --secondary-green-dark: #059669;
+  --secondary-green-light: #34d399;
+
+  /* 현대화된 Danger Colors */
+  --accent-red: #ef4444;
+  --accent-red-dark: #dc2626;
+
+  /* 세밀한 Gray Scale */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  /* Semantic Colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+
+  /* 통일된 글자 크기 체계 */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+
+  /* 기타 스타일 변수 */
+  --btn-radius: 12px;
+  --input-radius: 12px;
+  --card-radius: 16px;
+  --focus-outline: 2px solid var(--primary-blue);
+  --focus-outline-offset: 2px;
+  --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+}
+
+/* Material-UI 포털 요소 전역 스타일 */
+body .MuiPopover-root .MuiPaper-root {
+  background-color: #ffffff !important;
+}
+
+body .MuiList-root {
+  background-color: #ffffff !important;
+  padding: 8px 0;
+}
+
+/* 페이지 컨테이너 스타일 */
+.bot-form-container {
+  font-family: var(--font-family) !important;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 20px 0;
+}
+
+.bot-form-container .MuiContainer-root {
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+
+/* Paper 컴포넌트 스타일 */
+.bot-form-container .MuiPaper-root {
+  background: #ffffff;
+  border-radius: var(--card-radius);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  padding: 40px;
+}
+
+/* 제목 스타일 */
+.bot-form-container .MuiTypography-h4 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #2563eb;
+  text-align: center;
+  margin-bottom: 40px;
+  letter-spacing: 0.02em;
+  position: relative;
+}
+
+/* 제목 하단 장식선 */
+.bot-form-container .MuiTypography-h4::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: #2563eb;
+  border-radius: 2px;
+}
+
+/* Alert 스타일 */
+.bot-form-container .MuiAlert-root {
+  border-radius: var(--btn-radius);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+}
+
+.bot-form-container .MuiAlert-standardError {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+  color: var(--accent-red-dark);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.bot-form-container .MuiAlert-standardSuccess {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+  color: var(--secondary-green-dark);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.bot-form-container .MuiAlert-standardWarning {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.bot-form-container .MuiAlert-standardWarning .MuiAlert-message {
+  color: #92400e;
+}
+
+/* 계정 정보 카드 스타일 */
+.bot-form-container .MuiCard-root {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  border-radius: var(--btn-radius);
+  border: 1px solid #7dd3fc;
+  margin-bottom: 24px;
+}
+
+.bot-form-container .MuiCardContent-root {
+  padding: 24px;
+}
+
+/* 입력 필드 스타일 */
+.bot-form-container .MuiTextField-root,
+.bot-form-container .MuiFormControl-root {
+  margin-bottom: 24px;
+}
+
+/* 폼 내부 정렬 */
+.bot-form-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.bot-form-container .MuiOutlinedInput-root {
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  border-radius: var(--input-radius);
+  background: #ffffff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 56px;
+  color: var(--primary-text);
+}
+
+.bot-form-container .MuiOutlinedInput-input {
+  padding: 16px 20px;
+  color: #111111;
+  font-size: 1rem;
+}
+
+.bot-form-container .MuiOutlinedInput-root:hover {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.bot-form-container .MuiOutlinedInput-root.Mui-focused {
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.bot-form-container .MuiOutlinedInput-notchedOutline {
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bot-form-container .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #d1d5db;
+}
+
+.bot-form-container .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--primary-blue);
+  border-width: 2px;
+}
+
+/* 입력 필드 레이블 */
+.bot-form-container .MuiInputLabel-root {
+  font-size: 1rem;
+  font-family: var(--font-family);
+  color: #374151;
+  font-weight: 600;
+  background-color: #ffffff;
+  padding: 0 6px;
+  transform-origin: top left;
+}
+
+/* FormControl 레이블 위치 조정 */
+.bot-form-container .MuiInputLabel-outlined {
+  transform: translate(14px, 18px) scale(1);
+}
+
+.bot-form-container .MuiInputLabel-outlined.MuiInputLabel-shrink {
+  transform: translate(14px, -9px) scale(0.85);
+  background-color: #ffffff;
+  padding: 0 8px;
+  font-weight: 600;
+}
+
+.bot-form-container .MuiInputLabel-root.Mui-focused {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+/* Select 컴포넌트 스타일 */
+.bot-form-container .MuiSelect-select {
+  padding: 16px 20px;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  color: var(--primary-text);
+  font-size: var(--font-size-base);
+}
+
+/* Select 드롭다운 메뉴 */
+.MuiPaper-root.MuiMenu-paper {
+  background-color: #ffffff !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+  border: 1px solid #e5e7eb;
+}
+
+.MuiMenuItem-root {
+  background-color: #ffffff !important;
+  color: #111111 !important;
+  font-size: 1rem !important;
+  padding: 12px 20px !important;
+  transition: all 0.2s ease !important;
+  font-family: var(--font-family) !important;
+}
+
+.MuiMenuItem-root:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.MuiMenuItem-root.Mui-selected {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+  color: #2563eb !important;
+  font-weight: 600 !important;
+}
+
+.MuiMenuItem-root.Mui-selected:hover {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+}
+
+/* Select 드롭다운 아이콘 */
+.bot-form-container .MuiSelect-icon {
+  color: #6b7280;
+}
+
+/* Multiline 텍스트 필드 특별 처리 */
+.bot-form-container .MuiOutlinedInput-multiline {
+  min-height: auto;
+  padding: 0;
+}
+
+.bot-form-container .MuiOutlinedInput-inputMultiline {
+  padding: 16px 20px;
+}
+
+/* FormHelperText 스타일 */
+.bot-form-container .MuiFormHelperText-root {
+  font-size: 0.875rem;
+  margin-top: 6px;
+  margin-left: 14px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+/* Chip 스타일 */
+.bot-form-container .MuiChip-root {
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  height: 28px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+.bot-form-container .MuiChip-outlined {
+  background-color: transparent;
+  border-color: #d1d5db;
+  color: #6b7280;
+}
+
+.bot-form-container .MuiChip-sizeSmall {
+  height: 20px;
+  font-size: 0.7rem;
+}
+
+/* 버튼 스타일 */
+.bot-form-container .MuiButton-root {
+  font-family: var(--font-family);
+  font-weight: 600;
+  border-radius: var(--btn-radius);
+  text-transform: none;
+  padding: 12px 24px;
+  min-height: 48px;
+  font-size: var(--font-size-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Primary 버튼 (제출) */
+.bot-form-container .MuiButton-containedPrimary {
+  background: linear-gradient(135deg, var(--secondary-green) 0%, var(--secondary-green-dark) 100%);
+  color: var(--primary-bg);
+}
+
+.bot-form-container .MuiButton-containedPrimary:hover {
+  background: linear-gradient(135deg, var(--secondary-green-dark) 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+}
+
+.bot-form-container .MuiButton-containedPrimary:focus {
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+/* Secondary 버튼 (취소) */
+.bot-form-container .MuiButton-outlined {
+  border: 2px solid var(--gray-300);
+  color: var(--gray-700);
+  background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+}
+
+.bot-form-container .MuiButton-outlined:hover {
+  background: linear-gradient(135deg, var(--gray-200) 0%, var(--gray-300) 100%);
+  border-color: var(--gray-400);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 버튼 비활성화 상태 */
+.bot-form-container .MuiButton-root:disabled {
+  background: var(--gray-300);
+  color: var(--gray-500);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Box 컴포넌트 정렬 */
+.bot-form-container .MuiBox-root {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+/* CircularProgress 스타일 */
+.bot-form-container .MuiCircularProgress-root {
+  color: var(--primary-blue);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .bot-form-container .MuiContainer-root {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .bot-form-container .MuiPaper-root {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .bot-form-container .MuiTypography-h4 {
+    font-size: var(--font-size-xl);
+    margin-bottom: 20px;
+  }
+
+  .bot-form-container .MuiButton-root {
+    padding: 10px 20px;
+    min-height: 44px;
+    font-size: var(--font-size-sm);
+  }
+
+  .bot-form-container .MuiBox-root {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .bot-form-container .MuiButton-root {
+    width: 100%;
+  }
+
+  .bot-form-container .MuiTextField-root {
+    margin-bottom: 16px;
+  }
+}
+
+
+/* 애니메이션 효과 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bot-form-container .MuiPaper-root {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* 폼 그룹 스타일 */
+.bot-form-container form > * {
+  animation: fadeIn 0.4s ease-out backwards;
+}
+
+.bot-form-container form > *:nth-child(1) { animation-delay: 0.1s; }
+.bot-form-container form > *:nth-child(2) { animation-delay: 0.15s; }
+.bot-form-container form > *:nth-child(3) { animation-delay: 0.2s; }
+.bot-form-container form > *:nth-child(4) { animation-delay: 0.25s; }
+.bot-form-container form > *:nth-child(5) { animation-delay: 0.3s; }
+.bot-form-container form > *:nth-child(6) { animation-delay: 0.35s; }
+.bot-form-container form > *:nth-child(7) { animation-delay: 0.4s; }
+
+/* 봇 계정 정보 카드 스타일 */
+.bot-form-container .bot-account-info {
+  background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+  border-radius: var(--btn-radius);
+  border: 1px solid #93c5fd;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.12);
+}
+
+.bot-form-container .bot-account-info .MuiCardContent-root {
+  padding: 24px;
+}
+
+.bot-form-container .bot-account-info .MuiTypography-h6 {
+  color: #0369a1;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.bot-form-container .account-details {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.bot-form-container .account-details .MuiTypography-root {
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: #111111;
+}
+
+.bot-form-container .account-details strong {
+  color: var(--gray-900);
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+/* 폼 액션 버튼 컨테이너 */
+.bot-form-container .form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--gray-200);
+}
+
+/* 모델 목록 스타일 */
+.bot-form-container .model-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.bot-form-container .model-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.bot-form-container .model-item span {
+  font-weight: 600;
+  color: var(--primary-text);
+  font-size: var(--font-size-base);
+}
+
+/* Typography 개선 */
+.bot-form-container .MuiTypography-body1,
+.bot-form-container .MuiTypography-body2 {
+  line-height: 1.6;
+  color: var(--primary-text);
+}
+
+/* 모든 텍스트 요소에 명확한 색상 지정 */
+.bot-form-container .MuiTypography-root {
+  color: #111111;
+}
+
+/* Helper Text 스타일 개선 */
+.bot-form-container .MuiFormHelperText-root {
+  font-size: var(--font-size-xs);
+  line-height: 1.4;
+  margin-top: 6px;
+  margin-left: 14px;
+  color: var(--gray-500);
+}
+
+/* Loading 상태 스타일 */
+.bot-form-container .MuiButton-root.Mui-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 로딩 컨테이너 */
+.bot-form-container .loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+.bot-form-container .loading-text {
+  color: var(--gray-600);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+}
+
+/* 반응형 개선 */
+@media (max-width: 480px) {
+  .bot-form-container .MuiTypography-h4 {
+    font-size: var(--font-size-lg);
+  }
+
+  .bot-form-container .form-actions {
+    padding: 0 16px;
+  }
+
+  .bot-form-container .account-details {
+    padding: 12px;
+  }
+
+  .bot-form-container .bot-account-info .MuiCardContent-root {
+    padding: 16px;
+  }
+}
+
+/* 포커스 상태 개선 */
+.bot-form-container *:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+/* 에러 상태 스타일 */
+.bot-form-container .Mui-error .MuiOutlinedInput-notchedOutline {
+  border-color: var(--accent-red) !important;
+  border-width: 2px;
+}
+
+.bot-form-container .Mui-error.MuiFormHelperText-root {
+  color: var(--accent-red);
+  font-weight: 500;
+}

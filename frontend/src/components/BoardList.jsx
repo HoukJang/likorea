@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getBoards } from '../api/boards';
 import { getAllTags } from '../api/tags';
+import { getPendingPosts } from '../api/approval';
 import { processPostsList } from '../utils/dataUtils';
 import TagFilter from './TagFilter';
 import BoardTable from './board/BoardTable';
@@ -9,7 +10,7 @@ import BoardPagination from './board/BoardPagination';
 import { BoardLoading, BoardError, BoardEmpty } from './board/BoardStatus';
 import '../styles/BoardList.css';
 
-const BoardList = () => {
+const BoardList = ({ pendingOnly = false }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,15 +44,22 @@ const BoardList = () => {
           ...filters,
         };
 
-        const data = await getBoards(apiParams);
-
-        const postsData = data.posts || data;
-
-        const processedPosts = processPostsList(postsData);
-
-        // 백엔드에서 이미 정렬된 데이터를 그대로 사용
-        setPosts(processedPosts);
-        setTotalPages(data.totalPages || 1);
+        let data;
+        if (pendingOnly) {
+          // 승인 대기 게시물 가져오기
+          data = await getPendingPosts(apiParams);
+          const postsData = data.posts || data;
+          const processedPosts = processPostsList(postsData);
+          setPosts(processedPosts);
+          setTotalPages(data.pagination?.pages || 1);
+        } else {
+          // 일반 게시물 가져오기
+          data = await getBoards(apiParams);
+          const postsData = data.posts || data;
+          const processedPosts = processPostsList(postsData);
+          setPosts(processedPosts);
+          setTotalPages(data.totalPages || 1);
+        }
       } catch (error) {
         setError(error.message || '게시글 목록을 불러오는 중 오류가 발생했습니다.');
       } finally {
@@ -59,7 +67,7 @@ const BoardList = () => {
       }
     };
     fetchPosts();
-  }, [currentPage, filters]);
+  }, [currentPage, filters, pendingOnly]);
 
   // 필터 변경 핸들러
   const handleFilterChange = useCallback(newFilters => {
@@ -74,10 +82,12 @@ const BoardList = () => {
 
   return (
     <div className='board-list-container' role='main' aria-label='게시판 목록'>
-      {/* 태그 필터 컴포넌트 */}
-      <div className='user-controls' role='region' aria-label='사용자 컨트롤'>
-        <TagFilter onFilterChange={handleFilterChange} currentFilters={filters} />
-      </div>
+      {/* 태그 필터 컴포넌트 - 승인 대기 게시물일 때는 숨김 */}
+      {!pendingOnly && (
+        <div className='user-controls' role='region' aria-label='사용자 컨트롤'>
+          <TagFilter onFilterChange={handleFilterChange} currentFilters={filters} />
+        </div>
+      )}
 
       {loading ? (
         <BoardLoading />
@@ -88,10 +98,10 @@ const BoardList = () => {
       ) : (
         <>
           {/* 데스크톱 테이블 뷰 */}
-          <BoardTable posts={posts} tagList={tagList} />
+          <BoardTable posts={posts} tagList={tagList} pendingOnly={pendingOnly} />
 
           {/* 모바일 카드 뷰 */}
-          <BoardCards posts={posts} tagList={tagList} />
+          <BoardCards posts={posts} tagList={tagList} pendingOnly={pendingOnly} />
         </>
       )}
 

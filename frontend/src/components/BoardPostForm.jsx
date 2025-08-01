@@ -1,21 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { getBoardPost, createBoard, updateBoard } from '../api/boards';
 import { getCurrentUser, isAuthenticated } from '../api/auth';
+import { approvePost, rejectPost, updatePendingPost } from '../api/approval';
 import TagSelector from './TagSelector';
 import '../styles/BoardPostForm.css';
 
 function BoardPostForm() {
   const navigate = useNavigate();
   const { postId } = useParams(); // postId is optional for editing
+  const location = useLocation();
   const isEditMode = Boolean(postId);
+  const isPendingMode = new URLSearchParams(location.search).get('pending') === 'true';
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState({ type: '', region: '0' });
   const [message, setMessage] = useState('');
   const contentRef = useRef(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // 현재 사용자 정보 확인
   useEffect(() => {
@@ -105,6 +109,75 @@ function BoardPostForm() {
         e.preventDefault();
         return; // 이미지 처리 후 다른 붙여넣기 방지
       }
+    }
+  };
+
+  // 승인 처리
+  const handleApprove = async () => {
+    if (!window.confirm('이 게시글을 승인하시겠습니까?')) return;
+
+    try {
+      setLoading(true);
+      setMessage('');
+      
+      // 내용이 수정되었다면 먼저 업데이트
+      if (isPendingMode && isEditMode) {
+        const rawContent = contentRef.current ? contentRef.current.innerHTML : content;
+        const sanitizedContent = DOMPurify.sanitize(rawContent, {
+          ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li'],
+          ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
+          ALLOW_DATA_ATTR: false
+        });
+
+        await updatePendingPost(postId, {
+          title,
+          content: sanitizedContent,
+          tags,
+        });
+      }
+      
+      // 승인 처리
+      await approvePost(postId);
+      setMessage('게시글이 승인되었습니다.');
+      setTimeout(() => {
+        navigate('/admin');
+      }, 1000);
+    } catch (error) {
+      let errorMessage = '게시글 승인에 실패했습니다.';
+      if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      setMessage(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 거절 처리
+  const handleReject = async () => {
+    const reason = window.prompt('거절 사유를 입력하세요 (선택사항):');
+    if (reason === null) return; // 취소 클릭
+
+    try {
+      setLoading(true);
+      setMessage('');
+      await rejectPost(postId, reason);
+      setMessage('게시글이 거절되었습니다.');
+      setTimeout(() => {
+        navigate('/admin');
+      }, 1000);
+    } catch (error) {
+      let errorMessage = '게시글 거절에 실패했습니다.';
+      if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      setMessage(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -219,6 +292,19 @@ function BoardPostForm() {
             required
             className='title-input'
           />
+          {isPendingMode && (
+            <span style={{ 
+              marginLeft: '10px', 
+              padding: '4px 8px', 
+              backgroundColor: '#ff9800', 
+              color: 'white', 
+              borderRadius: '4px', 
+              fontSize: '0.9em',
+              display: 'inline-block'
+            }}>
+              승인 대기
+            </span>
+          )}
         </div>
 
         {/* 태그 선택 컴포넌트 */}
@@ -236,9 +322,32 @@ function BoardPostForm() {
             placeholder='내용을 입력하세요...'
           ></div>
         </div>
-        <button type='submit' className='submit-button'>
-          {isEditMode ? '수정 완료' : '게시글 생성'}
-        </button>
+        {isPendingMode ? (
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+            <button 
+              type='button' 
+              onClick={handleApprove}
+              className='submit-button'
+              style={{ backgroundColor: '#4caf50' }}
+              disabled={loading}
+            >
+              {loading ? '처리 중...' : '승인'}
+            </button>
+            <button 
+              type='button' 
+              onClick={handleReject}
+              className='submit-button'
+              style={{ backgroundColor: '#f44336' }}
+              disabled={loading}
+            >
+              {loading ? '처리 중...' : '거절'}
+            </button>
+          </div>
+        ) : (
+          <button type='submit' className='submit-button' disabled={loading}>
+            {loading ? '처리 중...' : (isEditMode ? '수정 완료' : '게시글 생성')}
+          </button>
+        )}
       </form>
       {message && (
         <p className={`message ${message.includes('성공') ? 'success' : 'error'}`}>{message}</p>
