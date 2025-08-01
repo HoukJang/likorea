@@ -140,15 +140,48 @@ router.post('/post', authenticateToken, requireAdmin, async (req, res) => {
     let generatedContent;
 
     try {
-      // 봇의 페르소나와 프롬프트를 사용하여 OpenAI에 요청
-      const systemPrompt = bot.prompt?.base || `당신은 ${bot.persona.age}살 ${bot.persona.occupation} ${bot.name}입니다. ${bot.persona.personality}`;
+      // 프롬프트 구성: 봇 설명 + 기본 프롬프트 + 페르소나 정보
+      let systemPrompt = '';
+      
+      // 1. 봇 설명 추가
+      if (bot.description) {
+        systemPrompt += bot.description + '\n\n';
+      }
+      
+      // 2. 기본 프롬프트 추가
+      if (bot.prompt?.base) {
+        systemPrompt += bot.prompt.base + '\n\n';
+      }
+      
+      // 3. 페르소나 정보 추가 (있는 경우)
+      if (bot.persona) {
+        const personaInfo = [];
+        if (bot.persona.age) personaInfo.push(`${bot.persona.age}살`);
+        if (bot.persona.occupation) personaInfo.push(bot.persona.occupation);
+        if (bot.persona.personality) personaInfo.push(bot.persona.personality);
+        if (bot.persona.location) personaInfo.push(`${bot.persona.location} 거주`);
+        
+        if (personaInfo.length > 0) {
+          systemPrompt += `당신은 ${personaInfo.join(', ')}인 ${bot.name}입니다.`;
+        }
+        
+        if (bot.persona.interests && bot.persona.interests.length > 0) {
+          systemPrompt += ` 관심사: ${bot.persona.interests.join(', ')}.`;
+        }
+      }
+      
+      // 기본값 설정 (아무것도 없는 경우)
+      if (!systemPrompt.trim()) {
+        systemPrompt = `당신은 롱아일랜드 한인 커뮤니티의 활발한 회원 ${bot.name}입니다.`;
+      }
+      
       const userPrompt = `다음 주제로 롱아일랜드 한인 커뮤니티에 게시글을 작성해주세요: ${task}
       
 요구사항:
 1. 제목은 40자 이내로 간결하게
 2. 내용은 친근하고 자연스러운 한국어로
 3. 롱아일랜드 지역 특성을 반영
-4. ${bot.persona.interests ? `관심사(${bot.persona.interests.join(', ')})를 자연스럽게 반영` : ''}
+4. 자연스럽고 진정성 있는 커뮤니티 구성원의 목소리로 작성
 
 응답 형식:
 제목: [게시글 제목]
@@ -186,14 +219,43 @@ router.post('/post', authenticateToken, requireAdmin, async (req, res) => {
         .map(line => `<p>${line}</p>`)
         .join('\n');
 
+      // 봇 서명 생성
+      const botInfo = [];
+      if (bot.persona?.age) botInfo.push(`${bot.persona.age}살`);
+      if (bot.persona?.occupation) botInfo.push(bot.persona.occupation);
+      const signature = botInfo.length > 0 ? `${bot.name} (${botInfo.join(' ')})` : bot.name;
+      
       // 봇 서명 추가
-      generatedContent += `\n<p><br></p>\n<p><em>- ${bot.name} (${bot.persona.age}살 ${bot.persona.occupation})</em></p>`;
+      generatedContent += `\n<p><br></p>\n<p><em>- ${signature}</em></p>`;
 
     } catch (claudeError) {
-      console.error('Claude API 오류:', claudeError);
-      // Claude 실패 시 기본 방식으로 fallback
-      generatedTitle = task.substring(0, 50) + (task.length > 50 ? '...' : '');
-      generatedContent = `<p>${task}</p>\n<p><br></p>\n<p><em>- ${bot.name} (${bot.persona.age}살 ${bot.persona.occupation})</em></p>`;
+      console.error('Claude API 오류:', {
+        error: claudeError.message,
+        status: claudeError.status,
+        type: claudeError.error?.type,
+        details: claudeError.error?.message
+      });
+      
+      // Claude API 오류 유형별 처리
+      if (claudeError.status === 401) {
+        throw new Error('Claude API 키가 유효하지 않습니다.');
+      } else if (claudeError.status === 429) {
+        throw new Error('API 사용량 한도를 초과했습니다. 잠시 후 다시 시도해주세요.');
+      } else if (claudeError.status === 500) {
+        throw new Error('Claude 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      }
+      
+      // 기타 오류 시 기본 fallback
+      console.log('Claude API 실패 - 기본 게시글 생성 모드로 전환');
+      generatedTitle = task.substring(0, 40) + (task.length > 40 ? '...' : '');
+      
+      // 봇 정보를 활용한 기본 콘텐츠 생성
+      const botInfo = [];
+      if (bot.persona?.age) botInfo.push(`${bot.persona.age}살`);
+      if (bot.persona?.occupation) botInfo.push(bot.persona.occupation);
+      const signature = botInfo.length > 0 ? `${bot.name} (${botInfo.join(' ')})` : bot.name;
+      
+      generatedContent = `<p>${task}에 대한 글입니다.</p>\n<p><br></p>\n<p><em>- ${signature}</em></p>`;
     }
 
     // 게시글 작성 (승인 대기 상태로)
