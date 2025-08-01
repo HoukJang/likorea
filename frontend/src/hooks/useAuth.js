@@ -56,15 +56,50 @@ export const useAuth = () => {
   }, [logout]);
 
   /**
+   * 전역 인증 이벤트 리스너 및 상태 동기화
+   */
+  useEffect(() => {
+    // 로그인 이벤트 리스너 - 서버에서 최신 사용자 정보 가져오기
+    const handleLoginEvent = async () => {
+      try {
+        setLoading(true);
+        await validateToken(); // 서버에서 최신 상태 확인
+      } catch (err) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // 로그아웃 이벤트 리스너 - 모든 useAuth 인스턴스 동기화
+    const handleLogoutEvent = () => {
+      setUser(null);
+      setError(null);
+      setLoading(false);
+    };
+
+    // 이벤트 리스너 등록
+    window.addEventListener('login', handleLoginEvent);
+    window.addEventListener('logout', handleLogoutEvent);
+
+    return () => {
+      window.removeEventListener('login', handleLoginEvent);
+      window.removeEventListener('logout', handleLogoutEvent);
+    };
+  }, [validateToken]);
+
+  /**
    * 초기 인증 상태 확인 및 주기적 검증
    */
   useEffect(() => {
     const checkAuth = async () => {
       try {
         setLoading(true);
+        setError(null);
         await validateToken();
       } catch (err) {
         setUser(null);
+        setError(null);
       } finally {
         setLoading(false);
       }
@@ -73,7 +108,11 @@ export const useAuth = () => {
     checkAuth();
 
     // 5분마다 토큰 유효성 검증
-    const interval = setInterval(validateToken, 5 * 60 * 1000);
+    const interval = setInterval(() => {
+      validateToken().catch(() => {
+        // 자동 검증 실패 시 조용히 처리
+      });
+    }, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, [validateToken]);
@@ -90,7 +129,7 @@ export const useAuth = () => {
 
       const data = await loginApi(credentials);
 
-      // 서버에서 httpOnly 쿠키로 토큰 저장함
+      // 서버에서 httpOnly 쿠키로 토큰 저장됨
       // 호환성을 위해 localStorage에도 사용자 정보 저장 (임시)
       if (data.user) {
         localStorage.setItem('userId', data.user.id);
@@ -98,14 +137,10 @@ export const useAuth = () => {
         localStorage.setItem('userAuthority', data.user.authority);
       }
 
-      // 사용자 상태 업데이트
-      setUser({
-        id: data.user.id,
-        email: data.user.email,
-        authority: data.user.authority,
-      });
+      // 서버에서 최신 사용자 정보를 다시 가져와서 상태 동기화
+      await validateToken();
 
-      // 로그인 이벤트 발생
+      // 로그인 이벤트 발생 (다른 useAuth 인스턴스들에게 알림)
       window.dispatchEvent(new Event('login'));
 
       return data;
@@ -116,7 +151,7 @@ export const useAuth = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [validateToken]);
 
   /**
    * 에러 초기화

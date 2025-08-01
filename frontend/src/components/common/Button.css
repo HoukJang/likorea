@@ -13,6 +13,8 @@
   position: relative;
   overflow: hidden;
   font-family: var(--font-family);
+  flex-direction: row; /* 강제로 가로 방향으로 설정 */
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 }
 
 /* 통일된 버튼 크기 시스템 */
@@ -102,11 +104,20 @@
   opacity: 0.7;
 }
 
+/* 버튼 내용 */
+.common-button__content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* 내용이 축소되지 않도록 */
+}
+
 /* 스피너 */
 .common-button__spinner {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0; /* 스피너가 축소되지 않도록 */
 }
 
 .spinner {
@@ -134,6 +145,33 @@
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
+/* 고대비 모드 지원 */
+@media (prefers-contrast: high) {
+  .common-button {
+    border: 2px solid currentColor;
+  }
+  
+  .common-button:focus {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
+  }
+}
+
+/* 애니메이션 감소 모드 지원 */
+@media (prefers-reduced-motion: reduce) {
+  .common-button {
+    transition: none;
+  }
+  
+  .common-button:hover:not(.common-button--disabled) {
+    transform: none;
+  }
+  
+  .spinner {
+    animation: none;
+  }
+}
+
 /* 활성 상태 */
 .common-button:active:not(.common-button--disabled) {
   transform: translateY(0);
@@ -142,6 +180,10 @@
 
 /* 모바일 반응형 스타일 */
 @media (max-width: 768px) {
+  .common-button {
+    flex-direction: row; /* 모바일에서도 가로 정렬 유지 */
+  }
+
   .common-button--small {
     padding: 10px 18px;
     font-size: 15px;
@@ -166,6 +208,7 @@
   .common-button {
     min-height: 44px;
     min-width: 44px;
+    flex-direction: row; /* 터치 디바이스에서도 가로 정렬 */
   }
 
   .common-button:active:not(.common-button--disabled) {

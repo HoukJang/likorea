@@ -44,7 +44,7 @@ const initTestDatabase = async () => {
 const dropAllCollections = async () => {
   const collections = await mongoose.connection.db.collections();
   
-  for (let collection of collections) {
+  for (const collection of collections) {
     await collection.drop().catch(() => {
       // 컬렉션이 없을 수도 있음
     });

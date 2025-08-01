@@ -12,6 +12,7 @@ import { getAllTags } from '../api/tags';
 import { processPostData, processCommentsList } from '../utils/dataUtils';
 import { createTagDisplayData } from '../utils/tagUtils';
 import { usePermission } from '../hooks/usePermission';
+import { useAuth } from '../hooks/useAuth';
 import { useErrorHandler } from '../utils/errorHandler';
 import '../styles/BoardPostView.css';
 
@@ -30,6 +31,7 @@ function BoardPostView() {
   const [tagList, setTagList] = useState(null);
 
   const { canModify: checkCanModify } = usePermission();
+  const { user } = useAuth();
   const { handleError } = useErrorHandler();
 
   // 게시글과 댓글을 함께 불러오는 함수 업데이트
@@ -105,7 +107,7 @@ function BoardPostView() {
   const handleDelete = async () => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
       try {
-        const userId = localStorage.getItem('userId');
+        const userId = user?.id || localStorage.getItem('userId');
         await deleteBoard(postId, userId);
         navigate('/boards');
       } catch (error) {
@@ -130,13 +132,12 @@ function BoardPostView() {
       return;
     }
 
-    const authToken = localStorage.getItem('authToken');
-    if (!authToken) {
+    if (!user) {
       alert('로그인 후 댓글을 작성할 수 있습니다.');
       return;
     }
 
-    const userId = localStorage.getItem('userId');
+    const userId = user?.id || localStorage.getItem('userId');
 
     try {
       setLoading(true);
@@ -223,7 +224,7 @@ function BoardPostView() {
 
     try {
       setLoading(true);
-      const userId = localStorage.getItem('userId');
+      const userId = user?.id || localStorage.getItem('userId');
 
       // API 문서에 맞게 요청 데이터 구성
       const response = await updateComment(postId, commentId, {
@@ -282,7 +283,7 @@ function BoardPostView() {
 
     try {
       setLoading(true);
-      const userId = localStorage.getItem('userId');
+      const userId = user?.id || localStorage.getItem('userId');
 
       // API 문서에 맞게 요청
       await deleteComment(postId, commentId, userId);
@@ -474,7 +475,7 @@ function BoardPostView() {
           <p className='no-comments'>댓글이 없습니다.</p>
         )}
 
-        {localStorage.getItem('authToken') ? (
+        {user ? (
           <form className='comment-form' onSubmit={handleCommentSubmit}>
             <textarea
               placeholder='댓글 작성...'

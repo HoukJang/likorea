@@ -29,17 +29,10 @@ function Login() {
     setMessage('');
 
     try {
-      const data = await login({ id, password });
-
-      const authorityText = getAuthorityText(data.user.authority);
-      setMessage(
-        `로그인 성공! ${authorityText} 권한으로 로그인되었습니다. 메인 페이지로 이동합니다.`
-      );
-
-      // 홈페이지로 리디렉션
-      setTimeout(() => {
-        navigate('/');
-      }, 2000); // 메시지를 더 오래 표시하기 위해 2초로 증가
+      await login({ id, password });
+      
+      // 즉시 홈페이지로 리디렉션 (상태 동기화가 이제 즉시 이루어짐)
+      navigate('/');
     } catch (error) {
       let errorMessage = '로그인에 실패했습니다.';
 

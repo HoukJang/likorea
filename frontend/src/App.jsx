@@ -2,6 +2,7 @@ import React, { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import Loading from './components/common/Loading';
+import { useAuth } from './hooks/useAuth';
 import { initViewportHandlers } from './utils/viewportUtils';
 import './styles/App.css';
 
@@ -20,11 +21,26 @@ const Profile = lazy(() => import('./components/Profile'));
 const DesignPreview = lazy(() => import('./components/DesignPreview'));
 
 function App() {
+  // 전역 인증 상태 관리 - 앱 시작 시 토큰 검증 수행
+  const { loading: authLoading } = useAuth();
+
   useEffect(() => {
     // Viewport 설정 초기화 및 이벤트 핸들러 등록
     const cleanup = initViewportHandlers();
     return cleanup;
   }, []);
+
+  // 인증 상태 로딩 중이면 로딩 화면 표시
+  if (authLoading) {
+    return (
+      <ErrorBoundary>
+        <div className='App'>
+          <Banner />
+          <Loading />
+        </div>
+      </ErrorBoundary>
+    );
+  }
 
   return (
     <ErrorBoundary>

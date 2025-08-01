@@ -101,7 +101,7 @@ const getAuthHeader = (token) => {
 const authenticatedRequest = (request, app, method, url) => {
   const token = generateTestToken();
   
-  let req = request(app)[method](url);
+  const req = request(app)[method](url);
   
   // Authorization 헤더 추가
   req.set('Authorization', getAuthHeader(token));
