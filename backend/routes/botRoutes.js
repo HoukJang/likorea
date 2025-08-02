@@ -34,20 +34,6 @@ const AI_MODELS = {
       provider: 'claude'
     },
     {
-      id: 'claude-3-opus-20240229',
-      name: 'Claude 3 Opus',
-      description: '최고 성능, 복잡한 작업에 적합 (비용 높음)',
-      costPer1kTokens: { input: 0.015, output: 0.075 },
-      provider: 'claude'
-    },
-    {
-      id: 'claude-3-sonnet-20240229',
-      name: 'Claude 3 Sonnet',
-      description: '균형잡힌 성능과 가격',
-      costPer1kTokens: { input: 0.003, output: 0.015 },
-      provider: 'claude'
-    },
-    {
       id: 'claude-3-haiku-20240307',
       name: 'Claude 3 Haiku',
       description: '빠르고 경제적인 모델',
