@@ -80,6 +80,8 @@ const botSchema = new mongoose.Schema({
       'claude-3-haiku-20240307', 
       'claude-3-5-haiku-20241022', 
       'claude-3-5-sonnet-20241022',
+      'claude-sonnet-4-20250514',  // Claude 4 Sonnet (2025년 5월 출시)
+      'claude-opus-4-20250514',    // Claude 4 Opus (2025년 5월 출시)
       // OpenAI models
       'gpt-3.5-turbo',
       'gpt-3.5-turbo-16k',

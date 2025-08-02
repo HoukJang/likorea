@@ -20,9 +20,23 @@ const openaiService = require('../services/openaiService');
 const AI_MODELS = {
   claude: [
     {
+      id: 'claude-opus-4-20250514',
+      name: 'Claude 4 Opus (최강)',
+      description: '최고 성능 코딩 모델, 32K 출력 지원, 메모리 파일 기능',
+      costPer1kTokens: { input: 0.015, output: 0.075 },
+      provider: 'claude'
+    },
+    {
+      id: 'claude-sonnet-4-20250514',
+      name: 'Claude 4 Sonnet (최신)',
+      description: '뛰어난 코딩 능력, 하이브리드 추론, 장시간 작업 가능',
+      costPer1kTokens: { input: 0.003, output: 0.015 },
+      provider: 'claude'
+    },
+    {
       id: 'claude-3-5-sonnet-20241022',
-      name: 'Claude 3.5 Sonnet (최신)',
-      description: '가장 균형잡힌 최신 모델, 우수한 성능과 합리적인 가격',
+      name: 'Claude 3.5 Sonnet',
+      description: '균형잡힌 성능과 합리적인 가격',
       costPer1kTokens: { input: 0.003, output: 0.015 },
       provider: 'claude'
     },

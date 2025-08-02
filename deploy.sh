@@ -186,13 +186,15 @@ npm run build
 # 빌드 파일 권한 설정 (프로덕션 환경에서만)
 if [ "$ENVIRONMENT" = "production" ]; then
     log_info "빌드 파일 권한 설정..."
-    if command -v chown &> /dev/null; then
-        chown -R www-data:www-data build/ || {
-            log_warn "권한 설정 실패: www-data 사용자가 없거나 권한이 부족합니다."
-        }
-    else
-        log_warn "chown 명령어를 찾을 수 없습니다."
-    fi
+    # Nginx가 접근할 수 있도록 디렉토리 권한 설정
+    chmod -R 755 build/ || {
+        log_warn "빌드 디렉토리 권한 설정 실패"
+    }
+    # 상위 디렉토리들도 접근 가능하도록 설정
+    chmod 755 . || {
+        log_warn "현재 디렉토리 권한 설정 실패"
+    }
+    log_info "빌드 파일 권한 설정 완료"
 fi
 cd ..
 

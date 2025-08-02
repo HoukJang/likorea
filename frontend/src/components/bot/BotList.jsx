@@ -144,11 +144,18 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
 
   const getModelName = (modelId) => {
     const modelNames = {
-      'claude-3-haiku-20240307': 'Haiku',
-      'claude-3-sonnet-20240229': 'Sonnet',
-      'claude-3-opus-20240229': 'Opus',
+      'claude-3-haiku-20240307': 'Haiku 3',
       'claude-3-5-haiku-20241022': 'Haiku 3.5',
-      'claude-3-5-sonnet-20241022': 'Sonnet 3.5'
+      'claude-3-5-sonnet-20241022': 'Sonnet 3.5',
+      'claude-sonnet-4-20250514': 'Sonnet 4',
+      'claude-opus-4-20250514': 'Opus 4',
+      'gpt-3.5-turbo': 'GPT-3.5',
+      'gpt-3.5-turbo-16k': 'GPT-3.5 16K',
+      'gpt-4': 'GPT-4',
+      'gpt-4-32k': 'GPT-4 32K',
+      'gpt-4-turbo': 'GPT-4 Turbo',
+      'gpt-4o': 'GPT-4o',
+      'gpt-4o-mini': 'GPT-4o Mini'
     };
     return modelNames[modelId] || modelId;
   };
