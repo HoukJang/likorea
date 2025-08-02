@@ -99,15 +99,31 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
   const handleCreatePost = async () => {
     if (!postDialog.bot || !task.trim()) return;
 
+    console.log('🚀 게시글 생성 시작');
+    console.log('봇 이름:', postDialog.bot.name);
+    console.log('봇 모델:', postDialog.bot.aiModel);
+    console.log('작업 주제:', task);
+    console.log('추가 지시사항:', additionalPrompt || '없음');
+
     try {
       setLoading(true);
-      await createBotPost(postDialog.bot._id, task, additionalPrompt);
+      const response = await createBotPost(postDialog.bot._id, task, additionalPrompt);
+      
+      console.log('📦 서버 응답:', response);
+      
+      // 프롬프트 정보가 있으면 표시
+      if (response.prompts) {
+        console.log('\n🎯 실제 사용된 프롬프트 확인 완료!');
+        console.log('백엔드 콘솔에서도 프롬프트를 확인할 수 있습니다.');
+      }
+      
       setPostDialog({ open: false, bot: null });
       onUpdate();
-      alert('게시글이 생성되었습니다. 승인 대기 탭에서 확인하세요.');
+      alert(`게시글이 생성되었습니다. 승인 대기 탭에서 확인하세요.\n예상 비용: $${(response.estimatedCost || 0).toFixed(4)}`);
     } catch (err) {
-      console.error('게시글 생성 실패:', err);
-      setError('게시글 생성에 실패했습니다.');
+      console.error('❌ 게시글 생성 실패:', err);
+      console.error('에러 상세:', err.response?.data);
+      setError(err.response?.data?.error || '게시글 생성에 실패했습니다.');
     } finally {
       setLoading(false);
     }

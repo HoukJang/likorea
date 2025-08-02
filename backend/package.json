@@ -24,6 +24,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^8.16.5",
     "node-cache": "^5.1.2",
+    "openai": "^4.52.7",
     "@anthropic-ai/sdk": "^0.27.3",
     "sanitize-html": "^2.17.0",
     "snappy": "^7.3.0",

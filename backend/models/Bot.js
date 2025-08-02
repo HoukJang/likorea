@@ -75,11 +75,52 @@ const botSchema = new mongoose.Schema({
   },
   aiModel: {
     type: String,
-    enum: ['claude-3-haiku-20240307', 'claude-3-sonnet-20240229', 'claude-3-opus-20240229', 'claude-3-5-haiku-20241022', 'claude-3-5-sonnet-20241022'],
+    enum: [
+      // Claude models
+      'claude-3-haiku-20240307', 
+      'claude-3-sonnet-20240229', 
+      'claude-3-opus-20240229', 
+      'claude-3-5-haiku-20241022', 
+      'claude-3-5-sonnet-20241022',
+      // OpenAI models
+      'gpt-3.5-turbo',
+      'gpt-3.5-turbo-16k',
+      'gpt-4',
+      'gpt-4-32k',
+      'gpt-4-turbo',
+      'gpt-4o',
+      'gpt-4o-mini'
+    ],
     default: 'claude-3-haiku-20240307'
+  },
+  aiProvider: {
+    type: String,
+    enum: ['claude', 'openai'],
+    default: 'claude',
+    // Provider is determined automatically based on aiModel
+    set: function(val) {
+      // Auto-detect provider based on model
+      if (this.aiModel) {
+        if (this.aiModel.startsWith('claude')) return 'claude';
+        if (this.aiModel.startsWith('gpt')) return 'openai';
+      }
+      return val;
+    }
   }
 }, {
   timestamps: true
+});
+
+// Auto-set aiProvider based on aiModel
+botSchema.pre('save', function(next) {
+  if (this.aiModel) {
+    if (this.aiModel.startsWith('claude')) {
+      this.aiProvider = 'claude';
+    } else if (this.aiModel.startsWith('gpt')) {
+      this.aiProvider = 'openai';
+    }
+  }
+  next();
 });
 
 module.exports = mongoose.model('Bot', botSchema);

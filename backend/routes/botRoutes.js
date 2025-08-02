@@ -13,45 +13,110 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-// Claude 모델 정보
-const CLAUDE_MODELS = [
-  {
-    id: 'claude-3-5-sonnet-20241022',
-    name: 'Claude 3.5 Sonnet (최신)',
-    description: '가장 균형잡힌 최신 모델, 우수한 성능과 합리적인 가격',
-    costPer1kTokens: { input: 0.003, output: 0.015 }
-  },
-  {
-    id: 'claude-3-5-haiku-20241022',
-    name: 'Claude 3.5 Haiku (최신)',
-    description: '가장 빠르고 경제적인 최신 모델',
-    costPer1kTokens: { input: 0.0008, output: 0.004 }
-  },
-  {
-    id: 'claude-3-opus-20240229',
-    name: 'Claude 3 Opus',
-    description: '최고 성능, 복잡한 작업에 적합 (비용 높음)',
-    costPer1kTokens: { input: 0.015, output: 0.075 }
-  },
-  {
-    id: 'claude-3-sonnet-20240229',
-    name: 'Claude 3 Sonnet',
-    description: '균형잡힌 성능과 가격',
-    costPer1kTokens: { input: 0.003, output: 0.015 }
-  },
-  {
-    id: 'claude-3-haiku-20240307',
-    name: 'Claude 3 Haiku',
-    description: '빠르고 경제적인 모델',
-    costPer1kTokens: { input: 0.00025, output: 0.00125 }
-  }
-];
+// OpenAI 서비스 import
+const openaiService = require('../services/openaiService');
 
-// 사용 가능한 Claude 모델 목록 조회 (관리자만)
+// AI 모델 정보
+const AI_MODELS = {
+  claude: [
+    {
+      id: 'claude-3-5-sonnet-20241022',
+      name: 'Claude 3.5 Sonnet (최신)',
+      description: '가장 균형잡힌 최신 모델, 우수한 성능과 합리적인 가격',
+      costPer1kTokens: { input: 0.003, output: 0.015 },
+      provider: 'claude'
+    },
+    {
+      id: 'claude-3-5-haiku-20241022',
+      name: 'Claude 3.5 Haiku (최신)',
+      description: '가장 빠르고 경제적인 최신 모델',
+      costPer1kTokens: { input: 0.0008, output: 0.004 },
+      provider: 'claude'
+    },
+    {
+      id: 'claude-3-opus-20240229',
+      name: 'Claude 3 Opus',
+      description: '최고 성능, 복잡한 작업에 적합 (비용 높음)',
+      costPer1kTokens: { input: 0.015, output: 0.075 },
+      provider: 'claude'
+    },
+    {
+      id: 'claude-3-sonnet-20240229',
+      name: 'Claude 3 Sonnet',
+      description: '균형잡힌 성능과 가격',
+      costPer1kTokens: { input: 0.003, output: 0.015 },
+      provider: 'claude'
+    },
+    {
+      id: 'claude-3-haiku-20240307',
+      name: 'Claude 3 Haiku',
+      description: '빠르고 경제적인 모델',
+      costPer1kTokens: { input: 0.00025, output: 0.00125 },
+      provider: 'claude'
+    }
+  ],
+  openai: [
+    {
+      id: 'gpt-4o',
+      name: 'GPT-4o (Omni)',
+      description: '가장 진보된 멀티모달 모델, GPT-4 Turbo보다 2배 빠르고 50% 저렴',
+      costPer1kTokens: { input: 0.005, output: 0.015 },
+      provider: 'openai'
+    },
+    {
+      id: 'gpt-4o-mini',
+      name: 'GPT-4o Mini',
+      description: '가성비 좋은 소형 모델, 가벼운 작업에 적합',
+      costPer1kTokens: { input: 0.00015, output: 0.0006 },
+      provider: 'openai'
+    },
+    {
+      id: 'gpt-4-turbo',
+      name: 'GPT-4 Turbo',
+      description: 'GPT-4보다 3배 저렴, 128K 컨텍스트 지원',
+      costPer1kTokens: { input: 0.01, output: 0.03 },
+      provider: 'openai'
+    },
+    {
+      id: 'gpt-4',
+      name: 'GPT-4',
+      description: '최고 성능, 복잡한 추론 작업에 적합',
+      costPer1kTokens: { input: 0.03, output: 0.06 },
+      provider: 'openai'
+    },
+    {
+      id: 'gpt-4-32k',
+      name: 'GPT-4 32K',
+      description: '대용량 컨텍스트 처리 가능',
+      costPer1kTokens: { input: 0.06, output: 0.12 },
+      provider: 'openai'
+    },
+    {
+      id: 'gpt-3.5-turbo',
+      name: 'GPT-3.5 Turbo',
+      description: '빠르고 경제적인 모델',
+      costPer1kTokens: { input: 0.0005, output: 0.0015 },
+      provider: 'openai'
+    },
+    {
+      id: 'gpt-3.5-turbo-16k',
+      name: 'GPT-3.5 Turbo 16K',
+      description: '더 긴 컨텍스트 지원',
+      costPer1kTokens: { input: 0.001, output: 0.002 },
+      provider: 'openai'
+    }
+  ]
+};
+
+// 모든 모델을 평면화
+const ALL_MODELS = [...AI_MODELS.claude, ...AI_MODELS.openai];
+
+// 사용 가능한 AI 모델 목록 조회 (관리자만)
 router.get('/models', authenticateToken, requireAdmin, async (req, res) => {
   try {
     res.json({
-      models: CLAUDE_MODELS,
+      models: ALL_MODELS,
+      modelsByProvider: AI_MODELS,
       default: 'claude-3-haiku-20240307'
     });
   } catch (error) {
@@ -135,13 +200,15 @@ router.post('/post', authenticateToken, requireAdmin, async (req, res) => {
       });
     }
 
-    // Claude를 사용하여 게시글 생성
+    // AI를 사용하여 게시글 생성
     let generatedTitle;
     let generatedContent;
+    let usage = {};
+    let systemPrompt = '';
+    let combinedUserPrompt = '';
 
     try {
       // 프롬프트 구성: 봇 설명 + 기본 프롬프트 + 페르소나 정보
-      let systemPrompt = '';
       
       // 1. 봇 설명 추가
       if (bot.description) {
@@ -189,35 +256,69 @@ router.post('/post', authenticateToken, requireAdmin, async (req, res) => {
 
       // 추가 프롬프트 결합
       const additionalPrompt = req.body.additionalPrompt || '';
-      const combinedUserPrompt = additionalPrompt ? 
+      combinedUserPrompt = additionalPrompt ? 
         `${userPrompt}\n\n추가 지시사항: ${additionalPrompt}` : 
         userPrompt;
       
-      const message = await anthropic.messages.create({
-        model: bot.aiModel || "claude-3-haiku-20240307",
-        max_tokens: 800,
-        temperature: 0.8,
-        system: systemPrompt,
-        messages: [
-          { role: "user", content: combinedUserPrompt }
-        ],
-      });
-
-      const response = message.content[0].text;
+      // 개발 환경에서 프롬프트 로그
+      if (process.env.NODE_ENV === 'development') {
+        console.log('\n=== AI 프롬프트 정보 ===');
+        console.log('봇 이름:', bot.name);
+        console.log('AI 모델:', bot.aiModel);
+        console.log('\n[System Prompt]');
+        console.log(systemPrompt);
+        console.log('\n[User Prompt]');
+        console.log(combinedUserPrompt);
+        console.log('========================\n');
+      }
       
-      // 응답에서 제목과 내용 파싱
-      const titleMatch = response.match(/제목:\s*(.+)/);
-      const contentMatch = response.match(/내용:\s*([\s\S]+)/);
+      // AI 제공자에 따라 다른 API 사용
+      let response;
       
-      generatedTitle = titleMatch ? titleMatch[1].trim() : task.substring(0, 50);
-      generatedContent = contentMatch ? contentMatch[1].trim() : response;
+      if (bot.aiModel.startsWith('gpt')) {
+        // OpenAI 사용
+        const result = await openaiService.generatePost(bot, systemPrompt, combinedUserPrompt);
+        generatedTitle = result.title;
+        generatedContent = result.content;
+        usage = result.usage;
+      } else {
+        // Claude 사용
+        const message = await anthropic.messages.create({
+          model: bot.aiModel || "claude-3-haiku-20240307",
+          max_tokens: 800,
+          temperature: 0.8,
+          system: systemPrompt,
+          messages: [
+            { role: "user", content: combinedUserPrompt }
+          ],
+        });
 
-      // HTML 형식으로 변환
-      generatedContent = generatedContent
-        .split('\n')
-        .filter(line => line.trim())
-        .map(line => `<p>${line}</p>`)
-        .join('\n');
+        response = message.content[0].text;
+        
+        // 응답에서 제목과 내용 파싱
+        const titleMatch = response.match(/제목:\s*(.+)/);
+        const contentMatch = response.match(/내용:\s*([\s\S]+)/);
+        
+        generatedTitle = titleMatch ? titleMatch[1].trim() : task.substring(0, 50);
+        generatedContent = contentMatch ? contentMatch[1].trim() : response;
+        
+        // Claude 사용량 정보
+        usage = {
+          inputTokens: message.usage.input_tokens,
+          outputTokens: message.usage.output_tokens,
+          totalTokens: message.usage.input_tokens + message.usage.output_tokens,
+          model: bot.aiModel
+        };
+      }
+
+      // HTML 형식으로 변환 (OpenAI는 이미 HTML로 반환하므로 Claude만 변환)
+      if (!bot.aiModel.startsWith('gpt')) {
+        generatedContent = generatedContent
+          .split('\n')
+          .filter(line => line.trim())
+          .map(line => `<p>${line}</p>`)
+          .join('\n');
+      }
 
       // 봇 서명 생성
       const botInfo = [];
@@ -228,25 +329,27 @@ router.post('/post', authenticateToken, requireAdmin, async (req, res) => {
       // 봇 서명 추가
       generatedContent += `\n<p><br></p>\n<p><em>- ${signature}</em></p>`;
 
-    } catch (claudeError) {
-      console.error('Claude API 오류:', {
-        error: claudeError.message,
-        status: claudeError.status,
-        type: claudeError.error?.type,
-        details: claudeError.error?.message
+    } catch (aiError) {
+      const provider = bot.aiModel.startsWith('gpt') ? 'OpenAI' : 'Claude';
+      console.error(`${provider} API 오류:`, {
+        error: aiError.message,
+        status: aiError.status || aiError.response?.status,
+        type: aiError.error?.type,
+        details: aiError.error?.message
       });
       
-      // Claude API 오류 유형별 처리
-      if (claudeError.status === 401) {
-        throw new Error('Claude API 키가 유효하지 않습니다.');
-      } else if (claudeError.status === 429) {
+      // API 오류 유형별 처리
+      const errorStatus = aiError.status || aiError.response?.status;
+      if (errorStatus === 401) {
+        throw new Error(`${provider} API 키가 유효하지 않습니다.`);
+      } else if (errorStatus === 429) {
         throw new Error('API 사용량 한도를 초과했습니다. 잠시 후 다시 시도해주세요.');
-      } else if (claudeError.status === 500) {
-        throw new Error('Claude 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      } else if (errorStatus === 500 || errorStatus === 503) {
+        throw new Error(`${provider} 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.`);
       }
       
       // 기타 오류 시 기본 fallback
-      console.log('Claude API 실패 - 기본 게시글 생성 모드로 전환');
+      console.log(`${provider} API 실패 - 기본 게시글 생성 모드로 전환`);
       generatedTitle = task.substring(0, 40) + (task.length > 40 ? '...' : '');
       
       // 봇 정보를 활용한 기본 콘텐츠 생성
@@ -279,7 +382,24 @@ router.post('/post', authenticateToken, requireAdmin, async (req, res) => {
     bot.stats.lastPostDate = new Date();
     await bot.save();
 
-    res.json({
+    // 비용 계산
+    let estimatedCost = 0;
+    if (usage.model) {
+      if (bot.aiModel.startsWith('gpt')) {
+        estimatedCost = openaiService.calculateCost(usage);
+      } else {
+        // Claude 비용 계산
+        const modelInfo = ALL_MODELS.find(m => m.id === bot.aiModel);
+        if (modelInfo) {
+          const inputCost = (usage.inputTokens / 1000) * modelInfo.costPer1kTokens.input;
+          const outputCost = (usage.outputTokens / 1000) * modelInfo.costPer1kTokens.output;
+          estimatedCost = inputCost + outputCost;
+        }
+      }
+    }
+
+    // 응답 구성
+    const responseData = {
       success: true,
       message: '봇이 게시글을 작성했습니다 (승인 대기)',
       bot: bot.name,
@@ -287,8 +407,22 @@ router.post('/post', authenticateToken, requireAdmin, async (req, res) => {
         _id: post._id,
         title: post.title,
         postNumber: post.postNumber
-      }
-    });
+      },
+      usage: usage,
+      estimatedCost: estimatedCost
+    };
+    
+    // 개발 환경에서는 프롬프트 정보도 포함
+    if (process.env.NODE_ENV === 'development') {
+      responseData.prompts = {
+        systemPrompt: systemPrompt,
+        userPrompt: combinedUserPrompt,
+        model: bot.aiModel,
+        provider: bot.aiModel.startsWith('gpt') ? 'OpenAI' : 'Claude'
+      };
+    }
+    
+    res.json(responseData);
   } catch (error) {
     console.error('Error executing bot task:', error);
     res.status(500).json({ 
@@ -490,7 +624,7 @@ router.patch('/:botId/settings', authenticateToken, requireAdmin, async (req, re
     const { aiModel, settings } = req.body;
     
     const updateData = {};
-    if (aiModel && CLAUDE_MODELS.find(m => m.id === aiModel)) {
+    if (aiModel && ALL_MODELS.find(m => m.id === aiModel)) {
       updateData.aiModel = aiModel;
     }
     if (settings) {
