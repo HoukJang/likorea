@@ -55,7 +55,7 @@ export default function BotForm() {
 내용: [게시글 내용]`,
     userPrompt: '',
     aiModel: 'claude-3-haiku-20240307',
-    type: 'news',  // 뉴스봇 고정
+    type: 'news',  // 기본값: 뉴스봇
     status: 'inactive',
     apiSettings: {
       maxTokens: 2000,  // 뉴스봇은 더 많은 토큰 필요
@@ -148,10 +148,47 @@ export default function BotForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // 봇 타입 변경시 적절한 systemPrompt 설정
+    if (name === 'type') {
+      let newSystemPrompt = '';
+      
+      if (value === 'news') {
+        newSystemPrompt = `당신은 롱아일랜드 한인 커뮤니티를 위한 뉴스 요약 전문가입니다.
+실제 뉴스를 바탕으로 정확하고 신뢰할 수 있는 정보만 전달합니다.
+
+응답 형식:
+제목: [게시글 제목]
+내용: [게시글 내용]`;
+      } else if (value === 'restaurant') {
+        newSystemPrompt = `당신은 24세 스토니브룩 대학생이며, 열정적인 맛집 탐험가입니다.
+롱아일랜드 지역의 숨은 맛집을 찾아다니며 리뷰를 작성합니다.
+친근하고 재미있는 말투로 글을 쓰며, 같은 또래의 대학생이나 젊은 직장인들이 공감할 수 있는 내용을 작성합니다.
+음식의 맛, 가격, 분위기, 서비스, 주차 등 실용적인 정보를 포함합니다.
+
+응답 형식:
+제목: [맛집 발견! 같은 흥미로운 제목]
+내용: [리뷰 내용]`;
+      } else if (value === 'general') {
+        newSystemPrompt = `당신은 롱아일랜드 한인 커뮤니티의 친근한 이웃입니다.
+커뮤니티에 도움이 되는 정보와 이야기를 나눕니다.
+
+응답 형식:
+제목: [게시글 제목]
+내용: [게시글 내용]`;
+      }
+      
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        systemPrompt: newSystemPrompt
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleApiSettingChange = (setting, value) => {
@@ -274,6 +311,26 @@ export default function BotForm() {
             disabled={loading || (isEdit && success)}
           />
 
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>봇 유형</InputLabel>
+            <Select
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              label="봇 유형"
+              disabled={loading || (isEdit && success)}
+            >
+              <MenuItem value="news">뉴스봇 - 실시간 뉴스 크롤링 및 요약</MenuItem>
+              <MenuItem value="restaurant">맛집봇 - 레스토랑 정보 수집 및 리뷰</MenuItem>
+              <MenuItem value="general">일반봇 - 다양한 주제 글 작성</MenuItem>
+            </Select>
+            <FormHelperText>
+              {formData.type === 'news' && 'Google News RSS에서 실제 뉴스를 크롤링하여 요약합니다'}
+              {formData.type === 'restaurant' && '레스토랑 정보를 수집하고 리뷰를 작성합니다'}
+              {formData.type === 'general' && '지정된 주제로 자유롭게 글을 작성합니다'}
+            </FormHelperText>
+          </FormControl>
+
           <Divider sx={{ my: 3 }} />
           <Typography variant="h6" gutterBottom>
             프롬프트 설정
@@ -329,22 +386,6 @@ export default function BotForm() {
               {models.find(m => m.id === formData.aiModel)?.description}
             </FormHelperText>
           </FormControl>
-
-          <FormControl fullWidth>
-            <InputLabel>봇 유형</InputLabel>
-            <Select
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              disabled={true}  // 뉴스봇만 사용 가능
-            >
-              <MenuItem value="news">뉴스 봇 (실제 뉴스 크롤링)</MenuItem>
-            </Select>
-          </FormControl>
-          
-          <Typography variant="caption" color="textSecondary" sx={{ mt: 1, mb: 2, display: 'block' }}>
-            * 뉴스봇은 Google News RSS에서 실제 뉴스를 크롤링하여 요약합니다
-          </Typography>
 
           {isEdit && (
             <FormControl fullWidth>

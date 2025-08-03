@@ -193,6 +193,12 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
 
                 <Box sx={{ mb: 2 }}>
                   <Chip
+                    label={bot.type === 'news' ? '뉴스봇' : bot.type === 'restaurant' ? '맛집봇' : '일반봇'}
+                    size="small"
+                    color={bot.type === 'news' ? 'primary' : bot.type === 'restaurant' ? 'secondary' : 'default'}
+                    sx={{ mr: 1 }}
+                  />
+                  <Chip
                     label={getModelName(bot.aiModel)}
                     size="small"
                     variant="outlined"
@@ -323,27 +329,57 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
         <DialogTitle>봇으로 게시글 작성</DialogTitle>
         <DialogContent>
           <Typography variant="body2" color="text.secondary" paragraph>
-            봇: {postDialog.bot?.name}
+            봇: {postDialog.bot?.name} ({postDialog.bot?.type === 'news' ? '뉴스봇' : postDialog.bot?.type === 'restaurant' ? '맛집봇' : '일반봇'})
           </Typography>
           <TextField
             fullWidth
-            label="크롤링할 지역명 (비워두면 Long Island 전체)"
+            label={
+              postDialog.bot?.type === 'restaurant' 
+                ? "레스토랑 정보 (이름, 주소)"
+                : postDialog.bot?.type === 'news'
+                ? "크롤링할 지역명 (비워두면 Long Island 전체)"
+                : "작업 내용"
+            }
             value={task}
             onChange={(e) => setTask(e.target.value)}
-            placeholder="예: Great Neck 또는 Great Neck/Flushing/Manhasset"
+            placeholder={
+              postDialog.bot?.type === 'restaurant'
+                ? "예: Sichuan Garden, 2077 Nesconset Hwy, Stony Brook"
+                : postDialog.bot?.type === 'news'
+                ? "예: Great Neck 또는 Great Neck/Flushing/Manhasset"
+                : "작업 내용을 입력하세요"
+            }
             margin="normal"
-            helperText="여러 지역은 / 로 구분하세요. 입력한 지역의 실제 뉴스를 크롤링하여 요약합니다"
+            helperText={
+              postDialog.bot?.type === 'restaurant'
+                ? "레스토랑 이름과 주소를 쉼표로 구분하여 입력하세요"
+                : postDialog.bot?.type === 'news'
+                ? "여러 지역은 / 로 구분하세요. 입력한 지역의 실제 뉴스를 크롤링하여 요약합니다"
+                : "봇이 수행할 작업을 입력하세요"
+            }
           />
           <TextField
             fullWidth
             label="추가 지시사항 (선택)"
             value={additionalPrompt}
             onChange={(e) => setAdditionalPrompt(e.target.value)}
-            placeholder="예: 한인 커뮤니티와 관련된 뉴스 위주로"
+            placeholder={
+              postDialog.bot?.type === 'restaurant'
+                ? "예: 디저트 메뉴도 포함해서 리뷰해줘"
+                : postDialog.bot?.type === 'news'
+                ? "예: 한인 커뮤니티와 관련된 뉴스 위주로"
+                : "추가 지시사항"
+            }
             margin="normal"
             multiline
             rows={3}
-            helperText="뉴스 선택 및 요약 방식에 대한 추가 지시"
+            helperText={
+              postDialog.bot?.type === 'restaurant'
+                ? "리뷰 작성에 대한 추가 지시사항"
+                : postDialog.bot?.type === 'news'
+                ? "뉴스 선택 및 요약 방식에 대한 추가 지시"
+                : "추가적인 지시사항이 있다면 입력하세요"
+            }
           />
         </DialogContent>
         <DialogActions>
