@@ -12,6 +12,7 @@ import { getAllTags } from '../api/tags';
 import { getPendingPost, approvePost, rejectPost } from '../api/approval';
 import { processPostData, processCommentsList } from '../utils/dataUtils';
 import { createTagDisplayData } from '../utils/tagUtils';
+import { linkifyContent } from '../utils/linkify';
 import { usePermission } from '../hooks/usePermission';
 import { useAuth } from '../hooks/useAuth';
 import { useErrorHandler } from '../utils/errorHandler';
@@ -470,7 +471,7 @@ function BoardPostView() {
       <hr className='post-divider' />
 
       <div className='post-content'>
-        <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        <div dangerouslySetInnerHTML={{ __html: linkifyContent(post.content) }} />
       </div>
 
       <div className='comment-section'>
@@ -523,7 +524,7 @@ function BoardPostView() {
                       </div>
                       <div className='comment-divider-vertical'></div>
                       <div className='comment-main'>
-                        <div className='comment-text'>{comment.content}</div>
+                        <div className='comment-text' dangerouslySetInnerHTML={{ __html: linkifyContent(comment.content) }} />
                         {hasPermission && (
                           <div className='comment-actions'>
                             <button

@@ -23,6 +23,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import PreviewIcon from '@mui/icons-material/Preview';
+import { linkifyContent } from '../../utils/linkify';
 import { 
   approvePost, 
   rejectPost, 
@@ -401,7 +402,7 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
         <DialogContent>
           <Box 
             dangerouslySetInnerHTML={{ 
-              __html: DOMPurify.sanitize(previewDialog.post?.content || '') 
+              __html: linkifyContent(DOMPurify.sanitize(previewDialog.post?.content || '')) 
             }}
             sx={{ 
               '& p': { marginBottom: 1 },
