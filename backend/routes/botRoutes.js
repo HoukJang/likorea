@@ -232,6 +232,12 @@ async function generatePostAsync(bot, task, additionalPrompt, adminUserId) {
                                    process.env.EXTRACT_FULL_ARTICLES === 'true' || 
                                    false; // 기본값: false (성능 고려)
         
+        debug(`📊 전체 기사 추출 설정:`);
+        debug(`  - bot.apiSettings?.extractFullArticles: ${bot.apiSettings?.extractFullArticles}`);
+        debug(`  - env.EXTRACT_FULL_ARTICLES: ${process.env.EXTRACT_FULL_ARTICLES}`);
+        debug(`  - 최종 extractFullArticles: ${extractFullArticles}`);
+        debug(`  - maxFullArticles: ${bot.apiSettings?.maxFullArticles || 7}`);
+        
         const newsData = await newsAggregatorService.aggregateWeeklyNews(targetLocations, {
           extractFullArticles: extractFullArticles,
           maxFullArticles: bot.apiSettings?.maxFullArticles || 7
