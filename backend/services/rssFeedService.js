@@ -26,27 +26,28 @@ class RSSFeedService {
     // 기본 RSS 피드 소스 (지역 무관)
     this.defaultFeedSources = [
       // 직접 접근 가능한 로컬 뉴스 소스
-      {
-        name: 'Newsday - Long Island',
-        url: 'https://www.newsday.com/feed/',
-        language: 'en',
-        priority: 1,
-        directAccess: true
-      },
-      {
-        name: 'Patch - Great Neck',
-        url: 'https://patch.com/new-york/greatneck/rss',
-        language: 'en',
-        priority: 2,
-        directAccess: true
-      },
-      {
-        name: 'Patch - Manhasset',
-        url: 'https://patch.com/new-york/manhasset/rss',
-        language: 'en',
-        priority: 2,
-        directAccess: true
-      },
+      // Note: Some RSS feeds may be temporarily unavailable
+      // {
+      //   name: 'Newsday - Long Island',
+      //   url: 'https://www.newsday.com/feed/',
+      //   language: 'en',
+      //   priority: 1,
+      //   directAccess: true
+      // },
+      // {
+      //   name: 'Patch - Great Neck',
+      //   url: 'https://patch.com/new-york/greatneck/rss',
+      //   language: 'en',
+      //   priority: 2,
+      //   directAccess: true
+      // },
+      // {
+      //   name: 'Patch - Manhasset',
+      //   url: 'https://patch.com/new-york/manhasset/rss',
+      //   language: 'en',
+      //   priority: 2,
+      //   directAccess: true
+      // },
       {
         name: 'Long Island Press',
         url: 'https://longislandpress.com/feed/',
