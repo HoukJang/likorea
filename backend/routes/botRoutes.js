@@ -464,8 +464,8 @@ ${newsPrompt}
             // 패턴 3: 긴 Google News URL을 "[원문 링크]"로 변환
             line = line.replace(/(https?:\/\/news\.google\.com\/[^\s]+)/g, '<a href="$1" target="_blank">[원문 링크]</a>');
             
-            // 패턴 4: 그 외 일반 URL (남은 URL들)
-            line = line.replace(/(https?:\/\/(?!news\.google\.com)[^\s]+)/g, '<a href="$1" target="_blank">[링크]</a>');
+            // 패턴 4: 그 외 모든 URL을 실제 링크로 변환
+            line = line.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
             
             return `<p>${line}</p>`;
           })
