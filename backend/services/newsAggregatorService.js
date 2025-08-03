@@ -1,5 +1,6 @@
 const rssFeedService = require('./rssFeedService');
 const articleExtractorService = require('./articleExtractorService');
+const urlResolverService = require('./urlResolverService');
 const NodeCache = require('node-cache');
 
 // 집계된 뉴스 캐시 (TTL: 1시간)
@@ -173,6 +174,21 @@ class NewsAggregatorService {
       // 상위 뉴스만 선택 (최대 20개)
       let topNews = scoredNews.slice(0, 20);
       
+      // Google News URL 리졸브
+      console.log('🔗 Google News URL 리졸브 시작...');
+      for (const article of topNews) {
+        if (article.link && article.link.includes('news.google.com/rss/articles/')) {
+          try {
+            const resolvedUrl = await urlResolverService.resolveGoogleNewsUrl(article.link);
+            article.originalLink = article.link; // 원본 보관
+            article.link = resolvedUrl;
+          } catch (error) {
+            console.warn(`⚠️ URL 리졸브 실패: ${article.title}`);
+            // 실패시 원본 URL 유지
+          }
+        }
+      }
+      
       // 전체 기사 추출 옵션이 활성화된 경우
       if (options.extractFullArticles) {
         const maxArticles = options.maxFullArticles || 7;
@@ -321,7 +337,8 @@ class NewsAggregatorService {
       prompt += '1. 전체 기사가 제공된 뉴스는 구체적인 내용을 바탕으로 상세히 설명해주세요.\n';
       prompt += '2. 각 뉴스마다 한 문단(7-10줄)으로 충실하게 요약해주세요.\n';
       prompt += '3. 한인 커뮤니티와의 관련성이나 영향을 언급해주세요.\n';
-      prompt += '4. 사실 관계를 정확히 전달하고, 추측은 피해주세요.';
+      prompt += '4. 사실 관계를 정확히 전달하고, 추측은 피해주세요.\n';
+      prompt += '5. URL이나 링크는 절대 포함하지 마세요. 출처명만 언급해주세요.';
       
     } else {
       // 기존 방식 (요약만 있는 경우)
@@ -360,7 +377,7 @@ class NewsAggregatorService {
         prompt += '\n';
       }
       
-      prompt += '\n위 뉴스들의 제목과 요약 내용을 바탕으로, 각 뉴스를 한 문단(5-8줄)씩 상세하게 설명해주세요.';
+      prompt += '\n위 뉴스들의 제목과 요약 내용을 바탕으로, 각 뉴스를 한 문단(5-8줄)씩 상세하게 설명해주세요. URL이나 링크는 절대 포함하지 마세요.';
     }
     
     return prompt;
@@ -393,7 +410,6 @@ class NewsAggregatorService {
 ║ 📅 날짜: ${date}
 ║ 📰 출처: ${article.source}
 ║ ✍️ 작성자: ${article.byline || '미상'}
-║ 🔗 원문: ${article.link}
 ║ 📊 중요도: ${article.relevanceScore || 0}점
 ╠════════════════════════════════════════════════════════════════════
 ║ 【기사 전문】
@@ -423,7 +439,6 @@ ${content.split('\n').map(line => '║ ' + line).join('\n')}
     return `${index}. [${date}] ${article.title}
    - 내용: ${description}
    - 출처: ${article.source}
-   - 링크: ${article.link}
    - 중요도 점수: ${article.relevanceScore || 0}점
 `;
   }
