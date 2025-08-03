@@ -227,7 +227,15 @@ async function generatePostAsync(bot, task, additionalPrompt, adminUserId) {
       // 실제 뉴스 데이터 크롤링
       debug(`🔍 실제 뉴스 데이터 수집 중... (지역: ${targetLocations.join(', ')})`);
       try {
-        const newsData = await newsAggregatorService.aggregateWeeklyNews(targetLocations);
+        // 전체 기사 추출 옵션 결정 (봇 설정 또는 환경 변수)
+        const extractFullArticles = bot.apiSettings?.extractFullArticles || 
+                                   process.env.EXTRACT_FULL_ARTICLES === 'true' || 
+                                   false; // 기본값: false (성능 고려)
+        
+        const newsData = await newsAggregatorService.aggregateWeeklyNews(targetLocations, {
+          extractFullArticles: extractFullArticles,
+          maxFullArticles: bot.apiSettings?.maxFullArticles || 7
+        });
         const newsPrompt = newsAggregatorService.formatForClaudePrompt(newsData);
         
         debug(`✅ 실제 뉴스 ${newsData.selectedArticles}개 수집 완료 (전체 ${newsData.totalArticles}개)`);

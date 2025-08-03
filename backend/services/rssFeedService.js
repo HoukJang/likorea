@@ -25,30 +25,71 @@ class RSSFeedService {
   constructor() {
     // 기본 RSS 피드 소스 (지역 무관)
     this.defaultFeedSources = [
+      // 직접 접근 가능한 로컬 뉴스 소스
+      {
+        name: 'Newsday - Long Island',
+        url: 'https://www.newsday.com/feed/',
+        language: 'en',
+        priority: 1,
+        directAccess: true
+      },
+      {
+        name: 'Patch - Great Neck',
+        url: 'https://patch.com/new-york/greatneck/rss',
+        language: 'en',
+        priority: 2,
+        directAccess: true
+      },
+      {
+        name: 'Patch - Manhasset',
+        url: 'https://patch.com/new-york/manhasset/rss',
+        language: 'en',
+        priority: 2,
+        directAccess: true
+      },
+      {
+        name: 'Long Island Press',
+        url: 'https://longislandpress.com/feed/',
+        language: 'en',
+        priority: 2,
+        directAccess: true
+      },
+      // Google News 피드 (리졸브 필요)
       {
         name: 'Google News - Long Island',
         url: 'https://news.google.com/rss/search?q=Long+Island+New+York&hl=en-US&gl=US&ceid=US:en',
         language: 'en',
-        priority: 1
+        priority: 3,
+        directAccess: false
       },
       {
         name: 'Google News - Nassau County',
         url: 'https://news.google.com/rss/search?q=Nassau+County+New+York&hl=en-US&gl=US&ceid=US:en',
         language: 'en',
-        priority: 3
+        priority: 4,
+        directAccess: false
       },
       // 한국어 뉴스 소스 (한인 커뮤니티 관련)
+      {
+        name: 'Korea Times NY',
+        url: 'https://www.koreatimes.com/rss',
+        language: 'ko',
+        priority: 1,
+        directAccess: true
+      },
       {
         name: 'Google News - 롱아일랜드 한인',
         url: 'https://news.google.com/rss/search?q=' + encodeURIComponent('롱아일랜드 한인') + '&hl=ko&gl=US&ceid=US:ko',
         language: 'ko',
-        priority: 1
+        priority: 3,
+        directAccess: false
       },
       {
         name: 'Google News - 뉴욕 한인',
         url: 'https://news.google.com/rss/search?q=' + encodeURIComponent('뉴욕 한인') + '&hl=ko&gl=US&ceid=US:ko',
         language: 'ko',
-        priority: 2
+        priority: 4,
+        directAccess: false
       }
     ];
     

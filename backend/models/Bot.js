@@ -130,6 +130,19 @@ const botSchema = new mongoose.Schema({
       type: Map,
       of: String,
       default: new Map()
+    },
+    // 전체 기사 추출 설정 (뉴스봇 전용)
+    extractFullArticles: {
+      type: Boolean,
+      default: false,
+      description: '전체 기사 내용 추출 여부 (성능 고려 필요)'
+    },
+    maxFullArticles: {
+      type: Number,
+      default: 7,
+      min: 1,
+      max: 10,
+      description: '전체 기사 추출 최대 개수'
     }
   },
   username: {

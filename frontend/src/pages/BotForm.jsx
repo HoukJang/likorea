@@ -62,7 +62,9 @@ export default function BotForm() {
       temperature: 0.8,
       topP: 0.95,
       topK: 0,
-      enableThinking: false
+      enableThinking: false,
+      extractFullArticles: false,
+      maxFullArticles: 5
     }
   });
 
@@ -131,7 +133,9 @@ export default function BotForm() {
           temperature: bot.apiSettings?.temperature || 0.8,
           topP: bot.apiSettings?.topP || 0.95,
           topK: bot.apiSettings?.topK || 0,
-          enableThinking: bot.apiSettings?.enableThinking || false
+          enableThinking: bot.apiSettings?.enableThinking || false,
+          extractFullArticles: bot.apiSettings?.extractFullArticles || false,
+          maxFullArticles: bot.apiSettings?.maxFullArticles || 5
         }
       });
     } catch (err) {
@@ -554,6 +558,81 @@ export default function BotForm() {
                           응답 시간이 증가할 수 있지만 품질이 향상됩니다.
                         </Typography>
                       </Alert>
+                    )}
+                  </Grid>
+                )}
+
+                {/* 뉴스봇 전체 기사 추출 설정 */}
+                {formData.type === 'news' && (
+                  <Grid item xs={12}>
+                    <Divider sx={{ mb: 2 }} />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={formData.apiSettings.extractFullArticles || false}
+                          onChange={(e) => handleApiSettingChange('extractFullArticles', e.target.checked)}
+                          disabled={loading || (isEdit && success)}
+                          sx={{ 
+                            color: '#3b82f6',
+                            '&.Mui-checked': { color: '#3b82f6' }
+                          }}
+                        />
+                      }
+                      label={
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Typography variant="body2" fontWeight={600}>
+                            전체 기사 내용 추출
+                          </Typography>
+                          <Chip label="성능 고려" size="small" color="warning" sx={{ height: 20 }} />
+                        </Stack>
+                      }
+                    />
+                    {formData.apiSettings.extractFullArticles && (
+                      <>
+                        <Alert 
+                          severity="warning" 
+                          sx={{ 
+                            mt: 2, mb: 2,
+                            backgroundColor: 'rgba(255, 152, 0, 0.05)',
+                            border: '1px solid rgba(255, 152, 0, 0.2)'
+                          }}
+                        >
+                          <Typography variant="body2">
+                            전체 기사 추출을 활성화하면 더 상세한 내용을 제공할 수 있지만,
+                            처리 시간이 길어질 수 있습니다. (기사당 2-5초 추가)
+                          </Typography>
+                        </Alert>
+                        <Stack spacing={1}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Typography variant="body2" fontWeight={600}>
+                              최대 추출 기사 수
+                            </Typography>
+                            <Chip 
+                              label={formData.apiSettings.maxFullArticles || 5} 
+                              size="small" 
+                              color="primary" 
+                              variant="outlined"
+                            />
+                          </Box>
+                          <Slider
+                            value={formData.apiSettings.maxFullArticles || 5}
+                            onChange={(e, value) => handleApiSettingChange('maxFullArticles', value)}
+                            min={1}
+                            max={10}
+                            step={1}
+                            marks={[
+                              { value: 1, label: '1' },
+                              { value: 5, label: '5' },
+                              { value: 10, label: '10' }
+                            ]}
+                            disabled={loading || (isEdit && success)}
+                            sx={{ mt: 1 }}
+                          />
+                          <Typography variant="caption" color="text.secondary">
+                            전체 내용을 추출할 상위 뉴스 개수 (권장: 3-5개)
+                          </Typography>
+                        </Stack>
+                      </>
                     )}
                   </Grid>
                 )}
