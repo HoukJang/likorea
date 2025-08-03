@@ -130,8 +130,17 @@ class NewsAggregatorService {
    * @param {number} options.maxFullArticles - 전체 기사 추출 최대 개수 (기본: 7)
    */
   async aggregateWeeklyNews(locations, options = {}) {
-    // locations를 배열로 변환
-    const locationArray = Array.isArray(locations) ? locations : [locations];
+    // locations를 배열로 변환하고 "/" 구분자 처리
+    let locationArray;
+    if (Array.isArray(locations)) {
+      locationArray = locations;
+    } else if (typeof locations === 'string' && locations.includes('/')) {
+      // "/" 구분자로 분리
+      locationArray = locations.split('/').map(loc => loc.trim()).filter(loc => loc);
+    } else {
+      locationArray = [locations];
+    }
+    
     const validLocations = locationArray.filter(loc => loc && loc.trim()).map(loc => loc.trim());
     
     // location이 없으면 기본값 사용

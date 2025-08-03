@@ -241,7 +241,7 @@ async function generatePostAsync(bot, task, additionalPrompt, adminUserId) {
         debug(`✅ 실제 뉴스 ${newsData.selectedArticles}개 수집 완료 (전체 ${newsData.totalArticles}개)`);
         
         userPrompt = `현재 날짜: ${nyDate} (뉴욕 시간)
-제목: ${month}월 ${weekOfMonth}째주 ${targetLocation} 뉴스
+제목: ${month}월 ${weekOfMonth}째주 ${targetLocations.join('·')} 뉴스
 
 아래 실제 뉴스들을 요약해주세요:
 
@@ -514,7 +514,8 @@ router.post('/post', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { botId, task, additionalPrompt } = req.body;
     
-    if (!botId || !task) {
+    // botId만 필수, task는 빈 문자열 허용 (undefined/null은 불가)
+    if (!botId || task === undefined || task === null) {
       return res.status(400).json({ 
         error: '봇 ID와 작업 내용을 입력해주세요' 
       });
