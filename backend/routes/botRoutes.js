@@ -8,6 +8,7 @@ const Anthropic = require('@anthropic-ai/sdk');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const newsAggregatorService = require('../services/newsAggregatorService');
+const restaurantScraperService = require('../services/restaurantScraperService');
 
 // Claude 클라이언트 초기화
 const anthropic = new Anthropic({
@@ -272,6 +273,106 @@ ${newsPrompt}
 제목: [게시글 제목]
 내용: [게시글 내용]`;
       }
+    } else if (bot.type === 'restaurant' || bot.subType === 'restaurant' || (bot.name && bot.name.includes('맛집'))) {
+      // 맛집봇 전용 처리
+      debug('🍽️ 맛집봇 작업 시작...');
+      
+      // task에서 레스토랑 정보 추출 (예: "Sichuan Garden, 2077 Nesconset Hwy, Stony Brook")
+      // 형식: "레스토랑명, 주소" 또는 "레스토랑명 주소"
+      let restaurantName = '';
+      let restaurantAddress = '';
+      
+      if (task && task.trim()) {
+        const parts = task.split(',').map(p => p.trim());
+        if (parts.length >= 2) {
+          restaurantName = parts[0];
+          restaurantAddress = parts.slice(1).join(', ');
+        } else {
+          // 쉼표가 없는 경우 첫 단어를 레스토랑명으로 간주
+          const words = task.trim().split(' ');
+          if (words.length > 1) {
+            restaurantName = words[0];
+            restaurantAddress = words.slice(1).join(' ');
+          } else {
+            restaurantName = task.trim();
+            restaurantAddress = 'Stony Brook, NY'; // 기본 지역
+          }
+        }
+      }
+      
+      if (!restaurantName) {
+        throw new Error('레스토랑 이름을 입력해주세요');
+      }
+      
+      try {
+        debug(`🔍 레스토랑 정보 수집: ${restaurantName} at ${restaurantAddress}`);
+        
+        // 레스토랑 데이터 수집
+        const restaurantData = await restaurantScraperService.collectRestaurantData(restaurantName, restaurantAddress);
+        
+        // Claude로 분석 및 추천 메뉴 추출
+        const analysisPrompt = restaurantScraperService.formatForClaudeAnalysis(restaurantData);
+        
+        debug('🤖 Claude AI로 레스토랑 분석 중...');
+        const analysisResponse = await anthropic.messages.create({
+          model: bot.aiModel || 'claude-3-5-sonnet-20241022',
+          max_tokens: 1024,
+          system: '당신은 레스토랑 평가 전문가입니다. 제공된 정보를 분석하여 추천 메뉴를 선정해주세요.',
+          messages: [{
+            role: 'user',
+            content: analysisPrompt
+          }]
+        });
+        
+        const analysis = analysisResponse.content[0].text;
+        debug(`✅ 레스토랑 분석 완료`);
+        
+        // 추천 메뉴 이미지 수집 (여기서는 간단히 처리)
+        const recommendedDishes = ['Mapo Tofu', 'Kung Pao Chicken', 'Fish with Chili Oil']; // 실제로는 분석 결과에서 추출
+        const dishImages = [];
+        
+        for (const dish of recommendedDishes) {
+          const imageUrl = await restaurantScraperService.searchDishImage(restaurantName, dish);
+          if (imageUrl) {
+            dishImages.push({ dish, imageUrl });
+          }
+        }
+        
+        // 최종 게시글 작성을 위한 프롬프트
+        userPrompt = `당신은 24세 스토니브룩 대학생입니다. 오늘 "${restaurantName}" 레스토랑을 방문했습니다.
+주소: ${restaurantAddress}
+
+레스토랑 정보:
+${analysis}
+
+이미지 정보:
+${dishImages.map(img => `- ${img.dish}: 맛있어 보이는 요리`).join('\n')}
+
+위 정보를 바탕으로 자연스럽고 친근한 맛집 리뷰 게시글을 작성해주세요.
+
+작성 지침:
+1. 24세 대학생의 관점에서 작성
+2. "오늘 친구들이랑" 또는 "시험 끝나고" 같은 자연스러운 도입
+3. 추천 메뉴 3개를 자연스럽게 소개
+4. 가격대, 분위기, 주차 정보 포함
+5. 이모티콘 적절히 사용 (너무 많이는 X)
+6. 300-500자 정도로 작성
+
+응답 형식:
+제목: [맛집 발견! 같은 흥미로운 제목]
+내용: [리뷰 내용]`;
+        
+      } catch (error) {
+        console.error('레스토랑 정보 수집 실패:', error);
+        userPrompt = `현재 날짜는 ${nyDate}입니다. 
+"${restaurantName}" 레스토랑에 대한 리뷰를 작성해주세요.
+24세 스토니브룩 대학생 관점에서 작성하되, 실제 정보를 확인할 수 없었다고 언급해주세요.
+
+응답 형식:
+제목: [게시글 제목]
+내용: [게시글 내용]`;
+      }
+      
     } else {
       // 일반 봇용 프롬프트
       userPrompt = `현재 날짜는 ${nyDate} (뉴욕 시간)입니다. 다음 주제로 롱아일랜드 한인 커뮤니티에 게시글을 작성해주세요: ${task}

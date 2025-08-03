@@ -29,7 +29,7 @@ const botSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['news'],  // 뉴스봇만 허용
+    enum: ['news', 'restaurant', 'general'],  // 뉴스봇, 맛집봇, 일반봇
     default: 'news'
   },
   subType: {
