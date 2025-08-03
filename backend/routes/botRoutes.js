@@ -455,8 +455,18 @@ ${newsPrompt}
           .filter(line => line.trim())
           .map(line => {
             // URL을 실제 링크로 변환
-            const urlPattern = /\[?(https?:\/\/[^\s\]]+)\]?/g;
-            line = line.replace(urlPattern, '<a href="$1" target="_blank">$1</a>');
+            // 패턴 1: "원문: URL" 형식을 "[원문 링크]"로 변환
+            line = line.replace(/원문:\s*(https?:\/\/[^\s]+)/gi, '<a href="$1" target="_blank">[원문 링크]</a>');
+            
+            // 패턴 2: "링크: URL" 형식을 "[원문 링크]"로 변환
+            line = line.replace(/링크:\s*(https?:\/\/[^\s]+)/gi, '<a href="$1" target="_blank">[원문 링크]</a>');
+            
+            // 패턴 3: 긴 Google News URL을 "[원문 링크]"로 변환
+            line = line.replace(/(https?:\/\/news\.google\.com\/[^\s]+)/g, '<a href="$1" target="_blank">[원문 링크]</a>');
+            
+            // 패턴 4: 그 외 일반 URL (남은 URL들)
+            line = line.replace(/(https?:\/\/(?!news\.google\.com)[^\s]+)/g, '<a href="$1" target="_blank">[링크]</a>');
+            
             return `<p>${line}</p>`;
           })
           .join('\n');
