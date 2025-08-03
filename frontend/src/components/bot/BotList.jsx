@@ -26,6 +26,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
 import { deleteBot, updateBotStatus, createBotPost } from '../../api/bots';
 
@@ -97,7 +98,8 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
   };
 
   const handleCreatePost = async () => {
-    if (!postDialog.bot || !task.trim()) return;
+    if (!postDialog.bot) return;
+    // task는 비어있어도 괜찮음 (Long Island 전체가 기본값)
 
     console.log('🚀 게시글 생성 시작');
     console.log('봇 이름:', postDialog.bot.name);
@@ -111,15 +113,16 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
       
       console.log('📦 서버 응답:', response);
       
-      // 프롬프트 정보가 있으면 표시
-      if (response.prompts) {
-        console.log('\n🎯 실제 사용된 프롬프트 확인 완료!');
-        console.log('백엔드 콘솔에서도 프롬프트를 확인할 수 있습니다.');
-      }
-      
       setPostDialog({ open: false, bot: null });
+      setTask('');
+      setAdditionalPrompt('');
+      
+      // 즉시 목록 업데이트하여 작성중 상태 표시
       onUpdate();
-      alert(`게시글이 생성되었습니다. 승인 대기 탭에서 확인하세요.\n예상 비용: $${(response.estimatedCost || 0).toFixed(4)}`);
+      
+      // 성공 메시지
+      setError(null);
+      alert('봇이 게시글 작성을 시작했습니다. 작성이 완료되면 승인 대기 탭에서 확인할 수 있습니다.');
     } catch (err) {
       console.error('❌ 게시글 생성 실패:', err);
       console.error('에러 상세:', err.response?.data);
@@ -207,6 +210,16 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
                       size="small"
                       color="warning"
                       variant="outlined"
+                      sx={{ mr: 1 }}
+                    />
+                  )}
+                  {bot.taskStatus === 'generating' && (
+                    <Chip
+                      icon={<CircularProgress size={16} />}
+                      label="작성중..."
+                      size="small"
+                      color="primary"
+                      variant="filled"
                     />
                   )}
                 </Box>
@@ -234,15 +247,22 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
                 >
                   {bot.status === 'active' ? <StopIcon /> : <PlayArrowIcon />}
                 </IconButton>
-                <Tooltip title="게시글 작성">
-                  <IconButton
-                    size="small"
-                    onClick={() => handlePostClick(bot)}
-                    aria-label="게시글 작성"
-                    color="primary"
-                  >
-                    <PostAddIcon />
-                  </IconButton>
+                <Tooltip title={bot.taskStatus === 'generating' ? '작성중...' : '게시글 작성'}>
+                  <span>
+                    <IconButton
+                      size="small"
+                      onClick={() => handlePostClick(bot)}
+                      aria-label="게시글 작성"
+                      color="primary"
+                      disabled={bot.taskStatus === 'generating'}
+                    >
+                      {bot.taskStatus === 'generating' ? (
+                        <CircularProgress size={20} />
+                      ) : (
+                        <PostAddIcon />
+                      )}
+                    </IconButton>
+                  </span>
                 </Tooltip>
                 <IconButton
                   size="small"
@@ -307,22 +327,23 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
           </Typography>
           <TextField
             fullWidth
-            label="작성할 주제"
+            label="크롤링할 지역명 (비워두면 Long Island 전체)"
             value={task}
             onChange={(e) => setTask(e.target.value)}
-            placeholder="예: 롱아일랜드 한인 마트 추천"
+            placeholder="예: Great Neck 또는 Great Neck/Flushing/Manhasset"
             margin="normal"
-            required
+            helperText="여러 지역은 / 로 구분하세요. 입력한 지역의 실제 뉴스를 크롤링하여 요약합니다"
           />
           <TextField
             fullWidth
             label="추가 지시사항 (선택)"
             value={additionalPrompt}
             onChange={(e) => setAdditionalPrompt(e.target.value)}
-            placeholder="예: 친근한 톤으로 작성해주세요"
+            placeholder="예: 한인 커뮤니티와 관련된 뉴스 위주로"
             margin="normal"
             multiline
             rows={3}
+            helperText="뉴스 선택 및 요약 방식에 대한 추가 지시"
           />
         </DialogContent>
         <DialogActions>
@@ -332,7 +353,7 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
           <Button
             onClick={handleCreatePost}
             variant="contained"
-            disabled={loading || !task.trim()}
+            disabled={loading}
           >
             작성
           </Button>

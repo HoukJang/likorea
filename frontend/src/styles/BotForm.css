@@ -67,6 +67,17 @@ body .MuiList-root {
   padding: 8px 0;
 }
 
+/* Select 메뉴 스타일 명시적 설정 */
+body .MuiMenu-root .MuiPaper-root {
+  background-color: #ffffff !important;
+  color: #111111 !important;
+}
+
+body .MuiMenu-root .MuiList-root {
+  background-color: #ffffff !important;
+  color: #111111 !important;
+}
+
 /* 페이지 컨테이너 스타일 */
 .bot-form-container {
   font-family: var(--font-family) !important;
@@ -602,4 +613,189 @@ body .MuiList-root {
 .bot-form-container .Mui-error.MuiFormHelperText-root {
   color: var(--accent-red);
   font-weight: 500;
+}
+
+/* Accordion 스타일 */
+.bot-form-container .MuiAccordion-root {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  border-radius: var(--btn-radius);
+  overflow: hidden;
+}
+
+.bot-form-container .MuiAccordion-root:before {
+  display: none;
+}
+
+.bot-form-container .MuiAccordionSummary-root {
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  min-height: 56px;
+  transition: all 0.3s ease;
+}
+
+.bot-form-container .MuiAccordionSummary-root:hover {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+.bot-form-container .MuiAccordionSummary-content {
+  color: #374151;
+  font-weight: 600;
+}
+
+.bot-form-container .MuiAccordionDetails-root {
+  padding: 24px;
+  background: #ffffff;
+}
+
+/* Slider 스타일 - 더 컴팩트하게 */
+.bot-form-container .MuiSlider-root {
+  color: var(--primary-blue);
+  height: 6px;
+  padding: 13px 0;
+}
+
+.bot-form-container .MuiSlider-track {
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+}
+
+.bot-form-container .MuiSlider-rail {
+  height: 3px;
+  background: #e5e7eb;
+}
+
+.bot-form-container .MuiSlider-thumb {
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border: 2px solid var(--primary-blue);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.bot-form-container .MuiSlider-thumb:hover {
+  box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.1);
+}
+
+.bot-form-container .MuiSlider-thumb.Mui-focusVisible {
+  box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.2);
+}
+
+.bot-form-container .MuiSlider-mark {
+  background: #d1d5db;
+  height: 6px;
+  width: 1px;
+  opacity: 0.5;
+}
+
+.bot-form-container .MuiSlider-markLabel {
+  font-size: 0.7rem;
+  color: #6b7280;
+  top: 30px;
+  font-weight: 500;
+}
+
+/* Divider 스타일 */
+.bot-form-container .MuiDivider-root {
+  border-color: #e5e7eb;
+  margin: 24px 0;
+}
+
+/* Checkbox 스타일 */
+.bot-form-container .MuiCheckbox-root {
+  color: #9ca3af;
+  padding: 8px;
+}
+
+.bot-form-container .MuiCheckbox-root.Mui-checked {
+  color: var(--primary-blue);
+}
+
+.bot-form-container .MuiFormControlLabel-root {
+  margin-left: 0;
+  margin-right: 0;
+  color: #374151;
+}
+
+.bot-form-container .MuiFormControlLabel-label {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Grid 레이아웃 최적화 */
+.bot-form-container .MuiGrid-container {
+  margin-top: 0 !important;
+}
+
+.bot-form-container .MuiGrid-item {
+  padding-top: 12px !important;
+}
+
+/* Stack 컴포넌트 스타일 */
+.bot-form-container .MuiStack-root {
+  width: 100%;
+}
+
+/* API 설정 섹션 내 Typography */
+.bot-form-container .MuiAccordionDetails-root .MuiTypography-caption {
+  font-size: 0.7rem;
+  line-height: 1.3;
+  opacity: 0.8;
+}
+
+.bot-form-container .MuiAccordionDetails-root .MuiTypography-body2 {
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* 프리셋 버튼 스타일 */
+.bot-form-container .MuiAccordionDetails-root .MuiButton-outlined {
+  border: 1px solid #d1d5db;
+  color: #4b5563;
+  padding: 4px 12px;
+  min-height: 28px;
+  font-size: 0.75rem;
+  background: #ffffff;
+}
+
+.bot-form-container .MuiAccordionDetails-root .MuiButton-outlined:hover {
+  background: rgba(59, 130, 246, 0.05);
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+}
+
+/* Chip 스타일 개선 */
+.bot-form-container .MuiAccordionDetails-root .MuiChip-root {
+  font-size: 0.7rem;
+  font-weight: 600;
+  height: 22px;
+  padding: 0 8px;
+}
+
+.bot-form-container .MuiAccordionDetails-root .MuiChip-colorPrimary {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary-blue);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.bot-form-container .MuiAccordionDetails-root .MuiChip-colorWarning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+/* 반응형 Grid 간격 조정 */
+@media (max-width: 900px) {
+  .bot-form-container .MuiGrid-item {
+    padding-top: 8px !important;
+  }
+  
+  .bot-form-container .MuiAccordionDetails-root {
+    padding: 16px;
+  }
+  
+  .bot-form-container .MuiSlider-markLabel {
+    font-size: 0.65rem;
+  }
 }

@@ -15,10 +15,27 @@ const botSchema = new mongoose.Schema({
     enum: ['active', 'inactive', 'maintenance'],
     default: 'inactive'
   },
+  // 현재 작업 상태
+  taskStatus: {
+    type: String,
+    enum: ['idle', 'generating', 'completed', 'failed'],
+    default: 'idle'
+  },
+  currentTask: {
+    description: String,
+    startedAt: Date,
+    completedAt: Date,
+    error: String
+  },
   type: {
     type: String,
-    enum: ['poster', 'analyzer', 'moderator'],
-    default: 'poster'
+    enum: ['news'],  // 뉴스봇만 허용
+    default: 'news'
+  },
+  subType: {
+    type: String,
+    enum: ['local', 'korean', 'business', 'event', 'general'],  // 뉴스 카테고리
+    default: 'local'
   },
   lastActivity: {
     type: Date,
@@ -61,12 +78,59 @@ const botSchema = new mongoose.Schema({
     }
   },
   prompt: {
-    base: {
+    system: {
       type: String,
-      default: '당신은 롱아일랜드 한인 커뮤니티의 활발한 회원입니다.'
+      default: `당신은 롱아일랜드 한인 커뮤니티의 활발한 회원입니다.
+
+응답 형식:
+제목: [게시글 제목]
+내용: [게시글 내용]`
     },
-    postingStyle: String,
-    restaurantReviewTemplate: String
+    user: {
+      type: String,
+      default: ''
+    }
+  },
+  // Claude API 파라미터
+  apiSettings: {
+    maxTokens: {
+      type: Number,
+      default: 800,
+      min: 1,
+      max: 200000  // Claude 4 최대 출력 지원
+    },
+    temperature: {
+      type: Number,
+      default: 0.8,
+      min: 0,
+      max: 1
+    },
+    topP: {
+      type: Number,
+      default: 0.95,
+      min: 0,
+      max: 1
+    },
+    topK: {
+      type: Number,
+      default: 0,
+      min: 0
+    },
+    // 확장된 사고 기능 (Claude 4 모델 전용)
+    // 활성화 시 'interleaved-thinking-2025-05-14' 베타 헤더 사용
+    enableThinking: {
+      type: Boolean,
+      default: false
+    },
+    // 베타 기능 헤더 (커스텀 설정)
+    // 주의: 잘못된 헤더 값은 API 오류 발생
+    // 올바른 예시: 'anthropic-beta': 'interleaved-thinking-2025-05-14'
+    // 잘못된 예시: 'anthropic-beta': 'thinking-2025-05-14' (X)
+    betaHeaders: {
+      type: Map,
+      of: String,
+      default: new Map()
+    }
   },
   username: {
     type: String,
@@ -80,47 +144,15 @@ const botSchema = new mongoose.Schema({
       'claude-3-haiku-20240307', 
       'claude-3-5-haiku-20241022', 
       'claude-3-5-sonnet-20241022',
+      'claude-3-7-sonnet',  // 하이브리드 추론 모델
       'claude-sonnet-4-20250514',  // Claude 4 Sonnet (2025년 5월 출시)
-      'claude-opus-4-20250514',    // Claude 4 Opus (2025년 5월 출시)
-      // OpenAI models
-      'gpt-3.5-turbo',
-      'gpt-3.5-turbo-16k',
-      'gpt-4',
-      'gpt-4-32k',
-      'gpt-4-turbo',
-      'gpt-4o',
-      'gpt-4o-mini'
+      'claude-opus-4-20250514'    // Claude 4 Opus (2025년 5월 출시)
     ],
     default: 'claude-3-haiku-20240307'
-  },
-  aiProvider: {
-    type: String,
-    enum: ['claude', 'openai'],
-    default: 'claude',
-    // Provider is determined automatically based on aiModel
-    set: function(val) {
-      // Auto-detect provider based on model
-      if (this.aiModel) {
-        if (this.aiModel.startsWith('claude')) return 'claude';
-        if (this.aiModel.startsWith('gpt')) return 'openai';
-      }
-      return val;
-    }
   }
 }, {
   timestamps: true
 });
 
-// Auto-set aiProvider based on aiModel
-botSchema.pre('save', function(next) {
-  if (this.aiModel) {
-    if (this.aiModel.startsWith('claude')) {
-      this.aiProvider = 'claude';
-    } else if (this.aiModel.startsWith('gpt')) {
-      this.aiProvider = 'openai';
-    }
-  }
-  next();
-});
 
 module.exports = mongoose.model('Bot', botSchema);

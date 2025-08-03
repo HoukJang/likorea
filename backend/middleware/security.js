@@ -5,15 +5,17 @@ const helmet = require('helmet');
  * Rate Limiting 설정
  */
 const createRateLimiters = () => {
-  // 테스트 환경에서는 rate limiting 비활성화
-  if (process.env.DISABLE_RATE_LIMIT === 'true') {
+  // 개발 환경이나 테스트 환경에서는 rate limiting 비활성화
+  if (process.env.NODE_ENV === 'development' || process.env.DISABLE_RATE_LIMIT === 'true') {
     const noopLimiter = (req, res, next) => next();
     return {
       generalLimiter: noopLimiter,
       loginLimiter: noopLimiter,
       signupLimiter: noopLimiter,
       postLimiter: noopLimiter,
-      commentLimiter: noopLimiter
+      commentLimiter: noopLimiter,
+      adminLimiter: noopLimiter,
+      verifyLimiter: noopLimiter
     };
   }
 

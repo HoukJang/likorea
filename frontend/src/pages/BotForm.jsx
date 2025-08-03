@@ -16,8 +16,19 @@ import {
   Card,
   CardContent,
   Chip,
-  FormHelperText
+  FormHelperText,
+  Slider,
+  FormControlLabel,
+  Checkbox,
+  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Grid,
+  Stack
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import TuneIcon from '@mui/icons-material/Tune';
 import { useAuth } from '../hooks/useAuth';
 import { 
   createBot, 
@@ -36,10 +47,23 @@ export default function BotForm() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    basePrompt: '',
+    systemPrompt: `당신은 롱아일랜드 한인 커뮤니티를 위한 뉴스 요약 전문가입니다.
+실제 뉴스를 바탕으로 정확하고 신뢰할 수 있는 정보만 전달합니다.
+
+응답 형식:
+제목: [게시글 제목]
+내용: [게시글 내용]`,
+    userPrompt: '',
     aiModel: 'claude-3-haiku-20240307',
-    type: 'poster',
-    status: 'inactive'
+    type: 'news',  // 뉴스봇 고정
+    status: 'inactive',
+    apiSettings: {
+      maxTokens: 2000,  // 뉴스봇은 더 많은 토큰 필요
+      temperature: 0.8,
+      topP: 0.95,
+      topK: 0,
+      enableThinking: false
+    }
   });
 
   const [models, setModels] = useState([]);
@@ -75,8 +99,11 @@ export default function BotForm() {
 
   const loadModels = async () => {
     try {
+      console.log('모델 목록 로드 시작...');
       const response = await getClaudeModels();
+      console.log('모델 API 응답:', response);
       setModels(response.models || []);
+      console.log('설정된 모델 목록:', response.models || []);
     } catch (err) {
       console.error('모델 목록 로드 실패:', err);
     }
@@ -90,10 +117,22 @@ export default function BotForm() {
       setFormData({
         name: bot.name || '',
         description: bot.description || '',
-        basePrompt: bot.prompt?.base || '',
+        systemPrompt: bot.prompt?.system || `당신은 롱아일랜드 한인 커뮤니티의 활발한 회원입니다.
+
+응답 형식:
+제목: [게시글 제목]
+내용: [게시글 내용]`,
+        userPrompt: bot.prompt?.user || '',
         aiModel: bot.aiModel || 'claude-3-haiku-20240307',
-        type: bot.type || 'poster',
-        status: bot.status || 'inactive'
+        type: bot.type || 'news',
+        status: bot.status || 'inactive',
+        apiSettings: {
+          maxTokens: bot.apiSettings?.maxTokens || 2000,  // 뉴스봇 기본값 증가
+          temperature: bot.apiSettings?.temperature || 0.8,
+          topP: bot.apiSettings?.topP || 0.95,
+          topK: bot.apiSettings?.topK || 0,
+          enableThinking: bot.apiSettings?.enableThinking || false
+        }
       });
     } catch (err) {
       console.error('봇 정보 로드 실패:', err);
@@ -108,6 +147,16 @@ export default function BotForm() {
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  const handleApiSettingChange = (setting, value) => {
+    setFormData(prev => ({
+      ...prev,
+      apiSettings: {
+        ...prev.apiSettings,
+        [setting]: value
+      }
     }));
   };
 
@@ -221,15 +270,33 @@ export default function BotForm() {
             disabled={loading || (isEdit && success)}
           />
 
+          <Divider sx={{ my: 3 }} />
+          <Typography variant="h6" gutterBottom>
+            프롬프트 설정
+          </Typography>
+
           <TextField
             fullWidth
-            label="기본 프롬프트"
-            name="basePrompt"
-            value={formData.basePrompt}
+            label="시스템 프롬프트"
+            name="systemPrompt"
+            value={formData.systemPrompt}
+            onChange={handleChange}
+            multiline
+            rows={6}
+            helperText="봇의 기본 성격과 역할, 응답 형식을 정의합니다. (항상 적용)"
+            disabled={loading || (isEdit && success)}
+            sx={{ mb: 2 }}
+          />
+
+          <TextField
+            fullWidth
+            label="유저 프롬프트 (선택적)"
+            name="userPrompt"
+            value={formData.userPrompt}
             onChange={handleChange}
             multiline
             rows={4}
-            helperText="봇의 기본 성격과 역할을 정의합니다."
+            helperText="추가적인 컨텍스트나 지시사항. 게시글 작성 시 주제와 함께 전달됩니다."
             disabled={loading || (isEdit && success)}
           />
 
@@ -265,13 +332,15 @@ export default function BotForm() {
               name="type"
               value={formData.type}
               onChange={handleChange}
-              disabled={loading || (isEdit && success)}
+              disabled={true}  // 뉴스봇만 사용 가능
             >
-              <MenuItem value="poster">게시글 작성 봇</MenuItem>
-              <MenuItem value="analyzer">분석 봇</MenuItem>
-              <MenuItem value="moderator">모더레이터 봇</MenuItem>
+              <MenuItem value="news">뉴스 봇 (실제 뉴스 크롤링)</MenuItem>
             </Select>
           </FormControl>
+          
+          <Typography variant="caption" color="textSecondary" sx={{ mt: 1, mb: 2, display: 'block' }}>
+            * 뉴스봇은 Google News RSS에서 실제 뉴스를 크롤링하여 요약합니다
+          </Typography>
 
           {isEdit && (
             <FormControl fullWidth>
@@ -288,6 +357,255 @@ export default function BotForm() {
               </Select>
             </FormControl>
           )}
+
+          <Accordion sx={{ mt: 3, mb: 2 }} defaultExpanded={false}>
+            <AccordionSummary 
+              expandIcon={<ExpandMoreIcon />}
+              sx={{ 
+                backgroundColor: 'rgba(59, 130, 246, 0.04)',
+                '&:hover': { backgroundColor: 'rgba(59, 130, 246, 0.08)' }
+              }}
+            >
+              <Stack direction="row" spacing={1} alignItems="center">
+                <TuneIcon sx={{ color: '#3b82f6', fontSize: 20 }} />
+                <Typography fontWeight={600}>고급 API 설정</Typography>
+                <Chip 
+                  label="선택사항" 
+                  size="small" 
+                  sx={{ 
+                    height: 20, 
+                    fontSize: '0.7rem',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    color: '#3b82f6'
+                  }} 
+                />
+              </Stack>
+            </AccordionSummary>
+            <AccordionDetails sx={{ pt: 3 }}>
+              <Grid container spacing={3}>
+                {/* 첫 번째 행: 최대 토큰과 Temperature */}
+                <Grid item xs={12} md={6}>
+                  <Stack spacing={1}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="body2" fontWeight={600}>
+                        최대 토큰
+                      </Typography>
+                      <Chip 
+                        label={formData.apiSettings.maxTokens} 
+                        size="small" 
+                        color="primary" 
+                        variant="outlined"
+                      />
+                    </Box>
+                    <Slider
+                      value={formData.apiSettings.maxTokens}
+                      onChange={(e, value) => handleApiSettingChange('maxTokens', value)}
+                      min={100}
+                      max={8000}
+                      step={100}
+                      marks={[
+                        { value: 800, label: '기본' },
+                        { value: 4000, label: '4K' },
+                        { value: 8000, label: '8K' }
+                      ]}
+                      disabled={loading || (isEdit && success)}
+                      sx={{ mt: 1 }}
+                    />
+                    <Typography variant="caption" color="text.secondary">
+                      응답 길이 제한 (토큰 단위)
+                    </Typography>
+                  </Stack>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <Stack spacing={1}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="body2" fontWeight={600}>
+                        Temperature
+                      </Typography>
+                      <Chip 
+                        label={formData.apiSettings.temperature.toFixed(2)} 
+                        size="small" 
+                        color={formData.apiSettings.temperature > 0.8 ? 'warning' : 'primary'}
+                        variant="outlined"
+                      />
+                    </Box>
+                    <Slider
+                      value={formData.apiSettings.temperature}
+                      onChange={(e, value) => handleApiSettingChange('temperature', value)}
+                      min={0}
+                      max={1}
+                      step={0.05}
+                      marks={[
+                        { value: 0, label: '정확' },
+                        { value: 0.8, label: '기본' },
+                        { value: 1, label: '창의' }
+                      ]}
+                      disabled={loading || (isEdit && success)}
+                      sx={{ mt: 1 }}
+                    />
+                    <Typography variant="caption" color="text.secondary">
+                      낮음: 일관성 | 높음: 창의성
+                    </Typography>
+                  </Stack>
+                </Grid>
+
+                {/* 두 번째 행: Top P와 Top K */}
+                <Grid item xs={12} md={6}>
+                  <Stack spacing={1}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="body2" fontWeight={600}>
+                        Top P (누적 확률)
+                      </Typography>
+                      <Chip 
+                        label={formData.apiSettings.topP.toFixed(2)} 
+                        size="small" 
+                        variant="outlined"
+                      />
+                    </Box>
+                    <Slider
+                      value={formData.apiSettings.topP}
+                      onChange={(e, value) => handleApiSettingChange('topP', value)}
+                      min={0}
+                      max={1}
+                      step={0.05}
+                      marks={[
+                        { value: 0.5, label: '0.5' },
+                        { value: 0.95, label: '기본' }
+                      ]}
+                      disabled={loading || (isEdit && success)}
+                      sx={{ mt: 1 }}
+                    />
+                    <Typography variant="caption" color="text.secondary">
+                      단어 선택 다양성 (기본값 권장)
+                    </Typography>
+                  </Stack>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <Stack spacing={1}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="body2" fontWeight={600}>
+                        Top K (상위 K개)
+                      </Typography>
+                      <Chip 
+                        label={formData.apiSettings.topK === 0 ? '비활성' : formData.apiSettings.topK} 
+                        size="small" 
+                        variant="outlined"
+                        color={formData.apiSettings.topK > 0 ? 'primary' : 'default'}
+                      />
+                    </Box>
+                    <Slider
+                      value={formData.apiSettings.topK}
+                      onChange={(e, value) => handleApiSettingChange('topK', value)}
+                      min={0}
+                      max={100}
+                      step={5}
+                      marks={[
+                        { value: 0, label: 'OFF' },
+                        { value: 50, label: '50' },
+                        { value: 100, label: '100' }
+                      ]}
+                      disabled={loading || (isEdit && success)}
+                      sx={{ mt: 1 }}
+                    />
+                    <Typography variant="caption" color="text.secondary">
+                      상위 K개 토큰만 고려 (0=비활성)
+                    </Typography>
+                  </Stack>
+                </Grid>
+
+                {/* 확장된 사고 기능 - 전체 너비 */}
+                {models.find(m => m.id === formData.aiModel)?.supportThinking && (
+                  <Grid item xs={12}>
+                    <Divider sx={{ mb: 2 }} />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={formData.apiSettings.enableThinking}
+                          onChange={(e) => handleApiSettingChange('enableThinking', e.target.checked)}
+                          disabled={loading || (isEdit && success)}
+                          sx={{ 
+                            color: '#3b82f6',
+                            '&.Mui-checked': { color: '#3b82f6' }
+                          }}
+                        />
+                      }
+                      label={
+                        <Stack direction="row" spacing={1} alignItems="center">
+                          <Typography variant="body2" fontWeight={600}>
+                            확장된 사고 기능 활성화
+                          </Typography>
+                          <Chip label="Beta" size="small" color="warning" sx={{ height: 20 }} />
+                        </Stack>
+                      }
+                    />
+                    {formData.apiSettings.enableThinking && (
+                      <Alert 
+                        severity="info" 
+                        sx={{ 
+                          mt: 2,
+                          backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                          border: '1px solid rgba(59, 130, 246, 0.2)'
+                        }}
+                      >
+                        <Typography variant="body2">
+                          AI가 내부 사고 과정을 거쳐 더 깊이 있는 분석을 수행합니다.
+                          응답 시간이 증가할 수 있지만 품질이 향상됩니다.
+                        </Typography>
+                      </Alert>
+                    )}
+                  </Grid>
+                )}
+
+                {/* 프리셋 버튼 추가 */}
+                <Grid item xs={12}>
+                  <Divider sx={{ mb: 2 }} />
+                  <Stack direction="row" spacing={1} flexWrap="wrap">
+                    <Typography variant="caption" color="text.secondary" sx={{ width: '100%', mb: 1 }}>
+                      빠른 설정:
+                    </Typography>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => {
+                        handleApiSettingChange('temperature', 0.3);
+                        handleApiSettingChange('topP', 0.7);
+                        handleApiSettingChange('topK', 40);
+                      }}
+                      sx={{ textTransform: 'none', fontSize: '0.75rem' }}
+                    >
+                      정확한 답변
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => {
+                        handleApiSettingChange('temperature', 0.8);
+                        handleApiSettingChange('topP', 0.95);
+                        handleApiSettingChange('topK', 0);
+                      }}
+                      sx={{ textTransform: 'none', fontSize: '0.75rem' }}
+                    >
+                      기본 설정
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => {
+                        handleApiSettingChange('temperature', 0.9);
+                        handleApiSettingChange('topP', 0.95);
+                        handleApiSettingChange('topK', 0);
+                      }}
+                      sx={{ textTransform: 'none', fontSize: '0.75rem' }}
+                    >
+                      창의적 글쓰기
+                    </Button>
+                  </Stack>
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
 
           <Box className="form-actions">
             <Button

@@ -12,6 +12,7 @@ import { BACKEND_URL } from '../config';
 import Profile from './Profile';
 import TrafficDashboard from './TrafficDashboard';
 import BotManagement from '../pages/BotManagement';
+import packageJson from '../../package.json';
 import '../styles/Admin.css';
 
 function Admin() {
@@ -593,7 +594,7 @@ function Admin() {
       <footer className='admin-footer'>
         <div className='version-info'>
           <span className='version-label'>Version</span>
-          <span className='version-number'>v1.2.0</span>
+          <span className='version-number'>v{packageJson.version}</span>
         </div>
       </footer>
     </div>

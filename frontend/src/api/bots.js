@@ -20,13 +20,37 @@ export const getBot = async (botId) => {
 
 // 봇 생성
 export const createBot = async (botData) => {
-  const response = await client.post('/api/bots', botData);
+  // 프론트엔드 형식을 백엔드 형식으로 변환
+  const formattedData = {
+    name: botData.name,
+    description: botData.description,
+    type: botData.type,
+    aiModel: botData.aiModel,
+    systemPrompt: botData.systemPrompt,
+    userPrompt: botData.userPrompt,
+    apiSettings: botData.apiSettings,
+    persona: botData.persona
+  };
+  
+  const response = await client.post('/api/bots', formattedData);
   return response;
 };
 
 // 봇 수정
 export const updateBot = async (botId, botData) => {
-  const response = await client.put(`/api/bots/${botId}`, botData);
+  // 프론트엔드 형식을 백엔드 형식으로 변환
+  const formattedData = {
+    name: botData.name,
+    description: botData.description,
+    type: botData.type,
+    status: botData.status,
+    aiModel: botData.aiModel,
+    systemPrompt: botData.systemPrompt,
+    userPrompt: botData.userPrompt,
+    apiSettings: botData.apiSettings
+  };
+  
+  const response = await client.put(`/api/bots/${botId}`, formattedData);
   return response;
 };
 

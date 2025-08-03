@@ -54,6 +54,27 @@ export default function BotManagement({ embedded = false }) {
     loadData();
   }, []);
 
+  // 5초마다 봇 목록 갱신 (작성중 상태 업데이트)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // 작성중인 봇이 있는 경우에만 갱신
+      if (bots.some(bot => bot.taskStatus === 'generating')) {
+        loadBots();
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [bots]);
+
+  const loadBots = async () => {
+    try {
+      const botsResponse = await getBots();
+      setBots(botsResponse?.bots || []);
+    } catch (err) {
+      console.error('봇 목록 갱신 실패:', err);
+    }
+  };
+
   const loadData = async () => {
     try {
       setLoading(true);
