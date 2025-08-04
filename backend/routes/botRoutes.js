@@ -327,14 +327,21 @@ ${newsPrompt}
         const analysis = analysisResponse.content[0].text;
         debug(`✅ 레스토랑 분석 완료`);
         
-        // 추천 메뉴 이미지 수집 (여기서는 간단히 처리)
-        const recommendedDishes = ['Mapo Tofu', 'Kung Pao Chicken', 'Fish with Chili Oil']; // 실제로는 분석 결과에서 추출
-        const dishImages = [];
+        // 분석 결과에서 추천 메뉴 추출
+        const recommendedDishes = restaurantScraperService.extractRecommendedDishes(analysis);
+        debug(`📋 추천 메뉴: ${recommendedDishes.join(', ')}`);
         
+        // 추천 메뉴 이미지 수집
+        const dishImages = [];
         for (const dish of recommendedDishes) {
-          const imageUrl = await restaurantScraperService.searchDishImage(restaurantName, dish);
-          if (imageUrl) {
-            dishImages.push({ dish, imageUrl });
+          const imageData = await restaurantScraperService.searchDishImage(restaurantName, dish);
+          if (imageData && imageData.url && !imageData.url.includes('placeholder')) {
+            dishImages.push({ 
+              dish, 
+              imageUrl: imageData.url,
+              isReference: imageData.isReference // 참고 이미지 여부 저장
+            });
+            debug(`📸 이미지 수집: ${dish} - ${imageData.url} (참고 이미지: ${imageData.isReference ? '예' : '아니오'})`);
           }
         }
         
@@ -346,21 +353,28 @@ ${newsPrompt}
 ${analysis}
 
 이미지 정보:
-${dishImages.map(img => `- ${img.dish}: 맛있어 보이는 요리`).join('\n')}
+${dishImages.map(img => `- ${img.dish}: ${img.isReference ? '참고 이미지 (실제 레스토랑 사진 아님)' : '레스토랑 실제 이미지'}`).join('\n')}
 
 위 정보를 바탕으로 자연스럽고 친근한 맛집 리뷰 게시글을 작성해주세요.
 
 작성 지침:
 1. 24세 대학생의 관점에서 작성
 2. "오늘 친구들이랑" 또는 "시험 끝나고" 같은 자연스러운 도입
-3. 추천 메뉴 3개를 자연스럽게 소개
-4. 가격대, 분위기, 주차 정보 포함
-5. 이모티콘 적절히 사용 (너무 많이는 X)
-6. 300-500자 정도로 작성
+3. 위에 나열된 추천 메뉴들을 모두 자연스럽게 소개하되, 각 메뉴를 언급한 직후에 반드시 정확히 [이미지: ${dishImages.length > 0 ? dishImages[0].dish : 'Dish Name'}] 형식으로 태그를 넣어주세요
+   중요: 반드시 위에 나열된 메뉴명을 그대로 사용하세요!
+   ${dishImages.map(img => `   - ${img.dish} 언급 후 → [이미지: ${img.dish}]`).join('\n')}
+4. 참고 이미지를 사용하는 경우, 이미지 태그 바로 다음에 "(참고 이미지)" 또는 "(이런 스타일)" 같은 설명을 추가
+   예시: "마파두부[이미지: Mapo Tofu](참고 이미지)는 이것보다 더 맛있어 보였어요"
+5. 가격대, 분위기, 주차 정보 포함
+6. 이모티콘 적절히 사용 (너무 많이는 X)
+7. 300-500자 정도로 작성
 
 응답 형식:
 제목: [맛집 발견! 같은 흥미로운 제목]
-내용: [리뷰 내용]`;
+내용: [리뷰 내용과 위에 명시된 형식의 이미지 태그 포함]`;
+        
+        // dishImages를 bot 객체의 임시 속성으로 저장 (나중에 HTML 변환시 사용)
+        bot._dishImages = dishImages;
         
       } catch (error) {
         console.error('레스토랑 정보 수집 실패:', error);
@@ -553,6 +567,67 @@ ${dishImages.map(img => `- ${img.dish}: 맛있어 보이는 요리`).join('\n')}
       .filter(line => line.trim())
       .map(line => `<p>${line}</p>`)
       .join('\n');
+
+    // 맛집봇인 경우 이미지 태그를 실제 이미지 HTML로 변환
+    if (bot.type === 'restaurant' && bot._dishImages && bot._dishImages.length > 0) {
+      console.log('🖼️ 맛집봇 이미지 처리 시작...');
+      console.log(`📋 처리할 이미지: ${bot._dishImages.map(img => img.dish).join(', ')}`);
+      console.log('📄 원본 컨텐츠 샘플:', generatedContent.substring(0, 500));
+      
+      let imageReplacementCount = 0;
+      
+      for (const img of bot._dishImages) {
+        // 이미지 캡션 (참고 이미지 표시 포함)
+        const imageCaption = img.isReference 
+          ? `${img.dish} (참고 이미지)` 
+          : img.dish;
+        
+        const imageHtml = `</p>\n<div style="text-align: center; margin: 20px 0;">\n<img src="${img.imageUrl}" alt="${img.dish}" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />\n<p style="margin-top: 8px; font-size: 14px; color: #666; font-style: italic;">${imageCaption}</p>\n</div>\n<p>`;
+        
+        // 다양한 형식의 이미지 태그 처리 (참고 이미지 텍스트 포함)
+        const patterns = [
+          `[이미지: ${img.dish}](참고 이미지)`,
+          `[이미지: ${img.dish}](이런 스타일)`,
+          `[이미지: ${img.dish}] (참고 이미지)`,
+          `[이미지: ${img.dish}] (이런 스타일)`,
+          `[이미지: ${img.dish}]`,
+          `[이미지:${img.dish}]`,
+          `[이미지 : ${img.dish}]`,
+          `[이미지: ${img.dish} ]`,
+          `[ 이미지: ${img.dish} ]`
+        ];
+        
+        let replaced = false;
+        for (const pattern of patterns) {
+          const regex = new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+          const matches = generatedContent.match(regex);
+          
+          if (matches) {
+            generatedContent = generatedContent.replace(regex, imageHtml);
+            imageReplacementCount += matches.length;
+            console.log(`✅ 이미지 태그 변환 성공: "${pattern}" (${matches.length}개) → ${img.imageUrl} (참고: ${img.isReference ? '예' : '아니오'})`);
+            replaced = true;
+            break; // 한 패턴이 매칭되면 다음 이미지로
+          }
+        }
+        
+        if (!replaced) {
+          console.log(`⚠️ 이미지 태그를 찾을 수 없음: ${img.dish}`);
+          console.log(`   시도한 패턴들:`, patterns);
+        }
+      }
+      
+      console.log(`📊 총 ${imageReplacementCount}개의 이미지 태그 변환 완료`);
+      console.log('📄 변환 후 컨텐츠 샘플:', generatedContent.substring(0, 500));
+    } else {
+      if (bot.type === 'restaurant') {
+        console.log('⚠️ 맛집봇이지만 이미지 데이터가 없음:', {
+          type: bot.type,
+          hasDishImages: !!bot._dishImages,
+          dishImagesLength: bot._dishImages?.length || 0
+        });
+      }
+    }
 
     // 봇 서명 생성
     const botInfo = [];

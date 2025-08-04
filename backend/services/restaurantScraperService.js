@@ -1,6 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const NodeCache = require('node-cache');
+const imageScraperService = require('./imageScraperService');
 
 // 레스토랑 정보 캐시 (TTL: 24시간)
 const restaurantCache = new NodeCache({ stdTTL: 86400 });
@@ -98,8 +99,40 @@ class RestaurantScraperService {
       const searchQuery = encodeURIComponent(`${restaurantName} ${address}`);
       const searchUrl = `https://www.google.com/maps/search/${searchQuery}`;
       
-      // 실제 구현에서는 Puppeteer나 Playwright를 사용해야 함
-      // 여기서는 간단한 구조만 제공
+      // 레스토랑별 다른 Mock 데이터 반환
+      const restaurantKey = restaurantName.toLowerCase();
+      
+      // Briermere Farms는 실제로 파이/베이커리로 유명한 곳
+      if (restaurantKey.includes('briermere') || restaurantKey.includes('farm')) {
+        return {
+          rating: 4.8,
+          reviewCount: 523,
+          priceLevel: '$',
+          reviews: [
+            {
+              text: 'Best pies on Long Island! The peach cream pie is legendary.',
+              rating: 5,
+              author: 'Emily R.'
+            },
+            {
+              text: 'Amazing apple pie and strawberry rhubarb pie. Worth the drive!',
+              rating: 5,
+              author: 'Michael K.'
+            }
+          ],
+          images: [
+            'https://example.com/briermere-pies.jpg',
+            'https://example.com/briermere-store.jpg'
+          ],
+          details: {
+            hours: 'Thu-Mon: 9:00 AM - 5:00 PM',
+            phone: '(631) 722-3931',
+            parking: 'Large free parking lot'
+          }
+        };
+      }
+      
+      // 기본 사천 레스토랑 데이터
       const mockData = {
         rating: 4.2,
         reviewCount: 156,
@@ -141,8 +174,50 @@ class RestaurantScraperService {
     try {
       console.log(`🔍 Yelp 검색: ${restaurantName}`);
       
-      // Yelp 검색 구현
-      // 실제로는 Yelp Fusion API 사용 권장
+      // 레스토랑별 다른 Mock 데이터 반환
+      const restaurantKey = restaurantName.toLowerCase();
+      
+      // Briermere Farms용 Yelp 데이터
+      if (restaurantKey.includes('briermere') || restaurantKey.includes('farm')) {
+        return {
+          rating: 4.9,
+          reviewCount: 342,
+          priceLevel: '$',
+          reviews: [
+            {
+              text: 'The best pies on Long Island! Must visit!',
+              rating: 5,
+              author: 'Rachel K.'
+            }
+          ],
+          menu: [
+            {
+              name: 'Apple Pie',
+              price: '$16.00',
+              description: 'Classic apple pie with cinnamon',
+              popular: true
+            },
+            {
+              name: 'Peach Cream Pie',
+              price: '$18.00',
+              description: 'Fresh peaches with cream filling',
+              popular: true
+            },
+            {
+              name: 'Strawberry Rhubarb Pie',
+              price: '$17.00',
+              description: 'Sweet and tart combination',
+              popular: true
+            }
+          ],
+          images: [
+            'https://example.com/yelp-briermere-1.jpg'
+          ],
+          categories: ['Bakery', 'Pies', 'Farm Stand']
+        };
+      }
+      
+      // 기본 사천 레스토랑 데이터
       const mockData = {
         rating: 4.0,
         reviewCount: 89,
@@ -194,7 +269,31 @@ class RestaurantScraperService {
     try {
       console.log(`🔍 Grubhub 메뉴 검색: ${restaurantName}`);
       
-      // Grubhub 메뉴 크롤링
+      // 레스토랑별 다른 Mock 데이터 반환
+      const restaurantKey = restaurantName.toLowerCase();
+      
+      // Briermere Farms용 Grubhub 데이터 (실제로는 Grubhub에 없을 수 있음)
+      if (restaurantKey.includes('briermere') || restaurantKey.includes('farm')) {
+        return {
+          menu: [
+            {
+              name: 'Blueberry Pie',
+              price: '$16.50',
+              description: 'Fresh blueberries in flaky crust',
+              category: 'Berry Pies'
+            },
+            {
+              name: 'Pumpkin Pie',
+              price: '$15.00',
+              description: 'Seasonal favorite with spices',
+              category: 'Seasonal'
+            }
+          ],
+          popularItems: ['Apple Pie', 'Peach Cream Pie', 'Strawberry Rhubarb Pie']
+        };
+      }
+      
+      // 기본 사천 레스토랑 데이터
       const mockData = {
         menu: [
           {
@@ -224,19 +323,117 @@ class RestaurantScraperService {
    * 메뉴 아이템 이미지 검색
    * @param {string} restaurantName - 레스토랑 이름
    * @param {string} dishName - 요리 이름
+   * @param {string} location - 레스토랑 위치 (선택사항)
+   * @returns {Object} 이미지 정보 객체 { url, isReference }
    */
-  async searchDishImage(restaurantName, dishName) {
+  async searchDishImage(restaurantName, dishName, location = '') {
     try {
-      // Google 이미지 검색 또는 레스토랑 웹사이트에서 이미지 수집
-      const searchQuery = encodeURIComponent(`${restaurantName} ${dishName}`);
-      console.log(`📸 이미지 검색: ${dishName}`);
+      console.log(`📸 이미지 검색: ${restaurantName}의 ${dishName}`);
       
-      // 실제 구현에서는 Google Custom Search API 사용
-      // 또는 Puppeteer로 이미지 크롤링
-      return `https://example.com/dish-image-${dishName.replace(/\s+/g, '-')}.jpg`;
+      // 캐시 확인
+      const cacheKey = `img_${restaurantName}_${dishName}`.replace(/\s+/g, '_');
+      const cached = restaurantCache.get(cacheKey);
+      if (cached) {
+        console.log(`📦 캐시된 이미지 사용: ${dishName}`);
+        return cached;
+      }
+      
+      // 환경 변수로 스크레이핑 활성화 여부 확인
+      const enableScraping = process.env.ENABLE_IMAGE_SCRAPING === 'true';
+      
+      if (enableScraping) {
+        console.log(`🔍 실제 이미지 스크레이핑 시도...`);
+        
+        try {
+          // imageScraperService를 사용한 실제 스크레이핑
+          const scrapedData = await imageScraperService.searchImages(
+            restaurantName, 
+            dishName, 
+            location || 'Long Island NY'
+          );
+          
+          if (scrapedData.images && scrapedData.images.length > 0) {
+            const result = {
+              url: scrapedData.images[0], // 첫 번째 이미지 사용
+              isReference: scrapedData.isReference
+            };
+            
+            // 캐시에 저장 (6시간)
+            restaurantCache.set(cacheKey, result, 21600);
+            
+            console.log(`✅ 스크레이핑 성공: ${dishName} - ${result.isReference ? '참고' : '실제'} 이미지`);
+            return result;
+          }
+        } catch (scrapeError) {
+          console.error(`⚠️ 스크레이핑 실패, 폴백 이미지 사용: ${scrapeError.message}`);
+        }
+      }
+      
+      // 스크레이핑 비활성화 또는 실패 시 기존 하드코딩 이미지 사용
+      console.log(`📌 폴백: 하드코딩된 참고 이미지 사용`);
+      
+      // 레스토랑별 실제 이미지 매핑 (하드코딩 - 폴백용)
+      const restaurantSpecificImages = {
+        'sichuan garden': {},
+        'briermere farms': {
+          'Apple Pie': 'https://example.com/briermere-apple-pie.jpg',
+          'Peach Cream Pie': 'https://example.com/briermere-peach-pie.jpg',
+          'Strawberry Rhubarb Pie': 'https://example.com/briermere-strawberry-pie.jpg'
+        }
+      };
+      
+      // 1. 먼저 레스토랑별 실제 이미지 확인
+      const restaurantKey = restaurantName.toLowerCase();
+      if (restaurantSpecificImages[restaurantKey] && restaurantSpecificImages[restaurantKey][dishName]) {
+        const result = {
+          url: restaurantSpecificImages[restaurantKey][dishName],
+          isReference: false
+        };
+        restaurantCache.set(cacheKey, result, 21600);
+        return result;
+      }
+      
+      // 2. 일반 참고 이미지 사용
+      const genericReferenceImages = {
+        'Mapo Tofu': 'https://thewoksoflife.com/wp-content/uploads/2019/06/mapo-tofu-10.jpg',
+        'Kung Pao Chicken': 'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=800',
+        'Fish with Chili Oil': 'https://redhousespice.com/wp-content/uploads/2021/06/Sichuan-boiled-fish-served.jpg',
+        'Dan Dan Noodles': 'https://thewoksoflife.com/wp-content/uploads/2014/11/dan-dan-noodles-15.jpg',
+        'Twice Cooked Pork': 'https://thewoksoflife.com/wp-content/uploads/2019/04/twice-cooked-pork-9.jpg',
+        'Hot and Sour Soup': 'https://www.recipetineats.com/wp-content/uploads/2019/02/Hot-and-Sour-Soup_7.jpg',
+        'Beef with Broccoli': 'https://www.recipetineats.com/wp-content/uploads/2020/06/Beef-and-Broccoli_8.jpg',
+        'General Tso\'s Chicken': 'https://www.recipetineats.com/wp-content/uploads/2020/10/General-Tsao-Chicken_1.jpg',
+        'Shrimp with Lobster Sauce': 'https://thewoksoflife.com/wp-content/uploads/2022/05/shrimp-with-lobster-sauce-13.jpg',
+        'Sweet and Sour Pork': 'https://thewoksoflife.com/wp-content/uploads/2019/05/sweet-and-sour-pork-9.jpg',
+        'Apple Pie': 'https://images.unsplash.com/photo-1535920527002-b35e96722eb9?w=800',
+        'Peach Cream Pie': 'https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=800',
+        'Strawberry Rhubarb Pie': 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800'
+      };
+      
+      if (genericReferenceImages[dishName]) {
+        console.log(`ℹ️ 일반 참고 이미지 사용 (실제 ${restaurantName} 이미지 아님): ${dishName}`);
+        const result = {
+          url: genericReferenceImages[dishName],
+          isReference: true
+        };
+        restaurantCache.set(cacheKey, result, 21600);
+        return result;
+      }
+      
+      // 3. 플레이스홀더
+      console.log(`⚠️ ${restaurantName}의 ${dishName} 이미지를 찾을 수 없음`);
+      const searchQuery = encodeURIComponent(`${restaurantName} ${dishName}`);
+      return {
+        url: `https://via.placeholder.com/400x300.png?text=${searchQuery}`,
+        isReference: true
+      };
+      
     } catch (error) {
       console.error(`❌ 이미지 검색 실패: ${error.message}`);
-      return null;
+      return {
+        url: null,
+        isReference: true
+      };
     }
   }
 
@@ -318,9 +515,61 @@ class RestaurantScraperService {
       prompt: `이 이미지는 "${dishName}"라는 요리입니다. 이미지를 보고 다음을 설명해주세요:
 1. 요리의 비주얼과 구성
 2. 예상되는 맛과 식감
-3. 이 요리를 좋아할 만한 사람의 특징`,
+3. 이 요리를 좋아할 만한 사람의 특징
+4. 매운 정도나 특별한 조리법`,
       imageUrl: imageUrl
     };
+  }
+  
+  /**
+   * 추천 메뉴 추출 (분석 결과에서)
+   */
+  extractRecommendedDishes(analysisText) {
+    // Claude의 분석에서 추천 메뉴 추출
+    const dishes = [];
+    
+    // 간단한 패턴 매칭으로 메뉴 추출 (파이 메뉴 추가)
+    const menuPatterns = [
+      /Mapo Tofu|마파두부|麻婆豆腐/gi,
+      /Kung Pao Chicken|궁보계정|宫保鸡丁/gi,
+      /Fish with Chili Oil|수자어|水煮鱼/gi,
+      /Dan Dan Noodles|단단면|担担面/gi,
+      /Twice Cooked Pork|회과육|回锅肉/gi,
+      /Apple Pie|애플파이|사과파이/gi,
+      /Peach Cream Pie|피치크림파이|복숭아파이/gi,
+      /Strawberry Rhubarb Pie|딸기루바브파이/gi,
+      /Blueberry Pie|블루베리파이/gi
+    ];
+    
+    const menuNames = [
+      'Mapo Tofu',
+      'Kung Pao Chicken', 
+      'Fish with Chili Oil',
+      'Dan Dan Noodles',
+      'Twice Cooked Pork',
+      'Apple Pie',
+      'Peach Cream Pie',
+      'Strawberry Rhubarb Pie',
+      'Blueberry Pie'
+    ];
+    
+    menuPatterns.forEach((pattern, index) => {
+      if (pattern.test(analysisText)) {
+        dishes.push(menuNames[index]);
+      }
+    });
+    
+    // 최대 3개까지만 반환 (메뉴가 없으면 기본값)
+    if (dishes.length === 0) {
+      // 분석 텍스트에 'pie' 또는 '파이'가 있으면 파이 메뉴 반환
+      if (/pie|파이/i.test(analysisText)) {
+        return ['Apple Pie', 'Peach Cream Pie', 'Strawberry Rhubarb Pie'];
+      }
+      // 그렇지 않으면 중국 음식 반환
+      return ['Mapo Tofu', 'Kung Pao Chicken', 'Fish with Chili Oil'];
+    }
+    
+    return dishes.slice(0, 3);
   }
 }
 
