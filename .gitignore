@@ -354,6 +354,29 @@ scripts/*.log
 scripts/*.tmp
 scripts/temp/
 
+# Test scripts and results
+backend/scripts/test*.js
+backend/scripts/*_result.html
+backend/scripts/*_photos.html
+backend/scripts/*_gallery.html
+backend/scripts/check*.js
+backend/scripts/display*.js
+backend/scripts/find*.js
+backend/scripts/get*.js
+backend/scripts/search*.js
+
+# Unused services
+backend/services/foursquare*.js
+backend/services/hybrid*.js
+
+# Incomplete components
+frontend/src/components/bot/MenuImageSelector.jsx
+
+# Documentation drafts
+docs/FOURSQUARE_API_SETUP.md
+docs/RESTAURANT_BOT_FLOW.md
+docs/RESTAURANT_BOT_INTEGRATION.md
+
 # 긴급공지 파일 (임시 파일로 보임)
 긴급공지*.txt
 
