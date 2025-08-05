@@ -101,3 +101,15 @@ export const createBotPost = async (botId, task, additionalPrompt = '') => {
   
   return response;
 };
+
+// 봇 작업 상태 조회
+export const getBotTaskStatus = async (botId) => {
+  const response = await client.get(`/api/bots/${botId}/task-status`);
+  return response;
+};
+
+// 봇의 최근 게시글 조회 (메뉴 이미지 포함)
+export const getBotLatestPost = async (botId) => {
+  const response = await client.get(`/api/bots/${botId}/latest-post`);
+  return response;
+};
