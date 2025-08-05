@@ -9,6 +9,9 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const newsAggregatorService = require('../services/newsAggregatorService');
 const restaurantScraperService = require('../services/restaurantScraperService');
+const restaurantAnalyzerService = require('../services/restaurantAnalyzerService');
+const menuExtractionService = require('../services/menuExtractionService');
+const menuEnrichmentService = require('../services/menuEnrichmentService');
 
 // Claude 클라이언트 초기화
 const anthropic = new Anthropic({
@@ -193,6 +196,9 @@ async function generatePostAsync(bot, task, additionalPrompt, adminUserId) {
       weekday: 'long'
     });
     
+    // 이미지 데이터를 전체 스코프에서 선언 (맛집봇용)
+    let dishImages = [];
+    
     // 뉴스봇 전용 처리
     let userPrompt;
     const isNewsBot = bot.type === 'news' || 
@@ -277,6 +283,8 @@ ${newsPrompt}
       // 맛집봇 전용 처리
       debug('🍽️ 맛집봇 작업 시작...');
       
+      // dishImages는 이미 상위 스코프에서 선언됨
+      
       // task에서 레스토랑 정보 추출 (예: "Sichuan Garden, 2077 Nesconset Hwy, Stony Brook")
       // 형식: "레스토랑명, 주소" 또는 "레스토랑명 주소"
       let restaurantName = '';
@@ -307,74 +315,145 @@ ${newsPrompt}
       try {
         debug(`🔍 레스토랑 정보 수집: ${restaurantName} at ${restaurantAddress}`);
         
-        // 레스토랑 데이터 수집
-        const restaurantData = await restaurantScraperService.collectRestaurantData(restaurantName, restaurantAddress);
+        // 새로운 Restaurant Analyzer Service 사용 (Google Places API 기반)
+        const analysisResult = await restaurantAnalyzerService.analyzeRestaurant(restaurantName, restaurantAddress);
         
-        // Claude로 분석 및 추천 메뉴 추출
-        const analysisPrompt = restaurantScraperService.formatForClaudeAnalysis(restaurantData);
+        debug('✅ 레스토랑 분석 완료');
+        debug(`📊 기본 정보: ${analysisResult.restaurant.name}, 평점: ${analysisResult.restaurant.rating}`);
+        debug(`🍽️ 추천 메뉴: ${analysisResult.recommendedMenuItems.map(item => item.name).join(', ')}`);
+        debug(`📸 사진: 외관 ${analysisResult.photos.exterior ? '✓' : '✗'}, 음식 ${analysisResult.photos.food.length}장`);
         
-        debug('🤖 Claude AI로 레스토랑 분석 중...');
-        const analysisResponse = await anthropic.messages.create({
-          model: bot.aiModel || 'claude-3-5-sonnet-20241022',
-          max_tokens: 1024,
-          system: '당신은 레스토랑 평가 전문가입니다. 제공된 정보를 분석하여 추천 메뉴를 선정해주세요.',
-          messages: [{
-            role: 'user',
-            content: analysisPrompt
-          }]
-        });
-        
-        const analysis = analysisResponse.content[0].text;
-        debug(`✅ 레스토랑 분석 완료`);
-        
-        // 분석 결과에서 추천 메뉴 추출
-        const recommendedDishes = restaurantScraperService.extractRecommendedDishes(analysis);
-        debug(`📋 추천 메뉴: ${recommendedDishes.join(', ')}`);
-        
-        // 추천 메뉴 이미지 수집
-        const dishImages = [];
-        for (const dish of recommendedDishes) {
-          const imageData = await restaurantScraperService.searchDishImage(restaurantName, dish);
-          if (imageData && imageData.url && !imageData.url.includes('placeholder')) {
-            dishImages.push({ 
-              dish, 
-              imageUrl: imageData.url,
-              isReference: imageData.isReference // 참고 이미지 여부 저장
+        // 이미지 데이터 준비 (Claude가 한글로 변환할 때 사용) - 이미 위에서 선언됨
+        // dishImages 초기화
+        for (const item of analysisResult.recommendedMenuItems) {
+          if (item.photo) {
+            dishImages.push({
+              dish: item.name,
+              imageUrl: item.photo.url || item.photo,
+              isReference: item.photo.confidence < 0.7 // 낮은 신뢰도는 참고 이미지로 표시
             });
-            debug(`📸 이미지 수집: ${dish} - ${imageData.url} (참고 이미지: ${imageData.isReference ? '예' : '아니오'})`);
+            debug(`📸 메뉴 이미지: ${item.name} - 신뢰도: ${item.confidence * 100}%`);
           }
         }
         
-        // 최종 게시글 작성을 위한 프롬프트
-        userPrompt = `당신은 24세 스토니브룩 대학생입니다. 오늘 "${restaurantName}" 레스토랑을 방문했습니다.
-주소: ${restaurantAddress}
+        // 외관 사진도 추가
+        if (analysisResult.photos.exterior) {
+          dishImages.push({
+            dish: 'Restaurant Exterior',
+            imageUrl: analysisResult.photos.exterior,
+            isReference: false
+          });
+        }
+        
+        // 음식 사진들도 추가 (최대 2장)
+        analysisResult.photos.food.slice(0, 2).forEach((photo, idx) => {
+          dishImages.push({
+            dish: `Food Photo ${idx + 1}`,
+            imageUrl: photo.url,
+            isReference: false
+          });
+        });
+        
+        // Step 1: Claude로 메뉴 추출 (1차 호출)
+        console.log('🤖 Step 1: Extracting menu items with Claude...');
+        const extractedMenus = await menuExtractionService.extractMenuItems(
+          analysisResult.rawReviews,
+          analysisResult.restaurant.name,
+          restaurantAnalyzerService.detectCuisineType(analysisResult.restaurant.types)
+        );
+        
+        console.log(`✅ Extracted ${extractedMenus.length} menu items`);
+        
+        // 모든 메뉴 항목 표시 (순위대로)
+        console.log(`📊 All menu items by score:`);
+        extractedMenus.forEach((menu, idx) => {
+          console.log(`   ${idx + 1}. ${menu.name} (score: ${menu.score}, mentions: ${menu.mentions})`);
+        });
+        
+        // Step 2: 상위 5개 메뉴만 데이터 보강 (이미지 검색 최적화)
+        console.log('🔧 Step 2: Enriching top 5 menu items...');
+        const top5Menus = extractedMenus.slice(0, 5); // 상위 5개만 선택
+        console.log(`📋 선택된 메뉴: ${top5Menus.map(m => m.name).join(', ')}`);
+        
+        const enrichedMenus = await menuEnrichmentService.enrichMenuData(
+          top5Menus, // 상위 5개만 보강
+          analysisResult
+        );
+        
+        console.log(`✅ Enriched ${enrichedMenus.length} menu items`);
+        
+        // Step 3: 보강된 데이터로 최종 글 작성 (Claude 2차 호출)
+        userPrompt = `You are a 24-year-old Stony Brook University student writing a restaurant review blog post.
 
-레스토랑 정보:
-${analysis}
+Restaurant Information:
+- Name: ${analysisResult.restaurant.name}
+- Address: ${analysisResult.restaurant.address}
+- Rating: ${analysisResult.restaurant.rating}/5 (${analysisResult.restaurant.totalReviews} reviews)
+- Price Level: ${analysisResult.restaurant.priceLevel}
+- Services: Delivery: ${analysisResult.restaurant.services.delivery ? 'Yes' : 'No'}, Takeout: ${analysisResult.restaurant.services.takeout ? 'Yes' : 'No'}, Dine-in: ${analysisResult.restaurant.services.dineIn ? 'Yes' : 'No'}
 
-이미지 정보:
-${dishImages.map(img => `- ${img.dish}: ${img.isReference ? '참고 이미지 (실제 레스토랑 사진 아님)' : '레스토랑 실제 이미지'}`).join('\n')}
+ALL ${enrichedMenus.length} MENU ITEMS RANKED BY POPULARITY (Score 0-100):
+${enrichedMenus.map((menu, idx) => {
+  let label = '';
+  if (idx === 0) label = '🥇 #1 BEST SELLER';
+  else if (idx === 1) label = '🥈 #2 MUST TRY';
+  else if (idx === 2) label = '🥉 #3 HIGHLY RECOMMENDED';
+  else if (idx < 5) label = `⭐ #${idx + 1} POPULAR`;
+  else label = `#${idx + 1}`;
+  
+  return `
+${idx + 1}. ${menu.name} ${label}
+   - Score: ${menu.score}/100
+   - Price: ${menu.enrichedPrice || menu.priceHint || 'Not specified'}
+   - Description: ${menu.enrichedDescription || menu.description || ''}
+   - Mentioned: ${menu.mentions} times in reviews
+   - Sentiment: ${menu.customerSentiment || 'positive'}
+   - Portion: ${menu.portionInfo || 'Standard'}
+   - Has Image: ${menu.images && menu.images.length > 0 ? 'Yes' : 'No'}`;
+}).join('\n')}
 
-위 정보를 바탕으로 자연스럽고 친근한 맛집 리뷰 게시글을 작성해주세요.
-
-작성 지침:
-1. 24세 대학생의 관점에서 작성
-2. "오늘 친구들이랑" 또는 "시험 끝나고" 같은 자연스러운 도입
-3. 위에 나열된 추천 메뉴들을 모두 자연스럽게 소개하되, 각 메뉴를 언급한 직후에 반드시 정확히 [이미지: ${dishImages.length > 0 ? dishImages[0].dish : 'Dish Name'}] 형식으로 태그를 넣어주세요
-   중요: 반드시 위에 나열된 메뉴명을 그대로 사용하세요!
-   ${dishImages.map(img => `   - ${img.dish} 언급 후 → [이미지: ${img.dish}]`).join('\n')}
-4. 참고 이미지를 사용하는 경우, 이미지 태그 바로 다음에 "(참고 이미지)" 또는 "(이런 스타일)" 같은 설명을 추가
-   예시: "마파두부[이미지: Mapo Tofu](참고 이미지)는 이것보다 더 맛있어 보였어요"
-5. 가격대, 분위기, 주차 정보 포함
-6. 이모티콘 적절히 사용 (너무 많이는 X)
-7. 300-500자 정도로 작성
-
-응답 형식:
-제목: [맛집 발견! 같은 흥미로운 제목]
-내용: [리뷰 내용과 위에 명시된 형식의 이미지 태그 포함]`;
+AVAILABLE IMAGES:
+${enrichedMenus.filter(m => m.images && m.images.length > 0).map(m => 
+  `[이미지: ${m.name}] -> Available (${m.images[0].source})`
+).join('\n') || 'No images available'}`;
+        
+        // dishImages를 enrichedMenus 기반으로 재구성 (모든 이미지 포함)
+        dishImages = enrichedMenus
+          .filter(menu => menu.images && menu.images.length > 0)
+          .map(menu => ({
+            dish: menu.name,
+            url: menu.images[0].url,
+            source: menu.images[0].source,
+            confidence: menu.images[0].confidence || 0.5,
+            // 모든 대체 이미지들도 포함
+            allImages: menu.allImages || []
+          }));
         
         // dishImages를 bot 객체의 임시 속성으로 저장 (나중에 HTML 변환시 사용)
         bot._dishImages = dishImages;
+        
+        // 디버그: 프론트엔드에서 이미지 선택 가능하도록 모든 이미지 정보 저장
+        bot._allMenuImages = enrichedMenus.map(menu => ({
+          dishName: menu.name,
+          selectedImage: menu.images && menu.images[0] ? menu.images[0].url : null,
+          allAvailableImages: menu.allImages || []
+        }));
+        
+        console.log('📸 All Menu Images Data:');
+        bot._allMenuImages.forEach(menuImg => {
+          console.log(`   🍽️ ${menuImg.dishName}:`);
+          console.log(`      - Selected: ${menuImg.selectedImage ? 'Yes' : 'No'}`);
+          console.log(`      - Available images: ${menuImg.allAvailableImages.length}`);
+          if (menuImg.allAvailableImages.length > 0) {
+            console.log(`      - Image URLs:`);
+            menuImg.allAvailableImages.slice(0, 3).forEach((img, idx) => {
+              console.log(`        ${idx + 1}. ${img.url.substring(0, 50)}...`);
+            });
+            if (menuImg.allAvailableImages.length > 3) {
+              console.log(`        ... and ${menuImg.allAvailableImages.length - 3} more`);
+            }
+          }
+        });
         
       } catch (error) {
         console.error('레스토랑 정보 수집 실패:', error);
@@ -568,33 +647,28 @@ ${dishImages.map(img => `- ${img.dish}: ${img.isReference ? '참고 이미지 (�
       .map(line => `<p>${line}</p>`)
       .join('\n');
 
-    // 맛집봇인 경우 이미지 태그를 실제 이미지 HTML로 변환
-    if (bot.type === 'restaurant' && bot._dishImages && bot._dishImages.length > 0) {
+    // 맛집봇인 경우 모든 이미지를 게시글에 포함
+    if (bot.type === 'restaurant' && bot._allMenuImages && bot._allMenuImages.length > 0) {
       console.log('🖼️ 맛집봇 이미지 처리 시작...');
-      console.log(`📋 처리할 이미지: ${bot._dishImages.map(img => img.dish).join(', ')}`);
-      console.log('📄 원본 컨텐츠 샘플:', generatedContent.substring(0, 500));
+      console.log(`📋 처리할 메뉴: ${bot._allMenuImages.map(menu => menu.dishName).join(', ')}`);
       
-      let imageReplacementCount = 0;
-      
-      for (const img of bot._dishImages) {
-        // 이미지 캡션 (참고 이미지 표시 포함)
-        const imageCaption = img.isReference 
-          ? `${img.dish} (참고 이미지)` 
-          : img.dish;
+      // 각 메뉴에 대해 모든 이미지를 추가
+      for (const menuItem of bot._allMenuImages) {
+        const dishName = menuItem.dishName;
+        const allImages = menuItem.allAvailableImages || [];
         
-        const imageHtml = `</p>\n<div style="text-align: center; margin: 20px 0;">\n<img src="${img.imageUrl}" alt="${img.dish}" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />\n<p style="margin-top: 8px; font-size: 14px; color: #666; font-style: italic;">${imageCaption}</p>\n</div>\n<p>`;
+        if (allImages.length === 0) {
+          console.log(`⚠️ ${dishName}에 대한 이미지가 없습니다`);
+          continue;
+        }
         
-        // 다양한 형식의 이미지 태그 처리 (참고 이미지 텍스트 포함)
+        // [이미지: dishName] 패턴을 찾아서 모든 이미지로 교체
         const patterns = [
-          `[이미지: ${img.dish}](참고 이미지)`,
-          `[이미지: ${img.dish}](이런 스타일)`,
-          `[이미지: ${img.dish}] (참고 이미지)`,
-          `[이미지: ${img.dish}] (이런 스타일)`,
-          `[이미지: ${img.dish}]`,
-          `[이미지:${img.dish}]`,
-          `[이미지 : ${img.dish}]`,
-          `[이미지: ${img.dish} ]`,
-          `[ 이미지: ${img.dish} ]`
+          `[이미지: ${dishName}]`,
+          `[이미지:${dishName}]`,
+          `[이미지 : ${dishName}]`,
+          `[이미지: ${dishName} ]`,
+          `[ 이미지: ${dishName} ]`
         ];
         
         let replaced = false;
@@ -603,28 +677,110 @@ ${dishImages.map(img => `- ${img.dish}: ${img.isReference ? '참고 이미지 (�
           const matches = generatedContent.match(regex);
           
           if (matches) {
-            generatedContent = generatedContent.replace(regex, imageHtml);
-            imageReplacementCount += matches.length;
-            console.log(`✅ 이미지 태그 변환 성공: "${pattern}" (${matches.length}개) → ${img.imageUrl} (참고: ${img.isReference ? '예' : '아니오'})`);
+            // 이미지 링크 목록으로 생성
+            let allImagesHtml = `</p>\n<div style="border: 2px solid #e0e0e0; border-radius: 8px; padding: 15px; margin: 20px 0; background-color: #f9f9f9;">`;
+            allImagesHtml += `\n<h4 style="margin-top: 0; color: #333;">${dishName} - 이미지 링크 (${allImages.length}개)</h4>`;
+            allImagesHtml += `\n<ol style="margin: 0; padding-left: 20px;">`;
+            
+            // 모든 이미지 링크 표시
+            allImages.forEach((img, index) => {
+              // TikTok 링크는 제외
+              if (img.url.includes('tiktok.com') || img.displayLink?.includes('tiktok.com')) {
+                return;
+              }
+              
+              allImagesHtml += `\n<li style="margin-bottom: 8px;">`;
+              allImagesHtml += `\n  <a href="${img.url}" target="_blank" rel="noopener noreferrer" style="color: #1976d2; text-decoration: none; word-break: break-all;">${img.url}</a>`;
+              allImagesHtml += `\n</li>`;
+            });
+            
+            allImagesHtml += `\n</ol>`;
+            allImagesHtml += `\n</div>\n<p>`;
+            
+            // 원본 이미지 태그를 모든 이미지로 교체
+            generatedContent = generatedContent.replace(regex, allImagesHtml);
+            console.log(`✅ ${dishName}: ${allImages.length}개 이미지 추가됨`);
             replaced = true;
-            break; // 한 패턴이 매칭되면 다음 이미지로
+            break;
           }
         }
         
         if (!replaced) {
-          console.log(`⚠️ 이미지 태그를 찾을 수 없음: ${img.dish}`);
-          console.log(`   시도한 패턴들:`, patterns);
+          // 이미지 태그를 찾지 못한 경우, 메뉴 이름이 언급된 곳 뒤에 이미지 추가
+          const menuNameRegex = new RegExp(`(${dishName})`, 'i');
+          const menuMatch = generatedContent.match(menuNameRegex);
+          
+          if (menuMatch) {
+            // 메뉴 이름 뒤에 이미지 링크 목록 추가
+            let allImagesHtml = `</p>\n<div style="border: 2px solid #e0e0e0; border-radius: 8px; padding: 15px; margin: 20px 0; background-color: #f9f9f9;">`;
+            allImagesHtml += `\n<h4 style="margin-top: 0; color: #333;">${dishName} - 이미지 링크 (${allImages.length}개)</h4>`;
+            allImagesHtml += `\n<ol style="margin: 0; padding-left: 20px;">`;
+            
+            // 모든 이미지 링크 표시
+            allImages.forEach((img, index) => {
+              // TikTok 링크는 제외
+              if (img.url.includes('tiktok.com') || img.displayLink?.includes('tiktok.com')) {
+                return;
+              }
+              
+              allImagesHtml += `\n<li style="margin-bottom: 8px;">`;
+              allImagesHtml += `\n  <a href="${img.url}" target="_blank" rel="noopener noreferrer" style="color: #1976d2; text-decoration: none; word-break: break-all;">${img.url}</a>`;
+              allImagesHtml += `\n</li>`;
+            });
+            
+            allImagesHtml += `\n</ol>`;
+            allImagesHtml += `\n</div>\n<p>`;
+            
+            // 메뉴 이름이 있는 단락 끝에 이미지 추가
+            const paragraphEndRegex = new RegExp(`(${dishName}[^<]*</p>)`, 'i');
+            generatedContent = generatedContent.replace(paragraphEndRegex, `$1${allImagesHtml}`);
+            console.log(`✅ ${dishName}: 메뉴 언급 뒤에 ${allImages.length}개 이미지 추가됨`);
+          } else {
+            console.log(`⚠️ ${dishName}: 게시글에서 메뉴 이름을 찾을 수 없음`);
+            // 언급되지 않은 메뉴도 게시글 끝에 추가
+            if (!generatedContent.includes('📸 추가 메뉴 이미지')) {
+              generatedContent += `\n\n<div style="border: 2px solid #ffd54f; border-radius: 8px; padding: 20px; margin: 30px 0; background-color: #fffde7;">`;
+              generatedContent += `\n<h3 style="margin-top: 0; color: #f57c00;">📸 추가 메뉴 이미지</h3>`;
+              generatedContent += `\n<p style="color: #666; font-size: 14px;">아래는 이 레스토랑의 다른 인기 메뉴들입니다:</p>`;
+            }
+            
+            generatedContent += `\n<div style="margin-top: 20px;">`;
+            generatedContent += `\n<h4 style="color: #333; margin-bottom: 10px;">${dishName}</h4>`;
+            generatedContent += `\n<ol style="margin: 0; padding-left: 20px;">`;
+            
+            // 모든 이미지 링크 표시
+            allImages.forEach((img, index) => {
+              const scoreColor = img.score > 50 ? '#4CAF50' : img.score > 0 ? '#FF9800' : '#f44336';
+              const warnings = img.warnings && img.warnings.length > 0 ? ` ⚠️ ${img.warnings.join(', ')}` : '';
+              
+              generatedContent += `\n<li style="margin-bottom: 8px;">`;
+              generatedContent += `\n  <a href="${img.url}" target="_blank" rel="noopener noreferrer" style="color: #1976d2; text-decoration: none; word-break: break-all;">${img.url}</a>`;
+              generatedContent += `\n  <span style="font-size: 12px; color: ${scoreColor}; margin-left: 8px;">(점수: ${img.score})</span>`;
+              if (warnings) {
+                generatedContent += `\n  <span style="font-size: 12px; color: #ff9800;">${warnings}</span>`;
+              }
+              generatedContent += `\n  <div style="font-size: 11px; color: #666; margin-top: 2px;">출처: ${img.displayLink || img.source}</div>`;
+              generatedContent += `\n</li>`;
+            });
+            
+            generatedContent += `\n</ol>`;
+            generatedContent += `\n</div>`;
+          }
         }
       }
       
-      console.log(`📊 총 ${imageReplacementCount}개의 이미지 태그 변환 완료`);
-      console.log('📄 변환 후 컨텐츠 샘플:', generatedContent.substring(0, 500));
+      // 추가 메뉴 이미지 섹션이 열려있으면 닫기
+      if (generatedContent.includes('📸 추가 메뉴 이미지') && !generatedContent.endsWith('</div>')) {
+        generatedContent += `\n</div>`;
+      }
+      
+      console.log('📄 모든 이미지 추가 완료');
     } else {
       if (bot.type === 'restaurant') {
         console.log('⚠️ 맛집봇이지만 이미지 데이터가 없음:', {
           type: bot.type,
-          hasDishImages: !!bot._dishImages,
-          dishImagesLength: bot._dishImages?.length || 0
+          hasAllMenuImages: !!bot._allMenuImages,
+          menuImagesLength: bot._allMenuImages?.length || 0
         });
       }
     }
@@ -637,9 +793,16 @@ ${dishImages.map(img => `- ${img.dish}: ${img.isReference ? '참고 이미지 (�
     
     // 봇 서명 추가
     generatedContent += `\n<p><br></p>\n<p><em>- ${signature}</em></p>`;
+    
+    // 맛집봇인 경우 경고 문구 추가
+    if (bot.type === 'restaurant') {
+      generatedContent += `\n<p><br></p>\n<p style="color: #666; font-size: 0.9em; font-style: italic; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 20px;">`;
+      generatedContent += `※ 이 리뷰는 AI 봇이 작성한 것으로, 실제 방문 경험과 다를 수 있으며 일부 내용은 사실과 다를 수 있습니다. 참고용으로만 활용해주세요.`;
+      generatedContent += `</p>`;
+    }
 
     // 게시글 작성 (승인 대기 상태로)
-    const post = await BoardPost.create({
+    const postData = {
       title: generatedTitle,
       content: generatedContent,
       tags: {
@@ -651,7 +814,14 @@ ${dishImages.map(img => `- ${img.dish}: ${img.isReference ? '참고 이미지 (�
       isBot: true,
       botId: bot._id,
       isApproved: false // 봇 게시글은 승인 대기
-    });
+    };
+    
+    // 맛집봇의 경우 모든 메뉴 이미지 데이터 저장
+    if (bot._allMenuImages && bot._allMenuImages.length > 0) {
+      postData.menuImages = bot._allMenuImages;
+    }
+    
+    const post = await BoardPost.create(postData);
 
     // 봇 통계 업데이트
     bot.lastActivity = new Date();
@@ -703,8 +873,8 @@ router.post('/post', authenticateToken, requireAdmin, async (req, res) => {
     // 비동기로 게시글 생성 시작
     generatePostAsync(bot, task, additionalPrompt, req.user._id);
 
-    // 즉시 응답 반환
-    res.json({
+    // 즉시 응답 반환 (맛집봇의 경우 이미지 데이터도 포함)
+    const response = {
       success: true,
       message: '봇이 게시글을 작성하기 시작했습니다',
       bot: {
@@ -715,7 +885,14 @@ router.post('/post', authenticateToken, requireAdmin, async (req, res) => {
           startedAt: new Date()
         }
       }
-    });
+    };
+    
+    // 맛집봇의 경우 모든 메뉴 이미지 데이터 포함
+    if (bot._allMenuImages) {
+      response.menuImages = bot._allMenuImages;
+    }
+    
+    res.json(response);
   } catch (error) {
     console.error('Error executing bot task:', error);
     res.status(500).json({ 
@@ -1008,9 +1185,28 @@ router.get('/:botId/task-status', authenticateToken, requireAdmin, async (req, r
       return res.status(404).json({ error: '봇을 찾을 수 없습니다' });
     }
     
+    // 작업이 완료된 경우 최근 게시글 정보도 포함
+    let latestPost = null;
+    let menuImages = null;
+    
+    if (bot.taskStatus === 'completed') {
+      // 최근 생성된 게시글 찾기
+      latestPost = await BoardPost.findOne({ botId: bot._id })
+        .sort({ createdAt: -1 })
+        .select('_id title postNumber createdAt')
+        .limit(1);
+      
+      // 맛집봇의 경우 이미지 데이터 추가 (임시 저장된 데이터에서)
+      if (bot._allMenuImages) {
+        menuImages = bot._allMenuImages;
+      }
+    }
+    
     res.json({
       taskStatus: bot.taskStatus,
-      currentTask: bot.currentTask
+      currentTask: bot.currentTask,
+      latestPost: latestPost,
+      menuImages: menuImages // 모든 메뉴 이미지 데이터
     });
   } catch (error) {
     console.error('Error fetching bot task status:', error);
@@ -1112,6 +1308,56 @@ router.get('/news/preview', authenticateToken, requireAdmin, async (req, res) =>
     res.status(500).json({
       error: '뉴스 미리보기 생성에 실패했습니다',
       details: error.message
+    });
+  }
+});
+
+// 봇의 최근 게시글 조회 (메뉴 이미지 포함) - 관리자 전용
+router.get('/:botId/latest-post', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { botId } = req.params;
+    
+    // 해당 봇의 가장 최근 게시글 조회
+    const latestPost = await BoardPost.findOne({ botId: botId })
+      .sort({ createdAt: -1 })
+      .populate('author', 'id profile.nickname')
+      .populate('botId', 'name type');
+    
+    if (!latestPost) {
+      return res.status(404).json({ 
+        error: '해당 봇의 게시글을 찾을 수 없습니다' 
+      });
+    }
+    
+    // 메뉴 이미지 데이터 디버그
+    console.log('📸 Latest Post Menu Images:');
+    if (latestPost.menuImages && latestPost.menuImages.length > 0) {
+      latestPost.menuImages.forEach(menu => {
+        console.log(`   ${menu.dishName}: ${menu.allAvailableImages?.length || 0} images`);
+      });
+    } else {
+      console.log('   No menu images found in post');
+    }
+    
+    res.json({
+      success: true,
+      post: {
+        _id: latestPost._id,
+        postNumber: latestPost.postNumber,
+        title: latestPost.title,
+        content: latestPost.content,
+        author: latestPost.author,
+        bot: latestPost.botId,
+        createdAt: latestPost.createdAt,
+        isApproved: latestPost.isApproved,
+        menuImages: latestPost.menuImages || [] // 모든 메뉴 이미지 데이터
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching bot latest post:', error);
+    res.status(500).json({ 
+      error: '봇 최근 게시글 조회에 실패했습니다',
+      details: error.message 
     });
   }
 });

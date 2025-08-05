@@ -103,6 +103,7 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
 
     console.log('🚀 게시글 생성 시작');
     console.log('봇 이름:', postDialog.bot.name);
+    console.log('봇 타입:', postDialog.bot.type);
     console.log('봇 모델:', postDialog.bot.aiModel);
     console.log('작업 주제:', task);
     console.log('추가 지시사항:', additionalPrompt || '없음');
@@ -113,6 +114,7 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
       
       console.log('📦 서버 응답:', response);
       
+      const currentBot = postDialog.bot;
       setPostDialog({ open: false, bot: null });
       setTask('');
       setAdditionalPrompt('');
@@ -120,9 +122,16 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
       // 즉시 목록 업데이트하여 작성중 상태 표시
       onUpdate();
       
+      // 맛집봇의 경우 이미지가 포함된다는 안내
+      if (currentBot.type === 'restaurant') {
+        alert('맛집봇이 게시글 작성을 시작했습니다. 각 메뉴별로 여러 이미지가 포함됩니다. 승인 시 원하는 이미지만 남기고 삭제해주세요.');
+      } else {
+        // 일반 봇의 경우 기존 메시지
+        alert('봇이 게시글 작성을 시작했습니다. 작성이 완료되면 승인 대기 탭에서 확인할 수 있습니다.');
+      }
+      
       // 성공 메시지
       setError(null);
-      alert('봇이 게시글 작성을 시작했습니다. 작성이 완료되면 승인 대기 탭에서 확인할 수 있습니다.');
     } catch (err) {
       console.error('❌ 게시글 생성 실패:', err);
       console.error('에러 상세:', err.response?.data);
@@ -131,6 +140,7 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
       setLoading(false);
     }
   };
+
 
   const getStatusColor = (status) => {
     switch (status) {

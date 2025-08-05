@@ -25,6 +25,11 @@
 - **게시글 관리**: 게시글 모니터링 및 관리
 - **댓글 관리**: 댓글 모니터링 및 관리
 
+### 🤖 봇 시스템
+- **맛집봇**: AI 기반 레스토랑 분석 및 추천
+- **Google Places API 통합**: 실시간 레스토랑 정보
+- **이미지 스크래핑**: 메뉴 및 음식 사진 수집
+
 ### 🔒 보안 기능
 - **Rate Limiting**: 무차별 대입 공격 방지
 - **Input Validation**: 입력 데이터 검증
@@ -109,6 +114,8 @@ likorea/
 │   ├── middleware/         # 미들웨어
 │   ├── models/            # 데이터베이스 모델
 │   ├── routes/            # API 라우트
+│   ├── services/          # 비즈니스 로직 서비스
+│   ├── scripts/           # 유틸리티 스크립트
 │   ├── tests/             # 테스트 파일
 │   ├── utils/             # 유틸리티
 │   └── server.js          # 서버 진입점
@@ -122,6 +129,10 @@ likorea/
 │   │   ├── styles/       # CSS 파일
 │   │   └── utils/        # 유틸리티
 │   └── package.json
+├── docs/                  # 프로젝트 문서
+│   ├── API_DOCUMENTATION.md
+│   ├── GOOGLE_PLACES_API.md
+│   └── ...
 ├── DEPLOYMENT_GUIDE.md   # 배포 가이드
 ├── PROJECT_PLAN.md       # 프로젝트 플랜
 └── README.md             # 프로젝트 설명
@@ -145,6 +156,16 @@ JWT_SECRET=your-super-secret-jwt-key-here
 
 # CORS 허용 도메인
 ALLOWED_ORIGINS=http://localhost:3000,https://yourdomain.com
+
+# Google Places API (선택사항)
+GOOGLE_PLACES_API_KEY=your-google-places-api-key
+ENABLE_GOOGLE_PLACES=false
+
+# Claude AI API (봇 시스템용)
+ANTHROPIC_API_KEY=your-anthropic-api-key
+
+# 이미지 스크래핑 설정
+ENABLE_IMAGE_SCRAPING=true
 ```
 
 **프론트엔드 (.env)**
@@ -249,14 +270,24 @@ Swagger UI를 통해 API 문서를 확인할 수 있습니다:
 ### 백엔드 최적화
 - 데이터베이스 인덱싱
 - 쿼리 최적화
-- 캐싱 전략
+- 캐싱 전략 (NodeCache 활용)
 - 로드 밸런싱
+- API 응답 캐싱 (Google Places API 결과)
 
 ### 프론트엔드 최적화
 - 코드 스플리팅
 - 이미지 최적화
 - 정적 파일 캐싱
 - 반응형 디자인
+
+## 📖 추가 문서
+
+프로젝트의 상세 문서는 `/docs` 디렉토리에서 확인할 수 있습니다:
+
+- **[API 문서](./docs/API_DOCUMENTATION.md)** - 전체 API 엔드포인트 참조
+- **[Google Places API 가이드](./docs/GOOGLE_PLACES_API.md)** - Google Places API 통합 가이드
+- **[프로젝트 구조](./docs/PROJECT_STRUCTURE.md)** - 상세 프로젝트 아키텍처
+- **[데이터베이스 스키마](./docs/DATABASE_SCHEMA.md)** - MongoDB 스키마 정의
 
 ## 🤝 기여하기
 
