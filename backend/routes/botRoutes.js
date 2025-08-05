@@ -794,10 +794,14 @@ ${enrichedMenus.filter(m => m.images && m.images.length > 0).map(m =>
     // 봇 서명 추가
     generatedContent += `\n<p><br></p>\n<p><em>- ${signature}</em></p>`;
     
-    // 맛집봇인 경우 경고 문구 추가
+    // AI 경고 문구 추가
     if (bot.type === 'restaurant') {
       generatedContent += `\n<p><br></p>\n<p style="color: #666; font-size: 0.9em; font-style: italic; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 20px;">`;
       generatedContent += `※ 이 리뷰는 AI 봇이 작성한 것으로, 실제 방문 경험과 다를 수 있으며 일부 내용은 사실과 다를 수 있습니다. 참고용으로만 활용해주세요.`;
+      generatedContent += `</p>`;
+    } else if (bot.type === 'news') {
+      generatedContent += `\n<p><br></p>\n<p style="color: #666; font-size: 0.9em; font-style: italic; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 20px;">`;
+      generatedContent += `※ 이 뉴스 요약은 AI 봇이 작성한 것으로, 실제 뉴스 내용과 다를 수 있으며 일부 해석은 부정확할 수 있습니다. 원문 확인을 권장합니다.`;
       generatedContent += `</p>`;
     }
 

@@ -28,9 +28,22 @@ class NewsAggregatorService {
       // 한인 커뮤니티 관련
       'korean': 9,
       'korean american': 10,
+      'korean church': 10,
+      'korean school': 9,
+      'korean community': 9,
+      'korean market': 8,
+      'korean restaurant': 8,
+      'h-mart': 8,
+      'h mart': 8,
+      'kimchi': 7,
+      'k-pop': 7,
+      'kpop': 7,
       '한인': 10,
       '한국': 8,
       '코리안': 8,
+      '한인회': 10,
+      '한국학교': 9,
+      '한인마켓': 8,
       
       // 중요 이벤트
       'emergency': 10,
@@ -267,24 +280,44 @@ class NewsAggregatorService {
    */
   categorizeNews(articles) {
     const categories = {
-      emergency: [],    // 긴급/사고
-      community: [],    // 커뮤니티/행사
-      business: [],     // 비즈니스/경제
-      education: [],    // 교육
-      politics: [],     // 정치/행정
-      other: []        // 기타
+      emergency: [],        // 긴급/사고
+      koreanCommunity: [],  // 한인 커뮤니티
+      koreanBusiness: [],   // 한인 비즈니스
+      community: [],        // 일반 커뮤니티/행사
+      business: [],         // 일반 비즈니스/경제
+      education: [],        // 교육
+      culture: [],          // 문화/K-POP
+      politics: [],         // 정치/행정
+      other: []            // 기타
     };
     
     articles.forEach(article => {
       const text = `${article.title} ${article.description}`.toLowerCase();
       
-      if (text.match(/(emergency|accident|fire|police|crime|arrest)/)) {
+      // 한인 관련 뉴스 우선 분류
+      if (text.match(/(korean|한인|한국|코리안)/)) {
+        if (text.match(/(church|community center|커뮤니티|한인회|gathering|event)/)) {
+          categories.koreanCommunity.push(article);
+        } else if (text.match(/(business|store|restaurant|market|h-mart|한인마켓|가게|식당)/)) {
+          categories.koreanBusiness.push(article);
+        } else if (text.match(/(school|education|한국학교|korean school)/)) {
+          categories.education.push(article);
+        } else if (text.match(/(k-pop|kpop|culture|festival|concert|한류)/)) {
+          categories.culture.push(article);
+        } else {
+          categories.koreanCommunity.push(article); // 기타 한인 관련
+        }
+      } 
+      // 일반 뉴스 분류
+      else if (text.match(/(emergency|accident|fire|police|crime|arrest)/)) {
         categories.emergency.push(article);
       } else if (text.match(/(school|education|student|university|college)/)) {
         categories.education.push(article);
       } else if (text.match(/(business|economy|store|restaurant|company|market)/)) {
         categories.business.push(article);
-      } else if (text.match(/(community|event|festival|church|gathering)/)) {
+      } else if (text.match(/(k-pop|kpop|culture|art|music|concert|festival|entertainment)/)) {
+        categories.culture.push(article);
+      } else if (text.match(/(community|event|church|gathering)/)) {
         categories.community.push(article);
       } else if (text.match(/(election|politics|government|mayor|council)/)) {
         categories.politics.push(article);
@@ -335,49 +368,89 @@ class NewsAggregatorService {
       
       prompt += '\n\n📝 작성 지침:\n';
       prompt += '1. 전체 기사가 제공된 뉴스는 구체적인 내용을 바탕으로 상세히 설명해주세요.\n';
-      prompt += '2. 각 뉴스마다 한 문단(7-10줄)으로 충실하게 요약해주세요.\n';
-      prompt += '3. 한인 커뮤니티와의 관련성이나 영향을 언급해주세요.\n';
-      prompt += '4. 사실 관계를 정확히 전달하고, 추측은 피해주세요.\n';
-      prompt += '5. URL이나 링크는 절대 포함하지 마세요. 출처명만 언급해주세요.';
+      prompt += '2. 각 뉴스마다 충실하고 상세한 요약을 작성해주세요:\n';
+      prompt += '   - 중요 뉴스(전체 기사 제공): 10-15줄의 심층 분석\n';
+      prompt += '   - 일반 뉴스(요약만 제공): 7-10줄의 상세 요약\n';
+      prompt += '3. 한인 커뮤니티 관점에서의 영향과 중요성을 반드시 포함해주세요:\n';
+      prompt += '   - 한인들에게 미치는 직접적 영향\n';
+      prompt += '   - 대응 방법이나 참여 방법\n';
+      prompt += '   - 관련 한인 단체나 비즈니스 언급\n';
+      prompt += '4. 실용적 정보를 포함해주세요:\n';
+      prompt += '   - 영향받는 구체적 지역\n';
+      prompt += '   - 일정이나 시간 정보\n';
+      prompt += '   - 문의처나 참여 방법\n';
+      prompt += '5. 스토리텔링 방식으로 흥미롭게 전달해주세요.\n';
+      prompt += '6. 사실 관계를 정확히 전달하고, 추측은 피해주세요.\n';
+      prompt += '7. URL이나 링크는 절대 포함하지 마세요. 출처명만 언급해주세요.';
       
     } else {
       // 기존 방식 (요약만 있는 경우)
       prompt = `다음은 실제로 크롤링된 뉴스 ${articles.length}개입니다. 각 뉴스의 제목과 내용 요약이 제공됩니다:\n\n`;
       
       // 카테고리별로 뉴스 정리
+      let articleIndex = 1;
+      
       if (categorized.emergency.length > 0) {
-        prompt += '【긴급/사고 뉴스】\n';
-        categorized.emergency.slice(0, 3).forEach((article, i) => {
-          prompt += this.formatSingleArticle(article, i + 1);
+        prompt += '【🚨 긴급/사고 뉴스】\n';
+        categorized.emergency.slice(0, 2).forEach(article => {
+          prompt += this.formatSingleArticle(article, articleIndex++);
+        });
+        prompt += '\n';
+      }
+      
+      if (categorized.koreanCommunity.length > 0) {
+        prompt += '【🇰🇷 한인 커뮤니티 뉴스】\n';
+        categorized.koreanCommunity.slice(0, 3).forEach(article => {
+          prompt += this.formatSingleArticle(article, articleIndex++);
+        });
+        prompt += '\n';
+      }
+      
+      if (categorized.koreanBusiness.length > 0) {
+        prompt += '【💼 한인 비즈니스 뉴스】\n';
+        categorized.koreanBusiness.slice(0, 2).forEach(article => {
+          prompt += this.formatSingleArticle(article, articleIndex++);
         });
         prompt += '\n';
       }
       
       if (categorized.community.length > 0) {
-        prompt += '【커뮤니티/행사 뉴스】\n';
-        categorized.community.slice(0, 3).forEach((article, i) => {
-          prompt += this.formatSingleArticle(article, i + 1);
+        prompt += '【🏘️ 지역 커뮤니티 뉴스】\n';
+        categorized.community.slice(0, 2).forEach(article => {
+          prompt += this.formatSingleArticle(article, articleIndex++);
         });
         prompt += '\n';
       }
       
       if (categorized.business.length > 0) {
-        prompt += '【비즈니스/경제 뉴스】\n';
-        categorized.business.slice(0, 3).forEach((article, i) => {
-          prompt += this.formatSingleArticle(article, i + 1);
+        prompt += '【📈 비즈니스/경제 뉴스】\n';
+        categorized.business.slice(0, 2).forEach(article => {
+          prompt += this.formatSingleArticle(article, articleIndex++);
         });
         prompt += '\n';
       }
       
       if (categorized.education.length > 0) {
-        prompt += '【교육 뉴스】\n';
-        categorized.education.slice(0, 2).forEach((article, i) => {
-          prompt += this.formatSingleArticle(article, i + 1);
+        prompt += '【🎓 교육 뉴스】\n';
+        categorized.education.slice(0, 2).forEach(article => {
+          prompt += this.formatSingleArticle(article, articleIndex++);
         });
         prompt += '\n';
       }
       
-      prompt += '\n위 뉴스들의 제목과 요약 내용을 바탕으로, 각 뉴스를 한 문단(5-8줄)씩 상세하게 설명해주세요. URL이나 링크는 절대 포함하지 마세요.';
+      if (categorized.culture.length > 0) {
+        prompt += '【🎭 문화/K-POP 뉴스】\n';
+        categorized.culture.slice(0, 2).forEach(article => {
+          prompt += this.formatSingleArticle(article, articleIndex++);
+        });
+        prompt += '\n';
+      }
+      
+      prompt += '\n위 뉴스들의 제목과 요약 내용을 바탕으로, 각 뉴스를 상세하게 설명해주세요:\n';
+      prompt += '- 각 뉴스마다 10-15줄의 충실한 요약\n';
+      prompt += '- 한인 커뮤니티 관점에서의 영향과 중요성 포함\n';
+      prompt += '- 스토리텔링 방식으로 흥미롭게 전달\n';
+      prompt += '- URL이나 링크는 절대 포함하지 마세요.';
     }
     
     return prompt;
