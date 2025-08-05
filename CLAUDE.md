@@ -260,3 +260,7 @@ When making changes to the codebase:
 2. Keep code examples in documentation up to date
 3. Add new sections as features are implemented
 4. Follow the documentation template in [DOCUMENTATION_INDEX.md](/docs/DOCUMENTATION_INDEX.md)
+
+### 🤖 Bot System Documentation
+- **[GOOGLE_PLACES_API.md](/docs/GOOGLE_PLACES_API.md)**: Google Places API integration guide
+- **[RESTAURANT_BOT_INTEGRATION.md](/docs/RESTAURANT_BOT_INTEGRATION.md)**: Restaurant bot system with real data integration
