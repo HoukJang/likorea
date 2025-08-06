@@ -35,13 +35,13 @@ class GooglePlacesService {
       
       console.log(`🔍 Google Places 검색: ${searchQuery}`);
       
-      // 1단계: Place Search로 레스토랑 찾기 (contextualContent 포함)
+      // 1단계: Place Search로 레스토랑 찾기
       const searchResponse = await this.client.textSearch({
         params: {
           query: searchQuery,
           key: this.apiKey,
-          language: 'ko', // 한국어 결과 우선
-          fields: ['contextualContents'] // AI 기반 관련 콘텐츠
+          language: 'ko' // 한국어 결과 우선
+          // fields 파라미터는 textSearch에서 지원하지 않음
         }
       });
 
