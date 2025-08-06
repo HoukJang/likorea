@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
 const { authenticateToken, requireAdmin } = require('../middleware/auth');
 const Bot = require('../models/Bot');
 const User = require('../models/User');
@@ -9,7 +8,6 @@ const Anthropic = require('@anthropic-ai/sdk');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const newsAggregatorService = require('../services/newsAggregatorService');
-const restaurantScraperService = require('../services/restaurantScraperService');
 const restaurantAnalyzerService = require('../services/restaurantAnalyzerService');
 const menuExtractionService = require('../services/menuExtractionService');
 const menuEnrichmentService = require('../services/menuEnrichmentService');
