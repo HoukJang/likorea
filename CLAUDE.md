@@ -231,6 +231,8 @@ The `deploy.sh` script handles:
 - Current project version: 1.6.1 (backend), 1.1.1 (root package.json)
 - Node.js version requirement: >=18.0.0
 - Backend runs on port 5001, frontend on port 3000
+- Max upload size: 10MB (configured in Express, requires matching Nginx configuration in production)
+- Images are stored as base64 in database (no server-side compression currently)
 
 ## Project Documentation
 

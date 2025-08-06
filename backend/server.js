@@ -50,7 +50,8 @@ app.use(requestSizeLimit);
 app.use(cookieParser());
 
 // 요청 본문 파싱 및 CORS 설정
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')

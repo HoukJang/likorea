@@ -113,7 +113,7 @@ exports.getTrafficDashboard = asyncHandler(async (req, res) => {
     },
   ]);
 
-  // 시간별 요청 수 (차트용)
+  // 시간별 요청 수 (차트용) - 미국 동부 시간대 적용
   const hourlyStats = await TrafficLog.aggregate([
     {
       $match: {
@@ -123,10 +123,10 @@ exports.getTrafficDashboard = asyncHandler(async (req, res) => {
     {
       $group: {
         _id: {
-          year: { $year: '$timestamp' },
-          month: { $month: '$timestamp' },
-          day: { $dayOfMonth: '$timestamp' },
-          hour: { $hour: '$timestamp' },
+          year: { $year: { date: '$timestamp', timezone: 'America/New_York' } },
+          month: { $month: { date: '$timestamp', timezone: 'America/New_York' } },
+          day: { $dayOfMonth: { date: '$timestamp', timezone: 'America/New_York' } },
+          hour: { $hour: { date: '$timestamp', timezone: 'America/New_York' } },
         },
         count: { $sum: 1 },
       },
@@ -238,8 +238,8 @@ exports.getPathAnalysis = asyncHandler(async (req, res) => {
     {
       $group: {
         _id: {
-          date: { $dateToString: { format: '%Y-%m-%d', date: '$timestamp' } },
-          hour: { $hour: '$timestamp' },
+          date: { $dateToString: { format: '%Y-%m-%d', date: '$timestamp', timezone: 'America/New_York' } },
+          hour: { $hour: { date: '$timestamp', timezone: 'America/New_York' } },
         },
         count: { $sum: 1 },
         avgResponseTime: { $avg: '$responseTime' },

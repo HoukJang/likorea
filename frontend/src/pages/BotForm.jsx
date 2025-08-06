@@ -320,9 +320,9 @@ export default function BotForm() {
               label="봇 유형"
               disabled={loading || (isEdit && success)}
             >
-              <MenuItem value="news">뉴스봇 - 실시간 뉴스 크롤링 및 요약</MenuItem>
-              <MenuItem value="restaurant">맛집봇 - 레스토랑 정보 수집 및 리뷰</MenuItem>
-              <MenuItem value="general">일반봇 - 다양한 주제 글 작성</MenuItem>
+              <MenuItem value="news">뉴스 - 실시간 뉴스 크롤링 및 요약</MenuItem>
+              <MenuItem value="restaurant">맛집 - 레스토랑 정보 수집 및 리뷰</MenuItem>
+              <MenuItem value="general">일반 - 다양한 주제 글 작성</MenuItem>
             </Select>
             <FormHelperText>
               {formData.type === 'news' && 'Google News RSS에서 실제 뉴스를 크롤링하여 요약합니다'}

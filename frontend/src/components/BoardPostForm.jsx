@@ -5,6 +5,7 @@ import { getBoardPost, createBoard, updateBoard } from '../api/boards';
 import { getCurrentUser, isAuthenticated } from '../api/auth';
 import { approvePost, rejectPost, updatePendingPost } from '../api/approval';
 import TagSelector from './TagSelector';
+import imageCompression from 'browser-image-compression';
 import '../styles/BoardPostForm.css';
 
 function BoardPostForm() {
@@ -68,26 +69,44 @@ function BoardPostForm() {
     }
   }, [postId, isEditMode, currentUser]);
 
+  // 이미지 압축 설정
+  const compressionOptions = {
+    maxSizeMB: 1, // 최대 1MB로 압축
+    maxWidthOrHeight: 1920, // 최대 너비/높이 1920px
+    useWebWorker: true,
+    quality: 0.8, // 품질 80%
+  };
+
   // Handle paste for images
-  const handlePaste = e => {
+  const handlePaste = async e => {
     const items = e.clipboardData.items;
     for (const index in items) {
       const item = items[index];
       if (item.kind === 'file' && item.type.startsWith('image/')) {
         const file = item.getAsFile();
-        const reader = new FileReader();
-        reader.onload = function (event) {
-          const img = document.createElement('img');
-          img.src = event.target.result;
-          img.alt = 'pasted-image';
-          img.style.maxWidth = '100%';
-          img.style.height = 'auto';
-          img.style.margin = '10px 0';
-          img.style.display = 'block';
+        
+        try {
+          // 이미지 압축
+          console.log('원본 이미지 크기:', (file.size / 1024 / 1024).toFixed(2), 'MB');
+          const compressedFile = await imageCompression(file, compressionOptions);
+          console.log('압축된 이미지 크기:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
+          
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            const img = document.createElement('img');
+            img.src = event.target.result;
+            img.alt = 'pasted-image';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '600px';
+            img.style.width = 'auto';
+            img.style.height = 'auto';
+            img.style.margin = '10px auto';
+            img.style.display = 'block';
+            img.style.objectFit = 'contain';
 
-          const target = e.currentTarget || e.target;
-          if (target) {
-            // 현재 커서 위치에 이미지 삽입
+            const target = e.currentTarget || e.target;
+            if (target) {
+              // 현재 커서 위치에 이미지 삽입
             const selection = window.getSelection();
             if (selection && selection.rangeCount > 0) {
               const range = selection.getRangeAt(0);
@@ -101,11 +120,15 @@ function BoardPostForm() {
               target.appendChild(img);
             }
 
-            // 입력 이벤트 발생시켜 상태 업데이트
-            target.dispatchEvent(new Event('input', { bubbles: true }));
-          }
-        };
-        reader.readAsDataURL(file);
+              // 입력 이벤트 발생시켜 상태 업데이트
+              target.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          };
+          reader.readAsDataURL(compressedFile); // 압축된 파일을 읽음
+        } catch (error) {
+          console.error('이미지 압축 실패:', error);
+          alert('이미지 압축 중 오류가 발생했습니다. 원본 이미지가 너무 큽니다.');
+        }
         e.preventDefault();
         return; // 이미지 처리 후 다른 붙여넣기 방지
       }

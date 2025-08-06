@@ -33,6 +33,7 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import DOMPurify from 'dompurify';
+import imageCompression from 'browser-image-compression';
 
 export default function PendingPosts({ posts, onApproval, onReload }) {
   const [editDialog, setEditDialog] = useState({ open: false, post: null });
@@ -132,27 +133,45 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
     }
   }, [editDialog.open, editDialog.post]);
 
+  // 이미지 압축 설정
+  const compressionOptions = {
+    maxSizeMB: 1, // 최대 1MB로 압축
+    maxWidthOrHeight: 1920, // 최대 너비/높이 1920px
+    useWebWorker: true,
+    quality: 0.8, // 품질 80%
+  };
+
   // 이미지 붙여넣기 처리
-  const handlePaste = (e) => {
+  const handlePaste = async (e) => {
     const items = e.clipboardData.items;
     for (const index in items) {
       const item = items[index];
       if (item.kind === 'file' && item.type.startsWith('image/')) {
         const file = item.getAsFile();
-        const reader = new FileReader();
-        reader.onload = function (event) {
-          const img = document.createElement('img');
-          img.src = event.target.result;
-          img.alt = 'pasted-image';
-          img.style.maxWidth = '100%';
-          img.style.height = 'auto';
-          img.style.margin = '10px 0';
-          img.style.display = 'block';
+        
+        try {
+          // 이미지 압축
+          console.log('원본 이미지 크기:', (file.size / 1024 / 1024).toFixed(2), 'MB');
+          const compressedFile = await imageCompression(file, compressionOptions);
+          console.log('압축된 이미지 크기:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
+          
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            const img = document.createElement('img');
+            img.src = event.target.result;
+            img.alt = 'pasted-image';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '600px';
+            img.style.width = 'auto';
+            img.style.height = 'auto';
+            img.style.margin = '10px auto';
+            img.style.display = 'block';
+            img.style.objectFit = 'contain';
 
-          const target = e.currentTarget || e.target;
-          if (target) {
-            const selection = window.getSelection();
-            if (selection && selection.rangeCount > 0) {
+            const target = e.currentTarget || e.target;
+            if (target) {
+              const selection = window.getSelection();
+              if (selection && selection.rangeCount > 0) {
               const range = selection.getRangeAt(0);
               range.deleteContents();
               range.insertNode(img);
@@ -162,10 +181,14 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
             } else {
               target.appendChild(img);
             }
-            target.dispatchEvent(new Event('input', { bubbles: true }));
-          }
-        };
-        reader.readAsDataURL(file);
+              target.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          };
+          reader.readAsDataURL(compressedFile); // 압축된 파일을 읽음
+        } catch (error) {
+          console.error('이미지 압축 실패:', error);
+          alert('이미지 압축 중 오류가 발생했습니다. 원본 이미지가 너무 큽니다.');
+        }
         e.preventDefault();
         return;
       }
@@ -369,7 +392,7 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
                 outlineOffset: '-2px',
               },
               '& p': { margin: '0 0 10px' },
-              '& img': { maxWidth: '100%', height: 'auto', display: 'block', margin: '10px 0' },
+              '& img': { maxWidth: '100%', maxHeight: '600px', width: 'auto', height: 'auto', display: 'block', margin: '10px auto', objectFit: 'contain' },
               '& a': { color: '#1976d2', textDecoration: 'underline' },
               '& ul, & ol': { marginLeft: '20px' },
               '& blockquote': { 
@@ -406,7 +429,7 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
             }}
             sx={{ 
               '& p': { marginBottom: 1 },
-              '& img': { maxWidth: '100%', height: 'auto' }
+              '& img': { maxWidth: '100%', maxHeight: '600px', width: 'auto', height: 'auto', objectFit: 'contain', display: 'block', margin: '10px auto' }
             }}
           />
         </DialogContent>

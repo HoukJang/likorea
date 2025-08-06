@@ -251,7 +251,7 @@ function TrafficDashboard() {
             {/* 시간별 요청 수 차트 */}
             {getHourlyChartData() && (
               <div className='chart-container'>
-                <h3>시간별 요청 수</h3>
+                <h3>시간별 요청 수 (EST/EDT)</h3>
                 <Line
                   data={getHourlyChartData()}
                   options={{
@@ -443,7 +443,7 @@ function TrafficDashboard() {
             <div className='traffic-list'>
               {realtimeData.slice(0, 20).map((log, index) => (
                 <div key={index} className='traffic-item'>
-                  <div className='traffic-time'>{new Date(log.timestamp).toLocaleTimeString()}</div>
+                  <div className='traffic-time'>{new Date(log.timestamp).toLocaleTimeString('en-US', { timeZone: 'America/New_York' })}</div>
                   <div className='traffic-method'>
                     <span
                       className='method-badge'

@@ -203,12 +203,6 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
 
                 <Box sx={{ mb: 2 }}>
                   <Chip
-                    label={bot.type === 'news' ? '뉴스봇' : bot.type === 'restaurant' ? '맛집봇' : '일반봇'}
-                    size="small"
-                    color={bot.type === 'news' ? 'primary' : bot.type === 'restaurant' ? 'secondary' : 'default'}
-                    sx={{ mr: 1 }}
-                  />
-                  <Chip
                     label={getModelName(bot.aiModel)}
                     size="small"
                     variant="outlined"
@@ -339,7 +333,7 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
         <DialogTitle>봇으로 게시글 작성</DialogTitle>
         <DialogContent>
           <Typography variant="body2" color="text.secondary" paragraph>
-            봇: {postDialog.bot?.name} ({postDialog.bot?.type === 'news' ? '뉴스봇' : postDialog.bot?.type === 'restaurant' ? '맛집봇' : '일반봇'})
+            봇: {postDialog.bot?.name}
           </Typography>
           <TextField
             fullWidth
