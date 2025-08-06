@@ -149,9 +149,10 @@ export default function BotForm() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    // 봇 타입 변경시 적절한 systemPrompt 설정
+    // 봇 타입 변경시 적절한 systemPrompt와 userPrompt 설정
     if (name === 'type') {
       let newSystemPrompt = '';
+      let newUserPrompt = '';
       
       if (value === 'news') {
         newSystemPrompt = `당신은 롱아일랜드 한인 커뮤니티를 위한 뉴스 요약 전문가입니다.
@@ -160,6 +161,28 @@ export default function BotForm() {
 응답 형식:
 제목: [게시글 제목]
 내용: [게시글 내용]`;
+        
+        newUserPrompt = `【현재 시각】 {CURRENT_DATE}
+
+【요청 지역】 {LOCATION}
+
+【작성 요청】
+아래는 {MONTH}월 {WEEK_OF_MONTH}째주 {LOCATION} 지역의 실제 뉴스입니다.
+각 뉴스를 상세하고 친근하게 요약하여 한인 커뮤니티 소식지 형식으로 작성해주세요.
+
+{NEWS_DATA}
+
+【응답 형식 - 매우 중요】
+다음 형식을 정확히 지켜주세요:
+
+제목: {MONTH}월 {WEEK_OF_MONTH}째주 {LOCATION} 한인 커뮤니티 주요 소식
+내용: [위 지침에 따라 작성된 뉴스 요약 내용]
+
+⚠️ 주의사항:
+- "제목:" 과 "내용:" 레이블은 반드시 포함해주세요
+- 제목은 한 줄로 작성해주세요
+- 내용은 HTML 형식으로 작성해주세요 (문단은 <p> 태그 사용)
+- 각 뉴스 소개 끝에 <a href="링크" target="_blank">[원문보기]</a> 형식으로 출처 링크를 포함해주세요`;
       } else if (value === 'restaurant') {
         newSystemPrompt = `당신은 24세 스토니브룩 대학생이며, 열정적인 맛집 탐험가입니다.
 롱아일랜드 지역의 숨은 맛집을 찾아다니며 리뷰를 작성합니다.
@@ -181,7 +204,8 @@ export default function BotForm() {
       setFormData(prev => ({
         ...prev,
         [name]: value,
-        systemPrompt: newSystemPrompt
+        systemPrompt: newSystemPrompt,
+        userPrompt: newUserPrompt
       }));
     } else {
       setFormData(prev => ({
@@ -335,6 +359,25 @@ export default function BotForm() {
           <Typography variant="h6" gutterBottom>
             프롬프트 설정
           </Typography>
+          
+          {formData.type === 'news' && (
+            <Alert severity="info" sx={{ mb: 2 }}>
+              <Typography variant="body2" fontWeight={600} gutterBottom>
+                뉴스봇 프롬프트 템플릿 변수 안내
+              </Typography>
+              <Typography variant="body2">
+                뉴스봇은 실시간으로 수집된 뉴스 데이터를 기반으로 게시글을 작성합니다. 
+                다음 템플릿 변수들이 자동으로 실제 값으로 치환됩니다:
+              </Typography>
+              <ul style={{ marginTop: '8px', marginBottom: 0, paddingLeft: '20px' }}>
+                <li><code>{'{CURRENT_DATE}'}</code> - 게시글 작성 시점의 날짜와 시간</li>
+                <li><code>{'{LOCATION}'}</code> - 사용자가 선택한 지역명</li>
+                <li><code>{'{MONTH}'}</code> - 현재 월 (숫자)</li>
+                <li><code>{'{WEEK_OF_MONTH}'}</code> - 현재 월의 주차 (1-5)</li>
+                <li><code>{'{NEWS_DATA}'}</code> - 수집된 실제 뉴스 데이터</li>
+              </ul>
+            </Alert>
+          )}
 
           <TextField
             fullWidth
@@ -357,7 +400,11 @@ export default function BotForm() {
             onChange={handleChange}
             multiline
             rows={4}
-            helperText="추가적인 컨텍스트나 지시사항. 게시글 작성 시 주제와 함께 전달됩니다."
+            helperText={
+              formData.type === 'news' 
+                ? '뉴스봇은 다음 템플릿 변수를 사용합니다: {CURRENT_DATE} - 현재 날짜/시간, {LOCATION} - 요청 지역, {MONTH} - 월, {WEEK_OF_MONTH} - 월의 주차, {NEWS_DATA} - 수집된 뉴스 데이터'
+                : '추가적인 컨텍스트나 지시사항. 게시글 작성 시 주제와 함께 전달됩니다.'
+            }
             disabled={loading || (isEdit && success)}
           />
 

@@ -54,7 +54,7 @@ function BoardPostForm() {
           if (contentRef.current) {
             // DOMPurify로 HTML을 새니타이즈하여 안전하게 표시
             const sanitizedContent = DOMPurify.sanitize(data.post.content, {
-              ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li'],
+              ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
               ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
               ALLOW_DATA_ATTR: false
             });
@@ -147,7 +147,7 @@ function BoardPostForm() {
       if (isPendingMode && isEditMode) {
         const rawContent = contentRef.current ? contentRef.current.innerHTML : content;
         const sanitizedContent = DOMPurify.sanitize(rawContent, {
-          ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li'],
+          ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
           ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
           ALLOW_DATA_ATTR: false
         });
@@ -235,7 +235,7 @@ function BoardPostForm() {
     // HTML 컨텐츠를 새니타이즈
     const rawContent = contentRef.current ? contentRef.current.innerHTML : content;
     const sanitizedContent = DOMPurify.sanitize(rawContent, {
-      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li'],
+      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
       ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
       ALLOW_DATA_ATTR: false
     });
@@ -341,6 +341,12 @@ function BoardPostForm() {
             ref={contentRef}
             onInput={e => setContent(e.currentTarget.innerHTML)}
             onPaste={handlePaste}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.execCommand('insertParagraph');
+              }
+            }}
             className='content-editor'
             placeholder='내용을 입력하세요...'
           ></div>

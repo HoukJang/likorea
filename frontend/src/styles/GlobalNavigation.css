@@ -100,10 +100,13 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   font-family: var(--font-family) !important;
   min-height: 44px !important;
+  height: 44px !important;
+  line-height: 1.5 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  box-sizing: border-box !important;
 }
 
 /* 더 강력한 선택자로 글자 크기 강제 적용 */
@@ -112,7 +115,8 @@
 .global-navigation .write-button,
 .global-navigation .user-button,
 .global-navigation .logout-button,
-.global-navigation .login-button {
+.global-navigation .login-button,
+.global-navigation .signup-button {
   font-size: 14px !important;
 }
 
@@ -166,14 +170,13 @@
   background: var(--gray-100) !important;
   color: var(--gray-700) !important;
   border-color: var(--gray-300) !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
   min-width: fit-content !important;
-  /* 모든 버튼과 동일한 padding 사용 */
-  padding: 10px 18px !important;
+  box-sizing: border-box !important;
 }
 
 .user-button:hover {
@@ -214,6 +217,26 @@
   box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3) !important;
 }
 
+/* 현대화된 회원가입 버튼 */
+.signup-button {
+  background: linear-gradient(
+    135deg,
+    var(--secondary-green) 0%,
+    var(--secondary-green-dark) 100%
+  ) !important;
+  color: var(--white) !important;
+  font-size: 14px !important;
+  padding: 10px 18px !important;
+  min-width: fit-content !important;
+  white-space: nowrap !important;
+}
+
+.signup-button:hover {
+  background: linear-gradient(135deg, var(--secondary-green-dark) 0%, #047857 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3) !important;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .nav-container {
@@ -232,6 +255,7 @@
     padding: 8px 12px !important;
     font-size: 13px !important;
     min-height: 38px !important;
+    height: 38px !important;
     white-space: nowrap !important;
   }
 
@@ -270,6 +294,7 @@
     padding: 6px 10px !important;
     font-size: clamp(10px, 2.8vw, 12px) !important;
     min-height: 36px !important;
+    height: 36px !important;
   }
 
   /* 사용자 버튼은 JavaScript에서 동적으로 크기 조정됨 */
@@ -294,6 +319,7 @@
     padding: 5px 8px !important;
     font-size: clamp(9px, 2.5vw, 11px) !important;
     min-height: 34px !important;
+    height: 34px !important;
   }
 
   /* 사용자 버튼은 JavaScript에서 동적으로 크기 조정됨 */

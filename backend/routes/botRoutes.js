@@ -252,16 +252,22 @@ async function generatePostAsync(bot, task, additionalPrompt, adminUserId) {
         
         debug(`✅ 실제 뉴스 ${newsData.selectedArticles}개 수집 완료 (전체 ${newsData.totalArticles}개)`);
         
-        userPrompt = `현재 날짜: ${nyDate} (뉴욕 시간)
-제목: ${month}월 ${weekOfMonth}째주 ${targetLocations.join('·')} 뉴스
-
-아래 실제 뉴스들을 요약해주세요:
-
-${newsPrompt}
-
-응답 형식:
-제목: [게시글 제목]
-내용: [게시글 내용]`;
+        // DB에 저장된 user prompt 사용
+        userPrompt = bot.prompt?.user || '';
+        
+        // 템플릿 변수 치환
+        const currentDateTime = `${nyDate} ${nyTime.toLocaleTimeString('ko-KR', { 
+          timeZone: 'America/New_York',
+          hour: '2-digit',
+          minute: '2-digit'
+        })} (뉴욕 시간)`;
+        
+        userPrompt = userPrompt
+          .replace(/{CURRENT_DATE}/g, currentDateTime)
+          .replace(/{LOCATION}/g, targetLocations.join(' · '))
+          .replace(/{MONTH}/g, month.toString())
+          .replace(/{WEEK_OF_MONTH}/g, weekOfMonth.toString())
+          .replace(/{NEWS_DATA}/g, newsPrompt);
       } catch (error) {
         console.error('뉴스 크롤링 실패:', error);
         // 크롤링 실패 시 폴백 메시지
@@ -784,22 +790,15 @@ ${enrichedMenus.filter(m => m.images && m.images.length > 0).map(m =>
       }
     }
 
-    // 봇 서명 생성
-    const botInfo = [];
-    if (bot.persona?.age) botInfo.push(`${bot.persona.age}살`);
-    if (bot.persona?.occupation) botInfo.push(bot.persona.occupation);
-    const signature = botInfo.length > 0 ? `${bot.name} (${botInfo.join(' ')})` : bot.name;
-    
-    // 봇 서명 추가
-    generatedContent += `\n<p><br></p>\n<p><em>- ${signature}</em></p>`;
+    // 봇 서명 제거됨 - 사용자 요청에 따라 서명 추가하지 않음
     
     // AI 경고 문구 추가
     if (bot.type === 'restaurant') {
-      generatedContent += `\n<p><br></p>\n<p style="color: #666; font-size: 0.9em; font-style: italic; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 20px;">`;
+      generatedContent += `\n<p><br></p>\n<p class="bot-disclaimer">`;
       generatedContent += `※ 이 리뷰는 AI 봇이 작성한 것으로, 실제 방문 경험과 다를 수 있으며 일부 내용은 사실과 다를 수 있습니다. 참고용으로만 활용해주세요.`;
       generatedContent += `</p>`;
     } else if (bot.type === 'news') {
-      generatedContent += `\n<p><br></p>\n<p style="color: #666; font-size: 0.9em; font-style: italic; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 20px;">`;
+      generatedContent += `\n<p><br></p>\n<p class="bot-disclaimer">`;
       generatedContent += `※ 이 뉴스 요약은 AI 봇이 작성한 것으로, 실제 뉴스 내용과 다를 수 있으며 일부 해석은 부정확할 수 있습니다. 원문 확인을 권장합니다.`;
       generatedContent += `</p>`;
     }

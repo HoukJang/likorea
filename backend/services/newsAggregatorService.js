@@ -100,12 +100,27 @@ class NewsAggregatorService {
 
   /**
    * 뉴스 중요도 점수 계산
+   * @param {Object} article - 뉴스 기사
+   * @param {Array} targetLocations - 요청된 지역 배열
    */
-  calculateRelevanceScore(article) {
+  calculateRelevanceScore(article, targetLocations = []) {
     let score = 0;
     const text = `${article.title} ${article.description}`.toLowerCase();
     
-    // 키워드 기반 점수
+    // 요청된 지역에 대한 동적 가중치 부여
+    if (targetLocations && targetLocations.length > 0) {
+      for (const location of targetLocations) {
+        const locationLower = location.toLowerCase();
+        // 제목에 포함되면 15점, 내용에 포함되면 10점
+        if (article.title.toLowerCase().includes(locationLower)) {
+          score += 15;
+        } else if (text.includes(locationLower)) {
+          score += 10;
+        }
+      }
+    }
+    
+    // 기본 키워드 기반 점수
     for (const [keyword, weight] of Object.entries(this.importantKeywords)) {
       if (text.includes(keyword.toLowerCase())) {
         score += weight;
@@ -175,10 +190,10 @@ class NewsAggregatorService {
       console.log(`📰 주간 뉴스 수집 시작... (지역: ${targetLocations.join(', ')})`);
       const recentNews = await rssFeedService.fetchRecentNews(7, targetLocations);
       
-      // 점수 계산 및 정렬
+      // 점수 계산 및 정렬 (요청된 지역 정보 전달)
       const scoredNews = recentNews.map(article => ({
         ...article,
-        relevanceScore: this.calculateRelevanceScore(article)
+        relevanceScore: this.calculateRelevanceScore(article, targetLocations)
       }));
       
       // 중요도순 정렬
@@ -276,52 +291,120 @@ class NewsAggregatorService {
   }
 
   /**
-   * 뉴스 카테고리 분류
+   * 뉴스 카테고리 분류 (더 세밀한 분류)
    */
   categorizeNews(articles) {
     const categories = {
-      emergency: [],        // 긴급/사고
+      emergency: [],        // 긴급/사고/안전
       koreanCommunity: [],  // 한인 커뮤니티
       koreanBusiness: [],   // 한인 비즈니스
+      koreanEducation: [],  // 한인 교육 (추가)
       community: [],        // 일반 커뮤니티/행사
       business: [],         // 일반 비즈니스/경제
-      education: [],        // 교육
-      culture: [],          // 문화/K-POP
+      education: [],        // 일반 교육
+      health: [],          // 건강/의료 (추가)
+      culture: [],          // 문화/K-POP/엔터테인먼트
+      sports: [],          // 스포츠 (추가)
+      realEstate: [],      // 부동산 (추가)
+      transportation: [],   // 교통/인프라 (추가)
       politics: [],         // 정치/행정
+      weather: [],         // 날씨/기상 (추가)
       other: []            // 기타
     };
     
     articles.forEach(article => {
       const text = `${article.title} ${article.description}`.toLowerCase();
+      let categorized = false;
       
-      // 한인 관련 뉴스 우선 분류
-      if (text.match(/(korean|한인|한국|코리안)/)) {
-        if (text.match(/(church|community center|커뮤니티|한인회|gathering|event)/)) {
-          categories.koreanCommunity.push(article);
-        } else if (text.match(/(business|store|restaurant|market|h-mart|한인마켓|가게|식당)/)) {
-          categories.koreanBusiness.push(article);
-        } else if (text.match(/(school|education|한국학교|korean school)/)) {
-          categories.education.push(article);
-        } else if (text.match(/(k-pop|kpop|culture|festival|concert|한류)/)) {
-          categories.culture.push(article);
-        } else {
-          categories.koreanCommunity.push(article); // 기타 한인 관련
-        }
-      } 
-      // 일반 뉴스 분류
-      else if (text.match(/(emergency|accident|fire|police|crime|arrest)/)) {
+      // 1. 긴급/사고/안전 뉴스 최우선 확인
+      if (text.match(/(emergency|breaking|urgent|accident|fire|police|crime|arrest|safety|alert|warning|closure|storm|disaster|flood|evacuation)/)) {
         categories.emergency.push(article);
-      } else if (text.match(/(school|education|student|university|college)/)) {
+        categorized = true;
+      }
+      
+      // 2. 한인 관련 뉴스 세분화
+      if (!categorized && text.match(/(korean|한인|한국|코리안|k-|korean american)/)) {
+        if (text.match(/(school|교육|학교|학원|academy|education|sat|college|admission|scholarship|한글학교|태권도)/)) {
+          categories.koreanEducation.push(article);
+          categorized = true;
+        } else if (text.match(/(business|store|restaurant|market|h-mart|한인마켓|가게|식당|한식당|미용실|여행사|보험|부동산)/)) {
+          categories.koreanBusiness.push(article);
+          categorized = true;
+        } else if (text.match(/(church|community|커뮤니티|한인회|gathering|event|meeting|festival|celebration|바자회|음악회|봉사|donation)/)) {
+          categories.koreanCommunity.push(article);
+          categorized = true;
+        } else if (text.match(/(k-pop|kpop|k-drama|korean drama|culture|concert|한류|bts|blackpink)/)) {
+          categories.culture.push(article);
+          categorized = true;
+        } else {
+          // 기타 한인 관련은 커뮤니티로 분류
+          categories.koreanCommunity.push(article);
+          categorized = true;
+        }
+      }
+      
+      // 3. 건강/의료 뉴스
+      if (!categorized && text.match(/(health|hospital|clinic|doctor|medical|medicare|insurance|vaccination|covid|flu|dental|pharmacy|wellness|senior|elderly|nursing)/)) {
+        categories.health.push(article);
+        categorized = true;
+      }
+      
+      // 4. 부동산 뉴스
+      if (!categorized && text.match(/(real estate|housing|apartment|condo|rent|sale|mortgage|property|development|zoning|construction|하우스|아파트|렌트|매매)/)) {
+        categories.realEstate.push(article);
+        categorized = true;
+      }
+      
+      // 5. 교통/인프라 뉴스
+      if (!categorized && text.match(/(traffic|lirr|subway|bus|road|highway|parking|construction|infrastructure|transportation|commute|train|airport)/)) {
+        categories.transportation.push(article);
+        categorized = true;
+      }
+      
+      // 6. 스포츠 뉴스
+      if (!categorized && text.match(/(sports|baseball|basketball|football|soccer|tennis|golf|game|team|player|championship|tournament|olympic|athlete)/)) {
+        categories.sports.push(article);
+        categorized = true;
+      }
+      
+      // 7. 날씨/기상 뉴스
+      if (!categorized && text.match(/(weather|storm|snow|rain|temperature|forecast|hurricane|tornado|flood|heat|cold|climate)/)) {
+        categories.weather.push(article);
+        categorized = true;
+      }
+      
+      // 8. 일반 교육 뉴스
+      if (!categorized && text.match(/(school|education|student|teacher|university|college|campus|graduation|curriculum|board of education)/)) {
         categories.education.push(article);
-      } else if (text.match(/(business|economy|store|restaurant|company|market)/)) {
+        categorized = true;
+      }
+      
+      // 9. 일반 비즈니스/경제
+      if (!categorized && text.match(/(business|economy|store|restaurant|company|market|employment|job|hiring|opening|closing|retail|mall|shopping)/)) {
         categories.business.push(article);
-      } else if (text.match(/(k-pop|kpop|culture|art|music|concert|festival|entertainment)/)) {
+        categorized = true;
+      }
+      
+      // 10. 문화/엔터테인먼트
+      if (!categorized && text.match(/(culture|art|music|concert|festival|entertainment|theater|movie|exhibition|museum|library|performance|show)/)) {
         categories.culture.push(article);
-      } else if (text.match(/(community|event|church|gathering)/)) {
-        categories.community.push(article);
-      } else if (text.match(/(election|politics|government|mayor|council)/)) {
+        categorized = true;
+      }
+      
+      // 11. 정치/행정
+      if (!categorized && text.match(/(election|politics|government|mayor|council|governor|vote|voting|candidate|democrat|republican|policy|law|legislation)/)) {
         categories.politics.push(article);
-      } else {
+        categorized = true;
+      }
+      
+      // 12. 커뮤니티 일반
+      if (!categorized && text.match(/(community|event|gathering|meeting|volunteer|charity|fundraising|parade|fair|bazaar)/)) {
+        categories.community.push(article);
+        categorized = true;
+      }
+      
+      // 13. 분류되지 않은 기타 뉴스
+      if (!categorized) {
         categories.other.push(article);
       }
     });
@@ -366,22 +449,56 @@ class NewsAggregatorService {
         });
       }
       
-      prompt += '\n\n📝 작성 지침:\n';
-      prompt += '1. 전체 기사가 제공된 뉴스는 구체적인 내용을 바탕으로 상세히 설명해주세요.\n';
-      prompt += '2. 각 뉴스마다 충실하고 상세한 요약을 작성해주세요:\n';
-      prompt += '   - 중요 뉴스(전체 기사 제공): 10-15줄의 심층 분석\n';
-      prompt += '   - 일반 뉴스(요약만 제공): 7-10줄의 상세 요약\n';
-      prompt += '3. 한인 커뮤니티 관점에서의 영향과 중요성을 반드시 포함해주세요:\n';
-      prompt += '   - 한인들에게 미치는 직접적 영향\n';
-      prompt += '   - 대응 방법이나 참여 방법\n';
-      prompt += '   - 관련 한인 단체나 비즈니스 언급\n';
-      prompt += '4. 실용적 정보를 포함해주세요:\n';
-      prompt += '   - 영향받는 구체적 지역\n';
-      prompt += '   - 일정이나 시간 정보\n';
-      prompt += '   - 문의처나 참여 방법\n';
-      prompt += '5. 스토리텔링 방식으로 흥미롭게 전달해주세요.\n';
-      prompt += '6. 사실 관계를 정확히 전달하고, 추측은 피해주세요.\n';
-      prompt += '7. URL이나 링크는 절대 포함하지 마세요. 출처명만 언급해주세요.';
+      prompt += '\n\n📝 작성 지침:\n\n';
+      
+      prompt += '【필수 작성 원칙】\n';
+      prompt += '1. **사실 기반 작성**: 제공된 기사 내용만을 바탕으로 작성하고, 추측이나 가정은 절대 하지 마세요.\n';
+      prompt += '2. **충실한 요약**: 각 뉴스마다 상세하고 구체적인 요약을 작성해주세요:\n';
+      prompt += '   - 중요 뉴스(전체 기사 제공): 15-20줄의 심층 분석\n';
+      prompt += '   - 일반 뉴스(요약만 제공): 10-15줄의 상세 요약\n';
+      prompt += '   - 단순 나열이 아닌 스토리텔링 방식으로 작성\n';
+      prompt += '\n';
+      
+      prompt += '【한인 커뮤니티 연관성 - 매우 중요】\n';
+      prompt += '각 뉴스마다 다음 내용을 반드시 포함해주세요:\n';
+      prompt += '1. 한인들에게 미치는 직접적인 영향 (구체적으로)\n';
+      prompt += '2. 한인 가정/비즈니스/학생들이 알아야 할 중요 정보\n';
+      prompt += '3. 대응 방법이나 참여 방법 (있다면)\n';
+      prompt += '4. 관련 한인 단체, 교회, 학교, 비즈니스 언급 (해당하는 경우)\n';
+      prompt += '5. 한인 밀집 지역에 미치는 구체적 영향\n';
+      prompt += '\n';
+      
+      prompt += '【실용적 정보 포함】\n';
+      prompt += '- 정확한 날짜, 시간, 장소 정보\n';
+      prompt += '- 영향받는 구체적 거리명, 지역명\n';
+      prompt += '- 문의처 전화번호나 이메일 (있다면)\n';
+      prompt += '- 신청 방법이나 참여 절차 (해당하는 경우)\n';
+      prompt += '- 비용이나 요금 정보 (언급된 경우)\n';
+      prompt += '\n';
+      
+      prompt += '【작성 스타일】\n';
+      prompt += '- 딱딱한 뉴스 보도가 아닌 커뮤니티 소식지 스타일\n';
+      prompt += '- 독자와 대화하듯 친근한 어조\n';
+      prompt += '- 중요한 정보는 **굵은 글씨**로 강조\n';
+      prompt += '- 각 뉴스 사이에 자연스러운 연결과 전환\n';
+      prompt += '\n';
+      
+      prompt += '【금지 사항】\n';
+      prompt += '- 추측성 내용이나 확인되지 않은 정보 금지\n';
+      prompt += '- 일반적인 조언이나 당연한 이야기 금지\n';
+      prompt += '- "이 기사에 따르면", "보도에 의하면" 같은 표현 금지\n';
+      
+      prompt += '\n【출처 링크 포함 방법 - 매우 중요】\n';
+      prompt += '- 각 뉴스 소개 문단 끝에 바로 [원문보기] 링크 추가\n';
+      prompt += '- 형식: ... 관련 내용입니다. <a href="URL" target="_blank" style="color: #0066cc; text-decoration: none;">[원문보기]</a></p>\n';
+      prompt += '- 각 뉴스마다 해당하는 링크를 정확히 매칭해서 포함\n';
+      prompt += '- 절대 모든 링크를 마지막에 몰아서 넣지 마세요\n';
+      prompt += '\n';
+      
+      prompt += '【마무리】\n';
+      prompt += '- 전체 내용을 간단히 정리하는 마무리 문단 추가\n';
+      prompt += '- 다음 주 예상되는 중요 일정이나 행사 언급 (있다면)\n';
+      prompt += '- 한인 커뮤니티에 도움이 되는 따뜻한 메시지로 마무리';
       
     } else {
       // 기존 방식 (요약만 있는 경우)
@@ -446,11 +563,35 @@ class NewsAggregatorService {
         prompt += '\n';
       }
       
-      prompt += '\n위 뉴스들의 제목과 요약 내용을 바탕으로, 각 뉴스를 상세하게 설명해주세요:\n';
-      prompt += '- 각 뉴스마다 10-15줄의 충실한 요약\n';
-      prompt += '- 한인 커뮤니티 관점에서의 영향과 중요성 포함\n';
-      prompt += '- 스토리텔링 방식으로 흥미롭게 전달\n';
-      prompt += '- URL이나 링크는 절대 포함하지 마세요.';
+      prompt += '\n\n📝 작성 지침:\n\n';
+      
+      prompt += '【필수 작성 원칙】\n';
+      prompt += '1. **사실 기반 작성**: 제공된 뉴스 제목과 요약만을 바탕으로 작성\n';
+      prompt += '2. **충실한 요약**: 각 뉴스마다 10-15줄의 상세한 설명\n';
+      prompt += '3. **스토리텔링**: 단순 나열이 아닌 자연스러운 이야기 형식\n';
+      prompt += '\n';
+      
+      prompt += '【한인 커뮤니티 연관성 필수】\n';
+      prompt += '각 뉴스마다 반드시 포함:\n';
+      prompt += '- 한인들에게 미치는 구체적 영향\n';
+      prompt += '- 한인 가정/비즈니스/학생 관련 정보\n';
+      prompt += '- 관련 한인 단체나 장소 언급\n';
+      prompt += '\n';
+      
+      prompt += '【실용 정보】\n';
+      prompt += '- 정확한 날짜, 시간, 장소\n';
+      prompt += '- 영향받는 구체적 지역\n';
+      prompt += '- 참여/대응 방법\n';
+      prompt += '\n';
+      
+      prompt += '【금지 사항】\n';
+      prompt += '- 추측성 내용 금지\n';
+      prompt += '- 일반론적 조언 금지\n';
+      
+      prompt += '\n\n【출처 링크 포함 방법】\n';
+      prompt += '- 각 뉴스 소개 바로 뒤에 [원문보기] 링크 추가\n';
+      prompt += '- 형식: <a href="URL" target="_blank" style="color: #0066cc;">[원문보기]</a>\n';
+      prompt += '- 각 뉴스의 정확한 링크를 매칭해서 포함';
     }
     
     return prompt;
@@ -483,6 +624,7 @@ class NewsAggregatorService {
 ║ 📅 날짜: ${date}
 ║ 📰 출처: ${article.source}
 ║ ✍️ 작성자: ${article.byline || '미상'}
+║ 🔗 링크: ${article.link}
 ║ 📊 중요도: ${article.relevanceScore || 0}점
 ╠════════════════════════════════════════════════════════════════════
 ║ 【기사 전문】
@@ -512,6 +654,7 @@ ${content.split('\n').map(line => '║ ' + line).join('\n')}
     return `${index}. [${date}] ${article.title}
    - 내용: ${description}
    - 출처: ${article.source}
+   - 링크: ${article.link}
    - 중요도 점수: ${article.relevanceScore || 0}점
 `;
   }

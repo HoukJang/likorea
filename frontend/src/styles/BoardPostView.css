@@ -202,6 +202,110 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
+/* HTML 콘텐츠 내부 요소들의 간격 설정 */
+.post-content p,
+.post-content div {
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+.post-content p:last-child,
+.post-content div:last-child {
+  margin-bottom: 0;
+}
+
+.post-content ul, 
+.post-content ol {
+  margin-bottom: 16px;
+  margin-top: 0;
+  padding-left: 24px;
+}
+
+.post-content li {
+  margin-bottom: 8px;
+}
+
+.post-content li:last-child {
+  margin-bottom: 0;
+}
+
+.post-content h1, 
+.post-content h2, 
+.post-content h3, 
+.post-content h4, 
+.post-content h5, 
+.post-content h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  color: var(--primary-text);
+}
+
+.post-content h1:first-child,
+.post-content h2:first-child,
+.post-content h3:first-child,
+.post-content h4:first-child,
+.post-content h5:first-child,
+.post-content h6:first-child {
+  margin-top: 0;
+}
+
+.post-content blockquote {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 4px solid var(--primary-blue);
+  background: var(--gray-50);
+  border-radius: 0 4px 4px 0;
+}
+
+.post-content hr {
+  margin: 24px 0;
+  border: none;
+  height: 1px;
+  background: var(--gray-200);
+}
+
+.post-content strong {
+  font-weight: 700;
+  color: var(--primary-text);
+}
+
+.post-content em {
+  font-style: italic;
+  color: var(--secondary-text);
+}
+
+.post-content code {
+  background: var(--gray-100);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9em;
+}
+
+.post-content pre {
+  background: var(--gray-100);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.post-content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* 봇 면책 조항 스타일 */
+.post-content .bot-disclaimer {
+  color: #666;
+  font-size: 0.9em;
+  font-style: italic;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+  margin-top: 20px;
+}
+
 /* 통일된 메타 정보 */
 .post-meta {
   display: flex;
@@ -591,6 +695,48 @@
   font-size: var(--font-size-sm);
   word-wrap: break-word;
   white-space: pre-wrap;
+}
+
+/* 댓글 내부 HTML 요소들의 간격 설정 */
+.comment-text p {
+  margin-bottom: 12px;
+  margin-top: 0;
+}
+
+.comment-text p:last-child {
+  margin-bottom: 0;
+}
+
+.comment-text ul, 
+.comment-text ol {
+  margin-bottom: 12px;
+  margin-top: 0;
+  padding-left: 20px;
+}
+
+.comment-text li {
+  margin-bottom: 4px;
+}
+
+.comment-text li:last-child {
+  margin-bottom: 0;
+}
+
+.comment-text strong {
+  font-weight: 700;
+  color: var(--primary-text);
+}
+
+.comment-text em {
+  font-style: italic;
+}
+
+.comment-text code {
+  background: var(--gray-100);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9em;
 }
 
 /* 반응형 디자인 */

@@ -185,7 +185,7 @@ exports.createPost = asyncHandler(async (req, res) => {
 
   // HTML sanitization
   const sanitizedContent = sanitizeHtml(content, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'div']),
     allowedAttributes: {
       ...sanitizeHtml.defaults.allowedAttributes,
       img: ['src', 'alt', 'width', 'height']
@@ -387,7 +387,7 @@ exports.updatePost = asyncHandler(async (req, res) => {
   if (content) {
     // HTML sanitization
     updateData.content = sanitizeHtml(content, {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'div']),
       allowedAttributes: {
         ...sanitizeHtml.defaults.allowedAttributes,
         img: ['src', 'alt', 'width', 'height']

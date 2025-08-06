@@ -11,23 +11,8 @@ import {
  * 인증 상태를 관리하는 커스텀 훅
  */
 export const useAuth = () => {
-  // localStorage에서 초기 사용자 정보 가져오기
-  const getInitialUser = () => {
-    const userId = localStorage.getItem('userId');
-    const userEmail = localStorage.getItem('userEmail');
-    const userAuthority = localStorage.getItem('userAuthority');
-    
-    if (userId && userEmail && userAuthority) {
-      return {
-        id: userId,
-        email: userEmail,
-        authority: parseInt(userAuthority, 10)
-      };
-    }
-    return null;
-  };
-
-  const [user, setUser] = useState(getInitialUser());
+  // 초기 상태는 null로 설정하고, 서버 검증 후에만 user 설정
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -66,11 +51,11 @@ export const useAuth = () => {
         return true;
       } else {
         // 토큰이 유효하지 않으면 로그아웃
-        await logout();
+        logout();
         return false;
       }
     } catch (error) {
-      await logout();
+      logout();
       return false;
     }
   }, [logout]);
@@ -116,11 +101,8 @@ export const useAuth = () => {
       try {
         setLoading(true);
         setError(null);
-        // localStorage에 사용자 정보가 있으면 검증 생략
-        if (user) {
-          setLoading(false);
-          return;
-        }
+        // 항상 서버에서 토큰 유효성을 검증
+        // localStorage의 데이터는 단지 힌트일 뿐, 실제 인증 상태는 서버에서 확인
         await validateToken();
       } catch (err) {
         setUser(null);
@@ -188,15 +170,15 @@ export const useAuth = () => {
   /**
    * 인증 상태 확인
    */
-  const authenticated = useCallback(async () => {
-    return await isAuthenticated();
+  const authenticated = useCallback(() => {
+    return isAuthenticated();
   }, []);
 
   /**
    * 관리자 권한 확인
    */
-  const admin = useCallback(async () => {
-    return await isAdmin();
+  const admin = useCallback(() => {
+    return isAdmin();
   }, []);
 
   return {
