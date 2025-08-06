@@ -157,6 +157,25 @@ const removeTestUserIfExists = async (userId) => {
   }
 };
 
+/**
+ * 테스트용 로그인 수행 (쿠키 문자열 반환)
+ */
+const loginTestUser = async (app, credentials) => {
+  const request = require('supertest');
+  const response = await request(app)
+    .post('/api/users/login')
+    .send(credentials);
+  
+  // 쿠키 헤더에서 authToken 추출
+  const cookies = response.headers['set-cookie'];
+  if (!cookies || cookies.length === 0) {
+    throw new Error('로그인 응답에 쿠키가 없습니다');
+  }
+  
+  // 첫 번째 쿠키를 반환 (authToken이어야 함)
+  return cookies[0];
+};
+
 module.exports = {
   createTestUser,
   createTestAdmin,
@@ -168,6 +187,7 @@ module.exports = {
   setupTestEnvironment,
   cleanupTestData,
   removeTestUserIfExists,
+  loginTestUser,
   // Re-export authHelpers for convenience
   ...authHelpers
 };

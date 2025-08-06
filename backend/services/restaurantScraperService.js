@@ -592,10 +592,10 @@ class RestaurantScraperService {
     
     // 추천 메뉴 섹션 찾기
     const recommendPatterns = [
-      /추천\s*메뉴[:\s]*([^\.]+)/gi,
-      /recommend[ed]*\s*dish[es]*[:\s]*([^\.]+)/gi,
-      /must[\s-]*try[:\s]*([^\.]+)/gi,
-      /popular\s*item[s]*[:\s]*([^\.]+)/gi,
+      /추천\s*메뉴[:\s]*([^.]+)/gi,
+      /recommend[ed]*\s*dish[es]*[:\s]*([^.]+)/gi,
+      /must[\s-]*try[:\s]*([^.]+)/gi,
+      /popular\s*item[s]*[:\s]*([^.]+)/gi,
       /\d+\.\s*([^\n]+)/g  // 번호 리스트 형식
     ];
     

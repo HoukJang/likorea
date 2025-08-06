@@ -50,7 +50,14 @@ describe('Comment API Tests', () => {
         id: 'testuser',
         password: 'Test1234!@'
       });
-    authToken = loginRes.headers['set-cookie'][0];
+    
+    // 쿠키 확인 및 할당
+    const cookies = loginRes.headers['set-cookie'];
+    authToken = cookies && cookies.length > 0 ? cookies[0] : null;
+    
+    if (!authToken) {
+      console.error('일반 사용자 로그인 실패:', loginRes.body);
+    }
 
     const adminLoginRes = await request(app)
       .post('/api/users/login')
@@ -58,7 +65,14 @@ describe('Comment API Tests', () => {
         id: 'admin',
         password: 'Admin1234!@'
       });
-    adminToken = adminLoginRes.headers['set-cookie'][0];
+    
+    // 관리자 쿠키 확인 및 할당
+    const adminCookies = adminLoginRes.headers['set-cookie'];
+    adminToken = adminCookies && adminCookies.length > 0 ? adminCookies[0] : null;
+    
+    if (!adminToken) {
+      console.error('관리자 로그인 실패:', adminLoginRes.body);
+    }
 
     // 테스트 게시글 생성
     testPost = await BoardPost.create({
@@ -295,7 +309,8 @@ describe('Comment API Tests', () => {
           password: 'Other1234!@'
         });
 
-      const otherToken = loginRes.headers['set-cookie'][0];
+      const cookies = loginRes.headers['set-cookie'] || [];
+      const otherToken = cookies.length > 0 ? cookies[0] : '';
 
       const res = await request(app)
         .put(`/api/boards/${testPost._id}/comments/${testComment._id}`)
@@ -378,7 +393,8 @@ describe('Comment API Tests', () => {
           password: 'Other1234!@'
         });
 
-      const otherToken = loginRes.headers['set-cookie'][0];
+      const cookies = loginRes.headers['set-cookie'] || [];
+      const otherToken = cookies.length > 0 ? cookies[0] : '';
 
       const res = await request(app)
         .delete(`/api/boards/${testPost._id}/comments/${testComment._id}`)

@@ -382,7 +382,8 @@ describe('Board API Tests', () => {
           password: 'Other1234!@'
         });
 
-      const otherToken = loginRes.headers['set-cookie'][0];
+      const cookies = loginRes.headers['set-cookie'] || [];
+      const otherToken = cookies.length > 0 ? cookies[0] : '';
 
       const res = await request(app)
         .put(`/api/boards/${testPost._id}`)
@@ -467,7 +468,8 @@ describe('Board API Tests', () => {
           password: 'Other1234!@'
         });
 
-      const otherToken = loginRes.headers['set-cookie'][0];
+      const cookies = loginRes.headers['set-cookie'] || [];
+      const otherToken = cookies.length > 0 ? cookies[0] : '';
 
       const res = await request(app)
         .delete(`/api/boards/${testPost._id}`)

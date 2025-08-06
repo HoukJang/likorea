@@ -61,6 +61,13 @@ const initializeEssentialData = async () => {
     { seq: 0 },
     { upsert: true, new: true }
   );
+  
+  // board 카운터 초기화 (duplicate key 오류 방지)
+  await Counter.findOneAndUpdate(
+    { _id: 'board' },
+    { seq: 0 },
+    { upsert: true, new: true }
+  );
 
   // 기본 태그 초기화
   await initializeTags();

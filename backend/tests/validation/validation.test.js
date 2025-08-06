@@ -33,7 +33,8 @@ describe('Input Validation Tests', () => {
         id: 'testuser',
         password: 'Test1234!@'
       });
-    authToken = loginRes.headers['set-cookie'][0];
+    const cookies = loginRes.headers['set-cookie'] || [];
+    authToken = cookies.length > 0 ? cookies[0] : '';
   });
 
   afterAll(async () => {
