@@ -1,10 +1,17 @@
 import React from 'react';
-import bannerImage from '../styles/banner_image.png';
+import ResponsiveImage from './common/ResponsiveImage';
 import '../styles/Banner.css';
 
 const Banner = () => (
   <div className='banner-container'>
-    <img src={bannerImage} alt='Long Island Korea Community' className='banner-image' />
+    <ResponsiveImage
+      imageName="banner"
+      alt="Long Island Korea Community"
+      className="banner-image"
+      fetchPriority="high"
+      loading="eager"
+      sizes="(max-width: 480px) 100vw, (max-width: 768px) 100vw, 1200px"
+    />
   </div>
 );
 

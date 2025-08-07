@@ -5,7 +5,15 @@ import { getBoardPost, createBoard, updateBoard } from '../api/boards';
 import { getCurrentUser, isAuthenticated } from '../api/auth';
 import { approvePost, rejectPost, updatePendingPost } from '../api/approval';
 import TagSelector from './TagSelector';
-import imageCompression from 'browser-image-compression';
+// Lazy load image compression library
+let imageCompression;
+const loadImageCompression = async () => {
+  if (!imageCompression) {
+    const module = await import('browser-image-compression');
+    imageCompression = module.default;
+  }
+  return imageCompression;
+};
 import '../styles/BoardPostForm.css';
 
 function BoardPostForm() {
@@ -86,8 +94,9 @@ function BoardPostForm() {
         const file = item.getAsFile();
         
         try {
-          // 이미지 압축
-          const compressedFile = await imageCompression(file, compressionOptions);
+          // 이미지 압축 라이브러리 동적 로드
+          const compress = await loadImageCompression();
+          const compressedFile = await compress(file, compressionOptions);
           
           const reader = new FileReader();
           reader.onload = function (event) {

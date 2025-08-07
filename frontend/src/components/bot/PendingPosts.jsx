@@ -33,7 +33,15 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import DOMPurify from 'dompurify';
-import imageCompression from 'browser-image-compression';
+// Lazy load image compression library
+let imageCompression;
+const loadImageCompression = async () => {
+  if (!imageCompression) {
+    const module = await import('browser-image-compression');
+    imageCompression = module.default;
+  }
+  return imageCompression;
+};
 
 export default function PendingPosts({ posts, onApproval, onReload }) {
   const [editDialog, setEditDialog] = useState({ open: false, post: null });
@@ -150,9 +158,10 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
         const file = item.getAsFile();
         
         try {
-          // 이미지 압축
+          // 이미지 압축 라이브러리 동적 로드
           console.log('원본 이미지 크기:', (file.size / 1024 / 1024).toFixed(2), 'MB');
-          const compressedFile = await imageCompression(file, compressionOptions);
+          const compress = await loadImageCompression();
+          const compressedFile = await compress(file, compressionOptions);
           console.log('압축된 이미지 크기:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
           
           const reader = new FileReader();

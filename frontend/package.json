@@ -18,16 +18,20 @@
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
+    "critical": "^7.2.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.33.0",
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "sharp": "^0.34.3"
   },
   "scripts": {
-    "start": "NODE_OPTIONS=--max-old-space-size=4096 react-scripts start",
-    "build": "NODE_OPTIONS=--max-old-space-size=4096 react-scripts build",
-    "test": "react-scripts test",
+    "start": "NODE_OPTIONS=--max-old-space-size=4096 craco start",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 craco build",
+    "postbuild": "node scripts/inline-critical-styles.js",
+    "test": "craco test",
     "eject": "react-scripts eject",
     "lint": "eslint src --ext .js,.jsx",
     "lint:fix": "eslint src --ext .js,.jsx --fix"

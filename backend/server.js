@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -40,6 +41,23 @@ const app = express();
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1); // 단일 프록시만 신뢰
 }
+
+// Compression 미들웨어 적용 (gzip 압축)
+app.use(compression({
+  // 1KB 이상의 응답만 압축
+  threshold: 1024,
+  // 압축 레벨 설정 (1-9, 기본값 6)
+  level: 6,
+  // 압축할 콘텐츠 타입 지정
+  filter: (req, res) => {
+    // 이미지는 이미 압축되어 있으므로 제외
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    // compress 함수의 기본 동작 사용 (text/*, application/json, etc.)
+    return compression.filter(req, res);
+  }
+}));
 
 // 보안 미들웨어 적용
 app.use(configureHelmet());
