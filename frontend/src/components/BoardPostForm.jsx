@@ -5,6 +5,7 @@ import { getBoardPost, createBoard, updateBoard } from '../api/boards';
 import { getCurrentUser, isAuthenticated } from '../api/auth';
 import { approvePost, rejectPost, updatePendingPost } from '../api/approval';
 import TagSelector from './TagSelector';
+import { domPurifyConfig } from '../utils/domPurifyConfig';
 // Lazy load image compression library
 let imageCompression;
 const loadImageCompression = async () => {
@@ -61,11 +62,7 @@ function BoardPostForm() {
           setTags(data.post.tags || { type: '', region: '0', subcategory: '' });
           if (contentRef.current) {
             // DOMPurify로 HTML을 새니타이즈하여 안전하게 표시
-            const sanitizedContent = DOMPurify.sanitize(data.post.content, {
-              ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
-              ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
-              ALLOW_DATA_ATTR: false
-            });
+            const sanitizedContent = DOMPurify.sanitize(data.post.content, domPurifyConfig);
             contentRef.current.innerHTML = sanitizedContent;
           }
           // 원 작성자 정보는 현재 사용하지 않음
@@ -87,7 +84,23 @@ function BoardPostForm() {
 
   // Handle paste for images
   const handlePaste = async e => {
+    // 먼저 이미지가 있는지 확인
     const items = e.clipboardData.items;
+    let hasImage = false;
+    
+    for (const item of items) {
+      if (item.kind === 'file' && item.type.startsWith('image/')) {
+        hasImage = true;
+        break;
+      }
+    }
+    
+    // 이미지가 있으면 기본 동작 방지
+    if (hasImage) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
     for (const index in items) {
       const item = items[index];
       if (item.kind === 'file' && item.type.startsWith('image/')) {
@@ -110,22 +123,25 @@ function BoardPostForm() {
             img.style.margin = '10px auto';
             img.style.display = 'block';
             img.style.objectFit = 'contain';
+            
+            console.log('Image created with src:', img.src.substring(0, 100) + '...');
+            console.log('Image src starts with data:', img.src.startsWith('data:'));
 
             const target = e.currentTarget || e.target;
             if (target) {
               // 현재 커서 위치에 이미지 삽입
-            const selection = window.getSelection();
-            if (selection && selection.rangeCount > 0) {
-              const range = selection.getRangeAt(0);
-              range.deleteContents();
-              range.insertNode(img);
-              range.setStartAfter(img);
-              selection.removeAllRanges();
-              selection.addRange(range);
-            } else {
-              // 커서가 없으면 끝에 추가
-              target.appendChild(img);
-            }
+              const selection = window.getSelection();
+              if (selection && selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                range.deleteContents();
+                range.insertNode(img);
+                range.setStartAfter(img);
+                selection.removeAllRanges();
+                selection.addRange(range);
+              } else {
+                // 커서가 없으면 끝에 추가
+                target.appendChild(img);
+              }
 
               // 입력 이벤트 발생시켜 상태 업데이트
               target.dispatchEvent(new Event('input', { bubbles: true }));
@@ -135,7 +151,6 @@ function BoardPostForm() {
         } catch (error) {
           alert('이미지 압축 중 오류가 발생했습니다. 원본 이미지가 너무 큽니다.');
         }
-        e.preventDefault();
         return; // 이미지 처리 후 다른 붙여넣기 방지
       }
     }
@@ -152,11 +167,7 @@ function BoardPostForm() {
       // 내용이 수정되었다면 먼저 업데이트
       if (isPendingMode && isEditMode) {
         const rawContent = contentRef.current ? contentRef.current.innerHTML : content;
-        const sanitizedContent = DOMPurify.sanitize(rawContent, {
-          ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
-          ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
-          ALLOW_DATA_ATTR: false
-        });
+        const sanitizedContent = DOMPurify.sanitize(rawContent, domPurifyConfig);
 
         await updatePendingPost(postId, {
           title,
@@ -240,11 +251,10 @@ function BoardPostForm() {
 
     // HTML 컨텐츠를 새니타이즈
     const rawContent = contentRef.current ? contentRef.current.innerHTML : content;
-    const sanitizedContent = DOMPurify.sanitize(rawContent, {
-      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
-      ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
-      ALLOW_DATA_ATTR: false
-    });
+    console.log('Raw content before sanitization:', rawContent);
+    const sanitizedContent = DOMPurify.sanitize(rawContent, domPurifyConfig);
+    console.log('Sanitized content:', sanitizedContent);
+    console.log('Has data: URLs after sanitization:', sanitizedContent.includes('data:image'));
 
     try {
       let response;

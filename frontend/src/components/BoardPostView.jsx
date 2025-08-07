@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import DOMPurify from 'dompurify';
 import {
   getBoardPost,
   deleteBoard,
@@ -13,6 +14,7 @@ import { getPendingPost, approvePost, rejectPost } from '../api/approval';
 import { processPostData, processCommentsList } from '../utils/dataUtils';
 import { createTagDisplayData } from '../utils/tagUtils';
 import { linkifyContent } from '../utils/linkify';
+import { linkifyContentSafe } from '../utils/linkifyContentSafe';
 import { usePermission } from '../hooks/usePermission';
 import { useAuth } from '../hooks/useAuth';
 import { useErrorHandler } from '../utils/errorHandler';
@@ -471,7 +473,30 @@ function BoardPostView() {
       <hr className='post-divider' />
 
       <div className='post-content'>
-        <div dangerouslySetInnerHTML={{ __html: linkifyContent(post.content) }} />
+        <div className='post-content-html' dangerouslySetInnerHTML={{ 
+          __html: (() => {
+            console.log('=== BoardPostView Debug ===');
+            console.log('Original content:', post.content);
+            console.log('Has img tags:', post.content.includes('<img'));
+            console.log('Has data: URLs:', post.content.includes('data:image'));
+            
+            // DOMPurify 테스트
+            const purified = DOMPurify.sanitize(post.content, {
+              ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
+              ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
+              ALLOW_DATA_ATTR: false,
+              ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.-]+(?:[^a-z+.:-]|$))/i
+            });
+            console.log('After DOMPurify:', purified);
+            console.log('DOMPurify kept img tags:', purified.includes('<img'));
+            console.log('DOMPurify kept data: URLs:', purified.includes('data:image'));
+            
+            const processed = linkifyContentSafe(purified);
+            console.log('After linkifyContentSafe:', processed);
+            console.log('=== End Debug ===');
+            return processed;
+          })()
+        }} />
       </div>
 
       <div className='comment-section'>
@@ -524,7 +549,7 @@ function BoardPostView() {
                       </div>
                       <div className='comment-divider-vertical'></div>
                       <div className='comment-main'>
-                        <div className='comment-text' dangerouslySetInnerHTML={{ __html: linkifyContent(comment.content) }} />
+                        <div className='comment-text' dangerouslySetInnerHTML={{ __html: linkifyContentSafe(comment.content) }} />
                         {hasPermission && (
                           <div className='comment-actions'>
                             <button

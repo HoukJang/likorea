@@ -11,9 +11,10 @@
 export function linkifyContent(content) {
   if (!content) return '';
   
-  // 이미 링크 태그가 있는 경우 건너뛰기 위한 처리
-  // HTML 태그 내부의 URL은 변환하지 않음
-  const parts = content.split(/(<[^>]*>)/);
+  // 더 정확한 HTML 태그 매칭을 위한 정규식
+  // img 태그와 같이 속성이 많은 태그도 제대로 처리
+  const htmlTagRegex = /(<(?:[^>"']|"[^"]*"|'[^']*')*>)/g;
+  const parts = content.split(htmlTagRegex);
   
   return parts.map((part, index) => {
     // 홀수 인덱스는 HTML 태그

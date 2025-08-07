@@ -57,7 +57,7 @@ const ResponsiveImage = ({
         alt={alt}
         className={className}
         loading={loading}
-        fetchpriority={fetchPriority}
+        fetchPriority={fetchPriority}
         sizes={sizes}
       />
     </picture>

@@ -24,6 +24,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import PreviewIcon from '@mui/icons-material/Preview';
 import { linkifyContent } from '../../utils/linkify';
+import { linkifyContentSafe } from '../../utils/linkifyContentSafe';
 import { 
   approvePost, 
   rejectPost, 
@@ -135,7 +136,8 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
       const sanitizedContent = DOMPurify.sanitize(editDialog.post.content, {
         ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li'],
         ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
-        ALLOW_DATA_ATTR: false
+        ALLOW_DATA_ATTR: false,
+        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.-]+(?:[^a-z+.:-]|$))/i
       });
       contentEditorRef.current.innerHTML = sanitizedContent;
     }
@@ -151,7 +153,23 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
 
   // 이미지 붙여넣기 처리
   const handlePaste = async (e) => {
+    // 먼저 이미지가 있는지 확인
     const items = e.clipboardData.items;
+    let hasImage = false;
+    
+    for (const item of items) {
+      if (item.kind === 'file' && item.type.startsWith('image/')) {
+        hasImage = true;
+        break;
+      }
+    }
+    
+    // 이미지가 있으면 기본 동작 방지
+    if (hasImage) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
     for (const index in items) {
       const item = items[index];
       if (item.kind === 'file' && item.type.startsWith('image/')) {
@@ -181,15 +199,15 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
             if (target) {
               const selection = window.getSelection();
               if (selection && selection.rangeCount > 0) {
-              const range = selection.getRangeAt(0);
-              range.deleteContents();
-              range.insertNode(img);
-              range.setStartAfter(img);
-              selection.removeAllRanges();
-              selection.addRange(range);
-            } else {
-              target.appendChild(img);
-            }
+                const range = selection.getRangeAt(0);
+                range.deleteContents();
+                range.insertNode(img);
+                range.setStartAfter(img);
+                selection.removeAllRanges();
+                selection.addRange(range);
+              } else {
+                target.appendChild(img);
+              }
               target.dispatchEvent(new Event('input', { bubbles: true }));
             }
           };
@@ -198,7 +216,6 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
           console.error('이미지 압축 실패:', error);
           alert('이미지 압축 중 오류가 발생했습니다. 원본 이미지가 너무 큽니다.');
         }
-        e.preventDefault();
         return;
       }
     }
@@ -212,7 +229,8 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
     const sanitizedContent = DOMPurify.sanitize(rawContent, {
       ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li'],
       ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
-      ALLOW_DATA_ATTR: false
+      ALLOW_DATA_ATTR: false,
+      ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i
     });
 
     try {
@@ -434,7 +452,12 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
         <DialogContent>
           <Box 
             dangerouslySetInnerHTML={{ 
-              __html: linkifyContent(DOMPurify.sanitize(previewDialog.post?.content || '')) 
+              __html: linkifyContentSafe(DOMPurify.sanitize(previewDialog.post?.content || '', {
+                ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
+                ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
+                ALLOW_DATA_ATTR: false,
+                ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.-]+(?:[^a-z+.:-]|$))/i
+              })) 
             }}
             sx={{ 
               '& p': { marginBottom: 1 },
