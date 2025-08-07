@@ -45,7 +45,7 @@ function BoardPostForm() {
   // If editing, fetch post data and update state
   useEffect(() => {
     if (isEditMode && currentUser) {
-      async function fetchPost() {
+      const fetchPost = async () => {
         try {
           const data = await getBoardPost(postId);
           setTitle(data.post.title);
@@ -87,9 +87,7 @@ function BoardPostForm() {
         
         try {
           // 이미지 압축
-          console.log('원본 이미지 크기:', (file.size / 1024 / 1024).toFixed(2), 'MB');
           const compressedFile = await imageCompression(file, compressionOptions);
-          console.log('압축된 이미지 크기:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
           
           const reader = new FileReader();
           reader.onload = function (event) {
@@ -126,7 +124,6 @@ function BoardPostForm() {
           };
           reader.readAsDataURL(compressedFile); // 압축된 파일을 읽음
         } catch (error) {
-          console.error('이미지 압축 실패:', error);
           alert('이미지 압축 중 오류가 발생했습니다. 원본 이미지가 너무 큽니다.');
         }
         e.preventDefault();

@@ -76,9 +76,6 @@ export default function BotForm() {
 
   // 관리자 권한 확인
   useEffect(() => {
-    console.log('BotForm - Auth loading:', authLoading);
-    console.log('BotForm - User:', user);
-    console.log('BotForm - User authority:', user?.authority);
     
     // 인증 로딩 중이면 대기
     if (authLoading) {
@@ -86,7 +83,6 @@ export default function BotForm() {
     }
     
     if (!user || user.authority < 5) {
-      console.log('BotForm - Redirecting due to insufficient permissions');
       navigate('/admin');
     }
   }, [user, authLoading, navigate]);
@@ -97,17 +93,14 @@ export default function BotForm() {
     if (isEdit) {
       loadBot();
     }
-  }, [isEdit, botId]);
+  }, [isEdit, botId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadModels = async () => {
     try {
-      console.log('모델 목록 로드 시작...');
       const response = await getClaudeModels();
-      console.log('모델 API 응답:', response);
       setModels(response.models || []);
-      console.log('설정된 모델 목록:', response.models || []);
     } catch (err) {
-      console.error('모델 목록 로드 실패:', err);
+      // 모델 목록 로드 실패 시 조용히 처리
     }
   };
 
@@ -139,7 +132,6 @@ export default function BotForm() {
         }
       });
     } catch (err) {
-      console.error('봇 정보 로드 실패:', err);
       setError('봇 정보를 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);
@@ -247,7 +239,6 @@ export default function BotForm() {
         }
       }
     } catch (err) {
-      console.error('봇 저장 실패:', err);
       setError(err.response?.data?.error || '봇 저장에 실패했습니다.');
     } finally {
       setLoading(false);

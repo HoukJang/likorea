@@ -249,6 +249,94 @@
   min-width: 600px; /* 최소 너비 설정 */
 }
 
+/* 모바일용 카드 레이아웃 */
+.users-cards {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .table-responsive {
+    display: none;
+  }
+  
+  .users-cards {
+    display: block;
+  }
+  
+  .user-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+  }
+  
+  .user-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .user-card-id {
+    font-weight: 700;
+    color: var(--accent-blue);
+    font-size: var(--font-size-base);
+  }
+  
+  .user-card-authority {
+    display: inline-block;
+    padding: 4px 8px;
+    background: var(--accent-blue);
+    color: var(--white);
+    border-radius: 4px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+  }
+  
+  .user-card-body {
+    margin-bottom: 15px;
+  }
+  
+  .user-card-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: var(--font-size-sm);
+  }
+  
+  .user-card-info label {
+    color: var(--secondary-text);
+    font-weight: 600;
+  }
+  
+  .user-card-info span {
+    color: var(--primary-text);
+  }
+  
+  .user-card-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .user-card-actions button {
+    flex: 1;
+    min-width: 80px;
+    padding: 10px 16px;
+    font-size: var(--font-size-sm);
+  }
+  
+  .user-card-actions select {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
 .users-table th,
 .users-table td {
   padding: 16px 12px;
@@ -661,7 +749,6 @@
     padding: 10px 15px;
     font-size: var(--font-size-xs);
     min-width: 80px;
-    flex-direction: column;
     gap: 4px;
   }
 
@@ -693,7 +780,7 @@
 
   .users-table {
     font-size: var(--font-size-xs);
-    min-width: 500px;
+    min-width: 100%;
   }
 
   .users-table th,
@@ -710,10 +797,10 @@
   .view-btn,
   .edit-btn,
   .delete-btn {
-    padding: 4px 8px;
+    padding: 8px 12px;
     font-size: var(--font-size-xs);
-    min-width: 50px;
-    margin: 1px;
+    min-width: 60px;
+    margin: 2px;
   }
 
   .stats-grid {
@@ -904,7 +991,7 @@
   }
 
   .users-table {
-    min-width: 400px;
+    min-width: 100%;
     font-size: var(--font-size-xs);
   }
 

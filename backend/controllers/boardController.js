@@ -267,7 +267,7 @@ exports.getPosts = asyncHandler(async (req, res) => {
         isNotice: { $eq: ['$tags.type', '공지'] }
       }
     },
-    { $sort: { isNotice: -1, createdAt: -1 } },
+    { $sort: { isNotice: -1, lastActivityAt: -1 } },
     { $skip: skip },
     { $limit: limitNum },
     // Author 정보 조인
@@ -439,6 +439,7 @@ exports.updatePost = asyncHandler(async (req, res) => {
   }
 
   updateData.modifiedAt = new Date();
+  updateData.lastActivityAt = new Date();
 
   // 업데이트 데이터는 보안상 로깅하지 않음
 

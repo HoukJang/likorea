@@ -67,10 +67,11 @@ exports.createComment = asyncHandler(async (req, res) => {
     parentComment: parentComment || undefined
   });
 
-  // BoardPost의 댓글 수 증가
+  // BoardPost의 댓글 수 증가 및 최신 활동 시간 업데이트
   await BoardPost.findByIdAndUpdate(postId, {
     $inc: { commentCount: 1 },
     modifiedAt: new Date(),
+    lastActivityAt: new Date(),
   });
 
   res.status(201).json({
@@ -124,9 +125,10 @@ exports.updateComment = asyncHandler(async (req, res) => {
   comment.content = sanitizedContent;
   await comment.save();
 
-  // 게시글의 modifiedAt 업데이트
+  // 게시글의 modifiedAt 및 lastActivityAt 업데이트
   await BoardPost.findByIdAndUpdate(postId, {
     modifiedAt: new Date(),
+    lastActivityAt: new Date(),
   });
 
   res.json({
@@ -168,10 +170,11 @@ exports.deleteComment = asyncHandler(async (req, res) => {
   await Comment.deleteMany({ parentComment: commentId });
   await comment.deleteOne();
 
-  // BoardPost의 댓글 수 감소
+  // BoardPost의 댓글 수 감소 및 최신 활동 시간 업데이트
   await BoardPost.findByIdAndUpdate(postId, {
     $inc: { commentCount: -1 },
     modifiedAt: new Date(),
+    lastActivityAt: new Date(),
   });
 
   res.json({

@@ -23,19 +23,30 @@ function Profile() {
 
   // 현재 사용자 정보 확인
   useEffect(() => {
-    const user = getCurrentUser();
-    const authenticated = isAuthenticated();
+    const checkAuth = async () => {
+      try {
+        const [user, authenticated] = await Promise.all([
+          getCurrentUser(),
+          isAuthenticated()
+        ]);
 
-    if (!authenticated || !user) {
-      setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
-      return;
-    }
+        if (!authenticated || !user) {
+          setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+          setTimeout(() => {
+            navigate('/login');
+          }, 2000);
+          return;
+        }
 
-    setCurrentUser(user);
-    fetchUserData(user.id);
+        setCurrentUser(user);
+        fetchUserData(user.id);
+      } catch (error) {
+        setError('인증 정보를 확인하는데 실패했습니다.');
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
   }, [navigate]);
 
   // 사용자 상세 정보 가져오기

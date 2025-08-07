@@ -8,7 +8,6 @@ import {
   deleteUser,
   getUserDetails,
 } from '../api/admin';
-import { BACKEND_URL } from '../config';
 import Profile from './Profile';
 import TrafficDashboard from './TrafficDashboard';
 import BotManagement from '../pages/BotManagement';
@@ -497,6 +496,61 @@ function Admin() {
                         ))}
                       </tbody>
                     </table>
+                  </div>
+
+                  {/* 모바일용 카드 레이아웃 */}
+                  <div className='users-cards'>
+                    {users.map(user => (
+                      <div key={user._id} className='user-card'>
+                        <div className='user-card-header'>
+                          <span className='user-card-id'>{user.id}</span>
+                          <span className='user-card-authority'>
+                            {getAuthorityLabel(user.authority)}
+                          </span>
+                        </div>
+                        <div className='user-card-body'>
+                          <div className='user-card-info'>
+                            <label>이메일:</label>
+                            <span>{user.email}</span>
+                          </div>
+                          <div className='user-card-info'>
+                            <label>가입일:</label>
+                            <span>{new Date(user.createdAt).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                        <div className='user-card-actions'>
+                          <select
+                            value={user.authority}
+                            onChange={e =>
+                              handleAuthorityChange(user._id, parseInt(e.target.value))
+                            }
+                            disabled={user.authority === 5}
+                          >
+                            <option key={1} value={1}>게스트 (1)</option>
+                            <option key={2} value={2}>제한 사용자 (2)</option>
+                            <option key={3} value={3}>일반 사용자 (3)</option>
+                            <option key={4} value={4}>매니저 (4)</option>
+                            <option key={5} value={5}>관리자 (5)</option>
+                          </select>
+                          <button
+                            onClick={() => handleViewDetails(user._id)}
+                            className='view-btn'
+                          >
+                            상세
+                          </button>
+                          <button onClick={() => handleEditClick(user)} className='edit-btn'>
+                            수정
+                          </button>
+                          <button
+                            onClick={() => handleDeleteUser(user._id)}
+                            className='delete-btn'
+                            disabled={user.authority === 5}
+                          >
+                            삭제
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
 
                   {totalPages > 1 && (
