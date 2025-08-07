@@ -23,7 +23,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import PreviewIcon from '@mui/icons-material/Preview';
-import { linkifyContent } from '../../utils/linkify';
 import { linkifyContentSafe } from '../../utils/linkifyContentSafe';
 import { 
   approvePost, 
@@ -177,10 +176,8 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
         
         try {
           // 이미지 압축 라이브러리 동적 로드
-          console.log('원본 이미지 크기:', (file.size / 1024 / 1024).toFixed(2), 'MB');
           const compress = await loadImageCompression();
           const compressedFile = await compress(file, compressionOptions);
-          console.log('압축된 이미지 크기:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
           
           const reader = new FileReader();
           reader.onload = function (event) {
@@ -213,7 +210,6 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
           };
           reader.readAsDataURL(compressedFile); // 압축된 파일을 읽음
         } catch (error) {
-          console.error('이미지 압축 실패:', error);
           alert('이미지 압축 중 오류가 발생했습니다. 원본 이미지가 너무 큽니다.');
         }
         return;

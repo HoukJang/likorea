@@ -68,7 +68,6 @@ export function linkifyContentSafe(content) {
     // 결과 반환
     return container.innerHTML;
   } catch (error) {
-    console.error('linkifyContentSafe error:', error);
     // 오류 발생 시 원본 반환
     return content;
   }

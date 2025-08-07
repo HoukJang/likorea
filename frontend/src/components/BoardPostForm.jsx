@@ -124,8 +124,6 @@ function BoardPostForm() {
             img.style.display = 'block';
             img.style.objectFit = 'contain';
             
-            console.log('Image created with src:', img.src.substring(0, 100) + '...');
-            console.log('Image src starts with data:', img.src.startsWith('data:'));
 
             const target = e.currentTarget || e.target;
             if (target) {
@@ -251,10 +249,7 @@ function BoardPostForm() {
 
     // HTML 컨텐츠를 새니타이즈
     const rawContent = contentRef.current ? contentRef.current.innerHTML : content;
-    console.log('Raw content before sanitization:', rawContent);
     const sanitizedContent = DOMPurify.sanitize(rawContent, domPurifyConfig);
-    console.log('Sanitized content:', sanitizedContent);
-    console.log('Has data: URLs after sanitization:', sanitizedContent.includes('data:image'));
 
     try {
       let response;

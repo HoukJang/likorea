@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import DOMPurify from 'dompurify';
 import {
   getBoardPost,
   deleteBoard,
@@ -13,7 +12,6 @@ import { getAllTags } from '../api/tags';
 import { getPendingPost, approvePost, rejectPost } from '../api/approval';
 import { processPostData, processCommentsList } from '../utils/dataUtils';
 import { createTagDisplayData } from '../utils/tagUtils';
-import { linkifyContent } from '../utils/linkify';
 import { linkifyContentSafe } from '../utils/linkifyContentSafe';
 import { usePermission } from '../hooks/usePermission';
 import { useAuth } from '../hooks/useAuth';
@@ -89,10 +87,6 @@ function BoardPostView() {
       checkEditDeletePermission(processedPost);
       
       // 관리자 권한 및 승인 대기 상태 확인
-      console.log('User authority:', user?.authority);
-      console.log('Post isApproved:', processedPost.isApproved);
-      console.log('Is Admin:', user?.authority >= 5);
-      console.log('Is Pending:', processedPost.isApproved === false);
       setIsAdmin(user?.authority >= 5);
       setIsPending(processedPost.isApproved === false);
     } catch (error) {
@@ -122,10 +116,7 @@ function BoardPostView() {
       return;
     }
 
-    console.log('게시글 데이터:', postData);
-    console.log('현재 사용자:', user);
     const canModifyPost = checkCanModify(postData);
-    console.log('수정 권한:', canModifyPost);
     setCanModify(canModifyPost);
   };
 
@@ -438,8 +429,6 @@ function BoardPostView() {
               </button>
             </>
           )}
-          {/* 디버깅 정보 */}
-          {console.log('Render - isAdmin:', isAdmin, 'isPending:', isPending)}
         </div>
       </div>
 
@@ -474,28 +463,7 @@ function BoardPostView() {
 
       <div className='post-content'>
         <div className='post-content-html' dangerouslySetInnerHTML={{ 
-          __html: (() => {
-            console.log('=== BoardPostView Debug ===');
-            console.log('Original content:', post.content);
-            console.log('Has img tags:', post.content.includes('<img'));
-            console.log('Has data: URLs:', post.content.includes('data:image'));
-            
-            // DOMPurify 테스트
-            const purified = DOMPurify.sanitize(post.content, {
-              ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
-              ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
-              ALLOW_DATA_ATTR: false,
-              ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.-]+(?:[^a-z+.:-]|$))/i
-            });
-            console.log('After DOMPurify:', purified);
-            console.log('DOMPurify kept img tags:', purified.includes('<img'));
-            console.log('DOMPurify kept data: URLs:', purified.includes('data:image'));
-            
-            const processed = linkifyContentSafe(purified);
-            console.log('After linkifyContentSafe:', processed);
-            console.log('=== End Debug ===');
-            return processed;
-          })()
+          __html: linkifyContentSafe(post.content)
         }} />
       </div>
 
