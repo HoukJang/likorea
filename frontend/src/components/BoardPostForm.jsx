@@ -114,8 +114,9 @@ function BoardPostForm() {
           const reader = new FileReader();
           reader.onload = function (event) {
             const img = document.createElement('img');
-            img.src = event.target.result;
-            img.alt = 'pasted-image';
+            // setAttribute를 사용하여 src 설정 (더 안정적)
+            img.setAttribute('src', event.target.result);
+            img.setAttribute('alt', 'pasted-image');
             img.style.maxWidth = '100%';
             img.style.maxHeight = '600px';
             img.style.width = 'auto';
@@ -123,7 +124,6 @@ function BoardPostForm() {
             img.style.margin = '10px auto';
             img.style.display = 'block';
             img.style.objectFit = 'contain';
-            
 
             const target = e.currentTarget || e.target;
             if (target) {
