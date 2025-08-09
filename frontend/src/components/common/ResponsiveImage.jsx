@@ -4,7 +4,7 @@ const ResponsiveImage = ({
   imageName, 
   alt, 
   className = '', 
-  loading = 'eager',
+  loading = 'lazy',
   fetchPriority = 'auto',
   sizes = '100vw',
   decoding = 'async'

@@ -30,7 +30,7 @@
   "scripts": {
     "start": "NODE_OPTIONS=--max-old-space-size=4096 craco start",
     "build": "NODE_OPTIONS=--max-old-space-size=4096 craco build",
-    "postbuild": "node scripts/inline-critical-styles.js",
+    "postbuild": "node scripts/inline-critical-styles.js && node scripts/optimize-build.js",
     "test": "craco test",
     "eject": "react-scripts eject",
     "lint": "eslint src --ext .js,.jsx",

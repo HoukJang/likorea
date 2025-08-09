@@ -13,6 +13,7 @@ import { getPendingPost, approvePost, rejectPost } from '../api/approval';
 import { processPostData, processCommentsList } from '../utils/dataUtils';
 import { createTagDisplayData } from '../utils/tagUtils';
 import { linkifyContentSafe } from '../utils/linkifyContentSafe';
+import { processContent } from '../utils/optimizeImages';
 import { usePermission } from '../hooks/usePermission';
 import { useAuth } from '../hooks/useAuth';
 import { useErrorHandler } from '../utils/errorHandler';
@@ -463,7 +464,7 @@ function BoardPostView() {
 
       <div className='post-content'>
         <div className='post-content-html' dangerouslySetInnerHTML={{ 
-          __html: linkifyContentSafe(post.content)
+          __html: processContent(post.content, linkifyContentSafe)
         }} />
       </div>
 
@@ -517,7 +518,7 @@ function BoardPostView() {
                       </div>
                       <div className='comment-divider-vertical'></div>
                       <div className='comment-main'>
-                        <div className='comment-text' dangerouslySetInnerHTML={{ __html: linkifyContentSafe(comment.content) }} />
+                        <div className='comment-text' dangerouslySetInnerHTML={{ __html: processContent(comment.content, linkifyContentSafe) }} />
                         {hasPermission && (
                           <div className='comment-actions'>
                             <button

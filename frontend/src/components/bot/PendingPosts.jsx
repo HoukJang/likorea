@@ -24,6 +24,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import PreviewIcon from '@mui/icons-material/Preview';
 import { linkifyContentSafe } from '../../utils/linkifyContentSafe';
+import { processContent } from '../../utils/optimizeImages';
 import { 
   approvePost, 
   rejectPost, 
@@ -448,12 +449,12 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
         <DialogContent>
           <Box 
             dangerouslySetInnerHTML={{ 
-              __html: linkifyContentSafe(DOMPurify.sanitize(previewDialog.post?.content || '', {
+              __html: processContent(DOMPurify.sanitize(previewDialog.post?.content || '', {
                 ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
-                ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
+                ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target', 'loading', 'decoding'],
                 ALLOW_DATA_ATTR: false,
                 ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.-]+(?:[^a-z+.:-]|$))/i
-              })) 
+              }), linkifyContentSafe) 
             }}
             sx={{ 
               '& p': { marginBottom: 1 },
