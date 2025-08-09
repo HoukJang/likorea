@@ -1,0 +1,183 @@
+/* Accessibility Improvements - Color Contrast Enhancements */
+
+/* Improve text contrast for better readability */
+:root {
+  /* Original grays with improved contrast */
+  --text-gray-500: #4b5563; /* from #6b7280 */
+  --text-gray-400: #6b7280; /* from #9ca3af */
+  --text-gray-600: #374151; /* already good */
+  
+  /* Improved link and action colors */
+  --link-color: #2563eb;
+  --link-hover: #1d4ed8;
+  --link-visited: #4c1d95;
+}
+
+/* Improve gray text contrast throughout the app */
+.text-gray-500,
+.comment-meta,
+.post-meta,
+.timestamp,
+.board-item-author,
+.board-item-date {
+  color: var(--text-gray-500) !important;
+}
+
+.text-gray-400,
+.placeholder-text,
+.disabled-text {
+  color: var(--text-gray-400) !important;
+}
+
+/* Ensure form labels have sufficient contrast */
+label,
+.form-label {
+  color: var(--text-gray-600) !important;
+  font-weight: 500;
+}
+
+/* Improve button contrast */
+button:disabled,
+.btn:disabled {
+  opacity: 0.7; /* Instead of 0.5 */
+  color: var(--text-gray-500) !important;
+}
+
+/* Ensure links are clearly visible */
+a {
+  color: var(--link-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+a:visited {
+  color: var(--link-visited);
+}
+
+/* Focus indicators for better keyboard navigation */
+*:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Ensure error messages are clearly visible */
+.error-message,
+.validation-error {
+  color: #dc2626 !important; /* Darker red for better contrast */
+  font-weight: 500;
+}
+
+/* Success messages with better contrast */
+.success-message {
+  color: #059669 !important; /* Darker green */
+  font-weight: 500;
+}
+
+/* Warning messages */
+.warning-message {
+  color: #d97706 !important; /* Darker amber */
+  font-weight: 500;
+}
+
+/* Improve placeholder text contrast */
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-gray-400);
+  opacity: 1;
+}
+
+/* Ensure select elements have labels */
+select[aria-label],
+select[aria-labelledby] {
+  /* Already properly labeled */
+}
+
+/* Add visual indicator for unlabeled selects (development aid) */
+select:not([aria-label]):not([aria-labelledby]):not([title]) {
+  border: 2px solid orange !important; /* Visual warning in dev */
+}
+
+/* Improve table header contrast */
+th {
+  background-color: #f3f4f6;
+  color: var(--text-gray-600);
+  font-weight: 600;
+}
+
+/* Ensure sufficient contrast for badges and chips */
+.badge,
+.chip,
+.tag {
+  font-weight: 500;
+  min-height: 24px; /* Ensure clickable area */
+  padding: 4px 8px;
+}
+
+/* Improve contrast for pagination */
+.pagination button,
+.pagination a {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure icons have text alternatives */
+.icon-only-button {
+  position: relative;
+}
+
+.icon-only-button[aria-label]::after {
+  /* Properly labeled with aria-label */
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  * {
+    border-width: 2px !important;
+  }
+  
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    border: 2px solid currentColor !important;
+  }
+}
+
+/* Dark mode contrast improvements */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-gray-500: #9ca3af;
+    --text-gray-400: #d1d5db;
+    --text-gray-600: #e5e7eb;
+  }
+}

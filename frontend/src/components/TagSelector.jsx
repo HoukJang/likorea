@@ -78,14 +78,16 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
   return (
     <div className='tag-selector'>
       <div className='tag-group'>
-        <label className='tag-label'>
+        <label htmlFor='tag-type-select' className='tag-label'>
           글종류 {required && <span className='required'>*</span>}
         </label>
         <select
+          id='tag-type-select'
           className='tag-select'
           value={selectedTags.type || ''}
           onChange={e => handleTagChange('type', e.target.value)}
           required={required}
+          aria-label='글종류 선택'
         >
           <option value=''>글종류 선택</option>
           {tags.type &&
@@ -107,11 +109,13 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
         subCategories[selectedTags.type] &&
         subCategories[selectedTags.type].length > 0 && (
           <div className='tag-group'>
-            <label className='tag-label'>소주제</label>
+            <label htmlFor='tag-subcategory-select' className='tag-label'>소주제</label>
             <select
+              id='tag-subcategory-select'
               className='tag-select'
               value={selectedTags.subcategory || ''}
               onChange={e => handleTagChange('subcategory', e.target.value)}
+              aria-label='소주제 선택'
             >
               <option value=''>소주제 선택 (선택사항)</option>
               {subCategories[selectedTags.type].map(subcategory => (
@@ -124,11 +128,13 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
         )}
 
       <div className='tag-group'>
-        <label className='tag-label'>지역</label>
+        <label htmlFor='tag-region-select' className='tag-label'>지역</label>
         <select
+          id='tag-region-select'
           className='tag-select'
           value={selectedTags.region || '0'}
           onChange={e => handleTagChange('region', e.target.value)}
+          aria-label='지역 선택'
         >
           {tags.region &&
             tags.region.map(tag => (

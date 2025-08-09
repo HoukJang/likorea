@@ -14,11 +14,11 @@ function optimizeBuild() {
 
   let html = fs.readFileSync(buildIndexPath, 'utf8');
   
-  // 1. Convert main CSS to non-blocking load
-  // Find: <link href="/static/css/main.*.css" rel="stylesheet">
-  // Replace with: <link href="/static/css/main.*.css" rel="stylesheet" media="print" onload="this.media='all'">
+  // 1. Convert main CSS and board-list CSS to non-blocking load
+  // Find: <link href="/static/css/*.css" rel="stylesheet">
+  // Replace with: <link href="/static/css/*.css" rel="stylesheet" media="print" onload="this.media='all'">
   html = html.replace(
-    /<link href="(\/static\/css\/main\.[^"]+\.css)" rel="stylesheet">/g,
+    /<link href="(\/static\/css\/(?:main|board-list)\.[^"]+\.css)" rel="stylesheet">/g,
     '<link href="$1" rel="stylesheet" media="print" onload="this.media=\'all\'">\n<noscript><link href="$1" rel="stylesheet"></noscript>'
   );
   

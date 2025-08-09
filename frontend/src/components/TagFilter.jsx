@@ -96,11 +96,13 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
     <div className='tag-filter'>
       <div className='filter-controls'>
         <div className='filter-group'>
-          <label className='filter-label'>글종류</label>
+          <label htmlFor='type-filter' className='filter-label'>글종류</label>
           <select
+            id='type-filter'
             className='filter-select'
             value={filters.type}
             onChange={e => handleFilterChange('type', e.target.value)}
+            aria-label='글종류 선택'
           >
             <option value=''>전체</option>
             {tags.type &&
@@ -114,11 +116,13 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
 
         {filters.type && subCategories[filters.type] && subCategories[filters.type].length > 0 && (
           <div className='filter-group'>
-            <label className='filter-label'>소주제</label>
+            <label htmlFor='subcategory-filter' className='filter-label'>소주제</label>
             <select
+              id='subcategory-filter'
               className='filter-select'
               value={filters.subcategory}
               onChange={e => handleFilterChange('subcategory', e.target.value)}
+              aria-label='소주제 선택'
             >
               <option value=''>전체</option>
               {subCategories[filters.type].map(subcategory => (

@@ -5,6 +5,7 @@ import Loading from './components/common/Loading';
 import { useAuth } from './hooks/useAuth';
 import { initViewportHandlers } from './utils/viewportUtils';
 import './styles/App.css';
+import './styles/accessibility-improvements.css';
 
 // 핵심 컴포넌트는 직접 import
 import Banner from './components/Banner';
