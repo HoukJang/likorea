@@ -227,27 +227,54 @@ exports.verifyToken = asyncHandler(async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { email, authority, password } = req.body;
+    const { email, authority, password, newPassword } = req.body;
 
     const user = await User.findOne({ id });
     if (!user) {
       return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
     }
 
+    // 일반 사용자가 자신의 프로필을 수정하는 경우 현재 비밀번호 확인
+    if (password && req.user && req.user.id === id) {
+      const isMatch = await user.comparePassword(password);
+      if (!isMatch) {
+        return res.status(400).json({ message: '현재 비밀번호가 일치하지 않습니다.' });
+      }
+    }
+
     // 수정할 필드들 업데이트
     if (email) {
+      // 이메일 형식 검증
+      const { validateEmail } = require('../middleware/validation');
+      if (!validateEmail(email)) {
+        return res.status(400).json({ message: '유효한 이메일 주소를 입력해주세요.' });
+      }
+      
+      // 이메일 변경 시 중복 체크
+      if (email !== user.email) {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+          return res.status(400).json({ message: '이미 사용 중인 이메일입니다.' });
+        }
+      }
       user.email = email;
     }
+    
     if (authority !== undefined) {
       user.authority = authority;
     }
-    if (password) {
+    
+    // 새 비밀번호가 제공된 경우에만 비밀번호 변경
+    if (newPassword) {
       // 비밀번호 정책 검증
-      const passwordValidation = validatePassword(password);
+      const passwordValidation = validatePassword(newPassword);
       if (!passwordValidation.isValid) {
-        throw new ValidationError(`비밀번호 정책 위반: ${passwordValidation.errors.join(', ')}`);
+        return res.status(400).json({ 
+          message: '비밀번호가 요구사항을 충족하지 않습니다.',
+          errors: passwordValidation.errors 
+        });
       }
-      user.password = password;
+      user.password = newPassword;
       user.passwordChangedAt = new Date();
     }
 

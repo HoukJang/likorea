@@ -281,7 +281,7 @@ router.post('/', signupLimiter, validateUserInput, signup);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.put('/:id', validateUserInput, updateUser);
+router.put('/:id', updateUser);
 
 /**
  * @swagger
