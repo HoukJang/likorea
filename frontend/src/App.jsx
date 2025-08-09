@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import Loading from './components/common/Loading';
 import { useAuth } from './hooks/useAuth';
@@ -12,6 +12,7 @@ import Banner from './components/Banner';
 import GlobalNavigation from './components/GlobalNavigation';
 
 // 페이지 컴포넌트는 lazy loading으로 코드 분할 with prefetch hints
+const Landing = React.lazy(() => import(/* webpackChunkName: "landing", webpackPrefetch: true */ './pages/Landing'));
 const Signup = React.lazy(() => import(/* webpackChunkName: "signup" */ './components/Signup'));
 const Login = React.lazy(() => import(/* webpackChunkName: "login" */ './components/Login'));
 const BoardList = React.lazy(() => import(/* webpackChunkName: "board-list", webpackPrefetch: true */ './components/BoardList'));
@@ -59,8 +60,8 @@ function App() {
           <Banner />
           <GlobalNavigation />
           <Routes>
-            {/* 루트 경로를 게시판으로 리다이렉트 */}
-            <Route path='/' element={<Navigate to='/boards' replace />} />
+            {/* 루트 경로를 랜딩 페이지로 설정 */}
+            <Route path='/' element={<SuspenseWrapper><Landing /></SuspenseWrapper>} />
             <Route path='/signup' element={<SuspenseWrapper><Signup /></SuspenseWrapper>} />
             <Route path='/login' element={<SuspenseWrapper><Login /></SuspenseWrapper>} />
 

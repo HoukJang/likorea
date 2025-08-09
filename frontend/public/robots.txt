@@ -1,12 +1,31 @@
-# robots.txt for likorea.com
-# Allow all search engines to crawl all pages
+# Robots.txt for Long Island Korea
+# https://longislandkorea.com
 
+# Allow all crawlers
 User-agent: *
-Disallow:
 Allow: /
 
-# Sitemap location
-Sitemap: https://likorea.com/sitemap.xml
+# Disallow admin and private pages
+Disallow: /admin
+Disallow: /profile
+Disallow: /login
+Disallow: /signup
+Disallow: /boards/new
+Disallow: /boards/*/edit
+Disallow: /bots/
+Disallow: /bot-management
+Disallow: /design-preview
 
-# Crawl-delay (optional, for server protection)
+# Sitemap location
+Sitemap: https://longislandkorea.com/sitemap.xml
+
+# Crawl-delay for responsible crawling
 Crawl-delay: 1
+
+# Google specific
+User-agent: Googlebot
+Allow: /
+
+# Bing specific  
+User-agent: Bingbot
+Allow: /

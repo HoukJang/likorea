@@ -35,7 +35,6 @@
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "rss-parser": "^3.13.0",
     "sanitize-html": "^2.17.0",
-    "sitemap": "^8.0.0",
     "snappy": "^7.3.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
