@@ -189,12 +189,24 @@
   max-height: 600px;
   width: auto;
   height: auto;
-  display: block;
-  margin: 16px auto;
+  display: inline-block;
+  margin: 16px 0;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   object-fit: contain;
+  vertical-align: bottom;
+}
+
+/* 정렬 클래스가 있는 경우에만 가운데 정렬 */
+.post-content .ql-align-center img {
+  display: block;
+  margin: 16px auto;
+}
+
+.post-content .ql-align-right img {
+  display: block;
+  margin: 16px 0 16px auto;
 }
 
 .post-content img:hover {
@@ -304,6 +316,57 @@
   border-top: 1px solid #ddd;
   padding-top: 10px;
   margin-top: 20px;
+}
+
+/* Quill 에디터로 작성된 콘텐츠 추가 스타일 */
+.post-content-html {
+  font-family: var(--font-family);
+}
+
+/* Quill 텍스트 정렬 스타일 */
+.post-content .ql-align-center {
+  text-align: center;
+}
+
+.post-content .ql-align-right {
+  text-align: right;
+}
+
+.post-content .ql-align-justify {
+  text-align: justify;
+}
+
+/* Quill 들여쓰기 스타일 */
+.post-content .ql-indent-1 {
+  padding-left: 3em;
+}
+
+.post-content .ql-indent-2 {
+  padding-left: 6em;
+}
+
+.post-content .ql-indent-3 {
+  padding-left: 9em;
+}
+
+.post-content .ql-indent-4 {
+  padding-left: 12em;
+}
+
+.post-content .ql-indent-5 {
+  padding-left: 15em;
+}
+
+.post-content .ql-indent-6 {
+  padding-left: 18em;
+}
+
+.post-content .ql-indent-7 {
+  padding-left: 21em;
+}
+
+.post-content .ql-indent-8 {
+  padding-left: 24em;
 }
 
 /* 통일된 메타 정보 */

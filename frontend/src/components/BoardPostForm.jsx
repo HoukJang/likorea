@@ -1,21 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { getBoardPost, createBoard, updateBoard } from '../api/boards';
 import { getCurrentUser, isAuthenticated } from '../api/auth';
 import { approvePost, rejectPost, updatePendingPost } from '../api/approval';
 import TagSelector from './TagSelector';
+import QuillEditor from './QuillEditor';
 import { domPurifyConfig } from '../utils/domPurifyConfig';
-// Lazy load image compression library
-let imageCompression;
-const loadImageCompression = async () => {
-  if (!imageCompression) {
-    const module = await import('browser-image-compression');
-    imageCompression = module.default;
-  }
-  return imageCompression;
-};
 import '../styles/BoardPostForm.css';
+import '../styles/QuillEditor.css';
 
 function BoardPostForm() {
   const navigate = useNavigate();
@@ -27,7 +20,6 @@ function BoardPostForm() {
   const [content, setContent] = useState('');
   const [tags, setTags] = useState({ type: '', region: '0' });
   const [message, setMessage] = useState('');
-  const contentRef = useRef(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -58,13 +50,9 @@ function BoardPostForm() {
         try {
           const data = await getBoardPost(postId);
           setTitle(data.post.title);
+          // Quill에서 직접 처리하므로 content만 설정
           setContent(data.post.content);
           setTags(data.post.tags || { type: '', region: '0', subcategory: '' });
-          if (contentRef.current) {
-            // DOMPurify로 HTML을 새니타이즈하여 안전하게 표시
-            const sanitizedContent = DOMPurify.sanitize(data.post.content, domPurifyConfig);
-            contentRef.current.innerHTML = sanitizedContent;
-          }
           // 원 작성자 정보는 현재 사용하지 않음
         } catch (error) {
           setMessage('게시글을 불러오는데 실패했습니다.');
@@ -74,85 +62,6 @@ function BoardPostForm() {
     }
   }, [postId, isEditMode, currentUser]);
 
-  // 이미지 압축 설정
-  const compressionOptions = {
-    maxSizeMB: 1, // 최대 1MB로 압축
-    maxWidthOrHeight: 1920, // 최대 너비/높이 1920px
-    useWebWorker: true,
-    quality: 0.8, // 품질 80%
-  };
-
-  // Handle paste for images
-  const handlePaste = async e => {
-    // 먼저 이미지가 있는지 확인
-    const items = e.clipboardData.items;
-    let hasImage = false;
-    
-    for (const item of items) {
-      if (item.kind === 'file' && item.type.startsWith('image/')) {
-        hasImage = true;
-        break;
-      }
-    }
-    
-    // 이미지가 있으면 기본 동작 방지
-    if (hasImage) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    
-    for (const index in items) {
-      const item = items[index];
-      if (item.kind === 'file' && item.type.startsWith('image/')) {
-        const file = item.getAsFile();
-        
-        try {
-          // 이미지 압축 라이브러리 동적 로드
-          const compress = await loadImageCompression();
-          const compressedFile = await compress(file, compressionOptions);
-          
-          const reader = new FileReader();
-          reader.onload = function (event) {
-            const img = document.createElement('img');
-            // setAttribute를 사용하여 src 설정 (더 안정적)
-            img.setAttribute('src', event.target.result);
-            img.setAttribute('alt', 'pasted-image');
-            img.style.maxWidth = '100%';
-            img.style.maxHeight = '600px';
-            img.style.width = 'auto';
-            img.style.height = 'auto';
-            img.style.margin = '10px auto';
-            img.style.display = 'block';
-            img.style.objectFit = 'contain';
-
-            const target = e.currentTarget || e.target;
-            if (target) {
-              // 현재 커서 위치에 이미지 삽입
-              const selection = window.getSelection();
-              if (selection && selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0);
-                range.deleteContents();
-                range.insertNode(img);
-                range.setStartAfter(img);
-                selection.removeAllRanges();
-                selection.addRange(range);
-              } else {
-                // 커서가 없으면 끝에 추가
-                target.appendChild(img);
-              }
-
-              // 입력 이벤트 발생시켜 상태 업데이트
-              target.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-          };
-          reader.readAsDataURL(compressedFile); // 압축된 파일을 읽음
-        } catch (error) {
-          alert('이미지 압축 중 오류가 발생했습니다. 원본 이미지가 너무 큽니다.');
-        }
-        return; // 이미지 처리 후 다른 붙여넣기 방지
-      }
-    }
-  };
 
   // 승인 처리
   const handleApprove = async () => {
@@ -164,8 +73,7 @@ function BoardPostForm() {
       
       // 내용이 수정되었다면 먼저 업데이트
       if (isPendingMode && isEditMode) {
-        const rawContent = contentRef.current ? contentRef.current.innerHTML : content;
-        const sanitizedContent = DOMPurify.sanitize(rawContent, domPurifyConfig);
+        const sanitizedContent = DOMPurify.sanitize(content, domPurifyConfig);
 
         await updatePendingPost(postId, {
           title,
@@ -248,8 +156,7 @@ function BoardPostForm() {
     }
 
     // HTML 컨텐츠를 새니타이즈
-    const rawContent = contentRef.current ? contentRef.current.innerHTML : content;
-    const sanitizedContent = DOMPurify.sanitize(rawContent, domPurifyConfig);
+    const sanitizedContent = DOMPurify.sanitize(content, domPurifyConfig);
 
     try {
       let response;
@@ -347,20 +254,11 @@ function BoardPostForm() {
         </div>
 
         <div className='form-group'>
-          <div
-            contentEditable
-            ref={contentRef}
-            onInput={e => setContent(e.currentTarget.innerHTML)}
-            onPaste={handlePaste}
-            onKeyDown={e => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                document.execCommand('insertParagraph');
-              }
-            }}
-            className='content-editor'
+          <QuillEditor
+            value={content}
+            onChange={setContent}
             placeholder='내용을 입력하세요...'
-          ></div>
+          />
         </div>
         {isPendingMode ? (
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
