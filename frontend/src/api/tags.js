@@ -9,12 +9,8 @@ import apiClient from './client';
  * @returns {Promise} 태그 목록 (카테고리별로 그룹화)
  */
 export const getAllTags = async () => {
-  try {
-    const response = await apiClient.get('/api/tags');
-    return response;
-  } catch (error) {
-    throw error;
-  }
+  const response = await apiClient.get('/api/tags');
+  return response;
 };
 
 /**
@@ -23,12 +19,8 @@ export const getAllTags = async () => {
  * @returns {Promise} 해당 카테고리의 태그 목록
  */
 export const getTagsByCategory = async category => {
-  try {
-    const response = await apiClient.get(`/api/tags/category/${category}`);
-    return response;
-  } catch (error) {
-    throw error;
-  }
+  const response = await apiClient.get(`/api/tags/category/${category}`);
+  return response;
 };
 
 /**
@@ -37,12 +29,8 @@ export const getTagsByCategory = async category => {
  * @returns {Promise} 해당 상위 카테고리의 하위 카테고리 목록
  */
 export const getSubCategoriesByParent = async parentCategory => {
-  try {
-    const response = await apiClient.get(`/api/tags/subcategories/${parentCategory}`);
-    return response;
-  } catch (error) {
-    throw error;
-  }
+  const response = await apiClient.get(`/api/tags/subcategories/${parentCategory}`);
+  return response;
 };
 
 /**

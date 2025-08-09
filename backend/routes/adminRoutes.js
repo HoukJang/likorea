@@ -7,7 +7,7 @@ const {
   updateUserAuthority,
   updateUserInfo,
   deleteUser,
-  getUserDetails,
+  getUserDetails
 } = require('../controllers/adminController');
 const { getCacheStats, clearCache, invalidateCache } = require('../middleware/cache');
 const router = express.Router();
@@ -38,10 +38,10 @@ router.delete('/cache', (req, res) => {
 router.delete('/cache/:pattern', (req, res) => {
   const { pattern } = req.params;
   const deletedCount = invalidateCache(pattern);
-  res.json({ 
-    success: true, 
+  res.json({
+    success: true,
     message: `${deletedCount}개의 캐시 항목이 삭제되었습니다.`,
-    pattern 
+    pattern
   });
 });
 

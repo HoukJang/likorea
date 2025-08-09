@@ -20,14 +20,14 @@ async function testArticleExtractor() {
 
   console.log('\n📋 단일 기사 추출 테스트');
   console.log('-'.repeat(70));
-  
+
   // 테스트 가능한 실제 기사 URL (예시)
   const sampleArticleUrl = 'https://patch.com/new-york/great-neck';
-  
+
   try {
     console.log(`\n🔍 테스트 URL: ${sampleArticleUrl}`);
     const article = await articleExtractorService.extractArticle(sampleArticleUrl);
-    
+
     if (article) {
       console.log('\n✅ 기사 추출 성공!');
       console.log(`📰 제목: ${article.title || 'No title'}`);
@@ -50,14 +50,14 @@ async function testArticleExtractor() {
 
   try {
     console.log('\n📰 뉴스 집계 시작 (전체 기사 추출 활성화)...');
-    
+
     // 뉴스 집계 (전체 기사 추출 옵션 활성화)
     const newsData = await newsAggregatorService.aggregateWeeklyNews('Great Neck', {
       extractFullArticles: true,
       maxFullArticles: 3  // 테스트를 위해 3개만
     });
 
-    console.log(`\n📊 집계 결과:`);
+    console.log('\n📊 집계 결과:');
     console.log(`   - 전체 수집 뉴스: ${newsData.totalArticles}개`);
     console.log(`   - 선택된 뉴스: ${newsData.selectedArticles}개`);
     console.log(`   - 전체 기사 추출 여부: ${newsData.hasFullContent ? '✅' : '❌'}`);
@@ -83,7 +83,7 @@ async function testArticleExtractor() {
     console.log('\n' + '=' .repeat(70));
     console.log('📋 Claude 프롬프트 생성 테스트');
     console.log('-'.repeat(70));
-    
+
     const prompt = newsAggregatorService.formatForClaudePrompt(newsData);
     console.log('\n생성된 프롬프트 길이:', prompt.length, '자');
     console.log('\n프롬프트 미리보기 (처음 1000자):');
@@ -98,7 +98,7 @@ async function testArticleExtractor() {
 
   console.log('\n' + '=' .repeat(70));
   console.log('✅ 테스트 완료!');
-  
+
   // 팁 출력
   console.log('\n💡 사용 팁:');
   console.log('1. 전체 기사 추출은 시간이 오래 걸릴 수 있습니다 (기사당 2-5초)');

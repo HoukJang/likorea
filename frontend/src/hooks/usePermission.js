@@ -47,12 +47,14 @@ export const usePermission = () => {
    */
   const canModify = useCallback(
     target => {
-      console.log('canModify 호출됨:', {
-        isAuth: isAuthenticated(),
-        hasTarget: !!target,
-        token: localStorage.getItem('authToken')
-      });
-      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('canModify 호출됨:', {
+          isAuth: isAuthenticated(),
+          hasTarget: !!target,
+          token: localStorage.getItem('authToken')
+        });
+      }
+
       if (!isAuthenticated() || !target) return false;
 
       const currentUserId = getCurrentUserId();
@@ -77,14 +79,16 @@ export const usePermission = () => {
         return false;
       }
 
-      console.log('권한 체크:', {
-        현재사용자: currentUserId,
-        현재권한: currentAuthority,
-        작성자: targetAuthorId,
-        작성자권한: targetAuthority,
-        본인여부: targetAuthorId === currentUserId,
-        권한비교: currentAuthority > targetAuthority
-      });
+      if (process.env.NODE_ENV === 'development') {
+        console.log('권한 체크:', {
+          현재사용자: currentUserId,
+          현재권한: currentAuthority,
+          작성자: targetAuthorId,
+          작성자권한: targetAuthority,
+          본인여부: targetAuthorId === currentUserId,
+          권한비교: currentAuthority > targetAuthority
+        });
+      }
 
       // 1. 본인 작성물인 경우 항상 수정/삭제 가능
       if (targetAuthorId === currentUserId) {
@@ -132,6 +136,6 @@ export const usePermission = () => {
     isAdmin,
     canModify,
     hasAuthority,
-    compareAuthority,
+    compareAuthority
   };
 };

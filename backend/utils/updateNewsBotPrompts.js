@@ -1,6 +1,6 @@
 /**
  * 기존 뉴스봇들의 프롬프트를 템플릿 변수를 사용하는 새로운 형식으로 업데이트하는 스크립트
- * 
+ *
  * 실행 방법: node utils/updateNewsBotPrompts.js
  */
 
@@ -61,7 +61,7 @@ async function updateNewsBotPrompts() {
       try {
         // 프롬프트가 이미 템플릿 변수를 사용하고 있는지 확인
         const currentUserPrompt = bot.prompt?.user || '';
-        const hasTemplateVars = currentUserPrompt.includes('{CURRENT_DATE}') || 
+        const hasTemplateVars = currentUserPrompt.includes('{CURRENT_DATE}') ||
                                currentUserPrompt.includes('{NEWS_DATA}');
 
         if (hasTemplateVars) {

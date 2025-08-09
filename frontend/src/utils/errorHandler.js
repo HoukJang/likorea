@@ -9,7 +9,7 @@ export const ERROR_TYPES = {
   NOT_FOUND: 'NOT_FOUND_ERROR',
   CONFLICT: 'CONFLICT_ERROR',
   SERVER: 'SERVER_ERROR',
-  UNKNOWN: 'UNKNOWN_ERROR',
+  UNKNOWN: 'UNKNOWN_ERROR'
 };
 
 // HTTP 상태 코드별 에러 타입 매핑
@@ -22,7 +22,7 @@ const STATUS_CODE_MAP = {
   500: ERROR_TYPES.SERVER,
   502: ERROR_TYPES.SERVER,
   503: ERROR_TYPES.SERVER,
-  504: ERROR_TYPES.SERVER,
+  504: ERROR_TYPES.SERVER
 };
 
 // 에러 메시지 한글화
@@ -34,7 +34,7 @@ const ERROR_MESSAGES = {
   [ERROR_TYPES.NOT_FOUND]: '요청한 정보를 찾을 수 없습니다.',
   [ERROR_TYPES.CONFLICT]: '이미 존재하는 정보입니다.',
   [ERROR_TYPES.SERVER]: '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
-  [ERROR_TYPES.UNKNOWN]: '알 수 없는 오류가 발생했습니다.',
+  [ERROR_TYPES.UNKNOWN]: '알 수 없는 오류가 발생했습니다.'
 };
 
 // API 응답 에러 처리
@@ -70,7 +70,7 @@ export const handleApiError = error => {
     type: errorType,
     message,
     statusCode,
-    originalError: error,
+    originalError: error
   };
 };
 
@@ -123,6 +123,6 @@ export const getErrorInfo = error => {
   return {
     message: error.message || '알 수 없는 오류가 발생했습니다.',
     stack: error.stack,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toISOString()
   };
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Signup.css';
 import { useApi } from '../hooks/useApi';
@@ -89,70 +89,70 @@ function Signup() {
   };
 
   return (
-    <div className='signup-container'>
-      <form className='signup-box' onSubmit={handleSubmit}>
+    <div className="signup-container">
+      <form className="signup-box" onSubmit={handleSubmit}>
         <h2>회원가입</h2>
-        <div className='form-group'>
+        <div className="form-group">
           <Input
-            type='text'
-            id='id'
-            name='id'
+            type="text"
+            id="id"
+            name="id"
             value={id}
             onChange={e => setId(e.target.value)}
             required
             disabled={loading}
-            placeholder='사용할 아이디 입력'
-            label='아이디'
+            placeholder="사용할 아이디 입력"
+            label="아이디"
           />
         </div>
-        <div className='form-group'>
+        <div className="form-group">
           <Input
-            type='email'
-            id='email'
-            name='email'
+            type="email"
+            id="email"
+            name="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
             disabled={loading}
-            placeholder='이메일 주소 입력'
-            label='이메일'
+            placeholder="이메일 주소 입력"
+            label="이메일"
           />
         </div>
-        <div className='form-group'>
+        <div className="form-group">
           <Input
-            type='password'
-            id='password'
-            name='password'
+            type="password"
+            id="password"
+            name="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
-            minLength='6'
+            minLength="6"
             disabled={loading}
-            placeholder='6자 이상 입력'
-            label='비밀번호'
-            helperText='최소 6자 이상, 소문자와 숫자를 포함해주세요'
+            placeholder="6자 이상 입력"
+            label="비밀번호"
+            helperText="최소 6자 이상, 소문자와 숫자를 포함해주세요"
           />
         </div>
-        <div className='form-group'>
+        <div className="form-group">
           <Input
-            type='password'
-            id='confirm'
-            name='confirm'
+            type="password"
+            id="confirm"
+            name="confirm"
             value={confirm}
             onChange={e => setConfirm(e.target.value)}
             required
             disabled={loading}
-            placeholder='비밀번호 재입력'
-            label='비밀번호 확인'
+            placeholder="비밀번호 재입력"
+            label="비밀번호 확인"
           />
         </div>
         <Button
-          type='submit'
-          variant='primary'
-          size='large'
+          type="submit"
+          variant="primary"
+          size="large"
           loading={loading}
           disabled={loading}
-          className='signup-button'
+          className="signup-button"
         >
           회원가입
         </Button>
@@ -161,8 +161,8 @@ function Signup() {
             {message || error}
           </div>
         )}
-        <div className='login-link'>
-          이미 계정이 있으신가요? <Link to='/login'>로그인</Link>
+        <div className="login-link">
+          이미 계정이 있으신가요? <Link to="/login">로그인</Link>
         </div>
       </form>
     </div>

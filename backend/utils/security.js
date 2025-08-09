@@ -30,7 +30,7 @@ const stripHtml = (html) => {
  */
 const isSafeString = (input) => {
   if (!input) return true;
-  
+
   // 위험한 패턴 체크
   const dangerousPatterns = [
     /\$where/i,
@@ -42,7 +42,7 @@ const isSafeString = (input) => {
     /\$out/i,
     /<script/i,
     /javascript:/i,
-    /on\w+=/i,  // onclick=, onerror= 등
+    /on\w+=/i  // onclick=, onerror= 등
   ];
 
   return !dangerousPatterns.some(pattern => pattern.test(input));
@@ -82,18 +82,18 @@ const isValidObjectId = (id) => {
  */
 const isSafeFilename = (filename, allowedExtensions = []) => {
   if (!filename) return false;
-  
+
   // 경로 탐색 공격 방지
   if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
     return false;
   }
-  
+
   // 확장자 검증
   if (allowedExtensions.length > 0) {
     const ext = filename.split('.').pop().toLowerCase();
     return allowedExtensions.includes(ext);
   }
-  
+
   return true;
 };
 
@@ -104,16 +104,16 @@ const isSafeFilename = (filename, allowedExtensions = []) => {
  */
 const encodeHtml = (str) => {
   if (!str) return '';
-  
+
   const htmlEntities = {
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
-    "'": '&#39;',
+    '\'': '&#39;',
     '/': '&#x2F;'
   };
-  
+
   return String(str).replace(/[&<>"'/]/g, (s) => htmlEntities[s]);
 };
 

@@ -17,10 +17,10 @@ async function createRestaurantBot() {
     // MongoDB 연결
     await mongoose.connect(process.env.MONGO_URI);
     console.log(colors.green('✅ MongoDB 연결 성공'));
-    
+
     // 맛집봇 사용자 계정 확인 또는 생성
     let botUser = await User.findOne({ id: 'restaurantbot' });
-    
+
     if (!botUser) {
       const hashedPassword = await bcrypt.hash('Bot#2025!Restaurant', 10);
       botUser = await User.create({
@@ -33,13 +33,13 @@ async function createRestaurantBot() {
     } else {
       console.log(colors.blue('ℹ️ 맛집봇 사용자 계정 이미 존재'));
     }
-    
+
     // 기존 맛집봇 확인
     let restaurantBot = await Bot.findOne({ name: '맛집봇' });
-    
+
     if (restaurantBot) {
       console.log(colors.yellow('⚠️ 맛집봇이 이미 존재합니다. 업데이트 중...'));
-      
+
       // 업데이트
       restaurantBot.type = 'restaurant';
       restaurantBot.systemPrompt = `당신은 24세 스토니브룩 대학생이며, 열정적인 맛집 탐험가입니다.
@@ -54,7 +54,7 @@ async function createRestaurantBot() {
 - 서비스 경험을 구체적 에피소드로 설명합니다
 - 주차, 웨이팅, 예약 등 실용적 팁을 자세히 제공합니다
 - 사진 찍기 좋은 메뉴나 포토스팟을 언급합니다`;
-      
+
       restaurantBot.userPrompt = `레스토랑 리뷰 작성 시 다음 사항을 포함해주세요:
 1. 방문 계기 (시험 끝나고, 친구들과, 데이트 등)
 2. 추천 메뉴 3개와 각각의 특징
@@ -62,7 +62,7 @@ async function createRestaurantBot() {
 4. 분위기 설명 (데이트, 가족모임, 친구모임 등 어디에 적합한지)
 5. 주차 정보
 6. 총평과 별점 (5점 만점)`;
-      
+
       restaurantBot.aiModel = 'claude-3-5-sonnet-20241022';
       restaurantBot.persona = {
         age: 24,
@@ -72,10 +72,10 @@ async function createRestaurantBot() {
         personality: '밝고 긍정적, 호기심 많음',
         writingStyle: '친근하고 재미있는, 이모티콘 적절히 사용'
       };
-      
+
       await restaurantBot.save();
       console.log(colors.green('✅ 맛집봇 업데이트 완료'));
-      
+
     } else {
       // 새로 생성
       restaurantBot = await Bot.create({
@@ -109,10 +109,10 @@ async function createRestaurantBot() {
           writingStyle: '친근하고 재미있는, 이모티콘 적절히 사용'
         }
       });
-      
+
       console.log(colors.green('✅ 맛집봇 생성 완료'));
     }
-    
+
     // 봇 정보 출력
     console.log(colors.cyan('\n=== 맛집봇 정보 ==='));
     console.log(`ID: ${restaurantBot._id}`);
@@ -120,14 +120,14 @@ async function createRestaurantBot() {
     console.log(`타입: ${restaurantBot.type}`);
     console.log(`상태: ${restaurantBot.status}`);
     console.log(`AI 모델: ${restaurantBot.aiModel}`);
-    
+
     console.log(colors.cyan('\n=== 테스트 방법 ==='));
     console.log('1. 관리자로 로그인');
     console.log('2. Bot Management 페이지에서 맛집봇 선택');
     console.log('3. "작업 내용"에 다음과 같이 입력:');
     console.log('   Sichuan Garden, 2077 Nesconset Hwy, Stony Brook');
     console.log('4. "게시글 작성 시작" 버튼 클릭');
-    
+
     console.log(colors.yellow('\n또는 API로 직접 테스트:'));
     console.log(`curl -X POST http://localhost:5001/api/bots/post \\
   -H "Authorization: Bearer YOUR_TOKEN" \\
@@ -136,7 +136,7 @@ async function createRestaurantBot() {
     "botId": "${restaurantBot._id}",
     "task": "Sichuan Garden, 2077 Nesconset Hwy, Stony Brook"
   }'`);
-    
+
   } catch (error) {
     console.error(colors.red('❌ 맛집봇 생성 실패:'), error);
   } finally {

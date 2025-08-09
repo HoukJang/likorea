@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Card,
@@ -30,7 +30,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
 import { deleteBot, updateBotStatus, createBotPost } from '../../api/bots';
 
-export default function BotList({ bots, onUpdate, onReload, embedded = false }) {
+export default function BotList({ bots, onUpdate, _onReload, embedded = false }) {
   const navigate = useNavigate();
   const [deleteDialog, setDeleteDialog] = useState({ open: false, bot: null });
   const [postDialog, setPostDialog] = useState({ open: false, bot: null });
@@ -45,15 +45,21 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
       e.preventDefault();
       e.stopPropagation();
     }
-    
-    console.log('handleEdit called, embedded:', embedded, 'botId:', botId);
-    
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('handleEdit called, embedded:', embedded, 'botId:', botId);
+    }
+
     if (embedded) {
       // 임베디드 모드에서는 새 탭에서 열기 - 절대 URL 사용
       const url = `${window.location.origin}/bots/edit/${botId}`;
-      console.log('Opening URL:', url);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Opening URL:', url);
+      }
       const newWindow = window.open(url, '_blank');
-      console.log('New window opened:', newWindow);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('New window opened:', newWindow);
+      }
     } else {
       navigate(`/bots/edit/${botId}`);
     }
@@ -73,7 +79,9 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
       setDeleteDialog({ open: false, bot: null });
       onUpdate();
     } catch (err) {
-      console.error('봇 삭제 실패:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('봇 삭제 실패:', err);
+      }
       setError('봇 삭제에 실패했습니다.');
     } finally {
       setLoading(false);
@@ -86,7 +94,9 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
       await updateBotStatus(bot._id, newStatus);
       onUpdate();
     } catch (err) {
-      console.error('상태 변경 실패:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('상태 변경 실패:', err);
+      }
       setError('상태 변경에 실패했습니다.');
     }
   };
@@ -101,27 +111,31 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
     if (!postDialog.bot) return;
     // task는 비어있어도 괜찮음 (Long Island 전체가 기본값)
 
-    console.log('🚀 게시글 생성 시작');
-    console.log('봇 이름:', postDialog.bot.name);
-    console.log('봇 타입:', postDialog.bot.type);
-    console.log('봇 모델:', postDialog.bot.aiModel);
-    console.log('작업 주제:', task);
-    console.log('추가 지시사항:', additionalPrompt || '없음');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🚀 게시글 생성 시작');
+      console.log('봇 이름:', postDialog.bot.name);
+      console.log('봇 타입:', postDialog.bot.type);
+      console.log('봇 모델:', postDialog.bot.aiModel);
+      console.log('작업 주제:', task);
+      console.log('추가 지시사항:', additionalPrompt || '없음');
+    }
 
     try {
       setLoading(true);
       const response = await createBotPost(postDialog.bot._id, task, additionalPrompt);
-      
-      console.log('📦 서버 응답:', response);
-      
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('📦 서버 응답:', response);
+      }
+
       const currentBot = postDialog.bot;
       setPostDialog({ open: false, bot: null });
       setTask('');
       setAdditionalPrompt('');
-      
+
       // 즉시 목록 업데이트하여 작성중 상태 표시
       onUpdate();
-      
+
       // 맛집봇의 경우 이미지가 포함된다는 안내
       if (currentBot.type === 'restaurant') {
         alert('맛집봇이 게시글 작성을 시작했습니다. 각 메뉴별로 여러 이미지가 포함됩니다. 승인 시 원하는 이미지만 남기고 삭제해주세요.');
@@ -129,12 +143,14 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
         // 일반 봇의 경우 기존 메시지
         alert('봇이 게시글 작성을 시작했습니다. 작성이 완료되면 승인 대기 탭에서 확인할 수 있습니다.');
       }
-      
+
       // 성공 메시지
       setError(null);
     } catch (err) {
-      console.error('❌ 게시글 생성 실패:', err);
-      console.error('에러 상세:', err.response?.data);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('❌ 게시글 생성 실패:', err);
+        console.error('에러 상세:', err.response?.data);
+      }
       setError(err.response?.data?.error || '게시글 생성에 실패했습니다.');
     } finally {
       setLoading(false);
@@ -324,8 +340,8 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
       </Dialog>
 
       {/* 게시글 작성 다이얼로그 */}
-      <Dialog 
-        open={postDialog.open} 
+      <Dialog
+        open={postDialog.open}
         onClose={() => setPostDialog({ open: false, bot: null })}
         maxWidth="sm"
         fullWidth
@@ -338,28 +354,28 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
           <TextField
             fullWidth
             label={
-              postDialog.bot?.type === 'restaurant' 
-                ? "레스토랑 정보 (이름, 주소)"
+              postDialog.bot?.type === 'restaurant'
+                ? '레스토랑 정보 (이름, 주소)'
                 : postDialog.bot?.type === 'news'
-                ? "크롤링할 지역명 (비워두면 Long Island 전체)"
-                : "작업 내용"
+                ? '크롤링할 지역명 (비워두면 Long Island 전체)'
+                : '작업 내용'
             }
             value={task}
             onChange={(e) => setTask(e.target.value)}
             placeholder={
               postDialog.bot?.type === 'restaurant'
-                ? "예: Sichuan Garden, 2077 Nesconset Hwy, Stony Brook"
+                ? '예: Sichuan Garden, 2077 Nesconset Hwy, Stony Brook'
                 : postDialog.bot?.type === 'news'
-                ? "예: Great Neck 또는 Great Neck/Flushing/Manhasset"
-                : "작업 내용을 입력하세요"
+                ? '예: Great Neck 또는 Great Neck/Flushing/Manhasset'
+                : '작업 내용을 입력하세요'
             }
             margin="normal"
             helperText={
               postDialog.bot?.type === 'restaurant'
-                ? "레스토랑 이름과 주소를 쉼표로 구분하여 입력하세요"
+                ? '레스토랑 이름과 주소를 쉼표로 구분하여 입력하세요'
                 : postDialog.bot?.type === 'news'
-                ? "여러 지역은 / 로 구분하세요. 입력한 지역의 실제 뉴스를 크롤링하여 요약합니다"
-                : "봇이 수행할 작업을 입력하세요"
+                ? '여러 지역은 / 로 구분하세요. 입력한 지역의 실제 뉴스를 크롤링하여 요약합니다'
+                : '봇이 수행할 작업을 입력하세요'
             }
           />
           <TextField
@@ -369,20 +385,20 @@ export default function BotList({ bots, onUpdate, onReload, embedded = false }) 
             onChange={(e) => setAdditionalPrompt(e.target.value)}
             placeholder={
               postDialog.bot?.type === 'restaurant'
-                ? "예: 디저트 메뉴도 포함해서 리뷰해줘"
+                ? '예: 디저트 메뉴도 포함해서 리뷰해줘'
                 : postDialog.bot?.type === 'news'
-                ? "예: 한인 커뮤니티와 관련된 뉴스 위주로"
-                : "추가 지시사항"
+                ? '예: 한인 커뮤니티와 관련된 뉴스 위주로'
+                : '추가 지시사항'
             }
             margin="normal"
             multiline
             rows={3}
             helperText={
               postDialog.bot?.type === 'restaurant'
-                ? "리뷰 작성에 대한 추가 지시사항"
+                ? '리뷰 작성에 대한 추가 지시사항'
                 : postDialog.bot?.type === 'news'
-                ? "뉴스 선택 및 요약 방식에 대한 추가 지시"
-                : "추가적인 지시사항이 있다면 입력하세요"
+                ? '뉴스 선택 및 요약 방식에 대한 추가 지시'
+                : '추가적인 지시사항이 있다면 입력하세요'
             }
           />
         </DialogContent>

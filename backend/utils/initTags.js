@@ -6,7 +6,7 @@ const SUB_CATEGORIES = {
   사고팔고: ['나눔', '중고'],
   부동산: ['렌트', '룸메이트'],
   생활정보: ['맛집', '업체정보', '정착가이드', '뉴스'],
-  모임: ['번개', '정기'],
+  모임: ['번개', '정기']
 };
 
 /**
@@ -24,7 +24,7 @@ const initializeTags = async () => {
       { value: '부동산', displayName: '부동산', order: 2 },
       { value: '생활정보', displayName: '생활정보', order: 3 },
       { value: '모임', displayName: '모임', order: 4 },
-      { value: '기타', displayName: '기타', order: 5 },
+      { value: '기타', displayName: '기타', order: 5 }
     ];
 
     // 하위 카테고리 태그들 (category 타입으로 추가)
@@ -47,7 +47,7 @@ const initializeTags = async () => {
           category: 'category',
           parentCategory: parentCategory,
           order: index,
-          isActive: true,
+          isActive: true
         });
       });
     });
@@ -115,7 +115,7 @@ const initializeTags = async () => {
       70: 'Exit 70 - Manorville / Montauk (County Route 111)',
       71: 'Exit 71 - Calverton / Hampton Bays (NY 24)',
       72: 'Exit 72 - Riverhead / Calverton (NY 25)',
-      73: 'Exit 73 - Greenport / Orient (CR 58)',
+      73: 'Exit 73 - Greenport / Orient (CR 58)'
     };
 
     // Exit 13부터 73까지만 생성 (Exit 1-12 제거)
@@ -129,7 +129,7 @@ const initializeTags = async () => {
       regionTags.push({
         value: exitStr,
         displayName: exitNames[exitStr] || `Exit ${exit}`,
-        order: exit,
+        order: exit
       });
     }
 
@@ -147,7 +147,7 @@ const initializeTags = async () => {
         {
           ...tagData,
           category: 'type',
-          isActive: true,
+          isActive: true
         },
         { upsert: true, new: true }
       );
@@ -169,7 +169,7 @@ const initializeTags = async () => {
         {
           ...tagData,
           category: 'region',
-          isActive: true,
+          isActive: true
         },
         { upsert: true, new: true }
       );
@@ -220,7 +220,7 @@ const addTag = async (category, value, displayName, order = 0, description = '')
       displayName,
       order,
       description,
-      isActive: true,
+      isActive: true
     });
     return await tag.save();
   } catch (error) {
@@ -255,8 +255,8 @@ const DEFAULT_TAGS = {
     '스태튼아일랜드',
     '롱아일랜드',
     '뉴저지',
-    '기타',
-  ],
+    '기타'
+  ]
 };
 
 module.exports = {
@@ -266,5 +266,5 @@ module.exports = {
   addTag,
   deactivateTag,
   DEFAULT_TAGS,
-  SUB_CATEGORIES,
+  SUB_CATEGORIES
 };

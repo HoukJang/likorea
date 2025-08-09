@@ -28,7 +28,7 @@ class RestaurantAnalyzerService {
 
     try {
       console.log(`🔍 Analyzing: ${restaurantName} at ${address}`);
-      
+
       // 1. Get basic info from Google Places
       const placeData = await this.getPlaceData(restaurantName, address);
       if (!placeData) {
@@ -37,10 +37,10 @@ class RestaurantAnalyzerService {
 
       // 2. Get all reviews (Google Places only provides 5 max)
       console.log(`📝 Reviews available: ${placeData.reviews?.length || 0} (Google Places limit: 5 max)`);
-      
+
       // 3. Match photos to categories
       const photos = await this.categorizePhotos(placeData.photos);
-      
+
       // 4. Build structured data for Claude API
       // Claude will analyze the raw reviews directly
       const structuredData = {
@@ -61,20 +61,20 @@ class RestaurantAnalyzerService {
             dineIn: placeData.dine_in || false
           }
         },
-        
+
         // Send raw reviews to Claude for better menu extraction
         rawReviews: placeData.reviews || [],
-        
+
         // Still do basic extraction as fallback
         recommendedMenuItems: await this.extractMenuRecommendations(placeData.reviews),
-        
+
         photos: {
           exterior: photos.exterior,
           interior: photos.interior,
           food: photos.food,
           menu: photos.menu
         },
-        
+
         metadata: {
           analyzedAt: new Date().toISOString(),
           dataSource: 'Google Places API',
@@ -87,10 +87,10 @@ class RestaurantAnalyzerService {
           }
         }
       };
-      
+
       this.cache.set(cacheKey, structuredData);
       return structuredData;
-      
+
     } catch (error) {
       console.error(`❌ Analysis failed: ${error.message}`);
       throw error;
@@ -161,7 +161,7 @@ class RestaurantAnalyzerService {
 
     // Combine and deduplicate reviews
     const allReviews = new Map();
-    
+
     // Add relevant reviews
     if (relevantDetails.data.result.reviews) {
       relevantDetails.data.result.reviews.forEach(review => {
@@ -169,7 +169,7 @@ class RestaurantAnalyzerService {
         allReviews.set(key, review);
       });
     }
-    
+
     // Add newest reviews (will skip duplicates)
     if (newestDetails.data.result.reviews) {
       newestDetails.data.result.reviews.forEach(review => {
@@ -183,7 +183,7 @@ class RestaurantAnalyzerService {
     // Replace reviews with combined set
     const result = relevantDetails.data.result;
     result.reviews = Array.from(allReviews.values());
-    
+
     console.log(`📝 Reviews collected: ${result.reviews.length} unique reviews (${relevantDetails.data.result.reviews?.length || 0} relevant + ${newestDetails.data.result.reviews?.length || 0} newest)`);
 
     return result;
@@ -199,7 +199,7 @@ class RestaurantAnalyzerService {
     }
 
     const menuMentions = {};
-    
+
     // Enhanced patterns for specific menu items (not generic categories)
     const specificDishPatterns = [
       // Pizza patterns - looking for specific pizza names
@@ -209,28 +209,28 @@ class RestaurantAnalyzerService {
       { pattern: /\b(bianca|white)\s+pizza/gi },
       { pattern: /\b(clam|seafood|shrimp|lobster)\s+pizza/gi },
       { pattern: /\b(bbq|barbecue)\s*(?:chicken\s+)?pizza/gi },
-      
+
       // Pasta patterns - looking for specific pasta dishes
       { pattern: /\b(spaghetti|linguine|fettuccine|penne|rigatoni|ziti|ravioli|lasagna|gnocchi)\s+(?:alla\s+)?([a-z]+)/gi },
       { pattern: /\b(carbonara|amatriciana|arrabiata|puttanesca|bolognese|alfredo|marinara|pomodoro)/gi },
       { pattern: /\b(cacio e pepe|aglio e olio|primavera|vongole)/gi },
-      
+
       // Sandwich patterns - specific sandwiches
       { pattern: /\b(chicken|tuna|turkey|ham|roast beef|italian|cuban|reuben|club)\s+(?:sandwich|sub|hero|hoagie)/gi },
       { pattern: /\b(meatball|sausage|eggplant|veal)\s+(?:parm(?:igiana)?|hero|sub)/gi },
       { pattern: /\b(blt|pbj|grilled cheese|panini|wrap)/gi },
       { pattern: /\b([a-z]+\s+)?pesto\s+(?:chicken\s+)?sandwich/gi },
-      
+
       // Appetizers and specific dishes
       { pattern: /\b(calamari|bruschetta|caprese|antipasto|carpaccio|focaccia)/gi },
       { pattern: /\b(caesar|greek|cobb|waldorf|nicoise)\s+salad/gi },
       { pattern: /\b(minestrone|wedding|tortellini|pasta e fagioli)\s+soup/gi },
-      
+
       // Meat/Seafood dishes
       { pattern: /\b(grilled|pan.?seared|roasted|braised)\s+(salmon|tuna|halibut|sea bass|branzino)/gi },
       { pattern: /\b(ribeye|sirloin|filet mignon|porterhouse|ny strip)\s*(?:steak)?/gi },
       { pattern: /\b(chicken|veal|eggplant)\s+(parm(?:igiana)?|marsala|piccata|francese)/gi },
-      
+
       // Desserts
       { pattern: /\b(tiramisu|cannoli|panna cotta|gelato|tartufo|zeppole)/gi },
       { pattern: /\b(chocolate|vanilla|strawberry)\s+(cake|cheesecake|mousse)/gi }
@@ -240,7 +240,7 @@ class RestaurantAnalyzerService {
     reviews.forEach(review => {
       const text = review.text;
       const rating = review.rating;
-      
+
       // Look for specific dishes
       specificDishPatterns.forEach(({ pattern }) => {
         const matches = text.match(pattern);
@@ -248,22 +248,22 @@ class RestaurantAnalyzerService {
           matches.forEach(match => {
             // Clean up the match
             let dishName = match.trim();
-            
+
             // Skip generic terms without specifics
             const genericTerms = ['pizza', 'pasta', 'sandwich', 'salad', 'soup', 'steak'];
-            const isGeneric = genericTerms.some(term => 
+            const isGeneric = genericTerms.some(term =>
               dishName.toLowerCase() === term.toLowerCase()
             );
-            
+
             if (isGeneric) return; // Skip generic terms
-            
+
             // Skip if it contains common non-food words
             const skipPatterns = /\b(was|is|are|were|been|being|has|have|had|and|or|but|the|this|that|here|there)\b/i;
             if (skipPatterns.test(dishName)) return;
-            
+
             // Capitalize properly
             dishName = this.capitalizeDishName(dishName);
-            
+
             if (!menuMentions[dishName]) {
               menuMentions[dishName] = {
                 name: dishName,
@@ -274,40 +274,40 @@ class RestaurantAnalyzerService {
                 contexts: []
               };
             }
-            
+
             menuMentions[dishName].mentions++;
             menuMentions[dishName].ratings.push(rating);
-            
+
             // Extract broader context (100 chars before and after)
             const escapedDish = dishName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const contextPattern = new RegExp(
-              `.{0,100}${escapedDish}.{0,100}`, 
+              `.{0,100}${escapedDish}.{0,100}`,
               'gi'
             );
             const contextMatch = text.match(contextPattern);
-            
+
             if (contextMatch) {
               const context = contextMatch[0];
               menuMentions[dishName].reviewSnippets.push({
                 text: context,
                 rating: rating
               });
-              
+
               // Extract descriptive words near the dish
               const descriptivePattern = /(delicious|amazing|fantastic|excellent|perfect|great|wonderful|best|good|tasty|fresh|authentic|homemade|crispy|creamy|tender|juicy|flavorful)/gi;
               const descriptiveWords = context.match(descriptivePattern);
-              
+
               if (descriptiveWords && rating >= 4) {
                 menuMentions[dishName].reasons.push(...descriptiveWords.map(w => w.toLowerCase()));
               }
-              
+
               // Check for price mentions
               const pricePattern = /\$\d+(?:\.\d{2})?|\d+\s*(?:dollars?|bucks)/gi;
               const priceMatch = context.match(pricePattern);
               if (priceMatch) {
                 menuMentions[dishName].price = priceMatch[0];
               }
-              
+
               // Check for portion/size mentions
               const portionPattern = /\b(huge|large|big|generous|small|tiny|perfect)\s*(?:portion|serving|size)?/gi;
               const portionMatch = context.match(portionPattern);
@@ -318,23 +318,23 @@ class RestaurantAnalyzerService {
           });
         }
       });
-      
+
       // Also look for menu items mentioned with "try", "recommend", "order", etc.
       const recommendPattern = /(?:try|recommend|order|get|must have|don't miss|best)\s+(?:the\s+)?([A-Z][a-z]+(?:\s+[A-Z]?[a-z]+)*)/g;
       let recommendMatch;
-      
+
       while ((recommendMatch = recommendPattern.exec(text)) !== null) {
         let dishName = recommendMatch[1].trim();
-        
+
         // Skip if it's a generic term or instruction
         const skipWords = ['the', 'their', 'this', 'that', 'here', 'it', 'them', 'our', 'your'];
         if (skipWords.includes(dishName.toLowerCase())) continue;
-        
+
         // Check if it looks like a real dish name (at least 2 words or known dish)
         const words = dishName.split(/\s+/);
         if (words.length >= 2 || this.isKnownDish(dishName)) {
           dishName = this.capitalizeDishName(dishName);
-          
+
           if (!menuMentions[dishName]) {
             menuMentions[dishName] = {
               name: dishName,
@@ -345,16 +345,16 @@ class RestaurantAnalyzerService {
               contexts: []
             };
           }
-          
+
           menuMentions[dishName].mentions++;
           menuMentions[dishName].ratings.push(rating);
           menuMentions[dishName].reasons.push('recommended');
-          
+
           // Get context
           const contextStart = Math.max(0, recommendMatch.index - 50);
           const contextEnd = Math.min(text.length, recommendMatch.index + recommendMatch[0].length + 50);
           const context = text.substring(contextStart, contextEnd);
-          
+
           menuMentions[dishName].reviewSnippets.push({
             text: context,
             rating: rating
@@ -400,7 +400,7 @@ class RestaurantAnalyzerService {
     photos.forEach((photo, idx) => {
       const ratio = photo.width / photo.height;
       const photoUrl = this.buildPhotoUrl(photo.photo_reference, 800);
-      
+
       // Categorization logic based on aspect ratio and position
       if (idx === 0 && ratio > 1.5) {
         // First photo, landscape - likely exterior
@@ -431,7 +431,7 @@ class RestaurantAnalyzerService {
    */
   async findMenuPhotos(restaurantName, menuItems, location) {
     const photos = {};
-    
+
     for (const item of menuItems) {
       try {
         // Try to find image using our scraping service
@@ -440,7 +440,7 @@ class RestaurantAnalyzerService {
           item,
           location
         );
-        
+
         if (imageResult && imageResult.url && !imageResult.isReference) {
           photos[item] = {
             url: imageResult.url,
@@ -452,7 +452,7 @@ class RestaurantAnalyzerService {
         console.log(`⚠️ Could not find photo for ${item}`);
       }
     }
-    
+
     return photos;
   }
 
@@ -500,7 +500,7 @@ class RestaurantAnalyzerService {
         rating: `${analyzedData.restaurant.rating}/5 from ${analyzedData.restaurant.totalReviews} reviews`,
         price_range: analyzedData.restaurant.priceLevel
       },
-      
+
       recommended_dishes: analyzedData.recommendedMenuItems.map(item => ({
         name: item.name,
         popularity: `Mentioned in ${item.mentions} reviews`,
@@ -508,17 +508,17 @@ class RestaurantAnalyzerService {
         why_recommended: item.reasons.join(', '),
         photo_available: item.photo !== null
       })),
-      
+
       available_photos: {
         has_exterior: analyzedData.photos.exterior !== null,
         has_interior: analyzedData.photos.interior !== null,
         food_photos_count: analyzedData.photos.food.length,
         has_menu: analyzedData.photos.menu !== null
       },
-      
+
       services: analyzedData.restaurant.services,
-      
-      instruction: "Create an engaging restaurant review post in Korean based on this data. Focus on the recommended dishes and authentic customer experiences."
+
+      instruction: 'Create an engaging restaurant review post in Korean based on this data. Focus on the recommended dishes and authentic customer experiences.'
     };
   }
 
@@ -528,7 +528,7 @@ class RestaurantAnalyzerService {
   capitalizeDishName(name) {
     // Words that should stay lowercase
     const lowercaseWords = ['and', 'with', 'in', 'on', 'the', 'a', 'an', 'of', 'e', 'alla', 'al', 'di'];
-    
+
     return name.split(/\s+/)
       .map((word, index) => {
         // Always capitalize first word
@@ -555,7 +555,7 @@ class RestaurantAnalyzerService {
       'margherita', 'capricciosa', 'calzone', 'focaccia', 'risotto',
       'ossobuco', 'saltimbocca', 'piccata', 'marsala', 'parmigiana'
     ];
-    
+
     return knownDishes.includes(name.toLowerCase());
   }
 
@@ -581,7 +581,7 @@ class RestaurantAnalyzerService {
         return cuisineMap[type];
       }
     }
-    
+
     return 'Restaurant'; // Generic fallback
   }
 }

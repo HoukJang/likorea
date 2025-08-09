@@ -24,7 +24,7 @@ const passwordPolicy = {
   historyCount: 5,
   // 로그인 실패 잠금 정책
   maxFailedAttempts: 5,
-  lockoutDuration: 30 * 60 * 1000, // 30분
+  lockoutDuration: 30 * 60 * 1000 // 30분
 };
 
 /**
@@ -35,61 +35,61 @@ const passwordPolicy = {
 function validatePassword(password) {
   const errors = [];
   const warnings = [];
-  
+
   // 기본 검증
   if (!password) {
     errors.push('비밀번호를 입력해주세요.');
     return { isValid: false, errors, warnings, strength: 0 };
   }
-  
+
   // 길이 검증
   if (password.length < passwordPolicy.minLength) {
     errors.push(`비밀번호는 최소 ${passwordPolicy.minLength}자 이상이어야 합니다.`);
   }
-  
+
   if (password.length > passwordPolicy.maxLength) {
     errors.push(`비밀번호는 최대 ${passwordPolicy.maxLength}자를 초과할 수 없습니다.`);
   }
-  
+
   // 문자 종류 검증
   const hasUppercase = /[A-Z]/.test(password);
   const hasLowercase = /[a-z]/.test(password);
   const hasNumbers = /\d/.test(password);
   const hasSpecialChars = new RegExp(`[${passwordPolicy.specialChars.replace(/[[\]\\]/g, '\\$&')}]`).test(password);
-  
+
   if (passwordPolicy.requireUppercase && !hasUppercase) {
     errors.push('비밀번호에 대문자를 포함해야 합니다.');
   }
-  
+
   if (passwordPolicy.requireLowercase && !hasLowercase) {
     errors.push('비밀번호에 소문자를 포함해야 합니다.');
   }
-  
+
   if (passwordPolicy.requireNumbers && !hasNumbers) {
     errors.push('비밀번호에 숫자를 포함해야 합니다.');
   }
-  
+
   if (passwordPolicy.requireSpecialChars && !hasSpecialChars) {
     errors.push('비밀번호에 특수문자를 포함해야 합니다.');
   }
-  
+
   // 일반적인 비밀번호 검증
   const lowerPassword = password.toLowerCase();
   if (passwordPolicy.commonPasswords.some(common => lowerPassword.includes(common))) {
     errors.push('너무 일반적인 비밀번호입니다. 더 복잡한 비밀번호를 사용해주세요.');
   }
-  
+
   // 연속된 문자 검증
   if (/(.)\1{2,}/.test(password)) {
     warnings.push('같은 문자가 3번 이상 연속으로 사용되었습니다.');
   }
-  
+
   // 키보드 패턴 검증
   const keyboardPatterns = ['qwerty', 'asdfgh', 'zxcvbn', '123456', '987654'];
   if (keyboardPatterns.some(pattern => lowerPassword.includes(pattern))) {
     warnings.push('키보드 패턴이 감지되었습니다. 더 안전한 비밀번호를 권장합니다.');
   }
-  
+
   // 비밀번호 강도 계산
   let strength = 0;
   if (password.length >= 8) strength += 20;
@@ -98,11 +98,11 @@ function validatePassword(password) {
   if (hasLowercase) strength += 15;
   if (hasNumbers) strength += 15;
   if (hasSpecialChars) strength += 15;
-  
+
   // 엔트로피 보너스
   const uniqueChars = new Set(password).size;
   if (uniqueChars >= 10) strength += 10;
-  
+
   return {
     isValid: errors.length === 0,
     errors,
@@ -155,20 +155,20 @@ function generateTemporaryPassword(length = 12) {
   const lowerChars = 'abcdefghijklmnopqrstuvwxyz';
   const numbers = '0123456789';
   const specials = '!@#$%^&*';
-  
+
   // 각 카테고리에서 최소 1개씩 보장
   let password = '';
   password += upperChars.charAt(Math.floor(Math.random() * upperChars.length));
   password += lowerChars.charAt(Math.floor(Math.random() * lowerChars.length));
   password += numbers.charAt(Math.floor(Math.random() * numbers.length));
   password += specials.charAt(Math.floor(Math.random() * specials.length));
-  
+
   // 나머지 길이 채우기
   const allChars = upperChars + lowerChars + numbers + specials;
   for (let i = 4; i < length; i++) {
     password += allChars.charAt(Math.floor(Math.random() * allChars.length));
   }
-  
+
   // 섞기
   return password.split('').sort(() => Math.random() - 0.5).join('');
 }
@@ -184,7 +184,7 @@ function checkPasswordExpiration(lastPasswordChange) {
   const daysSinceChange = Math.floor((now - changeDate) / (1000 * 60 * 60 * 24));
   const isExpired = daysSinceChange >= passwordPolicy.expirationDays;
   const daysRemaining = Math.max(0, passwordPolicy.expirationDays - daysSinceChange);
-  
+
   return {
     isExpired,
     daysSinceChange,

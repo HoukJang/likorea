@@ -1,4 +1,3 @@
-import React from 'react';
 import './Input.css';
 
 /**
@@ -52,9 +51,9 @@ const Input = ({
   const inputId = id || name;
 
   return (
-    <div className='common-input-wrapper'>
+    <div className="common-input-wrapper">
       {label && (
-        <label htmlFor={inputId} className='common-input__label'>
+        <label htmlFor={inputId} className="common-input__label">
           {label}
         </label>
       )}
@@ -73,8 +72,8 @@ const Input = ({
         readOnly={readOnly}
         {...props}
       />
-      {error && <div className='common-input__error'>{error}</div>}
-      {helperText && !error && <div className='common-input__helper'>{helperText}</div>}
+      {error && <div className="common-input__error">{error}</div>}
+      {helperText && !error && <div className="common-input__helper">{helperText}</div>}
     </div>
   );
 };

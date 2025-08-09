@@ -20,7 +20,7 @@ export const formatTagInfo = (tags, tagList) => {
 
   return {
     type: getTagDisplayName(tags.type, tagList, 'type'),
-    region: getTagDisplayName(tags.region, tagList, 'region'),
+    region: getTagDisplayName(tags.region, tagList, 'region')
   };
 };
 
@@ -36,7 +36,7 @@ export const createTagDisplayData = (tags, tagList) => {
     displayData.push({
       category: 'type',
       value: tags.type,
-      displayName: getTagDisplayName(tags.type, tagList, 'type'),
+      displayName: getTagDisplayName(tags.type, tagList, 'type')
     });
   }
 
@@ -44,7 +44,7 @@ export const createTagDisplayData = (tags, tagList) => {
     displayData.push({
       category: 'subcategory',
       value: tags.subcategory,
-      displayName: getTagDisplayName(tags.subcategory, tagList, 'category'),
+      displayName: getTagDisplayName(tags.subcategory, tagList, 'category')
     });
   }
 
@@ -52,7 +52,7 @@ export const createTagDisplayData = (tags, tagList) => {
     displayData.push({
       category: 'region',
       value: tags.region,
-      displayName: getTagDisplayName(tags.region, tagList, 'region'),
+      displayName: getTagDisplayName(tags.region, tagList, 'region')
     });
   }
 
@@ -67,7 +67,7 @@ export const SUB_CATEGORIES = {
   사고팔고: ['나눔', '중고'],
   부동산: ['렌트', '룸메이트'],
   생활정보: ['맛집', '업체정보', '정착가이드', '뉴스'],
-  모임: ['번개', '정기'],
+  모임: ['번개', '정기']
 };
 
 // 기본 태그들
@@ -82,8 +82,8 @@ export const DEFAULT_TAGS = {
     '스태튼아일랜드',
     '롱아일랜드',
     '뉴저지',
-    '기타',
-  ],
+    '기타'
+  ]
 };
 
 // 글종류별 색상 매핑
@@ -93,7 +93,7 @@ export const TYPE_COLORS = {
   부동산: '#10b981', // 초록색
   생활정보: '#3b82f6', // 파란색
   모임: '#8b5cf6', // 보라색
-  기타: '#6b7280', // 회색
+  기타: '#6b7280' // 회색
 };
 
 // 소주제별 색상 매핑
@@ -114,7 +114,7 @@ export const SUB_CATEGORY_COLORS = {
   뉴스: '#1e40af',
   // 모임
   번개: '#8b5cf6',
-  정기: '#7c3aed',
+  정기: '#7c3aed'
 };
 
 /**

@@ -24,7 +24,7 @@ class ApiClient {
    */
   getDefaultHeaders() {
     const headers = {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     };
 
     // httpOnly 쿠키 사용으로 Authorization 헤더 제거
@@ -71,7 +71,7 @@ class ApiClient {
     const config = {
       headers: this.getDefaultHeaders(),
       credentials: 'include', // 쿠키 포함하여 요청
-      ...options,
+      ...options
     };
 
     // body가 객체인 경우 JSON으로 변환
@@ -143,7 +143,7 @@ class ApiClient {
   async get(endpoint, options = {}) {
     return this.request(endpoint, {
       method: 'GET',
-      ...options,
+      ...options
     });
   }
 
@@ -154,7 +154,7 @@ class ApiClient {
     return this.request(endpoint, {
       method: 'POST',
       body: data,
-      ...options,
+      ...options
     });
   }
 
@@ -165,7 +165,7 @@ class ApiClient {
     return this.request(endpoint, {
       method: 'PUT',
       body: data,
-      ...options,
+      ...options
     });
   }
 
@@ -176,7 +176,7 @@ class ApiClient {
     return this.request(endpoint, {
       method: 'DELETE',
       body: data,
-      ...options,
+      ...options
     });
   }
 
@@ -187,7 +187,7 @@ class ApiClient {
     return this.request(endpoint, {
       method: 'PATCH',
       body: data,
-      ...options,
+      ...options
     });
   }
 }

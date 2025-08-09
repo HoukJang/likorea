@@ -47,7 +47,7 @@ async function testGooglePlaces() {
 
     try {
       const result = await googlePlacesService.searchRestaurant(test.name, test.address);
-      
+
       if (result) {
         console.log('\n📊 검색 결과:');
         console.log(`  이름: ${result.name}`);
@@ -59,44 +59,44 @@ async function testGooglePlaces() {
         console.log(`  웹사이트: ${result.website || '정보 없음'}`);
         console.log(`  현재 영업: ${result.isOpen ? '영업 중' : '영업 종료'}`);
         console.log(`  Google Maps: ${result.googleMapsUrl}`);
-        
+
         if (result.reviews && result.reviews.length > 0) {
           console.log('\n  📝 최근 리뷰:');
           result.reviews.slice(0, 2).forEach(review => {
             console.log(`    - "${review.text.substring(0, 100)}..." (${review.rating}★)`);
           });
         }
-        
+
         if (result.photos && result.photos.length > 0) {
           console.log(`\n  📸 사진: ${result.photos.length}장 있음`);
         }
-        
+
         console.log('\n  ⏰ 영업시간:');
         console.log('    ' + result.hours.split('\n').join('\n    '));
-        
+
       } else {
         console.log('  ❌ 검색 결과가 없습니다.');
       }
     } catch (error) {
       console.error(`  ❌ 오류 발생: ${error.message}`);
     }
-    
+
     console.log('\n' + '='.repeat(50));
   }
 
   // 근처 레스토랑 검색 테스트 (선택사항)
   console.log('\n📍 근처 한식당 검색 테스트 (Stony Brook 기준)');
   console.log('-'.repeat(50));
-  
+
   try {
     // Stony Brook University 좌표
     const lat = 40.9126;
     const lng = -73.1234;
-    
+
     const nearbyRestaurants = await googlePlacesService.searchNearbyRestaurants(
       lat, lng, 5000, 'korean'
     );
-    
+
     if (nearbyRestaurants.length > 0) {
       console.log(`\n✅ ${nearbyRestaurants.length}개 한식당 발견:`);
       nearbyRestaurants.slice(0, 5).forEach(restaurant => {

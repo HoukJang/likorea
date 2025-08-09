@@ -8,7 +8,7 @@ class GooglePlacesService {
   constructor() {
     this.client = new Client({});
     this.apiKey = process.env.GOOGLE_PLACES_API_KEY;
-    
+
     if (!this.apiKey) {
       console.warn('⚠️ GOOGLE_PLACES_API_KEY가 설정되지 않았습니다.');
     }
@@ -29,12 +29,12 @@ class GooglePlacesService {
 
     try {
       // 메뉴 관련 검색인 경우 쿼리 조정
-      const searchQuery = dishQuery 
+      const searchQuery = dishQuery
         ? `${restaurantName} ${dishQuery} ${address}`
         : `${restaurantName} restaurant ${address}`;
-      
+
       console.log(`🔍 Google Places 검색: ${searchQuery}`);
-      
+
       // 1단계: Place Search로 레스토랑 찾기
       const searchResponse = await this.client.textSearch({
         params: {
@@ -52,7 +52,7 @@ class GooglePlacesService {
 
       const place = searchResponse.data.results[0];
       const placeId = place.place_id;
-      
+
       console.log(`✅ 레스토랑 발견: ${place.name} (${place.formatted_address})`);
 
       // 2단계: Place Details로 상세 정보 가져오기
@@ -88,10 +88,10 @@ class GooglePlacesService {
       });
 
       const details = detailsResponse.data.result;
-      
+
       // 음식 종류 추론
       const cuisine = this.detectCuisineFromTypes(details.types || []);
-      
+
       // 리뷰 정리
       const reviews = (details.reviews || []).map(review => ({
         text: review.text,
@@ -101,8 +101,8 @@ class GooglePlacesService {
       }));
 
       // 영업시간 정리
-      const hours = details.opening_hours ? 
-        details.opening_hours.weekday_text.join('\n') : 
+      const hours = details.opening_hours ?
+        details.opening_hours.weekday_text.join('\n') :
         '영업시간 정보 없음';
 
       // 사진 URL 생성 (최대 10개, 메뉴 사진 포함 가능)
@@ -112,7 +112,7 @@ class GooglePlacesService {
         width: photo.width,
         height: photo.height
       }));
-      
+
       // contextualContent가 있으면 관련 사진 추가
       const contextualPhotos = searchResponse.data.results[0]?.contextualContents?.photos || [];
 
@@ -193,8 +193,8 @@ class GooglePlacesService {
         priceLevel: this.getPriceLevel(place.price_level),
         isOpen: place.opening_hours?.open_now,
         types: place.types,
-        distance: this.calculateDistance(lat, lng, 
-          place.geometry.location.lat, 
+        distance: this.calculateDistance(lat, lng,
+          place.geometry.location.lat,
           place.geometry.location.lng)
       }));
 
@@ -290,9 +290,9 @@ class GooglePlacesService {
     const R = 6371; // 지구 반경 (km)
     const dLat = this.deg2rad(lat2 - lat1);
     const dLon = this.deg2rad(lon2 - lon1);
-    const a = 
+    const a =
       Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
       Math.sin(dLon/2) * Math.sin(dLon/2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     const d = R * c; // 거리 (km)

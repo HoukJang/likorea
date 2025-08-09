@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Box,
   Card,
@@ -6,7 +6,6 @@ import {
   CardActions,
   Typography,
   Button,
-  IconButton,
   Chip,
   Dialog,
   DialogTitle,
@@ -25,11 +24,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import PreviewIcon from '@mui/icons-material/Preview';
 import { linkifyContentSafe } from '../../utils/linkifyContentSafe';
 import { processContent } from '../../utils/optimizeImages';
-import { 
-  approvePost, 
-  rejectPost, 
+import {
+  approvePost,
+  rejectPost,
   updatePendingPost,
-  approveBatch 
+  approveBatch
 } from '../../api/approval';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
@@ -148,7 +147,7 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
     maxSizeMB: 1, // 최대 1MB로 압축
     maxWidthOrHeight: 1920, // 최대 너비/높이 1920px
     useWebWorker: true,
-    quality: 0.8, // 품질 80%
+    quality: 0.8 // 품질 80%
   };
 
   // 이미지 붙여넣기 처리
@@ -156,30 +155,30 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
     // 먼저 이미지가 있는지 확인
     const items = e.clipboardData.items;
     let hasImage = false;
-    
+
     for (const item of items) {
       if (item.kind === 'file' && item.type.startsWith('image/')) {
         hasImage = true;
         break;
       }
     }
-    
+
     // 이미지가 있으면 기본 동작 방지
     if (hasImage) {
       e.preventDefault();
       e.stopPropagation();
     }
-    
+
     for (const index in items) {
       const item = items[index];
       if (item.kind === 'file' && item.type.startsWith('image/')) {
         const file = item.getAsFile();
-        
+
         try {
           // 이미지 압축 라이브러리 동적 로드
           const compress = await loadImageCompression();
           const compressedFile = await compress(file, compressionOptions);
-          
+
           const reader = new FileReader();
           reader.onload = function (event) {
             const img = document.createElement('img');
@@ -227,7 +226,7 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
       ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li'],
       ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
       ALLOW_DATA_ATTR: false,
-      ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i
+      ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.-]+(?:[^a-z+.:-]|$))/i
     });
 
     try {
@@ -321,10 +320,10 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
                   </Typography>
 
                   <Typography variant="caption" color="text.secondary">
-                    작성: {formatDistanceToNow(new Date(post.createdAt), { 
+                    작성: {formatDistanceToNow(new Date(post.createdAt), {
                       addSuffix: true,
-                      locale: ko 
-                    })} • 
+                      locale: ko
+                    })} •
                     작성자: {post.author?.profile?.nickname || post.author?.id}
                   </Typography>
                 </Box>
@@ -380,8 +379,8 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
       )}
 
       {/* 편집 다이얼로그 */}
-      <Dialog 
-        open={editDialog.open} 
+      <Dialog
+        open={editDialog.open}
         onClose={() => setEditDialog({ open: false, post: null })}
         maxWidth="md"
         fullWidth
@@ -413,15 +412,15 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
               backgroundColor: '#fff',
               '&:focus': {
                 outline: '2px solid #1976d2',
-                outlineOffset: '-2px',
+                outlineOffset: '-2px'
               },
               '& p': { margin: '0 0 10px' },
               '& img': { maxWidth: '100%', maxHeight: '600px', width: 'auto', height: 'auto', display: 'block', margin: '10px auto', objectFit: 'contain' },
               '& a': { color: '#1976d2', textDecoration: 'underline' },
               '& ul, & ol': { marginLeft: '20px' },
-              '& blockquote': { 
-                borderLeft: '3px solid #ddd', 
-                paddingLeft: '10px', 
+              '& blockquote': {
+                borderLeft: '3px solid #ddd',
+                paddingLeft: '10px',
                 marginLeft: '0',
                 color: '#666'
               }
@@ -439,24 +438,24 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
       </Dialog>
 
       {/* 미리보기 다이얼로그 */}
-      <Dialog 
-        open={previewDialog.open} 
+      <Dialog
+        open={previewDialog.open}
         onClose={() => setPreviewDialog({ open: false, post: null })}
         maxWidth="md"
         fullWidth
       >
         <DialogTitle>{previewDialog.post?.title}</DialogTitle>
         <DialogContent>
-          <Box 
-            dangerouslySetInnerHTML={{ 
+          <Box
+            dangerouslySetInnerHTML={{
               __html: processContent(DOMPurify.sanitize(previewDialog.post?.content || '', {
                 ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
                 ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target', 'loading', 'decoding'],
                 ALLOW_DATA_ATTR: false,
                 ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.-]+(?:[^a-z+.:-]|$))/i
-              }), linkifyContentSafe) 
+              }), linkifyContentSafe)
             }}
-            sx={{ 
+            sx={{
               '& p': { marginBottom: 1 },
               '& img': { maxWidth: '100%', maxHeight: '600px', width: 'auto', height: 'auto', objectFit: 'contain', display: 'block', margin: '10px auto' }
             }}
@@ -470,8 +469,8 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
       </Dialog>
 
       {/* 거절 다이얼로그 */}
-      <Dialog 
-        open={rejectDialog.open} 
+      <Dialog
+        open={rejectDialog.open}
         onClose={() => setRejectDialog({ open: false, post: null })}
         maxWidth="sm"
         fullWidth
@@ -496,8 +495,8 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
           <Button onClick={() => setRejectDialog({ open: false, post: null })}>
             취소
           </Button>
-          <Button 
-            onClick={handleRejectConfirm} 
+          <Button
+            onClick={handleRejectConfirm}
             color="error"
             variant="contained"
             disabled={loading}

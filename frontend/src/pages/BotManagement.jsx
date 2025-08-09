@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -37,7 +37,7 @@ export default function BotManagement({ embedded = false }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
   const [bots, setBots] = useState([]);
-  const [pendingPosts, setPendingPosts] = useState([]);
+  const [_pendingPosts, setPendingPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pendingCount, setPendingCount] = useState(0);
@@ -49,33 +49,18 @@ export default function BotManagement({ embedded = false }) {
     }
   }, [user, navigate, embedded]);
 
-  // 데이터 로드
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  // 5초마다 봇 목록 갱신 (작성중 상태 업데이트)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // 작성중인 봇이 있는 경우에만 갱신
-      if (bots.some(bot => bot.taskStatus === 'generating')) {
-        loadBots();
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [bots]);
-
-  const loadBots = async () => {
+  const loadBots = useCallback(async () => {
     try {
       const botsResponse = await getBots();
       setBots(botsResponse?.bots || []);
     } catch (err) {
-      console.error('봇 목록 갱신 실패:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('봇 목록 갱신 실패:', err);
+      }
     }
-  };
+  }, []);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -86,14 +71,18 @@ export default function BotManagement({ embedded = false }) {
       ]);
 
       // 디버깅을 위한 로그 추가
-      console.log('Bots API Response:', botsResponse);
-      console.log('Pending Posts API Response:', pendingResponse);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Bots API Response:', botsResponse);
+        console.log('Pending Posts API Response:', pendingResponse);
+      }
 
       setBots(botsResponse?.bots || []);
       setPendingPosts(pendingResponse?.posts || []);
       setPendingCount(pendingResponse?.pagination?.total || 0);
     } catch (err) {
-      console.error('데이터 로드 실패:', err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('데이터 로드 실패:', err);
+      }
       // 상세한 에러 메시지 표시
       if (err.statusCode === 401) {
         setError('로그인이 필요합니다. 다시 로그인해 주세요.');
@@ -107,7 +96,24 @@ export default function BotManagement({ embedded = false }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // 데이터 로드
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // 5초마다 봇 목록 갱신 (작성중 상태 업데이트)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // 작성중인 봇이 있는 경우에만 갱신
+      if (bots.some(bot => bot.taskStatus === 'generating')) {
+        loadBots();
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [bots, loadBots]);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -118,18 +124,26 @@ export default function BotManagement({ embedded = false }) {
       e.preventDefault();
       e.stopPropagation();
     }
-    
-    console.log('handleCreateBot called, embedded:', embedded);
-    console.log('Current location:', window.location.pathname);
-    
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('handleCreateBot called, embedded:', embedded);
+      console.log('Current location:', window.location.pathname);
+    }
+
     if (embedded) {
       // 임베디드 모드에서는 새 탭에서 열기 - 절대 URL 사용
       const url = `${window.location.origin}/bots/new`;
-      console.log('Opening URL:', url);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Opening URL:', url);
+      }
       const newWindow = window.open(url, '_blank');
-      console.log('New window opened:', newWindow);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('New window opened:', newWindow);
+      }
     } else {
-      console.log('Navigating to /bots/new');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Navigating to /bots/new');
+      }
       navigate('/bots/new');
     }
   };
@@ -138,7 +152,7 @@ export default function BotManagement({ embedded = false }) {
     loadData(); // 봇 업데이트 후 데이터 새로고침
   };
 
-  const handlePostApproval = () => {
+  const _handlePostApproval = () => {
     loadData(); // 승인 처리 후 데이터 새로고침
   };
 
@@ -189,9 +203,9 @@ export default function BotManagement({ embedded = false }) {
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={activeTab} onChange={handleTabChange} aria-label="봇 관리 탭">
             <Tab label="봇 목록" />
-            <Tab 
-              label={`승인 대기 (${pendingCount})`} 
-              sx={{ 
+            <Tab
+              label={`승인 대기 (${pendingCount})`}
+              sx={{
                 '& .MuiTab-wrapper': {
                   flexDirection: 'row',
                   gap: 1
@@ -202,8 +216,8 @@ export default function BotManagement({ embedded = false }) {
         </Box>
 
         <TabPanel value={activeTab} index={0}>
-          <BotList 
-            bots={bots} 
+          <BotList
+            bots={bots}
             onUpdate={handleBotUpdate}
             onReload={loadData}
             embedded={embedded}

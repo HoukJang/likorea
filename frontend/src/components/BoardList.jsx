@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getBoards } from '../api/boards';
 import { getAllTags } from '../api/tags';
 import { getPendingPosts } from '../api/approval';
@@ -41,7 +42,7 @@ const BoardList = ({ pendingOnly = false }) => {
         const apiParams = {
           page: currentPage,
           limit: 25,
-          ...filters,
+          ...filters
         };
 
         let data;
@@ -81,10 +82,10 @@ const BoardList = ({ pendingOnly = false }) => {
   }, []);
 
   return (
-    <div className='board-list-container' role='main' aria-label='게시판 목록'>
+    <div className="board-list-container" role="main" aria-label="게시판 목록">
       {/* 태그 필터 컴포넌트 - 승인 대기 게시물일 때는 숨김 */}
       {!pendingOnly && (
-        <div className='user-controls' role='region' aria-label='사용자 컨트롤'>
+        <div className="user-controls" role="region" aria-label="사용자 컨트롤">
           <TagFilter onFilterChange={handleFilterChange} currentFilters={filters} />
         </div>
       )}
@@ -112,6 +113,6 @@ const BoardList = ({ pendingOnly = false }) => {
       />
     </div>
   );
-}
+};
 
 export default React.memo(BoardList);

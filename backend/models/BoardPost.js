@@ -6,7 +6,7 @@ const commentSchema = new mongoose.Schema(
   {
     content: { type: String, required: true },
     // 댓글 작성자 (User 모델의 ObjectId, populate로 별명 활용 가능)
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
   },
   { timestamps: true }
 );
@@ -23,7 +23,7 @@ const boardPostSchema = new mongoose.Schema(
     tags: {
       type: { type: String, required: true }, // 필수 태그
       region: { type: String, required: true }, // 필수 태그
-      subcategory: { type: String }, // 소주제 (선택사항)
+      subcategory: { type: String } // 소주제 (선택사항)
       // 추후 추가될 수 있는 태그들
       // category: String,
       // location: String,
@@ -56,7 +56,7 @@ const boardPostSchema = new mongoose.Schema(
         warnings: [String],
         source: String
       }]
-    }],
+    }]
   },
   { timestamps: true }
 );

@@ -67,7 +67,7 @@ const requiredEnvVars = {
  */
 function validateEnvironment() {
   console.log('🔍 환경 변수 검증 중...\n');
-  
+
   let hasError = false;
   const missingVars = [];
   const invalidVars = [];
@@ -110,7 +110,7 @@ function validateEnvironment() {
   // 보안 경고
   if (process.env.NODE_ENV === 'production') {
     console.log('\n🔐 프로덕션 환경 보안 체크:');
-    
+
     // MongoDB 보안
     if (process.env.MONGO_URI && !process.env.MONGO_URI.includes('mongodb+srv://')) {
       console.warn('⚠️  MongoDB 연결이 암호화되지 않았습니다. mongodb+srv:// 사용을 권장합니다.');
@@ -143,7 +143,7 @@ function printSetupGuide() {
   console.log('2. .env.example 파일을 참고하여 필요한 값을 설정하세요.');
   console.log('3. 보안을 위해 다음 명령으로 안전한 시크릿을 생성할 수 있습니다:\n');
   console.log('   JWT_SECRET 생성:');
-  console.log(`   node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"\n`);
+  console.log('   node -e "console.log(require(\'crypto\').randomBytes(64).toString(\'hex\'))"\n');
   console.log('4. 절대로 .env 파일을 Git에 커밋하지 마세요!');
   console.log('5. 프로덕션 환경에서는 환경 변수 관리 서비스 사용을 권장합니다.\n');
 }

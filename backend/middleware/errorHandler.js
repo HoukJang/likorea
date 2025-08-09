@@ -89,7 +89,7 @@ const errorHandler = (err, req, res, _next) => {
     url: req.originalUrl,
     method: req.method,
     ip: req.ip,
-    userAgent: req.get('User-Agent'),
+    userAgent: req.get('User-Agent')
   });
 
   // Development vs Production error response
@@ -98,7 +98,7 @@ const errorHandler = (err, req, res, _next) => {
       success: false,
       error: error.message,
       stack: error.stack,
-      statusCode: error.statusCode || 500,
+      statusCode: error.statusCode || 500
     });
   }
 
@@ -106,7 +106,7 @@ const errorHandler = (err, req, res, _next) => {
   return res.status(error.statusCode || 500).json({
     success: false,
     error: error.isOperational ? error.message : '서버 내부 오류가 발생했습니다',
-    statusCode: error.statusCode || 500,
+    statusCode: error.statusCode || 500
   });
 };
 
@@ -132,5 +132,5 @@ module.exports = {
   ConflictError,
   errorHandler,
   notFound,
-  asyncHandler,
+  asyncHandler
 };

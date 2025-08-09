@@ -15,7 +15,7 @@ async function generateDummyData() {
 
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
-      useUnifiedTopology: true,
+      useUnifiedTopology: true
     });
     console.log('데이터베이스 연결 성공');
 
@@ -33,7 +33,7 @@ async function generateDummyData() {
       user = await User.create({
         email: 'dummy@example.com',
         password: 'dummy123',
-        authority: 1,
+        authority: 1
       });
     }
 
@@ -56,7 +56,7 @@ async function generateDummyData() {
       '37',
       '38',
       '39',
-      '40',
+      '40'
     ];
 
     // 제목 템플릿
@@ -70,7 +70,7 @@ async function generateDummyData() {
       '{type} 추천해주세요',
       '{type} 가격 문의',
       '{type} 위치 알려주세요',
-      '{type} 리뷰 올립니다',
+      '{type} 리뷰 올립니다'
     ];
 
     // 내용 템플릿
@@ -84,7 +84,7 @@ async function generateDummyData() {
       '{type} 가격이 궁금해요. 대략적인 가격대를 알려주실 수 있으신가요?',
       '{type} 위치를 찾고 있어요. Exit {region} 근처에서 어디에 있는지 알려주세요.',
       '{type} 리뷰를 올려봅니다. 전반적으로 만족스러웠어요.',
-      '{type} 관련해서 조언을 구하고 싶어요. 경험 있으신 분들 조언 부탁드려요.',
+      '{type} 관련해서 조언을 구하고 싶어요. 경험 있으신 분들 조언 부탁드려요.'
     ];
 
     // 45개의 더미 데이터 생성
@@ -106,9 +106,9 @@ async function generateDummyData() {
         viewCount,
         tags: {
           type,
-          region,
+          region
         },
-        createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000), // 최근 30일 내 랜덤 날짜
+        createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000) // 최근 30일 내 랜덤 날짜
       });
 
       await post.save();

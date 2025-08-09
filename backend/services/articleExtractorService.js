@@ -23,7 +23,7 @@ class ArticleExtractorService {
       'Connection': 'keep-alive',
       'Upgrade-Insecure-Requests': '1'
     };
-    
+
     // 신뢰할 수 있는 뉴스 도메인별 선택자
     this.siteSelectors = {
       'nytimes.com': 'article section.meteredContent',
@@ -73,7 +73,7 @@ class ArticleExtractorService {
       targetUrl = await urlResolverService.resolveGoogleNewsUrl(url);
       console.log(`🔗 URL 리졸브: ${url.substring(0, 30)}... → ${targetUrl.substring(0, 50)}...`);
     }
-    
+
     // 캐시 확인 (리졸브된 URL 기준)
     const cacheKey = `article_${targetUrl}`;
     const cached = articleCache.get(cacheKey);
@@ -84,7 +84,7 @@ class ArticleExtractorService {
 
     try {
       console.log(`🔄 기사 추출 시작: ${targetUrl.substring(0, 50)}...`);
-      
+
       // 1. HTML 가져오기
       const response = await axios.get(targetUrl, {
         headers: this.headers,
@@ -96,7 +96,7 @@ class ArticleExtractorService {
 
       // 2. Mozilla Readability 사용하여 기사 추출
       const article = this.extractWithReadability(html, targetUrl);
-      
+
       // 3. Readability가 실패하면 사이트별 선택자 사용
       if (!article || !article.content || article.content.length < 500) {
         console.log('⚠️ Readability 추출 실패, 사이트별 선택자 시도...');
@@ -116,13 +116,13 @@ class ArticleExtractorService {
 
     } catch (error) {
       console.error(`❌ 기사 추출 실패 (${url}):`, error.message);
-      
+
       // Google 캐시 시도
       if (!url.includes('webcache.googleusercontent.com')) {
         console.log('🔄 Google 캐시 시도...');
         return this.extractFromGoogleCache(url);
       }
-      
+
       return null;
     }
   }
@@ -140,7 +140,7 @@ class ArticleExtractorService {
         // HTML 태그 제거하고 텍스트만 추출
         const $ = cheerio.load(article.content);
         const textContent = $.text().trim();
-        
+
         return {
           title: article.title,
           content: textContent,
@@ -164,7 +164,7 @@ class ArticleExtractorService {
   extractWithSelectors(html, url) {
     try {
       const $ = cheerio.load(html);
-      
+
       // 제거할 요소들 삭제
       this.removeSelectors.forEach(selector => {
         $(selector).remove();
@@ -178,7 +178,7 @@ class ArticleExtractorService {
       // 기사 본문 추출
       const articleElement = $(selector).first();
       let content = '';
-      
+
       if (articleElement.length) {
         // 모든 단락 추출
         articleElement.find('p').each((i, elem) => {
@@ -195,8 +195,8 @@ class ArticleExtractorService {
       }
 
       // 제목 추출
-      const title = $('h1').first().text().trim() || 
-                   $('title').text().trim() || 
+      const title = $('h1').first().text().trim() ||
+                   $('title').text().trim() ||
                    'No title';
 
       // 저자 추출
@@ -237,26 +237,26 @@ class ArticleExtractorService {
    */
   async extractMultipleArticles(urls, maxConcurrent = 3) {
     const results = [];
-    
+
     // 동시 실행 제한을 위한 배치 처리
     for (let i = 0; i < urls.length; i += maxConcurrent) {
       const batch = urls.slice(i, i + maxConcurrent);
-      const batchPromises = batch.map(url => 
+      const batchPromises = batch.map(url =>
         this.extractArticle(url).catch(err => {
           console.error(`기사 추출 실패: ${url}`, err.message);
           return null;
         })
       );
-      
+
       const batchResults = await Promise.all(batchPromises);
       results.push(...batchResults);
-      
+
       // 요청 간 지연 (봇 차단 방지)
       if (i + maxConcurrent < urls.length) {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
-    
+
     return results.filter(article => article !== null);
   }
 
@@ -293,7 +293,7 @@ class ArticleExtractorService {
         Math.floor(sentences.length * 0.3),
         Math.floor(sentences.length * 0.7)
       );
-      
+
       for (const sentence of middleSentences) {
         if (currentLength + sentence.length > maxLength) {
           break;

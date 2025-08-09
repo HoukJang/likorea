@@ -1,7 +1,64 @@
+# Dependencies
 node_modules/
+**/node_modules/
+
+# Build outputs
 build/
 dist/
 coverage/
 *.min.js
-.env*
+*.min.css
+
+# Frontend specific
+frontend/build/
+frontend/public/
+frontend/src/serviceWorker.js
+frontend/src/setupTests.js
+frontend/scripts/
+
+# Backend specific
+backend/tests/legacy/
+backend/coverage/
+
+# Test data
+**/__tests__/fixtures/
+**/test-data/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
 *.log
+logs/
+
+# Environment
+.env
+.env.*
+
+# Documentation
+docs/
+*.md
+
+# Scripts
+scripts/
+deploy.sh
+deploy-auto.sh
+
+# Database
+*.db
+*.sqlite
+
+# Generated files
+backend/logs/
+bots/
+*.out
+
+# Cache
+*.cache

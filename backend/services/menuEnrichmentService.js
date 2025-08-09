@@ -27,10 +27,10 @@ class MenuEnrichmentService {
     }
 
     console.log(`🔧 Enriching ${menuItems.length} menu items...`);
-    
+
     const enrichedItems = [];
     const usedImageUrls = new Set(); // 이미 사용된 이미지 URL 추적
-    
+
     for (const item of menuItems) {
       try {
         const enriched = {
@@ -52,12 +52,12 @@ class MenuEnrichmentService {
               restaurantData.restaurant.address,
               usedImageUrls // 이미 사용된 이미지 URL 전달
             );
-            
+
             if (searchResult && searchResult.images && searchResult.images.length > 0) {
               // Store all images for frontend selection
               enriched.allImages = searchResult.images;
               console.log(`   📦 Storing ${searchResult.images.length} images in allImages for ${item.name}`);
-              
+
               // Use the best scored image as default
               const bestImage = searchResult.images[0];
               if (bestImage && bestImage.score >= 0) {
@@ -78,7 +78,7 @@ class MenuEnrichmentService {
             console.log(`⚠️ Image search skipped for ${item.name}`);
           }
         }
-        
+
         // Step 2: If no image found via search, try to use Google Places photos as fallback
         if (enriched.images.length === 0) {
           const matchedPhoto = await this.matchMenuToExistingPhotos(
@@ -86,7 +86,7 @@ class MenuEnrichmentService {
             restaurantData.photos,
             restaurantData.restaurant.types
           );
-          
+
           if (matchedPhoto) {
             enriched.images.push(matchedPhoto);
             enriched.matchConfidence.photo = matchedPhoto.confidence;
@@ -115,7 +115,7 @@ class MenuEnrichmentService {
         enriched.dataQuality = this.calculateDataQuality(enriched);
 
         enrichedItems.push(enriched);
-        
+
       } catch (error) {
         console.error(`⚠️ Failed to enrich ${item.name}:`, error.message);
         // Add item even if enrichment fails
@@ -128,7 +128,7 @@ class MenuEnrichmentService {
     }
 
     console.log(`✅ Enrichment complete. ${enrichedItems.filter(i => i.images.length > 0).length} items have images`);
-    
+
     return enrichedItems;
   }
 
@@ -139,7 +139,7 @@ class MenuEnrichmentService {
     // Don't use Google Places photos for specific menu items
     // They are usually general restaurant photos, not specific dishes
     // Only use if explicitly the restaurant exterior or interior
-    
+
     if (menuName === 'Restaurant Exterior' && photos.exterior) {
       return {
         url: photos.exterior,
@@ -148,7 +148,7 @@ class MenuEnrichmentService {
         type: 'exterior'
       };
     }
-    
+
     if (menuName === 'Restaurant Interior' && photos.interior) {
       return {
         url: photos.interior,
@@ -157,7 +157,7 @@ class MenuEnrichmentService {
         type: 'interior'
       };
     }
-    
+
     // Don't assign food photos to specific menu items
     // It's misleading to show wrong food photos
     return null;
@@ -175,49 +175,49 @@ class MenuEnrichmentService {
 
     try {
       // Clean location for better search - use full address for better results
-      
+
       // Use consistent search query for all restaurants
       const searchQuery = `"${dishName}" restaurant "${restaurantName}" ${location}`;
-      
+
       console.log(`🔍 Searching image for: ${dishName}`);
       console.log(`   Query: ${searchQuery}`);
-      
+
       // 첫 번째 페이지 (1-10)
-      const searchUrl1 = `https://www.googleapis.com/customsearch/v1?` +
+      const searchUrl1 = 'https://www.googleapis.com/customsearch/v1?' +
         `key=${this.googleApiKey}&` +
         `cx=${this.searchEngineId}&` +
         `q=${encodeURIComponent(searchQuery)}&` +
-        `searchType=image&` +
-        `num=10&` +
-        `start=1&` +
-        `safe=active`;
-      
+        'searchType=image&' +
+        'num=10&' +
+        'start=1&' +
+        'safe=active';
+
       // 두 번째 페이지 (11-20)
-      const searchUrl2 = `https://www.googleapis.com/customsearch/v1?` +
+      const searchUrl2 = 'https://www.googleapis.com/customsearch/v1?' +
         `key=${this.googleApiKey}&` +
         `cx=${this.searchEngineId}&` +
         `q=${encodeURIComponent(searchQuery)}&` +
-        `searchType=image&` +
-        `num=10&` +
-        `start=11&` +
-        `safe=active`;
-      
+        'searchType=image&' +
+        'num=10&' +
+        'start=11&' +
+        'safe=active';
+
       // 병렬로 두 페이지 요청
       const [response1, response2] = await Promise.all([
         fetch(searchUrl1),
         fetch(searchUrl2)
       ]);
-      
+
       if (!response1.ok) {
         const errorText = await response1.text();
         console.error(`❌ Image search failed (page 1): ${response1.status}`);
         console.error(`   Error: ${errorText.substring(0, 200)}`);
         return null;
       }
-      
+
       const data1 = await response1.json();
       let allItems = data1.items || [];
-      
+
       // 두 번째 페이지가 성공했으면 추가
       if (response2.ok) {
         const data2 = await response2.json();
@@ -225,30 +225,30 @@ class MenuEnrichmentService {
           allItems = allItems.concat(data2.items);
         }
       }
-      
+
       console.log(`   Found ${allItems.length} images total`);
-      
+
       if (allItems.length === 0) {
         return null;
       }
-      
+
       // Prefer images from food-related domains
       const foodDomains = ['yelp.com', 'tripadvisor.com', 'grubhub.com', 'doordash.com', 'ubereats.com', 'opentable.com'];
-      
+
       // Domains to avoid (often have hotlinking protection or not accessible)
       const avoidDomains = ['facebook.com', 'fbsbx.com', 'fbcdn.net', 'instagram.com', 'cdninstagram.com', 'tiktok.com'];
-      
+
       // Return ALL images with scoring for frontend selection
       const allImages = allItems.map(item => {
         let score = 0;
-        let warnings = [];
-        
+        const warnings = [];
+
         // Check if already used
         if (usedImageUrls.has(item.link)) {
           warnings.push('Already used for another dish');
           score -= 100;
         }
-        
+
         // Check domain quality
         if (foodDomains.some(domain => item.link.includes(domain))) {
           score += 50; // High score for food domains
@@ -258,22 +258,22 @@ class MenuEnrichmentService {
         } else {
           score += 20; // Neutral domains
         }
-        
+
         // Check if title/snippet contains dish name
         const contextText = `${item.title || ''} ${item.snippet || ''}`.toLowerCase();
         const dishWords = dishName.toLowerCase().split(' ');
-        
+
         dishWords.forEach(word => {
           if (contextText.includes(word)) {
             score += 10; // Bonus for matching words in context
           }
         });
-        
+
         // Check if it's specifically about this restaurant
         if (contextText.includes(restaurantName.toLowerCase())) {
           score += 15; // Bonus for restaurant-specific images
         }
-        
+
         return {
           url: item.link,
           title: item.title || '',
@@ -284,16 +284,16 @@ class MenuEnrichmentService {
           source: 'google_search'
         };
       });
-      
+
       // Sort by score but return ALL images
       const sortedImages = allImages.sort((a, b) => b.score - a.score);
-      
+
       console.log(`   ✓ Found ${sortedImages.length} images for ${dishName}`);
       console.log(`   📸 Image URLs for ${dishName}:`);
       sortedImages.forEach((img, idx) => {
         console.log(`      ${idx + 1}. Score: ${img.score}, URL: ${img.url.substring(0, 50)}...`);
       });
-      
+
       // Return array of all images instead of single best image
       return {
         images: sortedImages,
@@ -301,7 +301,7 @@ class MenuEnrichmentService {
         originalQuery: searchQuery,
         dishName: dishName
       };
-      
+
     } catch (error) {
       console.error('❌ Image search error:', error.message);
       return null;
@@ -318,24 +318,24 @@ class MenuEnrichmentService {
 
     // Look for price mentions near the menu item
     const menuNameLower = menuName.toLowerCase();
-    
+
     for (const review of reviews) {
       const text = review.text.toLowerCase();
-      
+
       // Check if menu is mentioned
       if (!text.includes(menuNameLower)) {
         continue;
       }
-      
+
       // Look for price pattern within 50 characters of menu mention
       const menuIndex = text.indexOf(menuNameLower);
       const contextStart = Math.max(0, menuIndex - 50);
       const contextEnd = Math.min(text.length, menuIndex + menuName.length + 50);
       const context = review.text.substring(contextStart, contextEnd);
-      
+
       // Price patterns
       const priceMatches = context.match(/\$\d+(?:\.\d{2})?|\d+\s*(?:dollars?|bucks)/gi);
-      
+
       if (priceMatches && priceMatches.length > 0) {
         // Clean and return the price
         let price = priceMatches[0];
@@ -345,7 +345,7 @@ class MenuEnrichmentService {
         return price;
       }
     }
-    
+
     return null;
   }
 
@@ -354,16 +354,16 @@ class MenuEnrichmentService {
    */
   enhanceDescription(menuName, basicDescription, restaurantTypes, ingredients = []) {
     const cuisineType = this.detectCuisineType(restaurantTypes);
-    
+
     // Start with basic description or menu name
     let enhanced = basicDescription || menuName;
-    
+
     // Add ingredients if available
     if (ingredients && ingredients.length > 0) {
       const ingredientStr = ingredients.slice(0, 3).join(', ');
       enhanced += ` - featuring ${ingredientStr}`;
     }
-    
+
     // Add cuisine-specific enhancements
     const enhancements = {
       'Italian': {
@@ -382,7 +382,7 @@ class MenuEnrichmentService {
         'soup': 'slow-simmered broth'
       }
     };
-    
+
     if (enhancements[cuisineType]) {
       const menuLower = menuName.toLowerCase();
       for (const [key, value] of Object.entries(enhancements[cuisineType])) {
@@ -392,7 +392,7 @@ class MenuEnrichmentService {
         }
       }
     }
-    
+
     return enhanced;
   }
 
@@ -418,7 +418,7 @@ class MenuEnrichmentService {
         return cuisineMap[type];
       }
     }
-    
+
     return 'Restaurant';
   }
 
@@ -428,37 +428,37 @@ class MenuEnrichmentService {
   calculateDataQuality(item) {
     let score = 0;
     let factors = 0;
-    
+
     // Has image: +30%
     if (item.images && item.images.length > 0) {
       score += 30;
       factors++;
     }
-    
+
     // Has price: +25%
     if (item.enrichedPrice || item.priceHint) {
       score += 25;
       factors++;
     }
-    
+
     // Has description: +20%
     if (item.enrichedDescription && item.enrichedDescription !== item.name) {
       score += 20;
       factors++;
     }
-    
+
     // Has ingredients: +15%
     if (item.ingredients && item.ingredients.length > 0) {
       score += 15;
       factors++;
     }
-    
+
     // Multiple mentions: +10%
     if (item.mentions > 1) {
       score += 10;
       factors++;
     }
-    
+
     if (score >= 70) return 'excellent';
     if (score >= 50) return 'good';
     if (score >= 30) return 'fair';

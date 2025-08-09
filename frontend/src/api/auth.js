@@ -67,7 +67,7 @@ export const logout = async () => {
   } catch (error) {
     // 로그아웃 오류는 무시
   }
-  
+
   // 호환성을 위한 localStorage 제거
   localStorage.removeItem('authToken');
   localStorage.removeItem('userId');
@@ -95,12 +95,12 @@ export const getCurrentUser = async () => {
     const userId = localStorage.getItem('userId');
     const userEmail = localStorage.getItem('userEmail');
     const userAuthority = localStorage.getItem('userAuthority');
-    
+
     if (userId) {
       return {
         id: userId,
         email: userEmail,
-        authority: userAuthority,
+        authority: userAuthority
       };
     }
     return null;

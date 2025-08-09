@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, isAuthenticated } from '../api/auth';
 import { getUser, updateUser } from '../api/auth';
@@ -18,7 +18,7 @@ function Profile() {
     email: '',
     password: '',
     newPassword: '',
-    confirmPassword: '',
+    confirmPassword: ''
   });
 
   // 현재 사용자 정보 확인
@@ -59,7 +59,7 @@ function Profile() {
         email: data.email || '',
         password: '',
         newPassword: '',
-        confirmPassword: '',
+        confirmPassword: ''
       });
     } catch (error) {
       setError('사용자 정보를 불러오는데 실패했습니다.');
@@ -81,7 +81,7 @@ function Profile() {
       email: userData?.email || '',
       password: '',
       newPassword: '',
-      confirmPassword: '',
+      confirmPassword: ''
     });
     setMessage('');
   };
@@ -104,7 +104,7 @@ function Profile() {
       setLoading(true);
       const updateData = {
         email: editForm.email,
-        password: editForm.password,
+        password: editForm.password
       };
 
       if (editForm.newPassword) {
@@ -126,42 +126,42 @@ function Profile() {
 
   if (loading && !userData) {
     return (
-      <div className='profile-container'>
-        <div className='loading'>사용자 정보를 불러오는 중...</div>
+      <div className="profile-container">
+        <div className="loading">사용자 정보를 불러오는 중...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className='profile-container'>
-        <div className='error'>오류: {error}</div>
+      <div className="profile-container">
+        <div className="error">오류: {error}</div>
       </div>
     );
   }
 
   return (
-    <div className='profile-container'>
-      <div className='profile-header'>
-        <h2 className='profile-title'>프로필</h2>
+    <div className="profile-container">
+      <div className="profile-header">
+        <h2 className="profile-title">프로필</h2>
       </div>
 
-      <div className='profile-content'>
+      <div className="profile-content">
         {!isEditing ? (
-          <div className='profile-info'>
-            <div className='info-group'>
+          <div className="profile-info">
+            <div className="info-group">
               <label>사용자 ID:</label>
               <span>{userData?.id}</span>
             </div>
-            <div className='info-group'>
+            <div className="info-group">
               <label>이메일:</label>
               <span>{userData?.email}</span>
             </div>
-            <div className='info-group'>
+            <div className="info-group">
               <label>권한 레벨:</label>
               <span>Lv.{userData?.authority}</span>
             </div>
-            <div className='info-group'>
+            <div className="info-group">
               <label>가입일:</label>
               <span>
                 {userData?.createdAt
@@ -170,81 +170,81 @@ function Profile() {
               </span>
             </div>
 
-            <div className='profile-actions'>
-              <Button onClick={handleEdit} variant='primary' size='medium'>
+            <div className="profile-actions">
+              <Button onClick={handleEdit} variant="primary" size="medium">
                 프로필 수정
               </Button>
             </div>
           </div>
         ) : (
-          <form onSubmit={handleUpdate} className='profile-edit-form'>
-            <div className='form-group'>
+          <form onSubmit={handleUpdate} className="profile-edit-form">
+            <div className="form-group">
               <Input
-                type='text'
-                label='사용자 ID'
+                type="text"
+                label="사용자 ID"
                 value={userData?.id || ''}
                 disabled
-                placeholder='사용자 ID'
+                placeholder="사용자 ID"
               />
             </div>
 
-            <div className='form-group'>
+            <div className="form-group">
               <Input
-                type='email'
-                label='이메일'
+                type="email"
+                label="이메일"
                 value={editForm.email}
                 onChange={e => setEditForm({ ...editForm, email: e.target.value })}
                 required
-                placeholder='이메일 주소'
+                placeholder="이메일 주소"
               />
             </div>
 
-            <div className='form-group'>
+            <div className="form-group">
               <Input
-                type='password'
-                label='현재 비밀번호'
+                type="password"
+                label="현재 비밀번호"
                 value={editForm.password}
                 onChange={e => setEditForm({ ...editForm, password: e.target.value })}
                 required
-                placeholder='현재 비밀번호'
+                placeholder="현재 비밀번호"
               />
             </div>
 
-            <div className='form-group'>
+            <div className="form-group">
               <Input
-                type='password'
-                label='새 비밀번호 (선택사항)'
+                type="password"
+                label="새 비밀번호 (선택사항)"
                 value={editForm.newPassword}
                 onChange={e => setEditForm({ ...editForm, newPassword: e.target.value })}
-                placeholder='새 비밀번호'
+                placeholder="새 비밀번호"
               />
             </div>
 
-            <div className='form-group'>
+            <div className="form-group">
               <Input
-                type='password'
-                label='새 비밀번호 확인'
+                type="password"
+                label="새 비밀번호 확인"
                 value={editForm.confirmPassword}
                 onChange={e => setEditForm({ ...editForm, confirmPassword: e.target.value })}
-                placeholder='새 비밀번호 확인'
+                placeholder="새 비밀번호 확인"
               />
             </div>
 
-            <div className='form-actions'>
+            <div className="form-actions">
               <Button
-                type='submit'
-                variant='primary'
-                size='medium'
+                type="submit"
+                variant="primary"
+                size="medium"
                 loading={loading}
                 disabled={loading}
               >
                 저장
               </Button>
               <Button
-                type='button'
+                type="button"
                 onClick={handleCancel}
-                variant='secondary'
-                size='medium'
+                variant="secondary"
+                size="medium"
                 disabled={loading}
               >
                 취소

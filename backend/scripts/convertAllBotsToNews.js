@@ -18,7 +18,7 @@ async function convertAllBotsToNews() {
       if (bot.type !== 'news') {
         console.log(`\n🔄 봇 "${bot.name}" 변환 중...`);
         console.log(`   기존 타입: ${bot.type}`);
-        
+
         // 뉴스봇으로 변환
         bot.type = 'news';
         // subType 설정 (기존 값이 유효하지 않으면 local로 설정)
@@ -26,7 +26,7 @@ async function convertAllBotsToNews() {
         if (!validSubTypes.includes(bot.subType)) {
           bot.subType = 'local';  // 기본값으로 local 설정
         }
-        
+
         // 시스템 프롬프트 업데이트
         if (!bot.prompt) {
           bot.prompt = {};
@@ -37,9 +37,9 @@ async function convertAllBotsToNews() {
 응답 형식:
 제목: [게시글 제목]
 내용: [게시글 내용]`;
-        
+
         await bot.save();
-        console.log(`   ✅ 뉴스봇으로 변환 완료`);
+        console.log('   ✅ 뉴스봇으로 변환 완료');
         convertedCount++;
       } else {
         console.log(`\n✨ 봇 "${bot.name}"은 이미 뉴스봇입니다`);
@@ -47,7 +47,7 @@ async function convertAllBotsToNews() {
     }
 
     console.log('\n' + '='.repeat(50));
-    console.log(`🎉 작업 완료!`);
+    console.log('🎉 작업 완료!');
     console.log(`   - 확인한 봇: ${bots.length}개`);
     console.log(`   - 변환한 봇: ${convertedCount}개`);
     console.log(`   - 기존 뉴스봇: ${bots.length - convertedCount}개`);
@@ -56,7 +56,7 @@ async function convertAllBotsToNews() {
     if (convertedCount > 0) {
       console.log('\n📊 변환된 봇들의 현재 상태:');
       const updatedBots = await Bot.find({});
-      
+
       for (const bot of updatedBots) {
         console.log(`\n봇: ${bot.name}`);
         console.log(`  - 타입: ${bot.type}`);

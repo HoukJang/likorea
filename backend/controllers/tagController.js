@@ -16,7 +16,7 @@ exports.getAllTags = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    tags: groupedTags,
+    tags: groupedTags
   });
 });
 
@@ -33,7 +33,7 @@ exports.getTagsByCategory = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     category,
-    tags,
+    tags
   });
 });
 
@@ -43,7 +43,7 @@ exports.getSubCategoriesByParent = asyncHandler(async (req, res) => {
 
   // DB에서 활성화된 type 태그 목록을 가져와서 유효성 검증
   const validTypes = await Tag.find({ category: 'type', isActive: true }).distinct('value');
-  
+
   if (!validTypes.includes(parentCategory)) {
     throw new ValidationError('유효하지 않은 상위 카테고리입니다.');
   }
@@ -53,7 +53,7 @@ exports.getSubCategoriesByParent = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     parentCategory,
-    subCategories,
+    subCategories
   });
 });
 
@@ -82,13 +82,13 @@ exports.addTag = asyncHandler(async (req, res) => {
     displayName,
     order: order || 0,
     description: description || '',
-    parentCategory: parentCategory || null,
+    parentCategory: parentCategory || null
   });
 
   res.status(201).json({
     success: true,
     message: '태그가 성공적으로 추가되었습니다.',
-    tag,
+    tag
   });
 });
 
@@ -123,7 +123,7 @@ exports.updateTag = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     message: '태그가 성공적으로 수정되었습니다.',
-    tag,
+    tag
   });
 });
 
@@ -141,7 +141,7 @@ exports.deactivateTag = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: '태그가 성공적으로 비활성화되었습니다.',
+    message: '태그가 성공적으로 비활성화되었습니다.'
   });
 });
 
@@ -160,7 +160,7 @@ exports.activateTag = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     message: '태그가 성공적으로 활성화되었습니다.',
-    tag,
+    tag
   });
 });
 
@@ -186,6 +186,6 @@ exports.getAllTagsForAdmin = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    tags: groupedTags,
+    tags: groupedTags
   });
 });

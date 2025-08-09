@@ -1,5 +1,5 @@
 // src/components/CommentForm.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { addComment } from '../api/boards';
 import '../styles/CommentForm.css'; // Import the CSS file
@@ -11,19 +11,19 @@ function CommentForm({ postId, parentComment, onCommentAdded }) {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    
+
     if (!user) {
       alert('로그인이 필요합니다.');
       return;
     }
-    
+
     setIsLoading(true);
     try {
       const commentData = {
         content,
         parentComment
       };
-      
+
       await addComment(postId, commentData);
       alert('댓글 작성 성공!');
       setContent('');
@@ -36,11 +36,11 @@ function CommentForm({ postId, parentComment, onCommentAdded }) {
   };
 
   return (
-    <form className='comment-form' onSubmit={handleSubmit}>
-      <div className='form-group'>
-        <label className='form-label'>댓글:</label>
+    <form className="comment-form" onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label className="form-label">댓글:</label>
         <textarea
-          className='comment-textarea'
+          className="comment-textarea"
           value={content}
           onChange={e => setContent(e.target.value)}
           required
@@ -48,9 +48,9 @@ function CommentForm({ postId, parentComment, onCommentAdded }) {
           placeholder={!user ? '로그인이 필요합니다.' : '댓글을 입력하세요.'}
         />
       </div>
-      <button 
-        type='submit' 
-        className='submit-button'
+      <button
+        type="submit"
+        className="submit-button"
         disabled={isLoading || !user || !content.trim()}
       >
         {isLoading ? '작성 중...' : '댓글 작성'}

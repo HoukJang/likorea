@@ -22,13 +22,13 @@ beforeAll(async () => {
   try {
     // 테스트 데이터베이스 초기화
     await initTestDatabase();
-    
+
     // MongoDB 연결 가능 표시
     global.__MONGODB_AVAILABLE__ = true;
   } catch (error) {
     console.error('❌ 테스트 환경 설정 실패:', error.message);
     console.warn('💡 MongoDB Atlas 연결을 확인하세요');
-    
+
     // MongoDB 없이도 단위 테스트는 실행 가능하도록 설정
     global.__MONGODB_AVAILABLE__ = false;
   }
@@ -50,5 +50,5 @@ global.console = {
   debug: jest.fn(),
   info: jest.fn(),
   warn: jest.fn(),
-  error: jest.fn(),
+  error: jest.fn()
 };

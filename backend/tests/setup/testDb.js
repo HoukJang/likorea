@@ -16,7 +16,7 @@ const initTestDatabase = async () => {
     // 테스트 DB 연결
     await mongoose.connect(testConfig.database.url, {
       serverSelectionTimeoutMS: 5000,
-      connectTimeoutMS: 5000,
+      connectTimeoutMS: 5000
     });
 
     console.log('✅ 테스트 데이터베이스 연결 성공');
@@ -43,7 +43,7 @@ const initTestDatabase = async () => {
  */
 const dropAllCollections = async () => {
   const collections = await mongoose.connection.db.collections();
-  
+
   for (const collection of collections) {
     await collection.drop().catch(() => {
       // 컬렉션이 없을 수도 있음
@@ -61,7 +61,7 @@ const initializeEssentialData = async () => {
     { seq: 0 },
     { upsert: true, new: true }
   );
-  
+
   // board 카운터 초기화 (duplicate key 오류 방지)
   await Counter.findOneAndUpdate(
     { _id: 'board' },
@@ -107,7 +107,7 @@ const initializeTags = async () => {
 
   // 모든 태그 upsert
   const allTags = [...typeTags, ...regionTags, ...categoryTags];
-  
+
   for (const tag of allTags) {
     await Tag.findOneAndUpdate(
       { category: tag.category, value: tag.value },

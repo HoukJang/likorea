@@ -1,9 +1,8 @@
-import React from 'react';
 import ResponsiveImage from './common/ResponsiveImage';
 import '../styles/Banner.css';
 
 const Banner = () => (
-  <div className='banner-container'>
+  <div className="banner-container">
     <ResponsiveImage
       imageName="banner"
       alt="Long Island Korea Community"

@@ -154,8 +154,8 @@ const botSchema = new mongoose.Schema({
     type: String,
     enum: [
       // Claude models (현재 사용 가능한 모델)
-      'claude-3-haiku-20240307', 
-      'claude-3-5-haiku-20241022', 
+      'claude-3-haiku-20240307',
+      'claude-3-5-haiku-20241022',
       'claude-3-5-sonnet-20241022',
       'claude-3-7-sonnet',  // 하이브리드 추론 모델
       'claude-sonnet-4-20250514',  // Claude 4 Sonnet (2025년 5월 출시)

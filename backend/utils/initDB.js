@@ -5,11 +5,14 @@ const Comment = require('../models/Comment');
 const Counter = require('../models/Counter');
 const Tag = require('../models/Tag');
 const { initializeTags } = require('./initTags');
+const { safeDbOperation, getSafeConnectionOptions } = require('./db-protection');
 require('dotenv').config();
 
 /**
  * 데이터베이스 초기화 스크립트
  * 프로덕션과 개발 환경 모두에서 사용 가능
+ *
+ * ⚠️  주의: 프로덕션 환경에서는 DB 보호 기능이 활성화됩니다
  */
 async function initDB() {
   try {
@@ -19,18 +22,22 @@ async function initDB() {
     // 데이터베이스 연결 확인
     if (mongoose.connection.readyState !== 1) {
       console.log('📡 데이터베이스에 연결 중...');
-      await mongoose.connect(process.env.MONGO_URI);
+      const connectionOptions = getSafeConnectionOptions();
+      await mongoose.connect(process.env.MONGO_URI, connectionOptions);
       console.log('✅ 데이터베이스 연결 완료');
     }
 
-    // 기존 데이터 정리 (주의: 모든 데이터가 삭제됩니다)
-    console.log('🗑️  기존 데이터 정리 중...');
-    await User.deleteMany({});
-    await BoardPost.deleteMany({});
-    await Comment.deleteMany({});
-    await Counter.deleteMany({});
-    await Tag.deleteMany({});
-    console.log('✅ 기존 데이터 정리 완료');
+    // DB 초기화 작업을 안전하게 수행
+    await safeDbOperation('initDB', async () => {
+      // 기존 데이터 정리 (주의: 모든 데이터가 삭제됩니다)
+      console.log('🗑️  기존 데이터 정리 중...');
+      await User.deleteMany({});
+      await BoardPost.deleteMany({});
+      await Comment.deleteMany({});
+      await Counter.deleteMany({});
+      await Tag.deleteMany({});
+      console.log('✅ 기존 데이터 정리 완료');
+    });
 
     // 1. Counter 초기화
     console.log('🔢 Counter 초기화 중...');
@@ -48,7 +55,7 @@ async function initDB() {
       id: 'likorea',
       email: 'admin@likorea.com',
       password: 'FhddkfZhfldk', // User 모델에서 자동 해시화됨
-      authority: 5, // 관리자 권한
+      authority: 5 // 관리자 권한
     });
     console.log(`✅ 관리자 계정 생성 완료: ${adminUser.id}`);
 
@@ -76,7 +83,7 @@ async function initDB() {
       isNotice: true,
       viewCount: 1,
       commentCount: 0,
-      createdAt: new Date(),
+      createdAt: new Date()
     });
 
     console.log('✅ 환영 공지사항 생성 완료');
@@ -84,19 +91,19 @@ async function initDB() {
     // 환경별 추가 설정
     if (process.env.NODE_ENV === 'development') {
       console.log('🛠️  개발 환경 추가 데이터 생성 중...');
-      
+
       // 개발 환경에서는 테스트용 사용자들도 생성
       const testUsers = ['testuser1', 'testuser2', 'testuser3'];
-      
+
       for (const userId of testUsers) {
         await User.create({
           id: userId,
           email: `${userId}@test.com`,
           password: 'password',
-          authority: 3,
+          authority: 3
         });
       }
-      
+
       console.log(`✅ 테스트 사용자 ${testUsers.length}명 생성 완료`);
     } else {
       console.log('🏭 프로덕션 환경: 기본 설정만 완료');
@@ -104,12 +111,12 @@ async function initDB() {
 
     console.log('\n🎉 데이터베이스 초기화 완료!');
     console.log('📊 생성된 데이터:');
-    console.log(`👤 관리자: likorea (비밀번호: FhddkfZhfldk)`);
-    console.log(`📢 환영 공지사항: 1개`);
-    console.log(`🏷️  태그 시스템: 초기화 완료 (495 고속도로 Exit 기반)`);
-    
+    console.log('👤 관리자: likorea (비밀번호: FhddkfZhfldk)');
+    console.log('📢 환영 공지사항: 1개');
+    console.log('🏷️  태그 시스템: 초기화 완료 (495 고속도로 Exit 기반)');
+
     if (process.env.NODE_ENV === 'development') {
-      console.log(`👥 테스트 사용자: 3명 (testuser1-3, 비밀번호: password)`);
+      console.log('👥 테스트 사용자: 3명 (testuser1-3, 비밀번호: password)');
     }
 
   } catch (error) {

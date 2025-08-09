@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useMemo } from 'react';
-import ReactQuill, { Quill } from 'react-quill';
+import { useRef, useEffect, useMemo } from 'react';
+import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 // Lazy load image compression library
@@ -17,7 +17,7 @@ const compressionOptions = {
   maxSizeMB: 1, // 최대 1MB로 압축
   maxWidthOrHeight: 1920, // 최대 너비/높이 1920px
   useWebWorker: true,
-  quality: 0.8, // 품질 80%
+  quality: 0.8 // 품질 80%
 };
 
 // 커스텀 이미지 핸들러
@@ -34,7 +34,7 @@ const imageHandler = async function() {
         // 이미지 압축
         const compress = await loadImageCompression();
         const compressedFile = await compress(file, compressionOptions);
-        
+
         // Base64로 변환
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -48,7 +48,9 @@ const imageHandler = async function() {
         reader.readAsDataURL(compressedFile);
       } catch (error) {
         alert('이미지 업로드 중 오류가 발생했습니다.');
-        console.error('Image compression error:', error);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Image compression error:', error);
+        }
       }
     }
   };
@@ -124,27 +126,27 @@ function QuillEditor({ value, onChange, placeholder = '내용을 입력하세요
   useEffect(() => {
     if (quillRef.current) {
       const quill = quillRef.current.getEditor();
-      
+
       // 한국어 툴팁 추가
       setTimeout(() => {
         addTooltips();
       }, 100);
-      
+
       quill.root.addEventListener('paste', async (e) => {
         const clipboardData = e.clipboardData || window.clipboardData;
         const items = clipboardData.items;
-        
+
         for (let i = 0; i < items.length; i++) {
           const item = items[i];
           if (item.kind === 'file' && item.type.startsWith('image/')) {
             e.preventDefault();
             const file = item.getAsFile();
-            
+
             try {
               // 이미지 압축
               const compress = await loadImageCompression();
               const compressedFile = await compress(file, compressionOptions);
-              
+
               // Base64로 변환
               const reader = new FileReader();
               reader.onload = (event) => {
@@ -158,7 +160,9 @@ function QuillEditor({ value, onChange, placeholder = '내용을 입력하세요
               reader.readAsDataURL(compressedFile);
             } catch (error) {
               alert('이미지 압축 중 오류가 발생했습니다.');
-              console.error('Image paste error:', error);
+              if (process.env.NODE_ENV === 'development') {
+                console.error('Image paste error:', error);
+              }
             }
             return;
           }

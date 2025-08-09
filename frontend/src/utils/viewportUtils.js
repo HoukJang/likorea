@@ -17,7 +17,7 @@ export const setViewportForDevice = () => {
       428: '428px', // iPhone 14 Pro Max, 13 Pro Max
       390: '390px', // iPhone 14, 13, 12
       375: '375px', // iPhone SE, 12 mini
-      414: '414px', // iPhone Plus 모델들
+      414: '414px' // iPhone Plus 모델들
     };
 
     viewportWidth = viewportMap[screenWidth] || viewportWidth;

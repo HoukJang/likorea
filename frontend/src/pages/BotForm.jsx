@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Container,
@@ -30,11 +30,11 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TuneIcon from '@mui/icons-material/Tune';
 import { useAuth } from '../hooks/useAuth';
-import { 
-  createBot, 
-  getBot, 
-  updateBot, 
-  getClaudeModels 
+import {
+  createBot,
+  getBot,
+  updateBot,
+  getClaudeModels
 } from '../api/bots';
 import '../styles/BotForm.css';
 
@@ -76,35 +76,27 @@ export default function BotForm() {
 
   // 관리자 권한 확인
   useEffect(() => {
-    
+
     // 인증 로딩 중이면 대기
     if (authLoading) {
       return;
     }
-    
+
     if (!user || user.authority < 5) {
       navigate('/admin');
     }
   }, [user, authLoading, navigate]);
 
-  // 모델 목록 로드
-  useEffect(() => {
-    loadModels();
-    if (isEdit) {
-      loadBot();
-    }
-  }, [isEdit, botId]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const loadModels = async () => {
+  const loadModels = useCallback(async () => {
     try {
       const response = await getClaudeModels();
       setModels(response.models || []);
     } catch (err) {
       // 모델 목록 로드 실패 시 조용히 처리
     }
-  };
+  }, []);
 
-  const loadBot = async () => {
+  const loadBot = useCallback(async () => {
     try {
       setLoading(true);
       const response = await getBot(botId);
@@ -136,16 +128,24 @@ export default function BotForm() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [botId]);
+
+  // 모델 목록 로드
+  useEffect(() => {
+    loadModels();
+    if (isEdit) {
+      loadBot();
+    }
+  }, [isEdit, botId, loadModels, loadBot]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     // 봇 타입 변경시 적절한 systemPrompt와 userPrompt 설정
     if (name === 'type') {
       let newSystemPrompt = '';
       let newUserPrompt = '';
-      
+
       if (value === 'news') {
         newSystemPrompt = `당신은 롱아일랜드 한인 커뮤니티를 위한 뉴스 요약 전문가입니다.
 실제 뉴스를 바탕으로 정확하고 신뢰할 수 있는 정보만 전달합니다.
@@ -153,7 +153,7 @@ export default function BotForm() {
 응답 형식:
 제목: [게시글 제목]
 내용: [게시글 내용]`;
-        
+
         newUserPrompt = `【현재 시각】 {CURRENT_DATE}
 
 【요청 지역】 {LOCATION}
@@ -192,7 +192,7 @@ export default function BotForm() {
 제목: [게시글 제목]
 내용: [게시글 내용]`;
       }
-      
+
       setFormData(prev => ({
         ...prev,
         [name]: value,
@@ -224,7 +224,7 @@ export default function BotForm() {
 
     try {
       setLoading(true);
-      
+
       if (isEdit) {
         await updateBot(botId, formData);
         setSuccess('봇이 성공적으로 수정되었습니다.');
@@ -232,7 +232,7 @@ export default function BotForm() {
       } else {
         const response = await createBot(formData);
         setSuccess('봇이 성공적으로 생성되었습니다.');
-        
+
         // 생성된 봇의 계정 정보 표시
         if (response.bot?.accountInfo) {
           setAccountInfo(response.bot.accountInfo);
@@ -350,14 +350,14 @@ export default function BotForm() {
           <Typography variant="h6" gutterBottom>
             프롬프트 설정
           </Typography>
-          
+
           {formData.type === 'news' && (
             <Alert severity="info" sx={{ mb: 2 }}>
               <Typography variant="body2" fontWeight={600} gutterBottom>
                 뉴스봇 프롬프트 템플릿 변수 안내
               </Typography>
               <Typography variant="body2">
-                뉴스봇은 실시간으로 수집된 뉴스 데이터를 기반으로 게시글을 작성합니다. 
+                뉴스봇은 실시간으로 수집된 뉴스 데이터를 기반으로 게시글을 작성합니다.
                 다음 템플릿 변수들이 자동으로 실제 값으로 치환됩니다:
               </Typography>
               <ul style={{ marginTop: '8px', marginBottom: 0, paddingLeft: '20px' }}>
@@ -392,7 +392,7 @@ export default function BotForm() {
             multiline
             rows={4}
             helperText={
-              formData.type === 'news' 
+              formData.type === 'news'
                 ? '뉴스봇은 다음 템플릿 변수를 사용합니다: {CURRENT_DATE} - 현재 날짜/시간, {LOCATION} - 요청 지역, {MONTH} - 월, {WEEK_OF_MONTH} - 월의 주차, {NEWS_DATA} - 수집된 뉴스 데이터'
                 : '추가적인 컨텍스트나 지시사항. 게시글 작성 시 주제와 함께 전달됩니다.'
             }
@@ -411,7 +411,7 @@ export default function BotForm() {
                 <MenuItem key={model.id} value={model.id}>
                   <Box className="model-item">
                     <span>{model.name}</span>
-                    <Chip 
+                    <Chip
                       label={`입력: $${model.costPer1kTokens.input}/1k`}
                       size="small"
                       variant="outlined"
@@ -442,9 +442,9 @@ export default function BotForm() {
           )}
 
           <Accordion sx={{ mt: 3, mb: 2 }} defaultExpanded={false}>
-            <AccordionSummary 
+            <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
-              sx={{ 
+              sx={{
                 backgroundColor: 'rgba(59, 130, 246, 0.04)',
                 '&:hover': { backgroundColor: 'rgba(59, 130, 246, 0.08)' }
               }}
@@ -452,15 +452,15 @@ export default function BotForm() {
               <Stack direction="row" spacing={1} alignItems="center">
                 <TuneIcon sx={{ color: '#3b82f6', fontSize: 20 }} />
                 <Typography fontWeight={600}>고급 API 설정</Typography>
-                <Chip 
-                  label="선택사항" 
-                  size="small" 
-                  sx={{ 
-                    height: 20, 
+                <Chip
+                  label="선택사항"
+                  size="small"
+                  sx={{
+                    height: 20,
                     fontSize: '0.7rem',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     color: '#3b82f6'
-                  }} 
+                  }}
                 />
               </Stack>
             </AccordionSummary>
@@ -473,10 +473,10 @@ export default function BotForm() {
                       <Typography variant="body2" fontWeight={600}>
                         최대 토큰
                       </Typography>
-                      <Chip 
-                        label={formData.apiSettings.maxTokens} 
-                        size="small" 
-                        color="primary" 
+                      <Chip
+                        label={formData.apiSettings.maxTokens}
+                        size="small"
+                        color="primary"
                         variant="outlined"
                       />
                     </Box>
@@ -506,9 +506,9 @@ export default function BotForm() {
                       <Typography variant="body2" fontWeight={600}>
                         Temperature
                       </Typography>
-                      <Chip 
-                        label={formData.apiSettings.temperature.toFixed(2)} 
-                        size="small" 
+                      <Chip
+                        label={formData.apiSettings.temperature.toFixed(2)}
+                        size="small"
                         color={formData.apiSettings.temperature > 0.8 ? 'warning' : 'primary'}
                         variant="outlined"
                       />
@@ -540,9 +540,9 @@ export default function BotForm() {
                       <Typography variant="body2" fontWeight={600}>
                         Top P (누적 확률)
                       </Typography>
-                      <Chip 
-                        label={formData.apiSettings.topP.toFixed(2)} 
-                        size="small" 
+                      <Chip
+                        label={formData.apiSettings.topP.toFixed(2)}
+                        size="small"
                         variant="outlined"
                       />
                     </Box>
@@ -571,9 +571,9 @@ export default function BotForm() {
                       <Typography variant="body2" fontWeight={600}>
                         Top K (상위 K개)
                       </Typography>
-                      <Chip 
-                        label={formData.apiSettings.topK === 0 ? '비활성' : formData.apiSettings.topK} 
-                        size="small" 
+                      <Chip
+                        label={formData.apiSettings.topK === 0 ? '비활성' : formData.apiSettings.topK}
+                        size="small"
                         variant="outlined"
                         color={formData.apiSettings.topK > 0 ? 'primary' : 'default'}
                       />
@@ -608,7 +608,7 @@ export default function BotForm() {
                           checked={formData.apiSettings.enableThinking}
                           onChange={(e) => handleApiSettingChange('enableThinking', e.target.checked)}
                           disabled={loading || (isEdit && success)}
-                          sx={{ 
+                          sx={{
                             color: '#3b82f6',
                             '&.Mui-checked': { color: '#3b82f6' }
                           }}
@@ -624,9 +624,9 @@ export default function BotForm() {
                       }
                     />
                     {formData.apiSettings.enableThinking && (
-                      <Alert 
-                        severity="info" 
-                        sx={{ 
+                      <Alert
+                        severity="info"
+                        sx={{
                           mt: 2,
                           backgroundColor: 'rgba(59, 130, 246, 0.05)',
                           border: '1px solid rgba(59, 130, 246, 0.2)'
@@ -651,7 +651,7 @@ export default function BotForm() {
                           checked={formData.apiSettings.extractFullArticles || false}
                           onChange={(e) => handleApiSettingChange('extractFullArticles', e.target.checked)}
                           disabled={loading || (isEdit && success)}
-                          sx={{ 
+                          sx={{
                             color: '#3b82f6',
                             '&.Mui-checked': { color: '#3b82f6' }
                           }}
@@ -668,9 +668,9 @@ export default function BotForm() {
                     />
                     {formData.apiSettings.extractFullArticles && (
                       <>
-                        <Alert 
-                          severity="warning" 
-                          sx={{ 
+                        <Alert
+                          severity="warning"
+                          sx={{
                             mt: 2, mb: 2,
                             backgroundColor: 'rgba(255, 152, 0, 0.05)',
                             border: '1px solid rgba(255, 152, 0, 0.2)'
@@ -686,10 +686,10 @@ export default function BotForm() {
                             <Typography variant="body2" fontWeight={600}>
                               최대 추출 기사 수
                             </Typography>
-                            <Chip 
-                              label={formData.apiSettings.maxFullArticles || 5} 
-                              size="small" 
-                              color="primary" 
+                            <Chip
+                              label={formData.apiSettings.maxFullArticles || 5}
+                              size="small"
+                              color="primary"
                               variant="outlined"
                             />
                           </Box>

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import '../styles/GlobalNavigation.css';
@@ -95,7 +96,7 @@ const GlobalNavigation = () => {
       maxWidth: maxWidth,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
+      whiteSpace: 'nowrap'
     };
   }, [user?.id, fontSize]);
 
@@ -138,38 +139,38 @@ const GlobalNavigation = () => {
 
   // 동적 스타일 객체
   const buttonStyle = {
-    fontSize: fontSize,
+    fontSize: fontSize
   };
 
   return (
-    <nav className='global-navigation'>
-      <div className='nav-container'>
-        <div className='nav-left'>
+    <nav className="global-navigation">
+      <div className="nav-container">
+        <div className="nav-left">
           <button
-            onClick={() => navigate('/boards')}
-            className='nav-button main-button'
+            onClick={() => navigate('/')}
+            className="nav-button main-button"
             style={buttonStyle}
-            aria-label='게시판으로 이동'
+            aria-label="게시판으로 이동"
           >
             메인으로
           </button>
           {user && (
             <button
               onClick={() => navigate('/boards/new')}
-              className='nav-button write-button'
+              className="nav-button write-button"
               style={buttonStyle}
-              aria-label='새 게시글 작성'
+              aria-label="새 게시글 작성"
             >
               ✏️ 글쓰기
             </button>
           )}
         </div>
-        <div className='nav-right'>
+        <div className="nav-right">
           {user ? (
             <>
               <button
                 onClick={handleUserClick}
-                className='nav-button user-button'
+                className="nav-button user-button"
                 style={userButtonStyle}
                 aria-label={user.authority >= 5 ? '관리자 페이지로 이동' : '프로필로 이동'}
               >
@@ -177,9 +178,9 @@ const GlobalNavigation = () => {
               </button>
               <button
                 onClick={handleLogout}
-                className='nav-button logout-button'
+                className="nav-button logout-button"
                 style={buttonStyle}
-                aria-label='로그아웃'
+                aria-label="로그아웃"
               >
                 로그아웃
               </button>
@@ -188,17 +189,17 @@ const GlobalNavigation = () => {
             <>
               <button
                 onClick={() => navigate('/login')}
-                className='nav-button login-button'
+                className="nav-button login-button"
                 style={buttonStyle}
-                aria-label='로그인 페이지로 이동'
+                aria-label="로그인 페이지로 이동"
               >
                 로그인
               </button>
               <button
                 onClick={() => navigate('/signup')}
-                className='nav-button signup-button'
+                className="nav-button signup-button"
                 style={buttonStyle}
-                aria-label='회원가입 페이지로 이동'
+                aria-label="회원가입 페이지로 이동"
               >
                 회원가입
               </button>

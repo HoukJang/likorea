@@ -70,7 +70,7 @@ export const useApi = () => {
     data,
     execute,
     reset,
-    clearError,
+    clearError
   };
 };
 
@@ -92,6 +92,6 @@ export const useApiCall = (apiCall, options = {}) => {
 
   return {
     ...api,
-    execute,
+    execute
   };
 };

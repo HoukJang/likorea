@@ -39,7 +39,7 @@ module.exports = {
     },
     admin: {
       id: 'admin',
-      email: 'admin@example.com', 
+      email: 'admin@example.com',
       password: 'Admin1234!@',
       authority: 5
     },

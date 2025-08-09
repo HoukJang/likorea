@@ -7,7 +7,7 @@ const {
   ValidationError,
   NotFoundError,
   AuthorizationError,
-  ConflictError,
+  ConflictError
 } = require('../middleware/errorHandler');
 
 // 관리자: 모든 사용자 목록 조회 (페이지네이션 포함)
@@ -20,8 +20,8 @@ exports.getAllUsers = asyncHandler(async (req, res) => {
     query = {
       $or: [
         { id: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-      ],
+        { email: { $regex: search, $options: 'i' } }
+      ]
     };
   }
 
@@ -39,7 +39,7 @@ exports.getAllUsers = asyncHandler(async (req, res) => {
     totalUsers,
     totalPages,
     currentPage: Number(page),
-    limit: Number(limit),
+    limit: Number(limit)
   });
 });
 
@@ -51,18 +51,18 @@ exports.getStats = asyncHandler(async (req, res) => {
 
   // 최근 7일간의 게시글 수
   const lastWeekPosts = await BoardPost.countDocuments({
-    createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
+    createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
   });
 
   // 최근 7일간의 댓글 수
   const lastWeekComments = await Comment.countDocuments({
-    createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
+    createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
   });
 
   // 권한별 사용자 수
   const authorityStats = await User.aggregate([
     { $group: { _id: '$authority', count: { $sum: 1 } } },
-    { $sort: { _id: 1 } },
+    { $sort: { _id: 1 } }
   ]);
 
   res.json({
@@ -73,8 +73,8 @@ exports.getStats = asyncHandler(async (req, res) => {
       commentCount,
       lastWeekPosts,
       lastWeekComments,
-      authorityStats,
-    },
+      authorityStats
+    }
   });
 });
 
@@ -83,7 +83,7 @@ exports.getAllBoards = asyncHandler(async (req, res) => {
   const boards = await mongoose.connection.collection('counters').find().toArray();
   res.json({
     success: true,
-    boards,
+    boards
   });
 });
 
@@ -104,13 +104,13 @@ exports.createBoardType = asyncHandler(async (req, res) => {
     seq: 0,
     name,
     description,
-    access: access || 1,
+    access: access || 1
   });
 
   res.status(201).json({
     success: true,
     message: '게시판 생성 성공',
-    board: newBoard,
+    board: newBoard
   });
 });
 
@@ -144,8 +144,8 @@ exports.updateUserAuthority = asyncHandler(async (req, res) => {
       id: user.id,
       email: user.email,
       authority: user.authority,
-      updatedAt: user.updatedAt,
-    },
+      updatedAt: user.updatedAt
+    }
   });
 });
 
@@ -191,8 +191,8 @@ exports.updateUserInfo = asyncHandler(async (req, res) => {
       id: user.id,
       email: user.email,
       authority: user.authority,
-      updatedAt: user.updatedAt,
-    },
+      updatedAt: user.updatedAt
+    }
   });
 });
 
@@ -217,7 +217,7 @@ exports.deleteUser = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: '사용자 삭제 성공',
+    message: '사용자 삭제 성공'
   });
 });
 
@@ -241,7 +241,7 @@ exports.getUserDetails = asyncHandler(async (req, res) => {
     user: {
       ...user.toObject(),
       postCount,
-      commentCount,
-    },
+      commentCount
+    }
   });
 });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import { getBoardPost, createBoard, updateBoard } from '../api/boards';
@@ -39,7 +39,7 @@ function BoardPostForm() {
 
       setCurrentUser(user);
     };
-    
+
     checkAuth();
   }, [navigate]);
 
@@ -57,7 +57,7 @@ function BoardPostForm() {
         } catch (error) {
           setMessage('게시글을 불러오는데 실패했습니다.');
         }
-      }
+      };
       fetchPost();
     }
   }, [postId, isEditMode, currentUser]);
@@ -70,7 +70,7 @@ function BoardPostForm() {
     try {
       setLoading(true);
       setMessage('');
-      
+
       // 내용이 수정되었다면 먼저 업데이트
       if (isPendingMode && isEditMode) {
         const sanitizedContent = DOMPurify.sanitize(content, domPurifyConfig);
@@ -78,10 +78,10 @@ function BoardPostForm() {
         await updatePendingPost(postId, {
           title,
           content: sanitizedContent,
-          tags,
+          tags
         });
       }
-      
+
       // 승인 처리
       await approvePost(postId);
       setMessage('게시글이 승인되었습니다.');
@@ -165,14 +165,14 @@ function BoardPostForm() {
         response = await updateBoard(postId, {
           title,
           content: sanitizedContent,
-          tags,
+          tags
         });
       } else {
         // Create new post
         response = await createBoard({
           title,
           content: sanitizedContent,
-          tags,
+          tags
         });
       }
 
@@ -215,31 +215,31 @@ function BoardPostForm() {
   // 로그인되지 않은 경우 로딩 표시
   if (!currentUser) {
     return (
-      <div className='form-container'>
-        <div className='loading'>로그인 상태를 확인하는 중...</div>
+      <div className="form-container">
+        <div className="loading">로그인 상태를 확인하는 중...</div>
       </div>
     );
   }
 
   return (
-    <div className='form-container'>
+    <div className="form-container">
       <form onSubmit={handleSubmit}>
-        <div className='form-group'>
+        <div className="form-group">
           <input
-            type='text'
-            placeholder='제목:'
+            type="text"
+            placeholder="제목:"
             value={title}
             onChange={e => setTitle(e.target.value)}
             required
-            className='title-input'
+            className="title-input"
           />
           {isPendingMode && (
-            <span style={{ 
-              marginLeft: '10px', 
-              padding: '4px 8px', 
-              backgroundColor: '#ff9800', 
-              color: 'white', 
-              borderRadius: '4px', 
+            <span style={{
+              marginLeft: '10px',
+              padding: '4px 8px',
+              backgroundColor: '#ff9800',
+              color: 'white',
+              borderRadius: '4px',
               fontSize: '0.9em',
               display: 'inline-block'
             }}>
@@ -249,32 +249,32 @@ function BoardPostForm() {
         </div>
 
         {/* 태그 선택 컴포넌트 */}
-        <div className='form-group'>
+        <div className="form-group">
           <TagSelector selectedTags={tags} onTagChange={setTags} required={true} />
         </div>
 
-        <div className='form-group'>
+        <div className="form-group">
           <QuillEditor
             value={content}
             onChange={setContent}
-            placeholder='내용을 입력하세요...'
+            placeholder="내용을 입력하세요..."
           />
         </div>
         {isPendingMode ? (
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-            <button 
-              type='button' 
+            <button
+              type="button"
               onClick={handleApprove}
-              className='submit-button'
+              className="submit-button"
               style={{ backgroundColor: '#4caf50' }}
               disabled={loading}
             >
               {loading ? '처리 중...' : '승인'}
             </button>
-            <button 
-              type='button' 
+            <button
+              type="button"
               onClick={handleReject}
-              className='submit-button'
+              className="submit-button"
               style={{ backgroundColor: '#f44336' }}
               disabled={loading}
             >
@@ -282,7 +282,7 @@ function BoardPostForm() {
             </button>
           </div>
         ) : (
-          <button type='submit' className='submit-button' disabled={loading}>
+          <button type="submit" className="submit-button" disabled={loading}>
             {loading ? '처리 중...' : (isEditMode ? '수정 완료' : '게시글 생성')}
           </button>
         )}

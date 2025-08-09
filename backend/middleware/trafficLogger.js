@@ -4,7 +4,7 @@ const TrafficLog = require('../models/TrafficLog');
  * 트래픽 로깅 미들웨어
  * 모든 API 요청의 상세 정보를 수집하여 데이터베이스에 저장
  */
-const trafficLogger = async (req, res, next) => {
+const trafficLogger = (req, res, next) => {
   const startTime = Date.now();
 
   // 원본 응답 메서드들을 저장
@@ -35,7 +35,7 @@ const trafficLogger = async (req, res, next) => {
   };
 
   // 응답 완료 후 로깅
-  res.on('finish', async () => {
+  res.on('finish', () => {
     try {
       const endTime = Date.now();
       const responseTime = endTime - startTime;
@@ -66,7 +66,7 @@ const trafficLogger = async (req, res, next) => {
         requestBody: sanitizedBody,
         responseData: shouldLogResponse ? responseData : null,
         responseSize,
-        error: responseError,
+        error: responseError
       };
 
       // 비동기로 로그 저장 (응답에 영향 주지 않음)

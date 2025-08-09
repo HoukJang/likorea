@@ -5,53 +5,53 @@ const trafficLogSchema = new mongoose.Schema(
     timestamp: {
       type: Date,
       default: Date.now,
-      required: true,
+      required: true
     },
     method: {
       type: String,
       required: true,
-      enum: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+      enum: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
     },
     path: {
       type: String,
-      required: true,
+      required: true
     },
     statusCode: {
       type: Number,
-      required: true,
+      required: true
     },
     responseTime: {
       type: Number, // milliseconds
-      required: true,
+      required: true
     },
     userAgent: {
       type: String,
-      default: '',
+      default: ''
     },
     ip: {
       type: String,
-      default: '',
+      default: ''
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      default: null,
+      default: null
     },
     userAuthority: {
       type: Number,
-      default: null,
+      default: null
     },
     requestBody: {
       type: mongoose.Schema.Types.Mixed,
-      default: null,
+      default: null
     },
     error: {
       type: String,
-      default: null,
-    },
+      default: null
+    }
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 

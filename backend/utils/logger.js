@@ -12,7 +12,7 @@ const LOG_LEVELS = {
   ERROR: 0,
   WARN: 1,
   INFO: 2,
-  DEBUG: 3,
+  DEBUG: 3
 };
 
 // 현재 로그 레벨 설정
@@ -26,7 +26,7 @@ const formatLog = (level, message, meta = {}) => {
     timestamp,
     level: level.toUpperCase(),
     message,
-    ...meta,
+    ...meta
   };
 
   return JSON.stringify(logEntry);
@@ -45,7 +45,7 @@ const writeToConsole = (level, message, meta = {}) => {
     error: '\x1b[31m', // 빨강
     warn: '\x1b[33m', // 노랑
     info: '\x1b[36m', // 청록
-    debug: '\x1b[35m', // 보라
+    debug: '\x1b[35m' // 보라
   };
 
   const reset = '\x1b[0m';
@@ -102,7 +102,7 @@ const logger = {
         statusCode: res.statusCode,
         duration: `${duration}ms`,
         ip: req.ip,
-        userAgent: req.get('User-Agent'),
+        userAgent: req.get('User-Agent')
       };
 
       if (res.statusCode >= 400) {
@@ -113,7 +113,7 @@ const logger = {
     });
 
     next();
-  },
+  }
 };
 
 module.exports = logger;

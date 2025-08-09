@@ -6,7 +6,7 @@ const { createRateLimiters } = require('../middleware/security');
 const {
   validatePostInput,
   validateCommentInput,
-  validateParams,
+  validateParams
 } = require('../middleware/validation');
 const { authenticateToken, requireAuthority } = require('../middleware/auth');
 const { cache, invalidatePostCache } = require('../middleware/cache');

@@ -43,7 +43,7 @@ const generateExpiredTestToken = (userData = {}) => {
  */
 const getOrCreateTestUser = async (type = 'regular') => {
   const userData = testConfig.testUsers[type];
-  
+
   if (!userData) {
     throw new Error(`Unknown test user type: ${type}`);
   }
@@ -51,12 +51,12 @@ const getOrCreateTestUser = async (type = 'regular') => {
   try {
     // 먼저 기존 사용자 찾기
     let user = await User.findOne({ id: userData.id });
-    
+
     if (!user) {
       // 없으면 생성
       user = await User.create(userData);
     }
-    
+
     return user;
   } catch (error) {
     // 중복 키 에러인 경우 다시 찾기
@@ -100,12 +100,12 @@ const getAuthHeader = (token) => {
  */
 const authenticatedRequest = (request, app, method, url) => {
   const token = generateTestToken();
-  
+
   const req = request(app)[method](url);
-  
+
   // Authorization 헤더 추가
   req.set('Authorization', getAuthHeader(token));
-  
+
   return req;
 };
 
@@ -114,7 +114,7 @@ const authenticatedRequest = (request, app, method, url) => {
  */
 const parseCookie = (cookieString) => {
   if (!cookieString) return {};
-  
+
   const cookies = {};
   cookieString.split(';').forEach(cookie => {
     const [key, value] = cookie.trim().split('=');
@@ -122,7 +122,7 @@ const parseCookie = (cookieString) => {
       cookies[key] = value;
     }
   });
-  
+
   return cookies;
 };
 

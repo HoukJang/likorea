@@ -45,8 +45,8 @@ const options = {
             boardType: { type: 'string', description: '게시판 타입' },
             title: { type: 'string', description: '제목' },
             content: { type: 'string', description: '내용' },
-            author: { 
-              type: 'object', 
+            author: {
+              type: 'object',
               properties: {
                 _id: { type: 'string' },
                 id: { type: 'string' },
@@ -64,8 +64,8 @@ const options = {
           properties: {
             _id: { type: 'string', description: '댓글 고유 ID' },
             content: { type: 'string', description: '댓글 내용' },
-            author: { 
-              type: 'object', 
+            author: {
+              type: 'object',
               properties: {
                 _id: { type: 'string' },
                 id: { type: 'string' },
@@ -92,4 +92,4 @@ const options = {
 
 const specs = swaggerJsdoc(options);
 
-module.exports = specs; 
+module.exports = specs;

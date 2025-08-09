@@ -6,7 +6,7 @@ const {
   asyncHandler,
   ValidationError,
   NotFoundError,
-  AuthorizationError,
+  AuthorizationError
 } = require('../middleware/errorHandler');
 
 // 댓글 조회: populate를 사용해 작성자의 id, email, authority를 가져옴
@@ -18,7 +18,7 @@ exports.getComments = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    comments,
+    comments
   });
 });
 
@@ -71,7 +71,7 @@ exports.createComment = asyncHandler(async (req, res) => {
   await BoardPost.findByIdAndUpdate(postId, {
     $inc: { commentCount: 1 },
     modifiedAt: new Date(),
-    lastActivityAt: new Date(),
+    lastActivityAt: new Date()
   });
 
   res.status(201).json({
@@ -83,8 +83,8 @@ exports.createComment = asyncHandler(async (req, res) => {
       author: comment.author.toString(),
       post: comment.post.toString(),
       parentComment: comment.parentComment?.toString(),
-      createdAt: comment.createdAt,
-    },
+      createdAt: comment.createdAt
+    }
   });
 });
 
@@ -128,7 +128,7 @@ exports.updateComment = asyncHandler(async (req, res) => {
   // 게시글의 modifiedAt 및 lastActivityAt 업데이트
   await BoardPost.findByIdAndUpdate(postId, {
     modifiedAt: new Date(),
-    lastActivityAt: new Date(),
+    lastActivityAt: new Date()
   });
 
   res.json({
@@ -139,8 +139,8 @@ exports.updateComment = asyncHandler(async (req, res) => {
       content: comment.content,
       author: comment.author,
       post: comment.post,
-      updatedAt: comment.updatedAt,
-    },
+      updatedAt: comment.updatedAt
+    }
   });
 });
 
@@ -174,11 +174,11 @@ exports.deleteComment = asyncHandler(async (req, res) => {
   await BoardPost.findByIdAndUpdate(postId, {
     $inc: { commentCount: -1 },
     modifiedAt: new Date(),
-    lastActivityAt: new Date(),
+    lastActivityAt: new Date()
   });
 
   res.json({
     success: true,
-    message: '댓글이 삭제되었습니다.',
+    message: '댓글이 삭제되었습니다.'
   });
 });

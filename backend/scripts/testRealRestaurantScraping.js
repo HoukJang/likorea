@@ -51,7 +51,7 @@ async function testRestaurantScraping() {
 
       // Display results
       console.log('\n📊 Results:');
-      
+
       // Google Maps results
       if (data.sources.google) {
         console.log('\n  Google Maps:');
@@ -90,10 +90,10 @@ async function testRestaurantScraping() {
       console.log('\n  🤖 Claude Analysis Prompt Length:', analysisPrompt.length, 'chars');
 
       // Success indicator
-      const detectedCuisine = data.sources.google?.cuisine || 
-                             data.sources.yelp?.cuisine || 
+      const detectedCuisine = data.sources.google?.cuisine ||
+                             data.sources.yelp?.cuisine ||
                              'Unknown';
-      
+
       const success = detectedCuisine !== 'Unknown' && detectedCuisine !== 'Chinese';
       console.log(`\n  ✅ Status: ${success ? 'SUCCESS' : 'NEEDS IMPROVEMENT'}`);
       console.log(`     Detected: ${detectedCuisine}`);
@@ -109,14 +109,14 @@ async function testRestaurantScraping() {
   // Test image scraping
   console.log('\n🖼️  Testing Image Scraping');
   console.log('-'.repeat(50));
-  
+
   try {
     const imageResult = await restaurantScraperService.searchDishImage(
       'Ocean',
       'Margherita Pizza',
       'Bayville NY'
     );
-    
+
     console.log('Image search result:');
     console.log(`  - URL: ${imageResult.url ? imageResult.url.substring(0, 50) + '...' : 'None'}`);
     console.log(`  - Is Reference: ${imageResult.isReference}`);

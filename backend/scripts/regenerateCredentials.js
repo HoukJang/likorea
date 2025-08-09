@@ -69,16 +69,16 @@ async function main() {
 
   // 4. 환경별 .env 파일 생성
   const createEnvFile = await question(`${colors.magenta}.env 파일을 자동으로 생성하시겠습니까? (y/n): ${colors.reset}`);
-  
+
   if (createEnvFile.toLowerCase() === 'y') {
     console.log('\n환경을 선택하세요:');
     console.log('1) Development (.env.development)');
     console.log('2) Production (.env.production)');
     const envChoice = await question('선택 (1 또는 2): ');
-    
+
     const envType = envChoice === '2' ? 'production' : 'development';
     const envFile = envType === 'production' ? '.env.production' : '.env.development';
-    
+
     let mongoUri = '';
     if (envType === 'production') {
       console.log('\n새로운 MongoDB URI를 입력하세요');
@@ -87,9 +87,9 @@ async function main() {
     } else {
       mongoUri = 'mongodb://localhost:27017/likorea_dev';
     }
-    
+
     const openaiKey = await question('\nOpenAI API Key (선택사항, Enter로 건너뛰기): ');
-    
+
     const envContent = `# ${envType.toUpperCase()} 환경 설정
 # 생성일: ${new Date().toISOString()}
 
@@ -114,11 +114,11 @@ ${openaiKey ? `OPENAI_API_KEY=${openaiKey}` : '# OPENAI_API_KEY=your-api-key-her
 # 로깅
 LOG_LEVEL=${envType === 'production' ? 'info' : 'debug'}
 `;
-    
+
     const envPath = path.join(__dirname, '..', envFile);
     fs.writeFileSync(envPath, envContent);
     console.log(`\n${colors.green}✅ ${envFile} 파일이 생성되었습니다!${colors.reset}`);
-    
+
     // .env.example 업데이트
     const exampleContent = `# 환경 변수 예제 파일
 # 이 파일을 복사하여 .env.development 또는 .env.production으로 만드세요
@@ -144,12 +144,12 @@ ALLOWED_ORIGINS=http://localhost:3000
 # 로깅
 LOG_LEVEL=debug
 `;
-    
+
     const examplePath = path.join(__dirname, '..', '.env.example');
     fs.writeFileSync(examplePath, exampleContent);
     console.log(`${colors.green}✅ .env.example 파일이 업데이트되었습니다!${colors.reset}`);
   }
-  
+
   // 5. 보안 체크리스트
   console.log(`\n${colors.blue}📋 보안 체크리스트:${colors.reset}`);
   console.log('[ ] MongoDB Atlas에서 비밀번호 변경');
@@ -158,14 +158,14 @@ LOG_LEVEL=debug
   console.log('[ ] 로컬 개발 환경의 .env 파일 업데이트');
   console.log('[ ] Git에서 민감한 정보가 포함된 파일 제거');
   console.log('[ ] 모든 팀원에게 크리덴셜 변경 공지');
-  
+
   console.log(`\n${colors.yellow}Git에서 민감한 파일 제거:${colors.reset}`);
   console.log('git rm --cached backend/.env.production');
   console.log('git commit -m "chore: remove exposed credentials"');
   console.log('git push origin main');
-  
+
   console.log(`\n${colors.red}⚠️  중요: 노출된 크리덴셜은 즉시 무효화하세요!${colors.reset}`);
-  
+
   rl.close();
 }
 

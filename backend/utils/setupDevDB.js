@@ -40,7 +40,7 @@ async function setupDevDB() {
       id: 'likorea',
       email: 'admin@likorea.com',
       password: 'password', // 평문 비밀번호 - User 모델에서 자동 해시화됨
-      authority: 5, // 관리자 권한
+      authority: 5 // 관리자 권한
     });
     console.log('관리자 계정 생성 완료:', adminUser.id);
 
@@ -53,7 +53,7 @@ async function setupDevDB() {
         id: userIds[i],
         email: `${userIds[i]}@example.com`,
         password: 'password', // 평문 비밀번호 - User 모델에서 자동 해시화됨
-        authority: 3, // 일반 사용자 권한
+        authority: 3 // 일반 사용자 권한
       });
       randomUsers.push(randomUser);
       console.log(`사용자 생성 완료: ${randomUser.id}`);
@@ -77,7 +77,7 @@ async function setupDevDB() {
                  </ul>
                  <p>많은 참여 부탁드립니다!</p>`,
         tags: { type: '기타', region: '0' },
-        isNotice: true,
+        isNotice: true
       },
       {
         title: '커뮤니티 이용 규칙 안내',
@@ -96,7 +96,7 @@ async function setupDevDB() {
                    <li>적절한 카테고리 선택</li>
                  </ul>`,
         tags: { type: '기타', region: '0' },
-        isNotice: true,
+        isNotice: true
       },
       {
         title: '지역 태그 사용법 및 LIE Exit 정보',
@@ -116,8 +116,8 @@ async function setupDevDB() {
                    <li><strong>기타:</strong> 위 카테고리에 속하지 않는 내용</li>
                  </ul>`,
         tags: { type: '기타', region: '0' },
-        isNotice: true,
-      },
+        isNotice: true
+      }
     ];
 
     const noticePosts = [];
@@ -126,7 +126,7 @@ async function setupDevDB() {
         ...notice,
         author: adminUser._id,
         viewCount: Math.floor(Math.random() * 100) + 50,
-        createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000), // 최근 일주일 내
+        createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000) // 최근 일주일 내
       });
       noticePosts.push(post);
     }
@@ -188,7 +188,7 @@ async function setupDevDB() {
       '세금 보고 도움 받을 곳',
       '한국 방송 보는 방법',
       '롱아일랜드 핫플레이스',
-      '주말 나들이 장소 추천',
+      '주말 나들이 장소 추천'
     ];
 
     const postContents = {
@@ -196,28 +196,28 @@ async function setupDevDB() {
         '<p>상태 매우 좋고 박스, 충전기 모두 포함되어 있습니다.</p><p>직거래 가능하고 연락주세요!</p>',
         '<p>아이가 커서 더 이상 사용하지 않아 판매합니다.</p><p>안전검사 통과한 제품이에요.</p>',
         '<p>이사 때문에 급하게 처분합니다.</p><p>상태 좋고 편안한 소파입니다.</p>',
-        '<p>한국에서 가져온 정품 라면들입니다.</p><p>유통기한 넉넉해요.</p>',
+        '<p>한국에서 가져온 정품 라면들입니다.</p><p>유통기한 넉넉해요.</p>'
       ],
       부동산: [
         '<p>깨끗하고 조용한 환경입니다.</p><p>교통편 좋고 한국 마트 가까워요.</p>',
         '<p>가구 포함, 즉시 입주 가능합니다.</p><p>연락 주시면 사진 보내드려요.</p>',
-        '<p>학군 좋은 지역이고 편의시설 가까워요.</p><p>투자용으로도 좋습니다.</p>',
+        '<p>학군 좋은 지역이고 편의시설 가까워요.</p><p>투자용으로도 좋습니다.</p>'
       ],
       생활정보: [
         '<p>가격도 합리적이고 물건도 다양해서 자주 이용하고 있어요.</p><p>주차도 편리합니다.</p>',
         '<p>아이가 아픈데 어느 병원이 좋은지 추천 부탁드려요.</p><p>한국어 가능한 곳이면 더 좋겠어요.</p>',
-        '<p>펌이나 염색 잘하는 곳 알고 계시면 공유해주세요.</p><p>가격도 궁금해요.</p>',
+        '<p>펌이나 염색 잘하는 곳 알고 계시면 공유해주세요.</p><p>가격도 궁금해요.</p>'
       ],
       모임: [
         '<p>주말마다 등산하는 모임입니다.</p><p>초보자도 환영해요!</p>',
         '<p>한국어 실력 향상을 위한 스터디 그룹입니다.</p><p>함께 공부해요.</p>',
-        '<p>아이들 놀이모임 만들고 싶어요.</p><p>비슷한 또래 엄마들 연락주세요.</p>',
+        '<p>아이들 놀이모임 만들고 싶어요.</p><p>비슷한 또래 엄마들 연락주세요.</p>'
       ],
       기타: [
         '<p>요즘 재미있게 본 드라마 있으시면 추천해주세요.</p><p>로맨스나 코미디 장르 좋아해요.</p>',
         '<p>출장 중인데 택배가 도착할 예정이에요.</p><p>도움 주실 분 계신가요?</p>',
-        '<p>반려견 키우는데 좋은 동물병원 알고 계시나요?</p><p>예방접종 받으려고요.</p>',
-      ],
+        '<p>반려견 키우는데 좋은 동물병원 알고 계시나요?</p><p>예방접종 받으려고요.</p>'
+      ]
     };
 
     const allPosts = [];
@@ -240,7 +240,7 @@ async function setupDevDB() {
         tags: { type: randomType, region: randomRegion },
         viewCount: Math.floor(Math.random() * 200),
         isNotice: false,
-        createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000), // 최근 30일 내
+        createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000) // 최근 30일 내
       });
       allPosts.push(post);
     }
@@ -272,7 +272,7 @@ async function setupDevDB() {
       '저희 집 근처에요. 좋은 정보 감사합니다.',
       '가격 협상 가능한가요?',
       '직거래 가능하신가요?',
-      '상품 상태 어떤가요?',
+      '상품 상태 어떤가요?'
     ];
 
     const allPostsForComments = [...noticePosts, ...allPosts];
@@ -287,7 +287,7 @@ async function setupDevDB() {
         content: randomContent,
         author: randomUser._id,
         post: randomPost._id,
-        createdAt: new Date(Date.now() - Math.random() * 20 * 24 * 60 * 60 * 1000), // 최근 20일 내
+        createdAt: new Date(Date.now() - Math.random() * 20 * 24 * 60 * 60 * 1000) // 최근 20일 내
       });
     }
     console.log('댓글 100개 생성 완료');
@@ -301,11 +301,11 @@ async function setupDevDB() {
 
     console.log('\n🎉 개발 환경 DB 설정 완료!');
     console.log('📊 생성된 데이터:');
-    console.log(`👤 관리자: likorea (비밀번호: password)`);
-    console.log(`👥 일반 사용자: 4명 (chulsu, younghee, minsu, sujin - 비밀번호: password)`);
-    console.log(`📢 공지사항: 3개`);
-    console.log(`📝 일반 게시글: 45개`);
-    console.log(`💬 댓글: 100개`);
+    console.log('👤 관리자: likorea (비밀번호: password)');
+    console.log('👥 일반 사용자: 4명 (chulsu, younghee, minsu, sujin - 비밀번호: password)');
+    console.log('📢 공지사항: 3개');
+    console.log('📝 일반 게시글: 45개');
+    console.log('💬 댓글: 100개');
   } catch (error) {
     console.error('DB 설정 중 오류 발생:', error);
   } finally {

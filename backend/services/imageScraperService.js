@@ -29,15 +29,15 @@ class ImageScraperService {
   async scrapeGoogleImagesSimple(query) {
     try {
       const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}&tbm=isch&hl=ko&gl=us`;
-      
+
       const response = await axios.get(searchUrl, {
         headers: this.headers,
         timeout: 10000
       });
-      
+
       const $ = cheerio.load(response.data);
       const images = [];
-      
+
       // Google 이미지 검색 결과에서 이미지 URL 추출
       // 주의: Google은 HTML 구조를 자주 변경함
       $('img').each((index, element) => {
@@ -46,14 +46,14 @@ class ImageScraperService {
           images.push(src);
         }
       });
-      
+
       // base64 인코딩된 썸네일도 추출 가능
       const scriptTags = $('script').text();
       const base64Images = scriptTags.match(/data:image\/[^;]+;base64,[^"]+/g) || [];
-      
+
       console.log(`✅ Google 이미지 검색: ${images.length}개 발견`);
       return images.slice(0, 5); // 상위 5개만
-      
+
     } catch (error) {
       console.error('Google 이미지 스크레이핑 실패:', error.message);
       return [];
@@ -68,15 +68,15 @@ class ImageScraperService {
     try {
       // DuckDuckGo는 JSON API를 제공 (비공식)
       const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}&iar=images&iax=images&ia=images`;
-      
+
       const response = await axios.get(searchUrl, {
         headers: this.headers,
         timeout: 10000
       });
-      
+
       const $ = cheerio.load(response.data);
       const images = [];
-      
+
       // DuckDuckGo 이미지 추출
       $('.tile--img__img').each((index, element) => {
         const src = $(element).attr('data-src') || $(element).attr('src');
@@ -84,19 +84,19 @@ class ImageScraperService {
           images.push(src);
         }
       });
-      
+
       // JavaScript에서 로드되는 이미지들을 위한 대체 방법
       const vqd = response.data.match(/vqd=([\d-]+)/);
       if (vqd && vqd[1]) {
         // DuckDuckGo의 이미지 API 엔드포인트 (비공식)
         const imageApiUrl = `https://duckduckgo.com/i.js?l=us-en&o=json&q=${encodeURIComponent(query)}&vqd=${vqd[1]}&f=,,,&p=1`;
-        
+
         try {
           const imageResponse = await axios.get(imageApiUrl, {
             headers: this.headers,
             timeout: 5000
           });
-          
+
           if (imageResponse.data && imageResponse.data.results) {
             imageResponse.data.results.forEach(result => {
               if (result.image) {
@@ -108,10 +108,10 @@ class ImageScraperService {
           console.log('DuckDuckGo API 호출 실패, HTML 파싱 결과만 사용');
         }
       }
-      
+
       console.log(`✅ DuckDuckGo 이미지 검색: ${images.length}개 발견`);
       return images.slice(0, 5);
-      
+
     } catch (error) {
       console.error('DuckDuckGo 이미지 스크레이핑 실패:', error.message);
       return [];
@@ -125,20 +125,20 @@ class ImageScraperService {
   async scrapeBingImages(query) {
     try {
       const searchUrl = `https://www.bing.com/images/search?q=${encodeURIComponent(query)}&form=HDRSC2&first=1&tsc=ImageBasicHover`;
-      
+
       const response = await axios.get(searchUrl, {
         headers: this.headers,
         timeout: 10000
       });
-      
+
       const $ = cheerio.load(response.data);
       const images = [];
-      
+
       // Bing 이미지 URL 추출
       $('.mimg, .iusc').each((index, element) => {
         // mimg 클래스의 src 또는 data-src
         let src = $(element).attr('src') || $(element).attr('data-src');
-        
+
         // iusc의 경우 m 속성에 JSON 데이터가 있음
         const m = $(element).attr('m');
         if (m) {
@@ -151,15 +151,15 @@ class ImageScraperService {
             // JSON 파싱 실패 무시
           }
         }
-        
+
         if (src && src.startsWith('http')) {
           images.push(src);
         }
       });
-      
+
       console.log(`✅ Bing 이미지 검색: ${images.length}개 발견`);
       return images.slice(0, 5);
-      
+
     } catch (error) {
       console.error('Bing 이미지 스크레이핑 실패:', error.message);
       return [];
@@ -185,13 +185,13 @@ class ImageScraperService {
           '--disable-gpu'
         ]
       });
-      
+
       const page = await browser.newPage();
-      
+
       // 모바일 User Agent 설정 (간단한 레이아웃)
       await page.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1');
       await page.setViewport({ width: 375, height: 667 });
-      
+
       let searchUrl;
       if (source === 'google') {
         searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}&tbm=isch`;
@@ -200,9 +200,9 @@ class ImageScraperService {
       } else {
         searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}&iar=images&iax=images&ia=images`;
       }
-      
+
       await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 30000 });
-      
+
       // 스크롤하여 더 많은 이미지 로드
       await page.evaluate(() => {
         return new Promise((resolve) => {
@@ -212,7 +212,7 @@ class ImageScraperService {
             const scrollHeight = document.body.scrollHeight;
             window.scrollBy(0, distance);
             totalHeight += distance;
-            
+
             if(totalHeight >= scrollHeight){
               clearInterval(timer);
               resolve();
@@ -220,7 +220,7 @@ class ImageScraperService {
           }, 100);
         });
       });
-      
+
       // 이미지 URL 추출
       const images = await page.evaluate(() => {
         const imgs = [];
@@ -232,10 +232,10 @@ class ImageScraperService {
         });
         return imgs;
       });
-      
+
       console.log(`✅ Puppeteer ${source} 이미지 검색: ${images.length}개 발견`);
       return images.slice(0, 10);
-      
+
     } catch (error) {
       console.error('Puppeteer 이미지 스크레이핑 실패:', error.message);
       return [];
@@ -255,15 +255,15 @@ class ImageScraperService {
       // 1. 레스토랑 웹사이트 찾기 (Google 검색)
       const searchQuery = `${restaurantName} ${location} restaurant website`;
       const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
-      
+
       const searchResponse = await axios.get(searchUrl, {
         headers: this.headers,
         timeout: 10000
       });
-      
+
       const $ = cheerio.load(searchResponse.data);
       let websiteUrl = null;
-      
+
       // 검색 결과에서 웹사이트 URL 추출
       $('a').each((index, element) => {
         const href = $(element).attr('href');
@@ -275,46 +275,46 @@ class ImageScraperService {
           }
         }
       });
-      
+
       if (!websiteUrl) {
         console.log('레스토랑 웹사이트를 찾을 수 없음');
         return [];
       }
-      
+
       console.log(`🌐 레스토랑 웹사이트 발견: ${websiteUrl}`);
-      
+
       // 2. 웹사이트에서 이미지 추출
       const websiteResponse = await axios.get(websiteUrl, {
         headers: this.headers,
         timeout: 10000
       });
-      
+
       const $$ = cheerio.load(websiteResponse.data);
       const images = [];
-      
+
       $$('img').each((index, element) => {
         let src = $$(element).attr('src') || $$(element).attr('data-src');
-        
+
         // 상대 경로를 절대 경로로 변환
         if (src && !src.startsWith('http')) {
           const baseUrl = new URL(websiteUrl);
           src = new URL(src, baseUrl.origin).href;
         }
-        
+
         // 의미있는 크기의 이미지만 (아이콘 제외)
         const width = $$(element).attr('width');
         const height = $$(element).attr('height');
-        
-        if (src && src.startsWith('http') && 
-            (!width || parseInt(width) > 100) && 
+
+        if (src && src.startsWith('http') &&
+            (!width || parseInt(width) > 100) &&
             (!height || parseInt(height) > 100)) {
           images.push(src);
         }
       });
-      
+
       console.log(`✅ 레스토랑 웹사이트에서 ${images.length}개 이미지 발견`);
       return images.slice(0, 10);
-      
+
     } catch (error) {
       console.error('레스토랑 웹사이트 스크레이핑 실패:', error.message);
       return [];
@@ -328,14 +328,14 @@ class ImageScraperService {
   async searchImages(restaurantName, dishName, location = '') {
     const query = `${restaurantName} ${location} ${dishName} food`;
     console.log(`🔍 이미지 검색 시작: "${query}"`);
-    
+
     const results = {
       google: [],
       bing: [],
       duckduckgo: [],
       website: []
     };
-    
+
     // 병렬로 여러 소스에서 검색
     const [googleImages, bingImages, duckImages, websiteImages] = await Promise.allSettled([
       this.scrapeGoogleImagesSimple(query),
@@ -343,12 +343,12 @@ class ImageScraperService {
       this.scrapeDuckDuckGoImages(query),
       this.scrapeRestaurantWebsite(restaurantName, location)
     ]);
-    
+
     if (googleImages.status === 'fulfilled') results.google = googleImages.value;
     if (bingImages.status === 'fulfilled') results.bing = bingImages.value;
     if (duckImages.status === 'fulfilled') results.duckduckgo = duckImages.value;
     if (websiteImages.status === 'fulfilled') results.website = websiteImages.value;
-    
+
     // 결과 통합 및 중복 제거
     const allImages = [
       ...results.website,  // 레스토랑 웹사이트 우선
@@ -356,16 +356,16 @@ class ImageScraperService {
       ...results.bing,
       ...results.duckduckgo
     ];
-    
+
     const uniqueImages = [...new Set(allImages)];
-    
-    console.log(`📊 통합 검색 결과:`);
+
+    console.log('📊 통합 검색 결과:');
     console.log(`  - Google: ${results.google.length}개`);
     console.log(`  - Bing: ${results.bing.length}개`);
     console.log(`  - DuckDuckGo: ${results.duckduckgo.length}개`);
     console.log(`  - Website: ${results.website.length}개`);
     console.log(`  - 총 고유 이미지: ${uniqueImages.length}개`);
-    
+
     return {
       images: uniqueImages.slice(0, 5),
       sources: results,

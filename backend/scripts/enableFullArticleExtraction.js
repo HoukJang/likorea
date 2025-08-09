@@ -12,23 +12,23 @@ const Bot = require('../models/Bot');
 async function enableFullArticleExtraction(botName) {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    
+
     if (botName) {
       // 특정 봇만 업데이트
       const result = await Bot.updateOne(
         { name: botName },
-        { 
-          $set: { 
+        {
+          $set: {
             'apiSettings.extractFullArticles': true,
             'apiSettings.maxFullArticles': 5  // 성능 고려하여 5개로 제한
           }
         }
       );
-      
+
       if (result.matchedCount > 0) {
         console.log(`✅ ${botName} 봇의 전체 기사 추출이 활성화되었습니다.`);
-        console.log(`   - extractFullArticles: true`);
-        console.log(`   - maxFullArticles: 5`);
+        console.log('   - extractFullArticles: true');
+        console.log('   - maxFullArticles: 5');
       } else {
         console.log(`❌ ${botName} 봇을 찾을 수 없습니다.`);
       }
@@ -36,17 +36,17 @@ async function enableFullArticleExtraction(botName) {
       // 모든 뉴스봇 업데이트
       const result = await Bot.updateMany(
         { type: 'news' },
-        { 
-          $set: { 
+        {
+          $set: {
             'apiSettings.extractFullArticles': true,
             'apiSettings.maxFullArticles': 5
           }
         }
       );
-      
+
       console.log(`✅ ${result.modifiedCount}개 뉴스봇의 전체 기사 추출이 활성화되었습니다.`);
     }
-    
+
     // 현재 상태 확인
     console.log('\n=== 현재 봇 설정 ===');
     const bots = await Bot.find({}, 'name type apiSettings.extractFullArticles apiSettings.maxFullArticles');
@@ -55,7 +55,7 @@ async function enableFullArticleExtraction(botName) {
       console.log(`  - extractFullArticles: ${bot.apiSettings?.extractFullArticles || false}`);
       console.log(`  - maxFullArticles: ${bot.apiSettings?.maxFullArticles || 7}`);
     });
-    
+
   } catch (error) {
     console.error('오류:', error);
   } finally {

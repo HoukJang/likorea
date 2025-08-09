@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 const mongoose = require('mongoose');
+const path = require('path');
 const Bot = require('../models/Bot');
-require('dotenv').config({ path: __dirname + '/../.env' });
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 async function updateBotTypes() {
   try {
@@ -13,11 +14,11 @@ async function updateBotTypes() {
     // 뉴스봇 찾아서 type 업데이트
     const result = await Bot.updateMany(
       { name: { $regex: /뉴스/i } },  // 이름에 '뉴스'가 포함된 봇
-      { 
-        $set: { 
+      {
+        $set: {
           type: 'news',
           subType: 'news'
-        } 
+        }
       }
     );
 

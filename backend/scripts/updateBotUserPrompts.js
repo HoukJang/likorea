@@ -29,22 +29,22 @@ async function updateBotUserPrompts() {
 
     // "롱알 뉴스봇" 업데이트
     const bot = await Bot.findOne({ name: '롱알 뉴스봇' });
-    
+
     if (bot) {
       console.log(`📝 "${bot.name}" 프롬프트 업데이트 중...`);
-      
+
       if (!bot.prompt) {
         bot.prompt = {};
       }
-      
+
       console.log('\n기존 User Prompt:');
       console.log(bot.prompt.user?.substring(0, 200) || 'None');
-      
+
       bot.prompt.user = improvedPrompt;
-      
+
       await bot.save();
       console.log('\n✅ 프롬프트 업데이트 완료!');
-      
+
       console.log('\n새로운 User Prompt:');
       console.log(bot.prompt.user.substring(0, 500) + '...');
     } else {
@@ -52,22 +52,22 @@ async function updateBotUserPrompts() {
     }
 
     // 다른 뉴스봇들도 업데이트할지 확인
-    const otherBots = await Bot.find({ 
-      type: 'news', 
+    const otherBots = await Bot.find({
+      type: 'news',
       name: { $ne: '롱알 뉴스봇' },
       'prompt.user': { $regex: '크롤링 된 주소로 가서' }
     });
 
     if (otherBots.length > 0) {
       console.log(`\n📋 비슷한 프롬프트를 가진 다른 봇들: ${otherBots.length}개`);
-      
+
       for (const otherBot of otherBots) {
         console.log(`\n🔄 "${otherBot.name}" 업데이트 중...`);
-        
+
         if (!otherBot.prompt) {
           otherBot.prompt = {};
         }
-        
+
         otherBot.prompt.user = improvedPrompt;
         await otherBot.save();
         console.log(`✅ "${otherBot.name}" 업데이트 완료`);

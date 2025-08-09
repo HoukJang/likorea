@@ -4,7 +4,7 @@ import {
   logout as logoutApi,
   isAuthenticated,
   isAdmin,
-  verifyToken,
+  verifyToken
 } from '../api/auth';
 
 /**
@@ -189,6 +189,6 @@ export const useAuth = () => {
     logout,
     clearError,
     authenticated,
-    admin,
+    admin
   };
 };

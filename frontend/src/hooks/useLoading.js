@@ -20,7 +20,7 @@ export const useLoading = (initialState = false) => {
   const setTaskLoading = useCallback((taskName, isLoading) => {
     setLoadingStates(prev => ({
       ...prev,
-      [taskName]: isLoading,
+      [taskName]: isLoading
     }));
   }, []);
 
@@ -73,6 +73,6 @@ export const useLoading = (initialState = false) => {
     isTaskLoading,
     isAnyTaskLoading,
     withLoading,
-    clearLoading,
+    clearLoading
   };
 };

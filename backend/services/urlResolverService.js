@@ -39,8 +39,8 @@ class UrlResolverService {
         return googleNewsUrl; // 이미 실제 URL인 경우
       }
 
-      console.log(`🔄 Google News URL 리졸빙 시도...`);
-      
+      console.log('🔄 Google News URL 리졸빙 시도...');
+
       // 방법 1: HEAD 요청으로 리다이렉트 추적
       try {
         const response = await axios.head(googleNewsUrl, {
@@ -48,7 +48,7 @@ class UrlResolverService {
           maxRedirects: 0, // 리다이렉트를 수동으로 처리
           validateStatus: (status) => status >= 200 && status < 400
         });
-        
+
         if (response.headers.location) {
           const resolvedUrl = response.headers.location;
           urlCache.set(googleNewsUrl, resolvedUrl);
@@ -67,9 +67,9 @@ class UrlResolverService {
       });
 
       // 최종 URL 추출
-      const finalUrl = response.request?.res?.responseUrl || 
-                      response.request?.path || 
-                      response.config?.url || 
+      const finalUrl = response.request?.res?.responseUrl ||
+                      response.request?.path ||
+                      response.config?.url ||
                       googleNewsUrl;
 
       if (finalUrl !== googleNewsUrl) {
@@ -98,7 +98,7 @@ class UrlResolverService {
         }
       }
 
-      console.log(`⚠️ URL 리졸브 실패, 원본 URL 사용`);
+      console.log('⚠️ URL 리졸브 실패, 원본 URL 사용');
       return googleNewsUrl;
 
     } catch (error) {
@@ -114,12 +114,12 @@ class UrlResolverService {
    */
   async resolveMultipleUrls(urls) {
     const resolved = [];
-    
+
     for (const url of urls) {
       try {
         const resolvedUrl = await this.resolveGoogleNewsUrl(url);
         resolved.push(resolvedUrl);
-        
+
         // 요청 간 지연 (봇 차단 방지)
         await new Promise(resolve => setTimeout(resolve, 500));
       } catch (error) {
@@ -127,7 +127,7 @@ class UrlResolverService {
         resolved.push(url); // 실패시 원본 URL 사용
       }
     }
-    
+
     return resolved;
   }
 

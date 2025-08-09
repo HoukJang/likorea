@@ -7,7 +7,7 @@ const {
   updateTag,
   deactivateTag,
   activateTag,
-  getAllTagsForAdmin,
+  getAllTagsForAdmin
 } = require('../controllers/tagController');
 const { requireAdmin } = require('../middleware/auth');
 const { cache } = require('../middleware/cache');

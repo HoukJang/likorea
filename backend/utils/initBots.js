@@ -6,11 +6,11 @@ const path = require('path');
 const initializeBots = async () => {
   try {
     console.log('봇 시스템 초기화 시작...');
-    
+
     // config 파일 읽기
     const configPath = path.join(__dirname, '../config/bots.json');
     let botsConfig;
-    
+
     try {
       const configData = fs.readFileSync(configPath, 'utf8');
       botsConfig = JSON.parse(configData);
@@ -18,7 +18,7 @@ const initializeBots = async () => {
       console.log('봇 config 파일을 찾을 수 없어 기본 봇을 생성합니다.');
       botsConfig = null;
     }
-    
+
     if (botsConfig && botsConfig.bots) {
       // config 파일의 봇들로 초기화
       for (const botData of botsConfig.bots) {
@@ -35,13 +35,13 @@ const initializeBots = async () => {
           persona: botData.persona,
           prompt: botData.prompt
         };
-        
+
         await Bot.findOneAndUpdate(
           { name: bot.name },
           bot,
           { upsert: true, new: true }
         );
-        
+
         // 봇의 사용자 계정도 생성
         if (botData.persona.likoreaAccount && botData.persona.likoreaAccount.username) {
           const existingUser = await User.findOne({ id: botData.persona.likoreaAccount.username });
@@ -56,7 +56,7 @@ const initializeBots = async () => {
           }
         }
       }
-      
+
       console.log(`봇 시스템 초기화 완료! ${botsConfig.bots.length}개의 봇이 준비되었습니다.`);
     } else {
       // 기본 봇들 정의
@@ -73,7 +73,7 @@ const initializeBots = async () => {
           }
         }
       ];
-      
+
       // 각 봇 생성 또는 업데이트
       for (const botData of defaultBots) {
         await Bot.findOneAndUpdate(
@@ -82,7 +82,7 @@ const initializeBots = async () => {
           { upsert: true, new: true }
         );
       }
-      
+
       console.log(`봇 시스템 초기화 완료! ${defaultBots.length}개의 기본 봇이 준비되었습니다.`);
     }
   } catch (error) {

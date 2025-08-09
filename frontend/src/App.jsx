@@ -45,7 +45,7 @@ function App() {
   if (authLoading) {
     return (
       <ErrorBoundary>
-        <div className='App'>
+        <div className="App">
           <Banner />
           <Loading />
         </div>
@@ -56,32 +56,36 @@ function App() {
   return (
     <ErrorBoundary>
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <div className='App'>
+        <div className="App">
           <Banner />
           <GlobalNavigation />
           <Routes>
-            {/* 루트 경로를 랜딩 페이지로 설정 */}
-            <Route path='/' element={<SuspenseWrapper><Landing /></SuspenseWrapper>} />
-            <Route path='/signup' element={<SuspenseWrapper><Signup /></SuspenseWrapper>} />
-            <Route path='/login' element={<SuspenseWrapper><Login /></SuspenseWrapper>} />
+            {/* 루트 경로를 게시판 리스트로 설정 */}
+            <Route path="/" element={<SuspenseWrapper><BoardList /></SuspenseWrapper>} />
+            
+            {/* SEO용 랜딩 페이지 */}
+            <Route path="/landing" element={<SuspenseWrapper><Landing /></SuspenseWrapper>} />
+            
+            <Route path="/signup" element={<SuspenseWrapper><Signup /></SuspenseWrapper>} />
+            <Route path="/login" element={<SuspenseWrapper><Login /></SuspenseWrapper>} />
 
             {/* 봇 관리 페이지 - 구체적인 경로를 먼저 배치 */}
-            <Route path='/bots/new' element={<SuspenseWrapper><BotForm /></SuspenseWrapper>} />
-            <Route path='/bots/edit/:botId' element={<SuspenseWrapper><BotForm /></SuspenseWrapper>} />
-            <Route path='/bot-management' element={<SuspenseWrapper><BotManagement /></SuspenseWrapper>} />
+            <Route path="/bots/new" element={<SuspenseWrapper><BotForm /></SuspenseWrapper>} />
+            <Route path="/bots/edit/:botId" element={<SuspenseWrapper><BotForm /></SuspenseWrapper>} />
+            <Route path="/bot-management" element={<SuspenseWrapper><BotManagement /></SuspenseWrapper>} />
 
             {/* 게시판 관련 라우트 */}
-            <Route path='/boards' element={<SuspenseWrapper><BoardList /></SuspenseWrapper>} />
-            <Route path='/boards/new' element={<SuspenseWrapper><BoardPostForm /></SuspenseWrapper>} />
-            <Route path='/boards/:postId' element={<SuspenseWrapper><BoardPostView /></SuspenseWrapper>} />
-            <Route path='/boards/:postId/edit' element={<SuspenseWrapper><BoardPostForm /></SuspenseWrapper>} />
+            <Route path="/boards" element={<SuspenseWrapper><BoardList /></SuspenseWrapper>} />
+            <Route path="/boards/new" element={<SuspenseWrapper><BoardPostForm /></SuspenseWrapper>} />
+            <Route path="/boards/:postId" element={<SuspenseWrapper><BoardPostView /></SuspenseWrapper>} />
+            <Route path="/boards/:postId/edit" element={<SuspenseWrapper><BoardPostForm /></SuspenseWrapper>} />
 
             {/* 사용자 관련 라우트 */}
-            <Route path='/profile' element={<SuspenseWrapper><Profile /></SuspenseWrapper>} />
+            <Route path="/profile" element={<SuspenseWrapper><Profile /></SuspenseWrapper>} />
 
             {/* 관리자 페이지 */}
-            <Route path='/admin' element={<SuspenseWrapper><Admin /></SuspenseWrapper>} />
-            <Route path='/design-preview' element={<SuspenseWrapper><DesignPreview /></SuspenseWrapper>} />
+            <Route path="/admin" element={<SuspenseWrapper><Admin /></SuspenseWrapper>} />
+            <Route path="/design-preview" element={<SuspenseWrapper><DesignPreview /></SuspenseWrapper>} />
           </Routes>
         </div>
       </Router>

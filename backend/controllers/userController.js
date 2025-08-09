@@ -4,12 +4,12 @@ const {
   asyncHandler,
   ValidationError,
   AuthenticationError,
-  ConflictError,
+  ConflictError
 } = require('../middleware/errorHandler');
-const { 
-  validatePassword, 
-  checkPasswordExpiration,
-  generateTemporaryPassword 
+const {
+  validatePassword,
+  checkPasswordExpiration: _checkPasswordExpiration,
+  generateTemporaryPassword: _generateTemporaryPassword
 } = require('../utils/passwordPolicy');
 
 // 회원가입
@@ -53,8 +53,8 @@ exports.signup = asyncHandler(async (req, res) => {
       id: user.id,
       email: user.email,
       authority: user.authority,
-      createdAt: user.createdAt,
-    },
+      createdAt: user.createdAt
+    }
   });
 });
 
@@ -77,14 +77,14 @@ exports.login = asyncHandler(async (req, res) => {
     // 로그인 실패 횟수 증가
     user.loginAttempts = (user.loginAttempts || 0) + 1;
     user.lastFailedLogin = new Date();
-    
+
     // 계정 잠금 확인
     if (user.loginAttempts >= 5) {
       user.lockedUntil = new Date(Date.now() + 30 * 60 * 1000); // 30분 잠금
       await user.save();
       throw new AuthenticationError('계정이 잠겼습니다. 30분 후에 다시 시도해주세요.');
     }
-    
+
     await user.save();
     throw new AuthenticationError(`잘못된 비밀번호입니다. (${user.loginAttempts}/5 시도)`);
   }
@@ -116,19 +116,19 @@ exports.login = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: 24 * 60 * 60 * 1000, // 1일
+    maxAge: 24 * 60 * 60 * 1000 // 1일
   };
-  
+
   console.log('=== 로그인 쿠키 설정 ===');
   console.log('쿠키 옵션:', cookieOptions);
   console.log('NODE_ENV:', process.env.NODE_ENV);
-  
+
   res.cookie('authToken', token, cookieOptions);
 
   res.json({
     success: true,
     message: '로그인 성공',
-    user: userObj,
+    user: userObj
   });
 });
 
@@ -183,9 +183,9 @@ exports.logout = (req, res) => {
   res.clearCookie('authToken', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'lax'
   });
-  
+
   res.json({ message: '로그아웃 성공' });
 };
 
@@ -204,7 +204,7 @@ exports.checkIdExists = async (req, res) => {
 };
 
 // 토큰 검증
-exports.verifyToken = asyncHandler(async (req, res) => {
+exports.verifyToken = asyncHandler((req, res) => {
   // 인증 미들웨어를 통해 이미 사용자 정보가 설정됨
   if (req.user) {
     res.json({
@@ -212,13 +212,13 @@ exports.verifyToken = asyncHandler(async (req, res) => {
       user: {
         id: req.user.id,
         email: req.user.email,
-        authority: req.user.authority,
-      },
+        authority: req.user.authority
+      }
     });
   } else {
     res.json({
       valid: false,
-      message: '유효하지 않은 토큰입니다.',
+      message: '유효하지 않은 토큰입니다.'
     });
   }
 });
@@ -249,7 +249,7 @@ exports.updateUser = async (req, res) => {
       if (!validateEmail(email)) {
         return res.status(400).json({ message: '유효한 이메일 주소를 입력해주세요.' });
       }
-      
+
       // 이메일 변경 시 중복 체크
       if (email !== user.email) {
         const existingUser = await User.findOne({ email });
@@ -259,19 +259,19 @@ exports.updateUser = async (req, res) => {
       }
       user.email = email;
     }
-    
+
     if (authority !== undefined) {
       user.authority = authority;
     }
-    
+
     // 새 비밀번호가 제공된 경우에만 비밀번호 변경
     if (newPassword) {
       // 비밀번호 정책 검증
       const passwordValidation = validatePassword(newPassword);
       if (!passwordValidation.isValid) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           message: '비밀번호가 요구사항을 충족하지 않습니다.',
-          errors: passwordValidation.errors 
+          errors: passwordValidation.errors
         });
       }
       user.password = newPassword;
@@ -285,7 +285,7 @@ exports.updateUser = async (req, res) => {
 
     res.json({
       message: '사용자 정보 수정 성공',
-      user: userObj,
+      user: userObj
     });
   } catch (error) {
     res.status(400).json({ message: '사용자 정보 수정 실패', error: error.message });

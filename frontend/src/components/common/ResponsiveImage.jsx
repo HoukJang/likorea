@@ -1,9 +1,8 @@
-import React from 'react';
 
-const ResponsiveImage = ({ 
-  imageName, 
-  alt, 
-  className = '', 
+const ResponsiveImage = ({
+  imageName,
+  alt,
+  className = '',
   loading = 'lazy',
   fetchPriority = 'auto',
   sizes = '100vw',
@@ -11,7 +10,7 @@ const ResponsiveImage = ({
 }) => {
   // 이미지 경로 생성
   const getImagePath = (suffix, format) => `/images/${imageName}-${suffix}.${format}`;
-  
+
   return (
     <picture>
       {/* WebP 형식 - 모바일 우선 */}
@@ -34,7 +33,7 @@ const ResponsiveImage = ({
         type="image/webp"
         srcSet={getImagePath('full', 'webp')}
       />
-      
+
       {/* PNG 폴백 - 모바일 우선 */}
       <source
         type="image/png"
@@ -51,7 +50,7 @@ const ResponsiveImage = ({
         media="(max-width: 1200px)"
         srcSet={getImagePath('desktop', 'png')}
       />
-      
+
       {/* 기본 이미지 */}
       <img
         src={getImagePath('desktop', 'png')}

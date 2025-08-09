@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   getBoardPost,
@@ -6,7 +6,7 @@ import {
   addComment,
   deleteComment,
   updateComment,
-  getComments,
+  getComments
 } from '../api/boards';
 import { getAllTags } from '../api/tags';
 import { getPendingPost, approvePost, rejectPost } from '../api/approval';
@@ -51,7 +51,7 @@ function BoardPostView() {
 
       // URL 경로에서 승인 대기 여부 확인
       const isPendingPath = window.location.pathname.includes('pending');
-      
+
       // 게시글 데이터 가져오기
       let response;
       if (isPendingPath) {
@@ -86,7 +86,7 @@ function BoardPostView() {
 
       // 권한 확인
       checkEditDeletePermission(processedPost);
-      
+
       // 관리자 권한 및 승인 대기 상태 확인
       setIsAdmin(user?.authority >= 5);
       setIsPending(processedPost.isApproved === false);
@@ -126,7 +126,7 @@ function BoardPostView() {
       try {
         const userId = user?.id || localStorage.getItem('userId');
         await deleteBoard(postId, userId);
-        navigate('/boards');
+        navigate('/');
       } catch (error) {
         alert('삭제 권한이 없거나 오류가 발생했습니다.');
       }
@@ -196,7 +196,7 @@ function BoardPostView() {
       // API 문서에 맞게 요청 데이터 구성
       const response = await addComment(postId, {
         content: commentText, // 댓글 내용
-        id: userId, // 사용자 ID
+        id: userId // 사용자 ID
       });
 
       if (response && response.comment) {
@@ -281,7 +281,7 @@ function BoardPostView() {
       // API 문서에 맞게 요청 데이터 구성
       const response = await updateComment(postId, commentId, {
         content: editCommentText, // 수정할 댓글 내용
-        id: userId, // 사용자 ID
+        id: userId // 사용자 ID
       });
 
       if (response && response.comment) {
@@ -347,7 +347,7 @@ function BoardPostView() {
       if (post && post.comments) {
         setPost(prevPost => ({
           ...prevPost,
-          comments: (prevPost.comments || []).filter(c => (c.id || c._id) !== commentId),
+          comments: (prevPost.comments || []).filter(c => (c.id || c._id) !== commentId)
         }));
       }
     } catch (error) {
@@ -390,39 +390,39 @@ function BoardPostView() {
   if (!post) return <p>게시글을 찾을 수 없습니다</p>;
 
   return (
-    <div className='post-container'>
-      <div className='post-header'>
-        <h1 className='post-title'>
+    <div className="post-container">
+      <div className="post-header">
+        <h1 className="post-title">
           {post.title}
           {isPending && <span style={{ marginLeft: '12px', padding: '4px 8px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.8em' }}>승인 대기</span>}
         </h1>
-        <div className='post-actions'>
+        <div className="post-actions">
           {canModify && (
             <>
               <button
                 onClick={() => navigate(`/boards/${postId}/edit`)}
-                className='action-button edit-button'
+                className="action-button edit-button"
               >
                 수정
               </button>
-              <button onClick={handleDelete} className='action-button delete-button'>
+              <button onClick={handleDelete} className="action-button delete-button">
                 삭제
               </button>
             </>
           )}
           {isAdmin && isPending && (
             <>
-              <button 
-                onClick={handleApprove} 
-                className='action-button' 
+              <button
+                onClick={handleApprove}
+                className="action-button"
                 style={{ backgroundColor: '#4caf50', color: 'white' }}
                 disabled={loading}
               >
                 승인
               </button>
-              <button 
-                onClick={handleReject} 
-                className='action-button' 
+              <button
+                onClick={handleReject}
+                className="action-button"
                 style={{ backgroundColor: '#f44336', color: 'white' }}
                 disabled={loading}
               >
@@ -433,26 +433,26 @@ function BoardPostView() {
         </div>
       </div>
 
-      <div className='post-meta'>
-        <span className='post-author'>
+      <div className="post-meta">
+        <span className="post-author">
           <strong>작성자:</strong> {post.botId?.name ? `🤖 ${post.botId.name}` : (post.author?.id || '알 수 없음')}
         </span>
-        <span className='post-date'>
+        <span className="post-date">
           <strong>작성일:</strong> {new Date(post.createdAt).toLocaleString()}
         </span>
         {post.updatedAt && post.updatedAt !== post.createdAt && (
-          <span className='update-date'>
+          <span className="update-date">
             <strong>수정일:</strong> {new Date(post.updatedAt).toLocaleString()}
           </span>
         )}
-        <span className='post-views'>
+        <span className="post-views">
           <strong>조회수:</strong> {post.viewCount || 0}
         </span>
         {post.tags && (
-          <div className='post-tags'>
+          <div className="post-tags">
             {createTagDisplayData(post.tags, tagList).map((tag, index) => (
               <span key={index} className={`tag ${tag.category}-tag`}>
-                {tag.category === 'type' ? 'Type' : 
+                {tag.category === 'type' ? 'Type' :
                  tag.category === 'subcategory' ? 'Sub' : 'Region'}: {tag.displayName}
               </span>
             ))}
@@ -460,20 +460,20 @@ function BoardPostView() {
         )}
       </div>
 
-      <hr className='post-divider' />
+      <hr className="post-divider" />
 
-      <div className='post-content'>
-        <div className='post-content-html' dangerouslySetInnerHTML={{ 
+      <div className="post-content">
+        <div className="post-content-html" dangerouslySetInnerHTML={{
           __html: processContent(post.content, linkifyContentSafe)
         }} />
       </div>
 
-      <div className='comment-section'>
+      <div className="comment-section">
         <h3>댓글 ({comments.length})</h3>
-        <hr className='comment-divider' />
+        <hr className="comment-divider" />
 
         {comments.length > 0 ? (
-          <div className='comment-list'>
+          <div className="comment-list">
             {comments.map((comment, index) => {
               const commentId = comment.id || comment._id || index;
               const isEditing = editingCommentId === commentId;
@@ -486,49 +486,49 @@ function BoardPostView() {
               const hasPermission = canModifyComment(comment);
 
               return (
-                <div key={commentId} className='comment-item'>
+                <div key={commentId} className="comment-item">
                   {isEditing ? (
-                    <div className='comment-edit-form'>
+                    <div className="comment-edit-form">
                       <textarea
-                        className='comment-edit-textarea'
+                        className="comment-edit-textarea"
                         value={editCommentText}
                         onChange={e => setEditCommentText(e.target.value)}
                       />
-                      <div className='comment-edit-actions'>
+                      <div className="comment-edit-actions">
                         <button
                           onClick={() => handleUpdateComment(commentId)}
                           disabled={loading}
-                          className='comment-edit-button'
+                          className="comment-edit-button"
                         >
                           저장
                         </button>
-                        <button onClick={handleCancelEditComment} className='comment-cancel-button'>
+                        <button onClick={handleCancelEditComment} className="comment-cancel-button">
                           취소
                         </button>
                       </div>
                     </div>
                   ) : (
-                    <div className='comment-content-wrapper'>
-                      <div className='comment-author-info'>
-                        <div className='comment-author-id'>{authorId}</div>
-                        <div className='comment-date'>
+                    <div className="comment-content-wrapper">
+                      <div className="comment-author-info">
+                        <div className="comment-author-id">{authorId}</div>
+                        <div className="comment-date">
                           <div>{commentDate.toLocaleDateString()}</div>
                           <div>{commentDate.toLocaleTimeString()}</div>
                         </div>
                       </div>
-                      <div className='comment-divider-vertical'></div>
-                      <div className='comment-main'>
-                        <div className='comment-text' dangerouslySetInnerHTML={{ __html: processContent(comment.content, linkifyContentSafe) }} />
+                      <div className="comment-divider-vertical"></div>
+                      <div className="comment-main">
+                        <div className="comment-text" dangerouslySetInnerHTML={{ __html: processContent(comment.content, linkifyContentSafe) }} />
                         {hasPermission && (
-                          <div className='comment-actions'>
+                          <div className="comment-actions">
                             <button
-                              className='comment-action-button edit-button'
+                              className="comment-action-button edit-button"
                               onClick={() => handleEditComment(comment)}
                             >
                               수정
                             </button>
                             <button
-                              className='comment-action-button delete-button'
+                              className="comment-action-button delete-button"
                               onClick={() => handleDeleteComment(commentId)}
                             >
                               삭제
@@ -543,25 +543,25 @@ function BoardPostView() {
             })}
           </div>
         ) : (
-          <p className='no-comments'>댓글이 없습니다.</p>
+          <p className="no-comments">댓글이 없습니다.</p>
         )}
 
         {user ? (
-          <form className='comment-form' onSubmit={handleCommentSubmit}>
+          <form className="comment-form" onSubmit={handleCommentSubmit}>
             <textarea
-              placeholder='댓글 작성...'
-              className='comment-textarea'
+              placeholder="댓글 작성..."
+              className="comment-textarea"
               value={commentText}
               onChange={e => setCommentText(e.target.value)}
               disabled={loading}
               required
             />
-            <button type='submit' className='comment-submit-button' disabled={loading}>
+            <button type="submit" className="comment-submit-button" disabled={loading}>
               {loading ? '작성 중...' : '댓글 달기'}
             </button>
           </form>
         ) : (
-          <p className='login-message'>댓글을 작성하려면 로그인이 필요합니다.</p>
+          <p className="login-message">댓글을 작성하려면 로그인이 필요합니다.</p>
         )}
       </div>
     </div>

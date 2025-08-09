@@ -8,7 +8,7 @@ async function checkBotPrompts() {
     console.log('✅ MongoDB 연결 성공\n');
 
     const bots = await Bot.find({ type: 'news' }).select('name prompt apiSettings');
-    
+
     bots.forEach(bot => {
       console.log('=' .repeat(50));
       console.log(`봇: ${bot.name}`);

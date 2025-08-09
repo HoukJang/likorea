@@ -6,36 +6,36 @@ const tagSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ['type', 'region', 'category'], // 추후 확장 가능
+      enum: ['type', 'region', 'category'] // 추후 확장 가능
     },
     // 태그 값 (예: '사고팔고', '부동산', '13', '14' 등)
     value: {
       type: String,
-      required: true,
+      required: true
     },
     // 태그 표시명 (예: '사고팔고', '부동산', '13세', '14세' 등)
     displayName: {
       type: String,
-      required: true,
+      required: true
     },
     // 태그 순서 (정렬용)
     order: {
       type: Number,
-      default: 0,
+      default: 0
     },
     // 활성화 여부
     isActive: {
       type: Boolean,
-      default: true,
+      default: true
     },
     // 태그 설명
     description: {
-      type: String,
+      type: String
     },
     // 상위 카테고리 (하위 카테고리용)
     parentCategory: {
-      type: String,
-    },
+      type: String
+    }
   },
   { timestamps: true }
 );
@@ -58,7 +58,7 @@ tagSchema.statics.getSubCategoriesByParent = function (parentCategory) {
   return this.find({
     category: 'category',
     parentCategory: parentCategory,
-    isActive: true,
+    isActive: true
   }).sort({ order: 1, value: 1 });
 };
 

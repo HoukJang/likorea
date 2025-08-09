@@ -1,0 +1,143 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '18.x'
+
+jobs:
+  test-backend:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+    
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm ci
+    
+    - name: Run backend lint
+      working-directory: ./backend
+      run: npm run lint
+    
+    - name: Run backend tests
+      working-directory: ./backend
+      env:
+        NODE_ENV: test
+        JWT_SECRET: test-secret
+        MONGO_URI: mongodb://localhost:27017/test
+      run: npm test
+    
+    - name: Upload backend coverage
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: backend-coverage
+        path: backend/coverage
+
+  test-frontend:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+    
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm ci
+    
+    - name: Run frontend lint
+      working-directory: ./frontend
+      run: npm run lint
+    
+    - name: Run frontend tests
+      working-directory: ./frontend
+      env:
+        CI: true
+        REACT_APP_BACKEND_URL: http://localhost:5001
+      run: npm test -- --passWithNoTests
+    
+    - name: Build frontend
+      working-directory: ./frontend
+      run: npm run build
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-build
+        path: frontend/build
+
+  deploy-development:
+    name: Deploy to Development
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to development server
+      env:
+        DEPLOY_KEY: ${{ secrets.DEV_DEPLOY_KEY }}
+        DEPLOY_HOST: ${{ secrets.DEV_DEPLOY_HOST }}
+        DEPLOY_USER: ${{ secrets.DEV_DEPLOY_USER }}
+      run: |
+        echo "Deploying to development server..."
+        # Add your deployment script here
+        # Example: ssh deployment, rsync, etc.
+
+  deploy-production:
+    name: Deploy to Production
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to production server
+      env:
+        DEPLOY_KEY: ${{ secrets.PROD_DEPLOY_KEY }}
+        DEPLOY_HOST: ${{ secrets.PROD_DEPLOY_HOST }}
+        DEPLOY_USER: ${{ secrets.PROD_DEPLOY_USER }}
+      run: |
+        echo "Deploying to production server..."
+        # Add your production deployment script here
+        # This should use the deploy-auto.sh script
+        
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Run security audit - Backend
+      working-directory: ./backend
+      run: npm audit --audit-level=high
+      continue-on-error: true
+    
+    - name: Run security audit - Frontend
+      working-directory: ./frontend
+      run: npm audit --audit-level=high
+      continue-on-error: true

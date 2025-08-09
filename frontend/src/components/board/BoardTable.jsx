@@ -15,26 +15,26 @@ const BoardTable = React.memo(({ posts, tagList, pendingOnly = false }) => {
   };
 
   return (
-    <div className='table-responsive' role='region' aria-label='게시글 목록 테이블'>
-      <table className='board-table' role='table' aria-label='게시글 목록'>
+    <div className="table-responsive" role="region" aria-label="게시글 목록 테이블">
+      <table className="board-table" role="table" aria-label="게시글 목록">
         <thead>
           <tr>
-            <th scope='col' style={{ width: '8%' }}>
+            <th scope="col" style={{ width: '8%' }}>
               글종류
             </th>
-            <th scope='col' style={{ width: '45%' }}>
+            <th scope="col" style={{ width: '45%' }}>
               제목
             </th>
-            <th scope='col' style={{ width: '12%' }}>
+            <th scope="col" style={{ width: '12%' }}>
               지역
             </th>
-            <th scope='col' style={{ width: '12%' }}>
+            <th scope="col" style={{ width: '12%' }}>
               글쓴이
             </th>
-            <th scope='col' style={{ width: '13%' }}>
+            <th scope="col" style={{ width: '13%' }}>
               날짜
             </th>
-            <th scope='col' style={{ width: '10%' }}>
+            <th scope="col" style={{ width: '10%' }}>
               조회수
             </th>
           </tr>
@@ -49,33 +49,33 @@ const BoardTable = React.memo(({ posts, tagList, pendingOnly = false }) => {
             return (
               <tr
                 key={post._id || post.id || idx}
-                role='row'
+                role="row"
                 tabIndex={0}
                 data-post-type={postType}
                 aria-label={`게시글 ${post.postNumber}: ${post.title}`}
                 onKeyDown={e => handleKeyDown(e, () => navigate(pendingOnly ? `/boards/${post.id || post._id}/edit?pending=true` : `/boards/${post.id}`))}
               >
-                <td className='post-number' style={{ textAlign: 'center' }} role='cell'>
+                <td className="post-number" style={{ textAlign: 'center' }} role="cell">
                   {tagList && post.tags && post.tags.type
                     ? getTagDisplayText(post.tags)
                     : post.type || '일반'}
                 </td>
-                <td style={{ textAlign: 'left' }} role='cell'>
+                <td style={{ textAlign: 'left' }} role="cell">
                   <Link
                     to={pendingOnly ? `/boards/${post.id || post._id}/edit?pending=true` : `/boards/${post.id}`}
-                    className='post-title'
+                    className="post-title"
                     style={{
                       color: 'inherit',
-                      textDecoration: 'none',
+                      textDecoration: 'none'
                     }}
                     aria-label={`게시글 제목: ${post.title}`}
                   >
                     {post.title}
                     {pendingOnly && <span style={{ marginLeft: '8px', padding: '2px 6px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.75em' }}>승인 대기</span>}
-                    <span className='comment-count'>[{post.commentCount || 0}]</span>
+                    <span className="comment-count">[{post.commentCount || 0}]</span>
                   </Link>
                 </td>
-                <td className='post-region' style={{ textAlign: 'center' }} role='cell'>
+                <td className="post-region" style={{ textAlign: 'center' }} role="cell">
                   {tagList && post.tags && post.tags.region
                     ? post.tags.region === '0'
                       ? '전체'
@@ -86,17 +86,17 @@ const BoardTable = React.memo(({ posts, tagList, pendingOnly = false }) => {
                         ? `Exit ${post.region}`
                         : '전체'}
                 </td>
-                <td className='post-author' style={{ textAlign: 'center' }} role='cell'>
+                <td className="post-author" style={{ textAlign: 'center' }} role="cell">
                   {pendingOnly && post.botId?.name ? (
                     <span style={{ fontStyle: 'italic' }}>🤖 {post.botId.name}</span>
                   ) : (
                     getAuthorId(post.author)
                   )}
                 </td>
-                <td className='post-date' style={{ textAlign: 'center' }} role='cell'>
+                <td className="post-date" style={{ textAlign: 'center' }} role="cell">
                   {formatDate(post.createdAt)}
                 </td>
-                <td className='post-views' style={{ textAlign: 'center' }} role='cell'>
+                <td className="post-views" style={{ textAlign: 'center' }} role="cell">
                   {post.viewCount ?? 0}
                 </td>
               </tr>

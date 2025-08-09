@@ -31,7 +31,7 @@ export const createBot = async (botData) => {
     apiSettings: botData.apiSettings,
     persona: botData.persona
   };
-  
+
   const response = await client.post('/api/bots', formattedData);
   return response;
 };
@@ -49,7 +49,7 @@ export const updateBot = async (botId, botData) => {
     userPrompt: botData.userPrompt,
     apiSettings: botData.apiSettings
   };
-  
+
   const response = await client.put(`/api/bots/${botId}`, formattedData);
   return response;
 };
@@ -79,26 +79,28 @@ export const createBotPost = async (botId, task, additionalPrompt = '') => {
     task,
     additionalPrompt
   });
-  
+
   // 프롬프트 정보 로그 (개발 환경에서만 prompts 필드가 존재)
-  if (response.prompts) {
-    console.log('\n🤖 AI 프롬프트 정보');
-    console.log('===============================');
-    console.log('모델:', response.prompts.model);
-    console.log('제공자:', response.prompts.provider);
-    console.log('\n📝 System Prompt:');
-    console.log(response.prompts.systemPrompt);
-    console.log('\n💬 User Prompt:');
-    console.log(response.prompts.userPrompt);
-    console.log('===============================\n');
-    console.log('💰 예상 비용: $' + (response.estimatedCost || 0).toFixed(4));
-    console.log('📊 토큰 사용량:', response.usage);
-  } else {
-    console.log('✅ 게시글 생성 성공');
-    console.log('💰 예상 비용: $' + (response.estimatedCost || 0).toFixed(4));
-    console.log('📊 토큰 사용량:', response.usage);
+  if (process.env.NODE_ENV === 'development') {
+    if (response.prompts) {
+      console.log('\n🤖 AI 프롬프트 정보');
+      console.log('===============================');
+      console.log('모델:', response.prompts.model);
+      console.log('제공자:', response.prompts.provider);
+      console.log('\n📝 System Prompt:');
+      console.log(response.prompts.systemPrompt);
+      console.log('\n💬 User Prompt:');
+      console.log(response.prompts.userPrompt);
+      console.log('===============================\n');
+      console.log('💰 예상 비용: $' + (response.estimatedCost || 0).toFixed(4));
+      console.log('📊 토큰 사용량:', response.usage);
+    } else {
+      console.log('✅ 게시글 생성 성공');
+      console.log('💰 예상 비용: $' + (response.estimatedCost || 0).toFixed(4));
+      console.log('📊 토큰 사용량:', response.usage);
+    }
   }
-  
+
   return response;
 };
 

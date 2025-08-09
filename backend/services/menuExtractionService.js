@@ -26,7 +26,7 @@ class MenuExtractionService {
 
     try {
       // Prepare review text for Claude
-      const reviewTexts = reviews.map((review, idx) => 
+      const reviewTexts = reviews.map((review, idx) =>
         `Review ${idx + 1} (${review.rating}/5 stars):\n"${review.text}"`
       ).join('\n\n');
 
@@ -70,7 +70,7 @@ IMPORTANT:
 If no specific menu items are found, return an empty array: []`;
 
       console.log('🤖 Requesting menu extraction from Claude...');
-      
+
       const response = await this.anthropic.messages.create({
         model: 'claude-3-5-sonnet-20241022',
         max_tokens: 1500,
@@ -83,7 +83,7 @@ If no specific menu items are found, return an empty array: []`;
 
       // Parse the response
       const responseText = response.content[0].text.trim();
-      
+
       // Clean up the response if it has markdown code blocks
       const cleanedResponse = responseText
         .replace(/```json\n?/g, '')
@@ -92,7 +92,7 @@ If no specific menu items are found, return an empty array: []`;
 
       try {
         const menuItems = JSON.parse(cleanedResponse);
-        
+
         // Validate and clean the data
         const validatedItems = menuItems
           .filter(item => item.name && typeof item.name === 'string')
@@ -114,14 +114,14 @@ If no specific menu items are found, return an empty array: []`;
       } catch (parseError) {
         console.error('❌ Failed to parse Claude response:', parseError);
         console.error('Response was:', cleanedResponse);
-        
+
         // Fallback: try to extract menu items with regex
         return this.fallbackExtraction(reviews);
       }
 
     } catch (error) {
       console.error('❌ Claude API error:', error);
-      
+
       // Fallback to basic extraction
       return this.fallbackExtraction(reviews);
     }
@@ -133,9 +133,9 @@ If no specific menu items are found, return an empty array: []`;
    */
   fallbackExtraction(reviews) {
     console.log('⚠️ Using fallback menu extraction...');
-    
+
     const menuMentions = {};
-    
+
     // Simplified patterns for fallback
     const patterns = [
       /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:pizza|pasta|sandwich|burger|salad|soup)\b/gi,
@@ -176,17 +176,17 @@ If no specific menu items are found, return an empty array: []`;
       // Filter out generic terms
       const genericTerms = ['food', 'meal', 'dish', 'plate', 'order', 'item'];
       const itemLower = item.name.toLowerCase();
-      
+
       // Check if it's not a generic term
       const isNotGeneric = !genericTerms.some(term => itemLower === term);
-      
+
       // Check if it has sufficient length
       const hasMinLength = item.name.length >= 3;
-      
+
       // Check if it's not just a single common word
-      const isNotSingleCommon = !(item.name.split(' ').length === 1 && 
+      const isNotSingleCommon = !(item.name.split(' ').length === 1 &&
                                    ['good', 'great', 'nice', 'bad', 'okay'].includes(itemLower));
-      
+
       return isNotGeneric && hasMinLength && isNotSingleCommon;
     });
   }

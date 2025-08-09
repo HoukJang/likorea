@@ -7,7 +7,7 @@ class ErrorBoundary extends React.Component {
     this.state = {
       hasError: false,
       error: null,
-      errorInfo: null,
+      errorInfo: null
     };
   }
 
@@ -22,7 +22,7 @@ class ErrorBoundary extends React.Component {
 
     this.setState({
       error,
-      errorInfo,
+      errorInfo
     });
 
     // 에러 추적 서비스로 전송 (선택적)
@@ -41,7 +41,7 @@ class ErrorBoundary extends React.Component {
             minHeight: '100vh',
             padding: '20px',
             textAlign: 'center',
-            backgroundColor: '#f8f9fa',
+            backgroundColor: '#f8f9fa'
           }}
         >
           <div
@@ -50,14 +50,14 @@ class ErrorBoundary extends React.Component {
               padding: '40px',
               backgroundColor: 'white',
               borderRadius: '8px',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
             }}
           >
             <h1
               style={{
                 color: '#dc3545',
                 marginBottom: '20px',
-                fontSize: '2rem',
+                fontSize: '2rem'
               }}
             >
               🚨 오류가 발생했습니다
@@ -67,7 +67,7 @@ class ErrorBoundary extends React.Component {
               style={{
                 color: '#6c757d',
                 marginBottom: '30px',
-                fontSize: '1.1rem',
+                fontSize: '1.1rem'
               }}
             >
               죄송합니다. 예상치 못한 오류가 발생했습니다.
@@ -84,7 +84,7 @@ class ErrorBoundary extends React.Component {
                   borderRadius: '4px',
                   cursor: 'pointer',
                   fontSize: '1rem',
-                  marginRight: '10px',
+                  marginRight: '10px'
                 }}
               >
                 페이지 새로고침
@@ -99,7 +99,7 @@ class ErrorBoundary extends React.Component {
                   padding: '12px 24px',
                   borderRadius: '4px',
                   cursor: 'pointer',
-                  fontSize: '1rem',
+                  fontSize: '1rem'
                 }}
               >
                 홈으로 이동
@@ -113,14 +113,14 @@ class ErrorBoundary extends React.Component {
                   padding: '15px',
                   backgroundColor: '#f8f9fa',
                   borderRadius: '4px',
-                  border: '1px solid #dee2e6',
+                  border: '1px solid #dee2e6'
                 }}
               >
                 <summary
                   style={{
                     cursor: 'pointer',
                     fontWeight: 'bold',
-                    color: '#495057',
+                    color: '#495057'
                   }}
                 >
                   개발자 정보 (개발 환경에서만 표시)
@@ -130,7 +130,7 @@ class ErrorBoundary extends React.Component {
                     marginTop: '10px',
                     textAlign: 'left',
                     fontSize: '0.9rem',
-                    color: '#6c757d',
+                    color: '#6c757d'
                   }}
                 >
                   <p>
@@ -150,7 +150,7 @@ class ErrorBoundary extends React.Component {
                           padding: '10px',
                           borderRadius: '4px',
                           overflow: 'auto',
-                          fontSize: '0.8rem',
+                          fontSize: '0.8rem'
                         }}
                       >
                         {this.state.errorInfo.componentStack}

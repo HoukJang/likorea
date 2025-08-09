@@ -33,92 +33,92 @@ exports.getTrafficDashboard = asyncHandler(async (req, res) => {
 
   // 기본 통계
   const totalRequests = await TrafficLog.countDocuments({
-    timestamp: { $gte: startTime },
+    timestamp: { $gte: startTime }
   });
 
   const uniqueUsers = await TrafficLog.distinct('userId', {
     timestamp: { $gte: startTime },
-    userId: { $ne: null },
+    userId: { $ne: null }
   });
 
   const avgResponseTime = await TrafficLog.aggregate([
     {
       $match: {
-        timestamp: { $gte: startTime },
-      },
+        timestamp: { $gte: startTime }
+      }
     },
     {
       $group: {
         _id: null,
-        avgResponseTime: { $avg: '$responseTime' },
-      },
-    },
+        avgResponseTime: { $avg: '$responseTime' }
+      }
+    }
   ]);
 
   // HTTP 상태 코드별 통계
   const statusCodeStats = await TrafficLog.aggregate([
     {
       $match: {
-        timestamp: { $gte: startTime },
-      },
+        timestamp: { $gte: startTime }
+      }
     },
     {
       $group: {
         _id: '$statusCode',
-        count: { $sum: 1 },
-      },
+        count: { $sum: 1 }
+      }
     },
     {
-      $sort: { _id: 1 },
-    },
+      $sort: { _id: 1 }
+    }
   ]);
 
   // HTTP 메서드별 통계
   const methodStats = await TrafficLog.aggregate([
     {
       $match: {
-        timestamp: { $gte: startTime },
-      },
+        timestamp: { $gte: startTime }
+      }
     },
     {
       $group: {
         _id: '$method',
-        count: { $sum: 1 },
-      },
+        count: { $sum: 1 }
+      }
     },
     {
-      $sort: { count: -1 },
-    },
+      $sort: { count: -1 }
+    }
   ]);
 
   // 인기 경로별 통계
   const pathStats = await TrafficLog.aggregate([
     {
       $match: {
-        timestamp: { $gte: startTime },
-      },
+        timestamp: { $gte: startTime }
+      }
     },
     {
       $group: {
         _id: '$path',
         count: { $sum: 1 },
-        avgResponseTime: { $avg: '$responseTime' },
-      },
+        avgResponseTime: { $avg: '$responseTime' }
+      }
     },
     {
-      $sort: { count: -1 },
+      $sort: { count: -1 }
     },
     {
-      $limit: 10,
-    },
+      $limit: 10
+    }
   ]);
 
   // 시간별 요청 수 (차트용) - 미국 동부 시간대 적용
   const hourlyStats = await TrafficLog.aggregate([
     {
       $match: {
-        timestamp: { $gte: startTime },
-      },
+        timestamp: { $gte: startTime }
+      }
     },
     {
       $group: {
@@ -126,14 +126,14 @@ exports.getTrafficDashboard = asyncHandler(async (req, res) => {
           year: { $year: { date: '$timestamp', timezone: 'America/New_York' } },
           month: { $month: { date: '$timestamp', timezone: 'America/New_York' } },
           day: { $dayOfMonth: { date: '$timestamp', timezone: 'America/New_York' } },
-          hour: { $hour: { date: '$timestamp', timezone: 'America/New_York' } },
+          hour: { $hour: { date: '$timestamp', timezone: 'America/New_York' } }
         },
-        count: { $sum: 1 },
-      },
+        count: { $sum: 1 }
+      }
     },
     {
-      $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1, '_id.hour': 1 },
-    },
+      $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1, '_id.hour': 1 }
+    }
   ]);
 
   // 에러 통계
@@ -141,19 +141,19 @@ exports.getTrafficDashboard = asyncHandler(async (req, res) => {
     {
       $match: {
         timestamp: { $gte: startTime },
-        $or: [{ statusCode: { $gte: 400 } }, { error: { $ne: null } }],
-      },
+        $or: [{ statusCode: { $gte: 400 } }, { error: { $ne: null } }]
+      }
     },
     {
       $group: {
         _id: '$statusCode',
         count: { $sum: 1 },
-        errors: { $push: '$error' },
-      },
+        errors: { $push: '$error' }
+      }
     },
     {
-      $sort: { count: -1 },
-    },
+      $sort: { count: -1 }
+    }
   ]);
 
   // 사용자 권한별 통계
@@ -161,18 +161,18 @@ exports.getTrafficDashboard = asyncHandler(async (req, res) => {
     {
       $match: {
         timestamp: { $gte: startTime },
-        userAuthority: { $ne: null },
-      },
+        userAuthority: { $ne: null }
+      }
     },
     {
       $group: {
         _id: '$userAuthority',
-        count: { $sum: 1 },
-      },
+        count: { $sum: 1 }
+      }
     },
     {
-      $sort: { _id: 1 },
-    },
+      $sort: { _id: 1 }
+    }
   ]);
 
   res.json({
@@ -182,15 +182,15 @@ exports.getTrafficDashboard = asyncHandler(async (req, res) => {
       summary: {
         totalRequests,
         uniqueUsers: uniqueUsers.length,
-        avgResponseTime: avgResponseTime[0]?.avgResponseTime || 0,
+        avgResponseTime: avgResponseTime[0]?.avgResponseTime || 0
       },
       statusCodeStats,
       methodStats,
       pathStats,
       hourlyStats,
       errorStats,
-      authorityStats,
-    },
+      authorityStats
+    }
   });
 });
 
@@ -201,7 +201,7 @@ exports.getRealtimeTraffic = asyncHandler(async (req, res) => {
   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
 
   const recentTraffic = await TrafficLog.find({
-    timestamp: { $gte: oneHourAgo },
+    timestamp: { $gte: oneHourAgo }
   })
     .sort({ timestamp: -1 })
     .limit(50)
@@ -210,7 +210,7 @@ exports.getRealtimeTraffic = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    data: recentTraffic,
+    data: recentTraffic
   });
 });
 
@@ -232,23 +232,23 @@ exports.getPathAnalysis = asyncHandler(async (req, res) => {
     {
       $match: {
         path: path,
-        timestamp: { $gte: startTime },
-      },
+        timestamp: { $gte: startTime }
+      }
     },
     {
       $group: {
         _id: {
           date: { $dateToString: { format: '%Y-%m-%d', date: '$timestamp', timezone: 'America/New_York' } },
-          hour: { $hour: { date: '$timestamp', timezone: 'America/New_York' } },
+          hour: { $hour: { date: '$timestamp', timezone: 'America/New_York' } }
         },
         count: { $sum: 1 },
         avgResponseTime: { $avg: '$responseTime' },
-        errors: { $sum: { $cond: [{ $gte: ['$statusCode', 400] }, 1, 0] } },
-      },
+        errors: { $sum: { $cond: [{ $gte: ['$statusCode', 400] }, 1, 0] } }
+      }
     },
     {
-      $sort: { '_id.date': 1, '_id.hour': 1 },
-    },
+      $sort: { '_id.date': 1, '_id.hour': 1 }
+    }
   ]);
 
   const userStats = await TrafficLog.aggregate([
@@ -256,22 +256,22 @@ exports.getPathAnalysis = asyncHandler(async (req, res) => {
       $match: {
         path: path,
         timestamp: { $gte: startTime },
-        userId: { $ne: null },
-      },
+        userId: { $ne: null }
+      }
     },
     {
       $group: {
         _id: '$userId',
         count: { $sum: 1 },
-        avgResponseTime: { $avg: '$responseTime' },
-      },
+        avgResponseTime: { $avg: '$responseTime' }
+      }
     },
     {
-      $sort: { count: -1 },
+      $sort: { count: -1 }
     },
     {
-      $limit: 10,
-    },
+      $limit: 10
+    }
   ]);
 
   res.json({
@@ -280,7 +280,7 @@ exports.getPathAnalysis = asyncHandler(async (req, res) => {
       path,
       period,
       pathStats,
-      userStats,
-    },
+      userStats
+    }
   });
 });

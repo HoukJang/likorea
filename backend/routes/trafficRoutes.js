@@ -3,7 +3,7 @@ const router = express.Router();
 const {
   getTrafficDashboard,
   getRealtimeTraffic,
-  getPathAnalysis,
+  getPathAnalysis
 } = require('../controllers/trafficController');
 const { authenticateToken, requireAdmin } = require('../middleware/auth');
 

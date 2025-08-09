@@ -9,7 +9,7 @@ const {
   checkIdExists,
   updateUser,
   deleteUser,
-  verifyToken,
+  verifyToken
 } = require('../controllers/userController');
 const { createRateLimiters } = require('../middleware/security');
 const { validateUserInput, validateLoginInput } = require('../middleware/validation');

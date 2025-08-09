@@ -11,7 +11,7 @@ const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const tokenFromHeader = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
     const tokenFromCookie = req.cookies?.authToken;
-    
+
     const token = tokenFromHeader || tokenFromCookie;
 
     // 개발 환경에서만 로깅
@@ -41,7 +41,7 @@ const authenticateToken = async (req, res, next) => {
       _id: user._id,
       id: user.id,
       email: user.email,
-      authority: user.authority,
+      authority: user.authority
     };
 
     next();
@@ -103,12 +103,12 @@ const verifyTokenMiddleware = async (req, res, next) => {
     console.log('쿠키들:', req.cookies);
     console.log('authToken 쿠키:', req.cookies?.authToken);
     console.log('Authorization 헤더:', req.headers['authorization']);
-    
+
     // Authorization 헤더 또는 쿠키에서 토큰 확인
     const authHeader = req.headers['authorization'];
     const tokenFromHeader = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
     const tokenFromCookie = req.cookies?.authToken;
-    
+
     const token = tokenFromHeader || tokenFromCookie;
 
     if (!token) {
@@ -132,7 +132,7 @@ const verifyTokenMiddleware = async (req, res, next) => {
       _id: user._id,
       id: user.id,
       email: user.email,
-      authority: user.authority,
+      authority: user.authority
     };
 
     next();
@@ -147,5 +147,5 @@ module.exports = {
   authenticateToken,
   requireAdmin,
   requireAuthority,
-  verifyTokenMiddleware,
+  verifyTokenMiddleware
 };

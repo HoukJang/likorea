@@ -1,4 +1,3 @@
-import React from 'react';
 import './Loading.css';
 
 /**
@@ -27,28 +26,28 @@ const Loading = ({
   const loadingClass = [baseClass, typeClass, sizeClass, className].filter(Boolean).join(' ');
 
   const renderSpinner = () => (
-    <div className='common-loading__spinner' style={{ borderTopColor: color }}>
-      <div className='spinner'></div>
+    <div className="common-loading__spinner" style={{ borderTopColor: color }}>
+      <div className="spinner"></div>
     </div>
   );
 
   const renderDots = () => (
-    <div className='common-loading__dots'>
-      <div className='dot' style={{ backgroundColor: color }}></div>
-      <div className='dot' style={{ backgroundColor: color }}></div>
-      <div className='dot' style={{ backgroundColor: color }}></div>
+    <div className="common-loading__dots">
+      <div className="dot" style={{ backgroundColor: color }}></div>
+      <div className="dot" style={{ backgroundColor: color }}></div>
+      <div className="dot" style={{ backgroundColor: color }}></div>
     </div>
   );
 
   const renderPulse = () => (
-    <div className='common-loading__pulse' style={{ backgroundColor: color }}></div>
+    <div className="common-loading__pulse" style={{ backgroundColor: color }}></div>
   );
 
   const renderSkeleton = () => (
-    <div className='common-loading__skeleton'>
-      <div className='skeleton-line' style={{ backgroundColor: color }}></div>
-      <div className='skeleton-line' style={{ backgroundColor: color }}></div>
-      <div className='skeleton-line' style={{ backgroundColor: color }}></div>
+    <div className="common-loading__skeleton">
+      <div className="skeleton-line" style={{ backgroundColor: color }}></div>
+      <div className="skeleton-line" style={{ backgroundColor: color }}></div>
+      <div className="skeleton-line" style={{ backgroundColor: color }}></div>
     </div>
   );
 
@@ -69,7 +68,7 @@ const Loading = ({
   return (
     <div className={loadingClass} style={style} {...props}>
       {renderContent()}
-      {text && <div className='common-loading__text'>{text}</div>}
+      {text && <div className="common-loading__text">{text}</div>}
     </div>
   );
 };

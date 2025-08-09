@@ -25,10 +25,10 @@ const createRateLimiters = () => {
     max: 100, // 최대 100개 요청
     message: {
       error: '너무 많은 요청이 발생했습니다. 15분 후에 다시 시도해주세요.',
-      retryAfter: 15 * 60,
+      retryAfter: 15 * 60
     },
     standardHeaders: true,
-    legacyHeaders: false,
+    legacyHeaders: false
   });
 
   // 로그인 요청 제한 (더 엄격)
@@ -37,11 +37,11 @@ const createRateLimiters = () => {
     max: 5, // 최대 5번 로그인 시도
     message: {
       error: '로그인 시도가 너무 많습니다. 15분 후에 다시 시도해주세요.',
-      retryAfter: 15 * 60,
+      retryAfter: 15 * 60
     },
     standardHeaders: true,
     legacyHeaders: false,
-    skipSuccessfulRequests: true, // 성공한 요청은 카운트하지 않음
+    skipSuccessfulRequests: true // 성공한 요청은 카운트하지 않음
   });
 
   // 회원가입 요청 제한
@@ -50,11 +50,11 @@ const createRateLimiters = () => {
     max: 3, // 최대 3번 회원가입 시도
     message: {
       error: '회원가입 시도가 너무 많습니다. 1시간 후에 다시 시도해주세요.',
-      retryAfter: 60 * 60,
+      retryAfter: 60 * 60
     },
     standardHeaders: true,
     legacyHeaders: false,
-    skipSuccessfulRequests: true,
+    skipSuccessfulRequests: true
   });
 
   // 게시글 작성 제한
@@ -63,10 +63,10 @@ const createRateLimiters = () => {
     max: 10, // 최대 10개 게시글 작성
     message: {
       error: '게시글 작성이 너무 많습니다. 10분 후에 다시 시도해주세요.',
-      retryAfter: 10 * 60,
+      retryAfter: 10 * 60
     },
     standardHeaders: true,
-    legacyHeaders: false,
+    legacyHeaders: false
   });
 
   // 관리자 API 전용 제한 (더 관대함)
@@ -75,10 +75,10 @@ const createRateLimiters = () => {
     max: 500, // 최대 500개 요청 (관리자 페이지는 여러 API를 동시에 호출)
     message: {
       error: '너무 많은 요청이 발생했습니다. 잠시 후에 다시 시도해주세요.',
-      retryAfter: 15 * 60,
+      retryAfter: 15 * 60
     },
     standardHeaders: true,
-    legacyHeaders: false,
+    legacyHeaders: false
   });
 
   // 토큰 검증 요청 제한 (더 관대함)
@@ -87,10 +87,10 @@ const createRateLimiters = () => {
     max: 300, // 최대 300개 요청 (자동 검증 고려)
     message: {
       error: '토큰 검증 요청이 너무 많습니다. 잠시 후에 다시 시도해주세요.',
-      retryAfter: 15 * 60,
+      retryAfter: 15 * 60
     },
     standardHeaders: true,
-    legacyHeaders: false,
+    legacyHeaders: false
   });
 
   return {
@@ -99,7 +99,7 @@ const createRateLimiters = () => {
     signupLimiter,
     postLimiter,
     adminLimiter,
-    verifyLimiter,
+    verifyLimiter
   };
 };
 
@@ -110,19 +110,19 @@ const configureHelmet = () => {
   return helmet({
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'"],
-        imgSrc: ["'self'", 'data:', 'https:'],
-        connectSrc: ["'self'"],
-        fontSrc: ["'self'"],
-        objectSrc: ["'none'"],
-        mediaSrc: ["'self'"],
-        frameSrc: ["'none'"],
-      },
+        defaultSrc: ['\'self\''],
+        styleSrc: ['\'self\'', '\'unsafe-inline\''],
+        scriptSrc: ['\'self\''],
+        imgSrc: ['\'self\'', 'data:', 'https:'],
+        connectSrc: ['\'self\''],
+        fontSrc: ['\'self\''],
+        objectSrc: ['\'none\''],
+        mediaSrc: ['\'self\''],
+        frameSrc: ['\'none\'']
+      }
     },
     crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    crossOriginResourcePolicy: { policy: 'cross-origin' }
   });
 };
 
@@ -158,7 +158,7 @@ const ipWhitelist = (req, res, next) => {
   if (whitelist.length > 0 && !whitelist.includes(clientIP)) {
     return res.status(403).json({
       error: '접근이 허용되지 않은 IP입니다.',
-      ip: clientIP,
+      ip: clientIP
     });
   }
 
@@ -174,7 +174,7 @@ const requestSizeLimit = (req, res, next) => {
 
   if (contentLength > maxSize) {
     return res.status(413).json({
-      error: '요청 크기가 너무 큽니다. 최대 10MB까지 허용됩니다.',
+      error: '요청 크기가 너무 큽니다. 최대 10MB까지 허용됩니다.'
     });
   }
 
@@ -186,5 +186,5 @@ module.exports = {
   configureHelmet,
   additionalSecurity,
   ipWhitelist,
-  requestSizeLimit,
+  requestSizeLimit
 };

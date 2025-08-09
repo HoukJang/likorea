@@ -69,7 +69,7 @@ export const formatDate = (date, locale = 'ko-KR') => {
     return dateObj.toLocaleDateString(locale, {
       year: 'numeric',
       month: '2-digit',
-      day: '2-digit',
+      day: '2-digit'
     });
   } catch (error) {
     return '날짜 오류';
@@ -127,7 +127,7 @@ export const processPostData = post => {
       viewCount: 0,
       postNumber: 0,
       commentCount: 0,
-      tags: {},
+      tags: {}
     };
   }
 
@@ -144,7 +144,7 @@ export const processPostData = post => {
     tags: post.tags || {},
     isApproved: post.isApproved !== undefined ? post.isApproved : true,
     botId: post.botId || null,
-    isBot: post.isBot || false,
+    isBot: post.isBot || false
   };
 };
 
@@ -160,7 +160,7 @@ export const processCommentData = comment => {
       content: '내용 없음',
       author: { id: '익명' },
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     };
   }
 
@@ -170,7 +170,7 @@ export const processCommentData = comment => {
     // author 정보를 객체로 유지하여 권한 정보도 포함
     author: comment.author || { id: '익명' },
     createdAt: comment.createdAt || new Date(),
-    updatedAt: comment.updatedAt || comment.createdAt || new Date(),
+    updatedAt: comment.updatedAt || comment.createdAt || new Date()
   };
 };
 

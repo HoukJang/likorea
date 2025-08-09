@@ -55,18 +55,18 @@ async function testGooglePlacesWithDishes() {
     try {
       // 메뉴 관련 검색 포함
       const result = await googlePlacesService.searchRestaurant(
-        test.name, 
+        test.name,
         test.address,
         test.dishQuery // 특정 메뉴 검색어 추가
       );
-      
+
       if (result) {
         console.log('\n📊 검색 결과:');
         console.log(`  이름: ${result.name}`);
         console.log(`  주소: ${result.address}`);
         console.log(`  음식 종류: ${result.cuisine || '미확인'}`);
         console.log(`  평점: ${result.rating} (${result.reviewCount}개 리뷰)`);
-        
+
         // 서비스 정보
         if (result.services) {
           console.log('\n  🍴 서비스 정보:');
@@ -76,7 +76,7 @@ async function testGooglePlacesWithDishes() {
           console.log(`    채식: ${result.services.servesVegetarianFood ? '가능' : '불가'}`);
           console.log(`    배달: ${result.services.delivery ? '가능' : '불가'}`);
         }
-        
+
         // 일반 사진
         if (result.photos && result.photos.length > 0) {
           console.log(`\n  📸 일반 사진: ${result.photos.length}장`);
@@ -84,20 +84,20 @@ async function testGooglePlacesWithDishes() {
             console.log(`    ${idx + 1}. ${photo.width}x${photo.height} - ${photo.url.substring(0, 50)}...`);
           });
         }
-        
+
         // contextual 사진 (메뉴 관련 가능성)
         if (result.contextualPhotos && result.contextualPhotos.length > 0) {
           console.log(`\n  🍽️ 메뉴 관련 사진: ${result.contextualPhotos.length}장`);
           console.log('    (검색어와 관련된 음식 사진일 가능성이 높음)');
         }
-        
+
         // 리뷰에서 메뉴 언급 찾기
         if (result.reviews && result.reviews.length > 0) {
           console.log('\n  📝 메뉴 관련 리뷰:');
-          const menuRelatedReviews = result.reviews.filter(review => 
+          const menuRelatedReviews = result.reviews.filter(review =>
             test.dishQuery && review.text.toLowerCase().includes(test.dishQuery.toLowerCase())
           );
-          
+
           if (menuRelatedReviews.length > 0) {
             menuRelatedReviews.slice(0, 2).forEach(review => {
               console.log(`    - "${review.text.substring(0, 100)}..." (${review.rating}★)`);
@@ -106,14 +106,14 @@ async function testGooglePlacesWithDishes() {
             console.log('    메뉴 관련 리뷰를 찾지 못했습니다.');
           }
         }
-        
+
       } else {
         console.log('  ❌ 검색 결과가 없습니다.');
       }
     } catch (error) {
       console.error(`  ❌ 오류 발생: ${error.message}`);
     }
-    
+
     console.log('\n' + '='.repeat(50));
   }
 
@@ -126,19 +126,19 @@ async function testGooglePlacesWithDishes() {
   console.log('  • contextualContent로 검색어 관련 사진 필터링');
   console.log('  • 리뷰에서 메뉴 언급 찾기');
   console.log('  • 서비스 정보 (아침/점심/저녁, 채식, 배달 등)');
-  
+
   console.log('\n❌ 제한사항:');
   console.log('  • 구조화된 메뉴 데이터 없음');
   console.log('  • 개별 메뉴 아이템별 사진 구분 불가');
   console.log('  • 메뉴 가격 정보 없음');
   console.log('  • 메뉴 설명이나 재료 정보 없음');
-  
+
   console.log('\n💡 추천 접근법:');
   console.log('  1. Google Places로 레스토랑 기본 정보 수집');
   console.log('  2. contextualContent로 메뉴 관련 사진 필터링');
   console.log('  3. 추가 메뉴 정보는 웹 스크래핑으로 보완');
   console.log('  4. Google My Business API (비즈니스 오너용) 활용');
-  
+
   console.log('\n✅ 테스트 완료!');
 }
 

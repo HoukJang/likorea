@@ -35,6 +35,8 @@
     "build": "NODE_OPTIONS=--max-old-space-size=4096 craco build",
     "postbuild": "node scripts/inline-critical-styles.js && node scripts/optimize-build.js",
     "test": "craco test",
+    "test:nowatch": "craco test --watchAll=false",
+    "test:coverage": "craco test --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "lint": "eslint src --ext .js,.jsx",
     "lint:fix": "eslint src --ext .js,.jsx --fix"
@@ -49,6 +51,12 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
     ]
   }
 }

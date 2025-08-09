@@ -30,14 +30,14 @@ class RestaurantScraperService {
   async collectRestaurantData(restaurantName, address) {
     const cacheKey = `${restaurantName}_${address}`.replace(/\s+/g, '_');
     const cached = restaurantCache.get(cacheKey);
-    
+
     if (cached) {
       console.log(`📦 캐시된 레스토랑 정보 사용: ${restaurantName}`);
       return cached;
     }
 
     console.log(`🍽️ 레스토랑 정보 수집 시작: ${restaurantName}`);
-    
+
     const data = {
       name: restaurantName,
       address: address,
@@ -102,7 +102,7 @@ class RestaurantScraperService {
 
     restaurantCache.set(cacheKey, data);
     console.log(`✅ 레스토랑 정보 수집 완료: ${restaurantName} (${data.cuisine || '종류 미확인'})`);
-    
+
     return data;
   }
 
@@ -111,9 +111,9 @@ class RestaurantScraperService {
    */
   detectCuisineFromName(restaurantName) {
     const nameLower = restaurantName.toLowerCase();
-    
+
     // 이탈리안
-    if (nameLower.includes('pizza') || nameLower.includes('italian') || 
+    if (nameLower.includes('pizza') || nameLower.includes('italian') ||
         nameLower.includes('pasta') || nameLower.includes('trattoria') ||
         nameLower.includes('ristorante') || nameLower.includes('olive')) {
       return 'Italian';
@@ -151,7 +151,7 @@ class RestaurantScraperService {
       return 'Indian';
     }
     // 해산물/시푸드
-    if (nameLower.includes('ocean') || nameLower.includes('seafood') || 
+    if (nameLower.includes('ocean') || nameLower.includes('seafood') ||
         nameLower.includes('fish') || nameLower.includes('lobster') ||
         nameLower.includes('crab') || nameLower.includes('oyster')) {
       return 'Seafood';
@@ -171,7 +171,7 @@ class RestaurantScraperService {
         nameLower.includes('steakhouse') || nameLower.includes('diner')) {
       return 'American';
     }
-    
+
     return null;
   }
 
@@ -181,10 +181,10 @@ class RestaurantScraperService {
   async scrapeGoogleMaps(restaurantName, address) {
     try {
       console.log(`🔍 Google Maps 검색: ${restaurantName}`);
-      
+
       // 음식 종류 추론
       const cuisine = this.detectCuisineFromName(restaurantName);
-      
+
       // 기본 데이터 구조 반환 (실제 스크레이핑 대신)
       const data = {
         rating: 4.3 + Math.random() * 0.5, // 4.3-4.8 사이 랜덤
@@ -199,7 +199,7 @@ class RestaurantScraperService {
         },
         cuisine: cuisine
       };
-      
+
       // 음식 종류에 따른 리뷰 생성
       if (cuisine === 'Italian' || cuisine === 'Seafood') {
         data.reviews = [
@@ -212,10 +212,10 @@ class RestaurantScraperService {
           { text: `Best ${cuisine} restaurant in the area`, rating: 4, author: 'Lisa K.' }
         ];
       }
-      
+
       console.log(`✅ Google Maps 데이터 생성 완료 (${cuisine || '미분류'})`);
       return data;
-      
+
     } catch (error) {
       console.error(`❌ Google Maps 처리 실패: ${error.message}`);
       return null;
@@ -228,10 +228,10 @@ class RestaurantScraperService {
   async scrapeYelp(restaurantName, address) {
     try {
       console.log(`🔍 Yelp 검색: ${restaurantName}`);
-      
+
       // 음식 종류 추론
       const cuisine = this.detectCuisineFromName(restaurantName);
-      
+
       const data = {
         rating: 4.0 + Math.random() * 0.5,
         reviewCount: Math.floor(50 + Math.random() * 200),
@@ -242,17 +242,17 @@ class RestaurantScraperService {
         categories: [],
         cuisine: cuisine
       };
-      
+
       // 음식 종류에 따른 카테고리 설정
       if (cuisine) {
         data.categories = [cuisine, 'Restaurant'];
         // 음식 종류별 메뉴 생성
         data.menu = this.getSuggestedMenuByCuisine(cuisine).slice(0, 3);
       }
-      
+
       console.log(`✅ Yelp 데이터 생성 완료 (${cuisine || '미분류'})`);
       return data;
-      
+
     } catch (error) {
       console.error(`❌ Yelp 처리 실패: ${error.message}`);
       return null;
@@ -265,26 +265,26 @@ class RestaurantScraperService {
   async scrapeGrubhub(restaurantName, address) {
     try {
       console.log(`🔍 Grubhub 메뉴 검색: ${restaurantName}`);
-      
+
       // 음식 종류 추론
       const cuisine = this.detectCuisineFromName(restaurantName);
-      
+
       const data = {
         menu: [],
         popularItems: [],
         cuisine: cuisine
       };
-      
+
       // 음식 종류별 추가 메뉴 생성
       if (cuisine) {
         const additionalMenu = this.getSuggestedMenuByCuisine(cuisine).slice(2, 5);
         data.menu = additionalMenu;
         data.popularItems = additionalMenu.map(item => item.name);
       }
-      
+
       console.log(`✅ Grubhub 데이터 생성 완료 (${data.menu.length}개 메뉴)`);
       return data;
-      
+
     } catch (error) {
       console.error(`❌ Grubhub 처리 실패: ${error.message}`);
       return null;
@@ -374,7 +374,7 @@ class RestaurantScraperService {
         { name: 'Crème Brûlée', price: '$8-12', description: 'Vanilla custard with caramelized sugar', popular: true }
       ]
     };
-    
+
     return menuSuggestions[cuisine] || [
       { name: 'Today\'s Special', price: 'Market Price', description: 'Ask your server for details' },
       { name: 'Chef\'s Recommendation', price: 'Varies', description: 'Seasonal selection' },
@@ -392,7 +392,7 @@ class RestaurantScraperService {
   async searchDishImage(restaurantName, dishName, location = '') {
     try {
       console.log(`📸 이미지 검색: ${restaurantName}의 ${dishName}`);
-      
+
       // 캐시 확인
       const cacheKey = `img_${restaurantName}_${dishName}`.replace(/\s+/g, '_');
       const cached = restaurantCache.get(cacheKey);
@@ -400,30 +400,30 @@ class RestaurantScraperService {
         console.log(`📦 캐시된 이미지 사용: ${dishName}`);
         return cached;
       }
-      
+
       // 환경 변수로 스크레이핑 활성화 여부 확인
       const enableScraping = process.env.ENABLE_IMAGE_SCRAPING === 'true';
-      
+
       if (enableScraping) {
-        console.log(`🔍 실제 이미지 스크레이핑 시도...`);
-        
+        console.log('🔍 실제 이미지 스크레이핑 시도...');
+
         try {
           // imageScraperService를 사용한 실제 스크레이핑
           const scrapedData = await imageScraperService.searchImages(
-            restaurantName, 
-            dishName, 
+            restaurantName,
+            dishName,
             location || 'Long Island NY'
           );
-          
+
           if (scrapedData.images && scrapedData.images.length > 0) {
             const result = {
               url: scrapedData.images[0], // 첫 번째 이미지 사용
               isReference: scrapedData.isReference
             };
-            
+
             // 캐시에 저장 (6시간)
             restaurantCache.set(cacheKey, result, 21600);
-            
+
             console.log(`✅ 스크레이핑 성공: ${dishName} - ${result.isReference ? '참고' : '실제'} 이미지`);
             return result;
           }
@@ -431,10 +431,10 @@ class RestaurantScraperService {
           console.error(`⚠️ 스크레이핑 실패, 폴백 이미지 사용: ${scrapeError.message}`);
         }
       }
-      
+
       // 스크레이핑 비활성화 또는 실패 시 기본 이미지 URL 생성
-      console.log(`📌 폴백: 참고 이미지 사용`);
-      
+      console.log('📌 폴백: 참고 이미지 사용');
+
       // 음식 종류별 대표 이미지 URL (Unsplash 등 무료 이미지)
       const dishImages = {
         // Italian
@@ -443,44 +443,44 @@ class RestaurantScraperService {
         'Chicken Parmigiana': 'https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=800',
         'Tiramisu': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800',
         'Caesar Salad': 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=800',
-        
+
         // Seafood
         'Grilled Salmon': 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800',
         'Lobster Roll': 'https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=800',
         'Fish & Chips': 'https://images.unsplash.com/photo-1534482421-64566f976cfa?w=800',
         'Clam Chowder': 'https://images.unsplash.com/photo-1548869206-93b036288d7e?w=800',
         'Shrimp Scampi': 'https://images.unsplash.com/photo-1625943553852-781c6dd46faa?w=800',
-        
+
         // Chinese
         'General Tso\'s Chicken': 'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=800',
         'Beef and Broccoli': 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800',
         'Shrimp Fried Rice': 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800',
         'Spring Rolls': 'https://images.unsplash.com/photo-1609501676725-7186f017a4b7?w=800',
         'Kung Pao Chicken': 'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=800',
-        
+
         // Japanese
         'Salmon Sushi Roll': 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800',
         'Chicken Teriyaki': 'https://images.unsplash.com/photo-1609183590563-7710381094db?w=800',
         'Tempura Udon': 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=800',
         'Miso Soup': 'https://images.unsplash.com/photo-1567479897131-4c3e7e56c132?w=800',
         'Gyoza': 'https://images.unsplash.com/photo-1529335241840-d59d2d1e284e?w=800',
-        
+
         // Default
         'Today\'s Special': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800',
         'Chef\'s Recommendation': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800',
         'House Specialty': 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800'
       };
-      
+
       const imageUrl = dishImages[dishName] || dishImages['Today\'s Special'];
-      
+
       const result = {
         url: imageUrl,
         isReference: true
       };
-      
+
       restaurantCache.set(cacheKey, result, 21600);
       return result;
-      
+
     } catch (error) {
       console.error(`❌ 이미지 검색 실패: ${error.message}`);
       return {
@@ -511,12 +511,12 @@ class RestaurantScraperService {
   formatForClaudeAnalysis(restaurantData) {
     let prompt = `다음은 "${restaurantData.name}" 레스토랑에 대한 정보입니다.\n\n`;
     prompt += `📍 주소: ${restaurantData.address}\n`;
-    
+
     // 음식 종류 정보
     if (restaurantData.cuisine) {
       prompt += `🍽️ 음식 종류: ${restaurantData.cuisine}\n\n`;
     }
-    
+
     // 평점 정보
     if (Object.keys(restaurantData.ratings).length > 0) {
       prompt += '⭐ 평점:\n';
@@ -525,7 +525,7 @@ class RestaurantScraperService {
       }
       prompt += '\n';
     }
-    
+
     // 리뷰 요약
     if (restaurantData.reviews.length > 0) {
       prompt += '📝 주요 리뷰:\n';
@@ -534,7 +534,7 @@ class RestaurantScraperService {
       });
       prompt += '\n';
     }
-    
+
     // 메뉴 정보
     if (restaurantData.menu.length > 0) {
       prompt += '🍽️ 메뉴:\n';
@@ -550,7 +550,7 @@ class RestaurantScraperService {
       });
       prompt += '\n';
     }
-    
+
     // 상세 정보
     if (Object.keys(restaurantData.details).length > 0) {
       prompt += '📋 상세 정보:\n';
@@ -558,14 +558,14 @@ class RestaurantScraperService {
         prompt += `- ${key}: ${value}\n`;
       }
     }
-    
+
     prompt += '\n위 정보를 바탕으로 이 레스토랑의 특징과 추천 메뉴 3가지를 선정해주세요.';
     prompt += '\n추천 메뉴는 리뷰에서 자주 언급되거나 인기 있는 메뉴를 우선으로 선택해주세요.';
-    
+
     if (restaurantData.cuisine) {
       prompt += `\n중요: 이 레스토랑은 ${restaurantData.cuisine} 레스토랑입니다. ${restaurantData.cuisine} 요리 중에서 추천해주세요.`;
     }
-    
+
     return prompt;
   }
 
@@ -582,14 +582,14 @@ class RestaurantScraperService {
       imageUrl: imageUrl
     };
   }
-  
+
   /**
    * 추천 메뉴 추출 (분석 결과에서)
    */
   extractRecommendedDishes(analysisText, cuisine = null) {
     // Claude의 분석에서 추천 메뉴 추출 - 더 유연한 패턴 매칭
     const dishes = [];
-    
+
     // 추천 메뉴 섹션 찾기
     const recommendPatterns = [
       /추천\s*메뉴[:\s]*([^.]+)/gi,
@@ -598,13 +598,13 @@ class RestaurantScraperService {
       /popular\s*item[s]*[:\s]*([^.]+)/gi,
       /\d+\.\s*([^\n]+)/g  // 번호 리스트 형식
     ];
-    
+
     // 메뉴 이름 추출 시도
     for (const pattern of recommendPatterns) {
       let match;
       while ((match = pattern.exec(analysisText)) !== null) {
         const menuText = match[1] || match[0];
-        
+
         // 메뉴 이름 정제 (가격, 설명 제거)
         const cleanedMenu = menuText
           .split(/[,\n]/)  // 쉼표나 줄바꿈으로 분리
@@ -620,11 +620,11 @@ class RestaurantScraperService {
             return cleaned;
           })
           .filter(item => item.length > 2 && item.length < 50); // 유효한 길이
-        
+
         dishes.push(...cleanedMenu);
       }
     }
-    
+
     // 특정 음식 종류별 키워드 검색
     if (dishes.length === 0) {
       const cuisineKeywords = {
@@ -639,7 +639,7 @@ class RestaurantScraperService {
         'Seafood': ['salmon', 'lobster', 'shrimp', 'crab', 'fish', 'oyster', 'clam', 'scallop', 'calamari'],
         'Mediterranean': ['hummus', 'falafel', 'shawarma', 'kebab', 'gyro', 'tzatziki', 'baklava', 'pita']
       };
-      
+
       // 음식 종류가 주어졌으면 해당 키워드 검색
       if (cuisine && cuisineKeywords[cuisine]) {
         for (const keyword of cuisineKeywords[cuisine]) {
@@ -656,21 +656,21 @@ class RestaurantScraperService {
         }
       }
     }
-    
+
     // 중복 제거
     const uniqueDishes = [...new Set(dishes)];
-    
+
     // 최대 3개까지만 반환
     if (uniqueDishes.length > 0) {
       return uniqueDishes.slice(0, 3);
     }
-    
+
     // 기본값 반환 (음식 종류에 따라)
     if (cuisine) {
       const fallbackMenus = this.getSuggestedMenuByCuisine(cuisine);
       return fallbackMenus.slice(0, 3).map(item => item.name);
     }
-    
+
     // 최후의 기본값
     return ['Today\'s Special', 'Chef\'s Recommendation', 'House Specialty'];
   }

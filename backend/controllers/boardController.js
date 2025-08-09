@@ -1,7 +1,7 @@
 const BoardPost = require('../models/BoardPost');
 const User = require('../models/User');
 const Tag = require('../models/Tag');
-const Comment = require('../models/Comment');
+const _Comment = require('../models/Comment');
 const sanitizeHtml = require('sanitize-html');
 const { SUB_CATEGORIES } = require('../utils/initTags');
 const { escapeRegex, safeParseInt } = require('../utils/security');
@@ -9,7 +9,7 @@ const {
   asyncHandler,
   ValidationError,
   NotFoundError,
-  AuthorizationError,
+  AuthorizationError
 } = require('../middleware/errorHandler');
 
 /**
@@ -202,7 +202,7 @@ exports.createPost = asyncHandler(async (req, res) => {
     content: sanitizedContent,
     tags,
     author: user._id,
-    modifiedAt: new Date(),
+    modifiedAt: new Date()
   });
 
   res.status(201).json({
@@ -215,8 +215,8 @@ exports.createPost = asyncHandler(async (req, res) => {
       tags: post.tags,
       author: post.author,
       createdAt: post.createdAt,
-      postNumber: post.postNumber,
-    },
+      postNumber: post.postNumber
+    }
   });
 });
 
@@ -259,7 +259,7 @@ exports.getPosts = asyncHandler(async (req, res) => {
     const escapedSearch = escapeRegex(search);
     filter.$or = [
       { title: { $regex: escapedSearch, $options: 'i' } },
-      { content: { $regex: escapedSearch, $options: 'i' } },
+      { content: { $regex: escapedSearch, $options: 'i' } }
     ];
   }
 
@@ -302,17 +302,17 @@ exports.getPosts = asyncHandler(async (req, res) => {
     },
     {
       $addFields: {
-        commentCount: { 
-          $ifNull: [{ $first: '$commentStats.count' }, 0] 
+        commentCount: {
+          $ifNull: [{ $first: '$commentStats.count' }, 0]
         }
       }
     },
     // 불필요한 필드 제거
-    { 
-      $project: { 
+    {
+      $project: {
         commentStats: 0,
         isNotice: 0
-      } 
+      }
     }
   ];
 
@@ -330,7 +330,7 @@ exports.getPosts = asyncHandler(async (req, res) => {
     totalPosts,
     totalPages,
     currentPage: pageNum,
-    filters: { type, region, subcategory, search },
+    filters: { type, region, subcategory, search }
   });
 });
 
@@ -350,7 +350,7 @@ exports.getPost = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    post,
+    post
   });
 });
 
@@ -421,7 +421,7 @@ exports.updatePost = asyncHandler(async (req, res) => {
         const regionTag = await Tag.findOne({
           category: 'region',
           value: tags.region,
-          isActive: true,
+          isActive: true
         });
         if (!regionTag) {
           throw new ValidationError('유효하지 않은 Region 태그입니다.');
@@ -456,7 +456,7 @@ exports.updatePost = asyncHandler(async (req, res) => {
   // findByIdAndUpdate 사용하여 업데이트
   const updatedPost = await BoardPost.findByIdAndUpdate(postId, updateData, {
     new: true,
-    runValidators: false,
+    runValidators: false
   }).populate('author', 'id email authority');
 
   if (!updatedPost) {
@@ -471,8 +471,8 @@ exports.updatePost = asyncHandler(async (req, res) => {
       title: updatedPost.title,
       content: updatedPost.content,
       tags: updatedPost.tags,
-      modifiedAt: updatedPost.modifiedAt,
-    },
+      modifiedAt: updatedPost.modifiedAt
+    }
   });
 });
 
@@ -502,18 +502,18 @@ exports.deletePost = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: '게시글 삭제 성공',
+    message: '게시글 삭제 성공'
   });
 });
 
 // 소주제 정보 조회
-exports.getSubCategories = asyncHandler(async (req, res) => {
+exports.getSubCategories = asyncHandler((req, res) => {
   const { type } = req.query;
 
   if (!type) {
     return res.json({
       success: true,
-      subCategories: SUB_CATEGORIES,
+      subCategories: SUB_CATEGORIES
     });
   }
 
@@ -521,6 +521,6 @@ exports.getSubCategories = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    subCategories: type ? { [type]: subCategories } : {},
+    subCategories: type ? { [type]: subCategories } : {}
   });
 });

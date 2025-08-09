@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import '../styles/Landing.css';
@@ -6,43 +6,43 @@ import '../styles/Landing.css';
 const Landing = () => {
   // Schema.org 구조화된 데이터
   const schemaData = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "롱아일랜드 한인 커뮤니티",
-    "alternateName": "Long Island Korea",
-    "url": "https://longislandkorea.com",
-    "description": "뉴욕 롱아일랜드 한인들을 위한 생활정보, 부동산, 구인구직, 맛집 정보 커뮤니티",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://longislandkorea.com/boards?search={search_term_string}",
-      "query-input": "required name=search_term_string"
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    'name': '롱아일랜드 한인 커뮤니티',
+    'alternateName': 'Long Island Korea',
+    'url': 'https://longislandkorea.com',
+    'description': '뉴욕 롱아일랜드 한인들을 위한 생활정보, 부동산, 구인구직, 맛집 정보 커뮤니티',
+    'potentialAction': {
+      '@type': 'SearchAction',
+      'target': 'https://longislandkorea.com/boards?search={search_term_string}',
+      'query-input': 'required name=search_term_string'
     },
-    "areaServed": {
-      "@type": "Place",
-      "name": "Long Island, New York",
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 40.7891,
-        "longitude": -73.1350
+    'areaServed': {
+      '@type': 'Place',
+      'name': 'Long Island, New York',
+      'geo': {
+        '@type': 'GeoCoordinates',
+        'latitude': 40.7891,
+        'longitude': -73.1350
       }
     }
   };
 
   const localBusinessSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "롱아일랜드 한인 커뮤니티",
-    "url": "https://longislandkorea.com",
-    "logo": "https://longislandkorea.com/logo192.png",
-    "sameAs": [
-      "https://www.facebook.com/longislandkorea",
-      "https://www.instagram.com/longislandkorea"
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    'name': '롱아일랜드 한인 커뮤니티',
+    'url': 'https://longislandkorea.com',
+    'logo': 'https://longislandkorea.com/logo192.png',
+    'sameAs': [
+      'https://www.facebook.com/longislandkorea',
+      'https://www.instagram.com/longislandkorea'
     ],
-    "address": {
-      "@type": "PostalAddress",
-      "addressRegion": "NY",
-      "addressCountry": "US",
-      "addressLocality": "Long Island"
+    'address': {
+      '@type': 'PostalAddress',
+      'addressRegion': 'NY',
+      'addressCountry': 'US',
+      'addressLocality': 'Long Island'
     }
   };
 
@@ -52,50 +52,50 @@ const Landing = () => {
   }, []);
 
   const popularExits = [
-    { exit: "Exit 38", name: "노던 블러바드", area: "Glen Cove, Roslyn" },
-    { exit: "Exit 41", name: "그레이트 넥", area: "Great Neck" },
-    { exit: "Exit 42", name: "노던 스테이트 파크웨이", area: "Manhasset, Port Washington" },
-    { exit: "Exit 49", name: "서비스 로드", area: "Melville, Huntington" },
-    { exit: "Exit 53", name: "사가모어 파크웨이", area: "Hauppauge" },
-    { exit: "Exit 57", name: "베테랑스 하이웨이", area: "Smithtown, Commack" }
+    { exit: 'Exit 38', name: '노던 블러바드', area: 'Glen Cove, Roslyn' },
+    { exit: 'Exit 41', name: '그레이트 넥', area: 'Great Neck' },
+    { exit: 'Exit 42', name: '노던 스테이트 파크웨이', area: 'Manhasset, Port Washington' },
+    { exit: 'Exit 49', name: '서비스 로드', area: 'Melville, Huntington' },
+    { exit: 'Exit 53', name: '사가모어 파크웨이', area: 'Hauppauge' },
+    { exit: 'Exit 57', name: '베테랑스 하이웨이', area: 'Smithtown, Commack' }
   ];
 
   const services = [
     {
-      icon: "🏠",
-      title: "부동산 정보",
-      description: "롱아일랜드 지역별 부동산 매매, 렌트 정보를 공유합니다",
-      link: "/boards?tag=부동산"
+      icon: '🏠',
+      title: '부동산 정보',
+      description: '롱아일랜드 지역별 부동산 매매, 렌트 정보를 공유합니다',
+      link: '/boards?tag=부동산'
     },
     {
-      icon: "🍽️",
-      title: "맛집 정보",
-      description: "한인 운영 레스토랑과 현지 맛집 정보를 나눕니다",
-      link: "/boards?tag=맛집"
+      icon: '🍽️',
+      title: '맛집 정보',
+      description: '한인 운영 레스토랑과 현지 맛집 정보를 나눕니다',
+      link: '/boards?tag=맛집'
     },
     {
-      icon: "💼",
-      title: "구인구직",
-      description: "롱아일랜드 지역 일자리 정보와 구인 공고를 확인하세요",
-      link: "/boards?tag=구인구직"
+      icon: '💼',
+      title: '구인구직',
+      description: '롱아일랜드 지역 일자리 정보와 구인 공고를 확인하세요',
+      link: '/boards?tag=구인구직'
     },
     {
-      icon: "🛒",
-      title: "사고팔고",
-      description: "중고물품 거래와 개인 거래 정보를 공유합니다",
-      link: "/boards?tag=사고팔고"
+      icon: '🛒',
+      title: '사고팔고',
+      description: '중고물품 거래와 개인 거래 정보를 공유합니다',
+      link: '/boards?tag=사고팔고'
     },
     {
-      icon: "👥",
-      title: "모임/이벤트",
-      description: "지역 한인 모임과 이벤트 소식을 전해드립니다",
-      link: "/boards?tag=모임"
+      icon: '👥',
+      title: '모임/이벤트',
+      description: '지역 한인 모임과 이벤트 소식을 전해드립니다',
+      link: '/boards?tag=모임'
     },
     {
-      icon: "📢",
-      title: "생활정보",
-      description: "병원, 학교, 생활 편의시설 등 유용한 정보를 공유합니다",
-      link: "/boards?tag=생활정보"
+      icon: '📢',
+      title: '생활정보',
+      description: '병원, 학교, 생활 편의시설 등 유용한 정보를 공유합니다',
+      link: '/boards?tag=생활정보'
     }
   ];
 
@@ -105,7 +105,7 @@ const Landing = () => {
         <title>롱아일랜드 한인 커뮤니티 | 뉴욕 롱아일랜드 한국인 생활정보</title>
         <meta name="description" content="뉴욕 롱아일랜드 한인들을 위한 생활정보 커뮤니티. 부동산, 구인구직, 맛집, 사고팔고, 모임 정보를 공유하고 한인들과 소통하세요. Great Neck, Manhasset, Melville 등 지역별 정보 제공." />
         <meta name="keywords" content="롱아일랜드 한인, Long Island Korean, 뉴욕 한인 커뮤니티, 롱아일랜드 부동산, 롱아일랜드 맛집, Great Neck 한인, Manhasset 한인, 뉴욕 한국 식당, 롱아일랜드 구인구직" />
-        
+
         {/* Open Graph Meta Tags */}
         <meta property="og:title" content="롱아일랜드 한인 커뮤니티 | Long Island Korea" />
         <meta property="og:description" content="뉴욕 롱아일랜드 한인들을 위한 생활정보 커뮤니티. 부동산, 구인구직, 맛집 정보를 공유하세요." />
@@ -114,20 +114,20 @@ const Landing = () => {
         <meta property="og:image" content="https://longislandkorea.com/og-image.jpg" />
         <meta property="og:locale" content="ko_KR" />
         <meta property="og:site_name" content="Long Island Korea" />
-        
+
         {/* Twitter Card Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="롱아일랜드 한인 커뮤니티" />
         <meta name="twitter:description" content="뉴욕 롱아일랜드 한인들을 위한 생활정보 커뮤니티" />
         <meta name="twitter:image" content="https://longislandkorea.com/og-image.jpg" />
-        
+
         {/* Canonical URL */}
         <link rel="canonical" href="https://longislandkorea.com" />
-        
+
         {/* Language Alternates */}
         <link rel="alternate" hrefLang="ko" href="https://longislandkorea.com" />
         <link rel="alternate" hrefLang="en" href="https://longislandkorea.com/en" />
-        
+
         {/* Structured Data */}
         <script type="application/ld+json">
           {JSON.stringify(schemaData)}
@@ -149,7 +149,7 @@ const Landing = () => {
               뉴욕 롱아일랜드에 거주하는 한인들을 위한 생활정보 공유 플랫폼
             </p>
             <div className="hero-actions">
-              <Link to="/boards" className="btn btn-primary">
+              <Link to="/" className="btn btn-primary">
                 커뮤니티 시작하기
               </Link>
               <Link to="/signup" className="btn btn-secondary">
@@ -248,18 +248,18 @@ const Landing = () => {
             <h2>뉴욕 롱아일랜드 한인 생활 가이드</h2>
             <div className="seo-text">
               <p>
-                롱아일랜드(Long Island)는 뉴욕주에서 한인들이 많이 거주하는 지역 중 하나입니다. 
-                특히 Great Neck, Manhasset, Port Washington, Syosset 등의 지역은 
+                롱아일랜드(Long Island)는 뉴욕주에서 한인들이 많이 거주하는 지역 중 하나입니다.
+                특히 Great Neck, Manhasset, Port Washington, Syosset 등의 지역은
                 우수한 학군과 안전한 주거환경으로 많은 한인 가족들이 선호하는 지역입니다.
               </p>
               <p>
-                저희 롱아일랜드 한인 커뮤니티는 이러한 지역에 거주하는 한인들을 위해 
-                부동산 정보, 학교 정보, 병원 및 의료 서비스, 한국 식품점, 한인 운영 비즈니스 등 
+                저희 롱아일랜드 한인 커뮤니티는 이러한 지역에 거주하는 한인들을 위해
+                부동산 정보, 학교 정보, 병원 및 의료 서비스, 한국 식품점, 한인 운영 비즈니스 등
                 실생활에 필요한 모든 정보를 제공하고 있습니다.
               </p>
               <p>
-                롱아일랜드 한인 커뮤니티를 통해 새로 이주하신 분들은 정착에 필요한 정보를 얻고, 
-                기존 거주자들은 일상생활에 유용한 정보를 공유하며, 
+                롱아일랜드 한인 커뮤니티를 통해 새로 이주하신 분들은 정착에 필요한 정보를 얻고,
+                기존 거주자들은 일상생활에 유용한 정보를 공유하며,
                 함께 더 나은 한인 커뮤니티를 만들어가고 있습니다.
               </p>
             </div>

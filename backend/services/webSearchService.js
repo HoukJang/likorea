@@ -138,7 +138,7 @@ class WebSearchService {
 
       $('.result').each((i, elem) => {
         if (i >= (options.num || 10)) return false;
-        
+
         const title = $(elem).find('.result__title').text().trim();
         const link = $(elem).find('.result__url').attr('href');
         const snippet = $(elem).find('.result__snippet').text().trim();
@@ -165,7 +165,7 @@ class WebSearchService {
    */
   async search(query, options = {}) {
     console.log(`🔍 웹 검색 시작: "${query}"`);
-    
+
     // 우선순위에 따라 시도
     let results = [];
 
@@ -206,7 +206,7 @@ class WebSearchService {
     ];
 
     const allResults = [];
-    
+
     for (const query of queries) {
       const results = await this.search(query, {
         ...options,
@@ -218,7 +218,7 @@ class WebSearchService {
     // 중복 제거
     const uniqueResults = [];
     const seenUrls = new Set();
-    
+
     for (const result of allResults) {
       if (!seenUrls.has(result.link)) {
         seenUrls.add(result.link);

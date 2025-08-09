@@ -1,14 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import Button from './common/Button';
 import Input from './common/Input';
 import '../styles/Login.css';
-
-// 권한 레벨에 따른 텍스트 반환 함수
-const getAuthorityText = authority => {
-  return parseInt(authority) === 5 ? '관리자' : '일반 사용자';
-};
 
 function Login() {
   const navigate = useNavigate();
@@ -30,7 +25,7 @@ function Login() {
 
     try {
       await login({ id, password });
-      
+
       // 즉시 홈페이지로 리디렉션 (상태 동기화가 이제 즉시 이루어짐)
       navigate('/');
     } catch (error) {
@@ -59,42 +54,42 @@ function Login() {
   };
 
   return (
-    <div className='login-container'>
-      <form className='login-box' onSubmit={handleSubmit}>
+    <div className="login-container">
+      <form className="login-box" onSubmit={handleSubmit}>
         <h2>로그인</h2>
-        <div className='form-group'>
+        <div className="form-group">
           <Input
-            type='text'
-            id='id'
-            name='id'
+            type="text"
+            id="id"
+            name="id"
             value={id}
             onChange={e => setId(e.target.value)}
             required
             disabled={loading}
-            placeholder='아이디 입력'
-            label='아이디'
+            placeholder="아이디 입력"
+            label="아이디"
           />
         </div>
-        <div className='form-group'>
+        <div className="form-group">
           <Input
-            type='password'
-            id='password'
-            name='password'
+            type="password"
+            id="password"
+            name="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
             disabled={loading}
-            placeholder='비밀번호 입력'
-            label='비밀번호'
+            placeholder="비밀번호 입력"
+            label="비밀번호"
           />
         </div>
         <Button
-          type='submit'
-          variant='primary'
-          size='large'
+          type="submit"
+          variant="primary"
+          size="large"
           loading={loading}
           disabled={loading}
-          className='login-button'
+          className="login-button"
         >
           로그인
         </Button>
@@ -103,8 +98,8 @@ function Login() {
             {message || error}
           </div>
         )}
-        <div className='signup-link'>
-          계정이 없으신가요? <Link to='/signup'>회원가입</Link>
+        <div className="signup-link">
+          계정이 없으신가요? <Link to="/signup">회원가입</Link>
         </div>
       </form>
     </div>

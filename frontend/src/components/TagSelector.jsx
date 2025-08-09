@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getAllTags, getSubCategoriesByParent } from '../api/tags';
 import '../styles/TagSelector.css';
 
@@ -41,7 +41,7 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
           if (response && response.subCategories) {
             setSubCategories(prev => ({
               ...prev,
-              [selectedTags.type]: response.subCategories,
+              [selectedTags.type]: response.subCategories
             }));
           }
         } catch (err) {
@@ -56,7 +56,7 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
   const handleTagChange = (category, value) => {
     const newTags = {
       ...selectedTags,
-      [category]: value,
+      [category]: value
     };
 
     // 글종류가 변경되면 소주제 초기화
@@ -68,28 +68,28 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
   };
 
   if (loading) {
-    return <div className='tag-selector-loading'>태그를 불러오는 중...</div>;
+    return <div className="tag-selector-loading">태그를 불러오는 중...</div>;
   }
 
   if (error) {
-    return <div className='tag-selector-error'>오류: {error}</div>;
+    return <div className="tag-selector-error">오류: {error}</div>;
   }
 
   return (
-    <div className='tag-selector'>
-      <div className='tag-group'>
-        <label htmlFor='tag-type-select' className='tag-label'>
-          글종류 {required && <span className='required'>*</span>}
+    <div className="tag-selector">
+      <div className="tag-group">
+        <label htmlFor="tag-type-select" className="tag-label">
+          글종류 {required && <span className="required">*</span>}
         </label>
         <select
-          id='tag-type-select'
-          className='tag-select'
+          id="tag-type-select"
+          className="tag-select"
           value={selectedTags.type || ''}
           onChange={e => handleTagChange('type', e.target.value)}
           required={required}
-          aria-label='글종류 선택'
+          aria-label="글종류 선택"
         >
-          <option value=''>글종류 선택</option>
+          <option value="">글종류 선택</option>
           {tags.type &&
             tags.type.map(tag => {
               // 공지 태그는 권한 4 이상만 선택 가능
@@ -108,16 +108,16 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
       {selectedTags.type &&
         subCategories[selectedTags.type] &&
         subCategories[selectedTags.type].length > 0 && (
-          <div className='tag-group'>
-            <label htmlFor='tag-subcategory-select' className='tag-label'>소주제</label>
+          <div className="tag-group">
+            <label htmlFor="tag-subcategory-select" className="tag-label">소주제</label>
             <select
-              id='tag-subcategory-select'
-              className='tag-select'
+              id="tag-subcategory-select"
+              className="tag-select"
               value={selectedTags.subcategory || ''}
               onChange={e => handleTagChange('subcategory', e.target.value)}
-              aria-label='소주제 선택'
+              aria-label="소주제 선택"
             >
-              <option value=''>소주제 선택 (선택사항)</option>
+              <option value="">소주제 선택 (선택사항)</option>
               {subCategories[selectedTags.type].map(subcategory => (
                 <option key={subcategory.value} value={subcategory.value}>
                   {subcategory.displayName}
@@ -127,14 +127,14 @@ const TagSelector = ({ selectedTags, onTagChange, required = true }) => {
           </div>
         )}
 
-      <div className='tag-group'>
-        <label htmlFor='tag-region-select' className='tag-label'>지역</label>
+      <div className="tag-group">
+        <label htmlFor="tag-region-select" className="tag-label">지역</label>
         <select
-          id='tag-region-select'
-          className='tag-select'
+          id="tag-region-select"
+          className="tag-select"
           value={selectedTags.region || '0'}
           onChange={e => handleTagChange('region', e.target.value)}
-          aria-label='지역 선택'
+          aria-label="지역 선택"
         >
           {tags.region &&
             tags.region.map(tag => (

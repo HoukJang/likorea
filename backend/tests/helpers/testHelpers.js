@@ -26,7 +26,7 @@ const createTestUser = async (userData = {}) => {
   };
 
   const user = { ...defaultUser, ...userData };
-  
+
   // User 모델의 pre('save') 미들웨어가 패스워드를 자동으로 해싱하므로
   // 여기서는 해싱하지 않음
 
@@ -46,7 +46,7 @@ const createTestAdmin = async (userData = {}) => {
     authority: 5, // 관리자 권한
     ...userData
   };
-  
+
   return await createTestUser(adminData);
 };
 
@@ -165,13 +165,13 @@ const loginTestUser = async (app, credentials) => {
   const response = await request(app)
     .post('/api/users/login')
     .send(credentials);
-  
+
   // 쿠키 헤더에서 authToken 추출
   const cookies = response.headers['set-cookie'];
   if (!cookies || cookies.length === 0) {
     throw new Error('로그인 응답에 쿠키가 없습니다');
   }
-  
+
   // 첫 번째 쿠키를 반환 (authToken이어야 함)
   return cookies[0];
 };

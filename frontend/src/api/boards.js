@@ -20,7 +20,7 @@ export const getBoards = async (options = {}) => {
   const { page = 1, limit = 10, type, region, subcategory, search } = options;
   const params = new URLSearchParams({
     page: page.toString(),
-    limit: limit.toString(),
+    limit: limit.toString()
   });
 
   if (type) params.append('type', type);
@@ -45,7 +45,7 @@ export const createBoard = async boardData => {
   return apiClient.post('/api/boards', {
     title: boardData.title,
     content: boardData.content,
-    tags: boardData.tags,
+    tags: boardData.tags
   });
 };
 
@@ -62,7 +62,7 @@ export const updateBoard = async (postId, boardData) => {
   return apiClient.put(`/api/boards/${postId}`, {
     title: boardData.title,
     content: boardData.content,
-    tags: boardData.tags,
+    tags: boardData.tags
   });
 };
 
@@ -94,13 +94,13 @@ export const getBoardPost = async postId => {
  */
 export const addComment = async (postId, commentData) => {
   const payload = {
-    content: commentData.content,
+    content: commentData.content
   };
-  
+
   if (commentData.parentComment) {
     payload.parentComment = commentData.parentComment;
   }
-  
+
   return apiClient.post(`/api/boards/${postId}/comments`, payload);
 };
 
@@ -116,7 +116,7 @@ export const addComment = async (postId, commentData) => {
 export const updateComment = async (postId, commentId, commentData) => {
   return apiClient.put(`/api/boards/${postId}/comments/${commentId}`, {
     content: commentData.content,
-    id: commentData.id,
+    id: commentData.id
   });
 };
 

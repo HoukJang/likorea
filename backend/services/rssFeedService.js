@@ -93,11 +93,11 @@ class RSSFeedService {
         directAccess: false
       }
     ];
-    
+
     // 현재 활성화된 피드 소스
     this.feedSources = [...this.defaultFeedSources];
   }
-  
+
   /**
    * 지역 기반 동적 피드 소스 생성
    * @param {string|Array} locations - 검색할 지역명 또는 지역명 배열 (예: "Great Neck", ["Great Neck", "Manhasset", "Flushing"])
@@ -105,22 +105,22 @@ class RSSFeedService {
   setLocationFeeds(locations) {
     // 기본 피드 복사
     this.feedSources = [...this.defaultFeedSources];
-    
+
     // locations를 배열로 변환
     const locationArray = Array.isArray(locations) ? locations : [locations];
-    
+
     // 비어있거나 유효하지 않은 경우 기본 피드만 사용
     const validLocations = locationArray.filter(loc => loc && loc.trim());
     if (validLocations.length === 0) {
       return;
     }
-    
+
     // 각 지역에 대한 피드 추가
     const locationFeeds = [];
-    
+
     for (const location of validLocations) {
       const cleanLocation = location.trim();
-      
+
       // 영어 뉴스
       locationFeeds.push({
         name: `Google News - ${cleanLocation}`,
@@ -128,7 +128,7 @@ class RSSFeedService {
         language: 'en',
         priority: 1
       });
-      
+
       // 한국어 뉴스 (지역 + 한인)
       locationFeeds.push({
         name: `Google News - ${cleanLocation} 한인`,
@@ -136,7 +136,7 @@ class RSSFeedService {
         language: 'ko',
         priority: 1
       });
-      
+
       // 비즈니스 뉴스
       locationFeeds.push({
         name: `Google News - ${cleanLocation} Business`,
@@ -144,7 +144,7 @@ class RSSFeedService {
         language: 'en',
         priority: 2
       });
-      
+
       // 학교/교육 뉴스
       locationFeeds.push({
         name: `Google News - ${cleanLocation} School`,
@@ -153,10 +153,10 @@ class RSSFeedService {
         priority: 2
       });
     }
-    
+
     // 피드 소스 앞부분에 추가 (우선순위 높음)
     this.feedSources = [...locationFeeds, ...this.defaultFeedSources];
-    
+
     console.log(`📍 지역 설정: ${validLocations.join(', ')} (${locationFeeds.length}개 피드 추가)`);
   }
 
@@ -166,7 +166,7 @@ class RSSFeedService {
   async parseFeed(feedSource) {
     const cacheKey = `rss_${feedSource.name}`;
     const cached = cache.get(cacheKey);
-    
+
     if (cached) {
       console.log(`📦 캐시에서 로드: ${feedSource.name}`);
       return cached;
@@ -175,7 +175,7 @@ class RSSFeedService {
     try {
       console.log(`🔄 RSS 피드 가져오기: ${feedSource.name}`);
       const feed = await parser.parseURL(feedSource.url);
-      
+
       const articles = feed.items.map(item => ({
         title: item.title,
         link: item.link,
@@ -186,7 +186,7 @@ class RSSFeedService {
         priority: feedSource.priority,
         guid: item.guid || item.link
       }));
-      
+
       cache.set(cacheKey, articles);
       return articles;
     } catch (error) {
@@ -204,13 +204,13 @@ class RSSFeedService {
     if (location) {
       this.setLocationFeeds(location);
     }
-    
+
     const allArticles = [];
-    
+
     // 병렬로 모든 피드 파싱
     const promises = this.feedSources.map(source => this.parseFeed(source));
     const results = await Promise.allSettled(promises);
-    
+
     results.forEach((result, index) => {
       if (result.status === 'fulfilled' && result.value) {
         allArticles.push(...result.value);
@@ -218,13 +218,13 @@ class RSSFeedService {
         console.warn(`⚠️ 피드 수집 실패: ${this.feedSources[index].name}`);
       }
     });
-    
+
     // 중복 제거 (같은 제목 또는 같은 링크)
     const uniqueArticles = this.removeDuplicates(allArticles);
-    
+
     // 날짜순 정렬 (최신순)
     uniqueArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-    
+
     return uniqueArticles;
   }
 
@@ -237,7 +237,7 @@ class RSSFeedService {
     const allNews = await this.fetchAllNews(location);
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
-    
+
     return allNews.filter(article => {
       const articleDate = new Date(article.pubDate);
       return articleDate >= cutoffDate;
@@ -249,7 +249,7 @@ class RSSFeedService {
    */
   filterNewsByKeywords(articles, keywords) {
     if (!keywords || keywords.length === 0) return articles;
-    
+
     return articles.filter(article => {
       const text = `${article.title} ${article.description}`.toLowerCase();
       return keywords.some(keyword => text.includes(keyword.toLowerCase()));
@@ -265,11 +265,11 @@ class RSSFeedService {
       // 제목과 링크를 기준으로 중복 체크
       const key = `${article.title.toLowerCase().trim()}`;
       const linkKey = article.link;
-      
+
       if (seen.has(key) || seen.has(linkKey)) {
         return false;
       }
-      
+
       seen.add(key);
       seen.add(linkKey);
       return true;
@@ -281,14 +281,14 @@ class RSSFeedService {
    */
   formatForClaude(articles, maxArticles = 10) {
     const limitedArticles = articles.slice(0, maxArticles);
-    
+
     return limitedArticles.map((article, index) => {
       const date = new Date(article.pubDate).toLocaleDateString('ko-KR', {
         timeZone: 'America/New_York',
         month: 'long',
         day: 'numeric'
       });
-      
+
       return `[뉴스 ${index + 1}]
 제목: ${article.title}
 날짜: ${date}

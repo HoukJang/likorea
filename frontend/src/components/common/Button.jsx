@@ -1,4 +1,3 @@
-import React from 'react';
 import './Button.css';
 
 /**
@@ -51,11 +50,11 @@ const Button = ({
       {...props}
     >
       {loading && (
-        <span className='common-button__spinner'>
-          <div className='spinner'></div>
+        <span className="common-button__spinner">
+          <div className="spinner"></div>
         </span>
       )}
-      <span className='common-button__content'>{children}</span>
+      <span className="common-button__content">{children}</span>
     </button>
   );
 };

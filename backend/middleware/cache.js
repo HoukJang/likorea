@@ -34,7 +34,7 @@ const generateCacheKey = (req) => {
     params: params || {},
     userId: req.user?.id || 'anonymous'
   };
-  
+
   // 일관된 키 생성을 위해 정렬된 JSON 사용
   const sortedKeyData = JSON.stringify(keyData, Object.keys(keyData).sort());
   return crypto.createHash('md5').update(sortedKeyData).digest('hex');
@@ -44,19 +44,19 @@ const generateCacheKey = (req) => {
 const cacheableEndpoints = {
   // 게시글 목록 (TTL: 5분)
   'GET:/api/boards': { ttl: 300, varyByUser: false },
-  
+
   // 개별 게시글 (TTL: 10분)
   'GET:/api/boards/:postId': { ttl: 600, varyByUser: false },
-  
+
   // 태그 목록 (TTL: 1시간)
   'GET:/api/tags': { ttl: 3600, varyByUser: false },
-  
+
   // 소주제 목록 (TTL: 1시간)
   'GET:/api/boards/subcategories': { ttl: 3600, varyByUser: false },
-  
+
   // 사용자 목록 (TTL: 5분, 권한별 캐싱)
   'GET:/api/users': { ttl: 300, varyByUser: true },
-  
+
   // 트래픽 통계 (TTL: 2분)
   'GET:/api/traffic/stats': { ttl: 120, varyByUser: false }
 };
@@ -68,45 +68,45 @@ const cache = (customTTL) => {
     if (req.method !== 'GET') {
       return next();
     }
-    
+
     // 캐시 가능한 엔드포인트인지 확인
     const endpoint = `${req.method}:${req.route?.path || req.path}`;
     const cacheConfig = cacheableEndpoints[endpoint] || (customTTL ? { ttl: customTTL, varyByUser: false } : null);
-    
+
     if (!cacheConfig) {
       return next();
     }
-    
+
     // 캐시 키 생성
     const cacheKey = generateCacheKey(req);
-    
+
     try {
       // 캐시 조회
       const cachedResponse = apiCache.get(cacheKey);
-      
+
       if (cachedResponse) {
         cacheStats.hits++;
-        
+
         // 캐시 히트 헤더 추가
         res.set({
           'X-Cache': 'HIT',
           'X-Cache-Key': cacheKey.substring(0, 8), // 디버깅용
           'X-Cache-TTL': apiCache.getTtl(cacheKey) - Date.now()
         });
-        
+
         if (process.env.NODE_ENV === 'development') {
           logger.debug(`캐시 히트: ${endpoint}`, { cacheKey: cacheKey.substring(0, 8) });
         }
-        
+
         return res.json(cachedResponse);
       }
-      
+
       // 캐시 미스
       cacheStats.misses++;
-      
+
       // 원본 res.json 저장
       const originalJson = res.json.bind(res);
-      
+
       // res.json 오버라이드하여 응답 캐싱
       res.json = (data) => {
         // 성공 응답만 캐싱 (2xx 상태 코드)
@@ -114,28 +114,28 @@ const cache = (customTTL) => {
           try {
             apiCache.set(cacheKey, data, cacheConfig.ttl);
             cacheStats.sets++;
-            
+
             // 캐시 설정 헤더 추가
             res.set({
               'X-Cache': 'MISS',
               'X-Cache-Key': cacheKey.substring(0, 8),
               'X-Cache-TTL': cacheConfig.ttl
             });
-            
+
             if (process.env.NODE_ENV === 'development') {
-              logger.debug(`캐시 저장: ${endpoint}`, { 
+              logger.debug(`캐시 저장: ${endpoint}`, {
                 cacheKey: cacheKey.substring(0, 8),
-                ttl: cacheConfig.ttl 
+                ttl: cacheConfig.ttl
               });
             }
           } catch (cacheError) {
             logger.error('캐시 저장 실패:', cacheError);
           }
         }
-        
+
         return originalJson(data);
       };
-      
+
       next();
     } catch (error) {
       logger.error('캐시 미들웨어 오류:', error);
@@ -149,17 +149,17 @@ const invalidateCache = (pattern) => {
   try {
     const keys = apiCache.keys();
     let deletedCount = 0;
-    
+
     keys.forEach(key => {
       if (!pattern || key.includes(pattern)) {
         apiCache.del(key);
         deletedCount++;
       }
     });
-    
+
     cacheStats.deletes += deletedCount;
     logger.info(`캐시 무효화: ${deletedCount}개 항목 삭제`, { pattern });
-    
+
     return deletedCount;
   } catch (error) {
     logger.error('캐시 무효화 실패:', error);
@@ -171,7 +171,7 @@ const invalidateCache = (pattern) => {
 const invalidateEndpoint = (endpoint) => {
   const keys = apiCache.keys();
   let deletedCount = 0;
-  
+
   keys.forEach(key => {
     const cachedData = apiCache.get(key);
     if (cachedData && cachedData._endpoint === endpoint) {
@@ -179,7 +179,7 @@ const invalidateEndpoint = (endpoint) => {
       deletedCount++;
     }
   });
-  
+
   return deletedCount;
 };
 
@@ -187,7 +187,7 @@ const invalidateEndpoint = (endpoint) => {
 const getCacheStats = () => {
   const keys = apiCache.keys();
   const memoryUsage = process.memoryUsage();
-  
+
   return {
     ...cacheStats,
     hitRate: cacheStats.hits / (cacheStats.hits + cacheStats.misses) || 0,
@@ -215,12 +215,12 @@ const clearCache = () => {
 // 게시글 관련 캐시 무효화 미들웨어
 const invalidatePostCache = (req, res, next) => {
   const originalJson = res.json.bind(res);
-  
+
   res.json = (data) => {
     // 게시글 생성/수정/삭제 성공 시 관련 캐시 무효화
     if (res.statusCode >= 200 && res.statusCode < 300) {
       const { method, path } = req;
-      
+
       if (method === 'POST' || method === 'PUT' || method === 'DELETE') {
         if (path.includes('/boards')) {
           // 게시글 목록 캐시 무효화
@@ -229,10 +229,10 @@ const invalidatePostCache = (req, res, next) => {
         }
       }
     }
-    
+
     return originalJson(data);
   };
-  
+
   next();
 };
 

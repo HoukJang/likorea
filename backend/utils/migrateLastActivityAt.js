@@ -5,7 +5,7 @@ require('dotenv').config();
 
 /**
  * 기존 게시글에 lastActivityAt 필드를 추가하는 마이그레이션 스크립트
- * 
+ *
  * 로직:
  * 1. lastActivityAt이 없는 게시글을 찾음
  * 2. 각 게시글의 최신 댓글 시간을 확인
@@ -35,14 +35,14 @@ async function migrateLastActivityAt() {
       try {
         // 해당 게시글의 모든 댓글 찾기
         const comments = await Comment.find({ post: post._id }).sort({ createdAt: -1 }).limit(1);
-        
+
         let lastActivity;
-        
+
         if (comments.length > 0) {
           // 댓글이 있는 경우: 최신 댓글 시간과 게시글 수정 시간 중 더 최근 시간 사용
           const latestCommentTime = comments[0].createdAt;
           const postModifiedTime = post.modifiedAt || post.createdAt;
-          
+
           lastActivity = latestCommentTime > postModifiedTime ? latestCommentTime : postModifiedTime;
         } else {
           // 댓글이 없는 경우: 게시글 수정 시간 또는 생성 시간 사용
