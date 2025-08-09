@@ -27,13 +27,53 @@
     <!-- Preload critical resources -->
     <link rel="preload" as="font" href="https://fonts.gstatic.com/s/pretendard/v9/Pretendard-Regular.woff2" type="font/woff2" crossorigin>
     <link rel="preload" as="font" href="https://fonts.gstatic.com/s/pretendard/v9/Pretendard-Medium.woff2" type="font/woff2" crossorigin>
-    <link rel="preload" as="image" href="%PUBLIC_URL%/images/banner-mobile.webp" media="(max-width: 480px)" type="image/webp" fetchpriority="high">
-    <link rel="preload" as="image" href="%PUBLIC_URL%/images/banner-desktop.webp" media="(min-width: 481px)" type="image/webp" fetchpriority="high">
+    <link rel="preload" as="image" href="%PUBLIC_URL%/images/banner-mobile.webp" media="(max-width: 768px)" type="image/webp" fetchpriority="high">
+    <link rel="preload" as="image" href="%PUBLIC_URL%/images/banner-desktop.webp" media="(min-width: 769px)" type="image/webp" fetchpriority="high">
     
-    <!-- Font loading with swap -->
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Async font loading with swap -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap"></noscript>
     
     <title>Long Island Korea</title>
+    
+    <!-- Critical CSS for immediate rendering -->
+    <style>
+      /* Critical inline styles for above-the-fold content */
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      .App {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .banner-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: #f5f5f5;
+      }
+      
+      .banner-image {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      
+      /* Preload fallback font while Pretendard loads */
+      body:not(.fonts-loaded) {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+    </style>
     <!-- Google Tag Manager (Optimized Loading) -->
     <script>
     // Delay GTM loading until after page interaction or 2 seconds
@@ -58,6 +98,12 @@
     <!-- End Google Tag Manager -->
   </head>
   <body>
+    <script>
+      // Mark when fonts are loaded
+      document.fonts.ready.then(() => {
+        document.body.classList.add('fonts-loaded');
+      });
+    </script>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NQHK4HKH"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>

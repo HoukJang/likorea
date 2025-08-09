@@ -1,5 +1,6 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
   webpack: {
@@ -11,14 +12,22 @@ module.exports = {
           ...webpackConfig.optimization,
           splitChunks: {
             chunks: 'all',
-            maxInitialRequests: 25,
-            minSize: 20000,
+            maxInitialRequests: 30,
+            minSize: 10000,
+            maxAsyncRequests: 30,
             cacheGroups: {
-              // React core libraries
-              react: {
-                test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom)[\\/]/,
-                name: 'react-vendor',
-                priority: 30,
+              // React core libraries - split into smaller chunks
+              reactCore: {
+                test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+                name: 'react-core',
+                priority: 35,
+                reuseExistingChunk: true,
+                enforce: true,
+              },
+              reactRouter: {
+                test: /[\\/]node_modules[\\/](react-router|react-router-dom|history)[\\/]/,
+                name: 'react-router',
+                priority: 34,
                 reuseExistingChunk: true,
               },
               // Material-UI components
@@ -56,13 +65,20 @@ module.exports = {
                 priority: 16,
                 reuseExistingChunk: true,
               },
+              // Emotion styling libraries
+              emotion: {
+                test: /[\\/]node_modules[\\/]@emotion[\\/]/,
+                name: 'emotion',
+                priority: 15,
+                reuseExistingChunk: true,
+              },
               // Remaining vendor libraries
               vendor: {
                 test: /[\\/]node_modules[\\/]/,
                 name: 'vendor',
                 priority: 10,
                 reuseExistingChunk: true,
-                enforce: true,
+                minSize: 30000,
               },
               // Common chunk for code used in multiple places
               common: {
@@ -129,6 +145,15 @@ module.exports = {
         // Tree shaking optimization
         webpackConfig.optimization.usedExports = true;
         webpackConfig.optimization.sideEffects = false;
+        
+        // Add webpack plugins for better optimization
+        webpackConfig.plugins.push(
+          new webpack.optimize.ModuleConcatenationPlugin(),
+          // Add prefetch/preload hints for lazy-loaded routes
+          new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('production')
+          })
+        );
       }
 
       // Development optimizations
@@ -141,10 +166,17 @@ module.exports = {
           splitChunks: false,
         };
         
-        // Use eval-source-map for faster rebuilds
-        webpackConfig.devtool = 'eval-source-map';
+        // Use cheap-module-source-map for faster rebuilds with better debugging
+        webpackConfig.devtool = 'cheap-module-source-map';
       }
 
+      // Add resource hints for better loading
+      webpackConfig.plugins.push(
+        new webpack.ids.DeterministicModuleIdsPlugin({
+          maxLength: 5,
+        })
+      );
+      
       return webpackConfig;
     },
   },

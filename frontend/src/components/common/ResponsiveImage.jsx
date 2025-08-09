@@ -6,7 +6,8 @@ const ResponsiveImage = ({
   className = '', 
   loading = 'eager',
   fetchPriority = 'auto',
-  sizes = '100vw'
+  sizes = '100vw',
+  decoding = 'async'
 }) => {
   // 이미지 경로 생성
   const getImagePath = (suffix, format) => `/images/${imageName}-${suffix}.${format}`;
@@ -59,6 +60,7 @@ const ResponsiveImage = ({
         loading={loading}
         fetchPriority={fetchPriority}
         sizes={sizes}
+        decoding={decoding}
       />
     </picture>
   );

@@ -10,17 +10,17 @@ import './styles/App.css';
 import Banner from './components/Banner';
 import GlobalNavigation from './components/GlobalNavigation';
 
-// 페이지 컴포넌트는 lazy loading으로 코드 분할
-const Signup = React.lazy(() => import('./components/Signup'));
-const Login = React.lazy(() => import('./components/Login'));
-const BoardList = React.lazy(() => import('./components/BoardList'));
-const BoardPostForm = React.lazy(() => import('./components/BoardPostForm'));
-const BoardPostView = React.lazy(() => import('./components/BoardPostView'));
-const Admin = React.lazy(() => import('./components/Admin'));
-const Profile = React.lazy(() => import('./components/Profile'));
-const DesignPreview = React.lazy(() => import('./components/DesignPreview'));
-const BotManagement = React.lazy(() => import('./pages/BotManagement'));
-const BotForm = React.lazy(() => import('./pages/BotForm'));
+// 페이지 컴포넌트는 lazy loading으로 코드 분할 with prefetch hints
+const Signup = React.lazy(() => import(/* webpackChunkName: "signup" */ './components/Signup'));
+const Login = React.lazy(() => import(/* webpackChunkName: "login" */ './components/Login'));
+const BoardList = React.lazy(() => import(/* webpackChunkName: "board-list", webpackPrefetch: true */ './components/BoardList'));
+const BoardPostForm = React.lazy(() => import(/* webpackChunkName: "board-form" */ './components/BoardPostForm'));
+const BoardPostView = React.lazy(() => import(/* webpackChunkName: "board-view", webpackPrefetch: true */ './components/BoardPostView'));
+const Admin = React.lazy(() => import(/* webpackChunkName: "admin" */ './components/Admin'));
+const Profile = React.lazy(() => import(/* webpackChunkName: "profile" */ './components/Profile'));
+const DesignPreview = React.lazy(() => import(/* webpackChunkName: "design-preview" */ './components/DesignPreview'));
+const BotManagement = React.lazy(() => import(/* webpackChunkName: "bot-management" */ './pages/BotManagement'));
+const BotForm = React.lazy(() => import(/* webpackChunkName: "bot-form" */ './pages/BotForm'));
 
 // Suspense wrapper for lazy loaded components
 const SuspenseWrapper = ({ children }) => (
