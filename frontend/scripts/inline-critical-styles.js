@@ -17,12 +17,26 @@ const inlineCriticalStyles = () => {
 /* Critical CSS for initial render */
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
 body {
   margin: 0;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  background-color: #ffffff;
+  color: #333333;
+}
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 .App {
   text-align: center;
@@ -30,17 +44,26 @@ body {
   display: flex;
   flex-direction: column;
 }
+/* Header critical styles */
+header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 1000;
+}
 /* Banner critical styles */
 .banner {
   width: 100%;
   overflow: hidden;
   position: relative;
   background-color: #f5f5f5;
+  min-height: 89px;
 }
 .banner-image {
   width: 100%;
   height: auto;
   display: block;
+  object-fit: cover;
 }
 /* Loading states */
 .loading {
@@ -58,6 +81,23 @@ nav {
   position: sticky;
   top: 0;
   z-index: 100;
+  padding: 0.5rem 0;
+}
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+nav a {
+  color: #333;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s;
+}
+nav a:hover {
+  color: #0066cc;
 }
 /* Responsive container */
 .container {
@@ -65,6 +105,18 @@ nav {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+}
+/* Main content area */
+main {
+  flex: 1;
+  padding: 20px 0;
+}
+/* Footer */
+footer {
+  background-color: #f8f9fa;
+  padding: 2rem 0;
+  margin-top: auto;
+  border-top: 1px solid #e0e0e0;
 }
 /* Hide elements until JS loads */
 .js-loading {
@@ -74,10 +126,53 @@ nav {
 .fonts-loading body {
   font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }
+/* Prevent layout shift */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+/* Button defaults */
+button {
+  cursor: pointer;
+  border: none;
+  background: #0066cc;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-family: inherit;
+}
+/* Input defaults */
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+/* Mobile styles */
 @media (max-width: 768px) {
   .container {
     padding: 0 15px;
   }
+  nav {
+    padding: 0.25rem 0;
+  }
+  .banner {
+    min-height: 60px;
+  }
+  main {
+    padding: 15px 0;
+  }
+}
+/* Skeleton loading */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 `;
 

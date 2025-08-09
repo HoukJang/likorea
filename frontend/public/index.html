@@ -14,24 +14,47 @@
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!-- DNS Prefetch for early resolution -->
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    
     <!-- Preconnect to external resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com">
     
     <!-- Preload critical resources -->
-    <link rel="preload" as="image" href="%PUBLIC_URL%/images/banner-mobile.webp" media="(max-width: 480px)" type="image/webp">
-    <link rel="preload" as="image" href="%PUBLIC_URL%/images/banner-desktop.webp" media="(min-width: 481px)" type="image/webp">
+    <link rel="preload" as="font" href="https://fonts.gstatic.com/s/pretendard/v9/Pretendard-Regular.woff2" type="font/woff2" crossorigin>
+    <link rel="preload" as="font" href="https://fonts.gstatic.com/s/pretendard/v9/Pretendard-Medium.woff2" type="font/woff2" crossorigin>
+    <link rel="preload" as="image" href="%PUBLIC_URL%/images/banner-mobile.webp" media="(max-width: 480px)" type="image/webp" fetchpriority="high">
+    <link rel="preload" as="image" href="%PUBLIC_URL%/images/banner-desktop.webp" media="(min-width: 481px)" type="image/webp" fetchpriority="high">
     
     <!-- Font loading with swap -->
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <title>Long Island Korea</title>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-NQHK4HKH');</script>
+    <!-- Google Tag Manager (Optimized Loading) -->
+    <script>
+    // Delay GTM loading until after page interaction or 2 seconds
+    window.dataLayer = window.dataLayer || [];
+    var gtmLoaded = false;
+    function loadGTM() {
+      if (gtmLoaded) return;
+      gtmLoaded = true;
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.defer=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-NQHK4HKH');
+    }
+    // Load on first interaction
+    ['mousedown', 'touchstart', 'scroll', 'keydown'].forEach(function(event) {
+      window.addEventListener(event, loadGTM, { once: true, passive: true });
+    });
+    // Fallback: load after 2 seconds
+    setTimeout(loadGTM, 2000);
+    </script>
     <!-- End Google Tag Manager -->
   </head>
   <body>

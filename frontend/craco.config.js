@@ -11,31 +11,65 @@ module.exports = {
           ...webpackConfig.optimization,
           splitChunks: {
             chunks: 'all',
+            maxInitialRequests: 25,
+            minSize: 20000,
             cacheGroups: {
-              // Vendor chunk for node_modules
+              // React core libraries
+              react: {
+                test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom)[\\/]/,
+                name: 'react-vendor',
+                priority: 30,
+                reuseExistingChunk: true,
+              },
+              // Material-UI components
+              mui: {
+                test: /[\\/]node_modules[\\/]@mui[\\/]/,
+                name: 'mui',
+                priority: 25,
+                reuseExistingChunk: true,
+              },
+              // Chart.js libraries
+              charts: {
+                test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2|@kurkle)[\\/]/,
+                name: 'charts',
+                priority: 20,
+                reuseExistingChunk: true,
+              },
+              // Image compression libraries
+              imageTools: {
+                test: /[\\/]node_modules[\\/](browser-image-compression|pica|blueimp)[\\/]/,
+                name: 'image-tools',
+                priority: 18,
+                reuseExistingChunk: true,
+              },
+              // Sanitization libraries
+              sanitize: {
+                test: /[\\/]node_modules[\\/](dompurify|sanitize-html)[\\/]/,
+                name: 'sanitize',
+                priority: 17,
+                reuseExistingChunk: true,
+              },
+              // Date/Time libraries
+              datetime: {
+                test: /[\\/]node_modules[\\/](date-fns|dayjs|moment)[\\/]/,
+                name: 'datetime',
+                priority: 16,
+                reuseExistingChunk: true,
+              },
+              // Remaining vendor libraries
               vendor: {
                 test: /[\\/]node_modules[\\/]/,
                 name: 'vendor',
                 priority: 10,
                 reuseExistingChunk: true,
+                enforce: true,
               },
               // Common chunk for code used in multiple places
               common: {
                 minChunks: 2,
                 priority: 5,
                 reuseExistingChunk: true,
-              },
-              // Separate chunk for Material-UI
-              mui: {
-                test: /[\\/]node_modules[\\/]@mui[\\/]/,
-                name: 'mui',
-                priority: 20,
-              },
-              // Separate chunk for Chart.js
-              charts: {
-                test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2)[\\/]/,
-                name: 'charts',
-                priority: 15,
+                enforce: true,
               },
             },
           },
