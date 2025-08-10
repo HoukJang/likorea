@@ -9,13 +9,13 @@ import {
   getUserDetails
 } from '../api/admin';
 import Profile from './Profile';
-// TrafficDashboard를 lazy load
-const TrafficDashboard = lazy(() => import('./TrafficDashboard'));
 import packageJson from '../../package.json';
 import Loading from './common/Loading';
-// BotManagement를 직접 import
 import BotManagement from '../pages/BotManagement';
 import '../styles/Admin.css';
+
+// TrafficDashboard를 lazy load
+const TrafficDashboard = lazy(() => import('./TrafficDashboard'));
 
 function Admin() {
   const navigate = useNavigate();

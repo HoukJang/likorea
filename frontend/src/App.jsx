@@ -22,8 +22,7 @@ import Profile from './components/Profile';
 // 무거운 컴포넌트들은 lazy loading
 const BoardPostForm = lazy(() => import('./components/BoardPostForm')); // Quill 포함
 const BotManagement = lazy(() => import('./pages/BotManagement'));
-// Admin은 Chart.js 문제로 직접 import
-import Admin from './components/Admin';
+const Admin = lazy(() => import('./components/Admin').then(module => ({ default: module.default }))); // Chart.js 포함
 const DesignPreview = lazy(() => import('./components/DesignPreview'));
 const BotForm = lazy(() => import('./pages/BotForm'));
 
@@ -100,7 +99,11 @@ function App() {
             <Route path="/profile" element={<Profile />} />
 
             {/* 관리자 페이지 */}
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={
+              <Suspense fallback={<Loading />}>
+                <Admin />
+              </Suspense>
+            } />
             <Route path="/design-preview" element={
               <Suspense fallback={<Loading />}>
                 <DesignPreview />

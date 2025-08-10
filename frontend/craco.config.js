@@ -18,34 +18,33 @@ module.exports = {
           splitChunks: {
             chunks: 'all',
             cacheGroups: {
+              // MUI와 emotion을 먼저 처리 (우선순위 높게)
+              mui: {
+                test: /[\\/]node_modules[\\/](@mui[\\/]|@emotion[\\/])/,
+                name: 'mui',
+                priority: 20,
+                reuseExistingChunk: true
+              },
+              // React Quill 분리 (약 200KB)
+              quill: {
+                test: /[\\/]node_modules[\\/](react-quill|quill)[\\/]/,
+                name: 'quill',
+                priority: 10,
+                reuseExistingChunk: true
+              },
+              // Chart.js 분리 (약 100KB)
+              chart: {
+                test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2)[\\/]/,
+                name: 'chart',
+                priority: 10,
+                reuseExistingChunk: true
+              },
+              // 나머지 vendors
               defaultVendors: {
                 test: /[\\/]node_modules[\\/]/,
                 priority: -10,
                 reuseExistingChunk: true,
                 name: 'vendors'
-              },
-              // React Quill 분리 (약 200KB)
-              quill: {
-                test: /[\\/]node_modules[\\/](react-quill|quill)[\\/]/,
-                priority: 10,
-                reuseExistingChunk: true,
-                name: 'quill'
-              },
-              // Chart.js 분리 (약 100KB)
-              chart: {
-                test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2)[\\/]/,
-                priority: 10,
-                reuseExistingChunk: true,
-                name: 'chart',
-                chunks: 'all',
-                enforce: true
-              },
-              // MUI 분리
-              mui: {
-                test: /[\\/]node_modules[\\/]@mui[\\/]/,
-                priority: 10,
-                reuseExistingChunk: true,
-                name: 'mui'
               },
               default: {
                 minChunks: 2,
