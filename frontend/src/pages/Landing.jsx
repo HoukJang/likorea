@@ -64,39 +64,39 @@ const Landing = () => {
 
   const regions = [
     {
-      name: '롱시티, 플러싱',
+      name: 'Flushing, Bayside, Little Neck',
       exits: '13-30',
-      description: 'Queens 접경 지역',
+      description: 'Queens Border Area',
       link: '/boards?region=%3C%3D30'
     },
     {
-      name: '그레잇넥, 제리코, 샤요셋',
+      name: 'Great Neck, Port Washington, Manhasset',
       exits: '31-41',
-      description: 'Nassau County 서부',
+      description: 'Western Nassau County',
       link: '/boards?region=31-41'
     },
     {
-      name: '힉스빌, 플레인뷰, 멜빌',
+      name: 'Syosset, Jericho, Plainview, Hicksville',
       exits: '42-49',
-      description: 'Nassau County 중부',
+      description: 'Central Nassau County',
       link: '/boards?region=42-49'
     },
     {
-      name: '딕스힐, 브렌트우드, 롱콩코마',
+      name: 'Melville, Dix Hills, Huntington',
       exits: '50-58',
-      description: 'Suffolk County 서부',
+      description: 'Western Suffolk County',
       link: '/boards?region=50-58'
     },
     {
-      name: '스토니브룩, 시터켓, 패쵹, 얍행크',
+      name: 'Stony Brook, Port Jefferson, Centereach',
       exits: '59-68',
-      description: 'Suffolk County 중부',
+      description: 'Central Suffolk County',
       link: '/boards?region=59-68'
     },
     {
-      name: '리버헤드',
+      name: 'Riverhead, Calverton, Wading River',
       exits: '69+',
-      description: 'Suffolk County 동부',
+      description: 'Eastern Suffolk County',
       link: '/boards?region=%3E69'
     }
   ];

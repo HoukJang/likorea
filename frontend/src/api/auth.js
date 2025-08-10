@@ -68,8 +68,7 @@ export const logout = async () => {
     // 로그아웃 오류는 무시
   }
 
-  // 호환성을 위한 localStorage 제거
-  localStorage.removeItem('authToken');
+  // localStorage에서 사용자 정보 제거
   localStorage.removeItem('userId');
   localStorage.removeItem('userEmail');
   localStorage.removeItem('userAuthority');
@@ -91,18 +90,7 @@ export const getCurrentUser = async () => {
     }
     return null;
   } catch (error) {
-    // 호환성을 위한 localStorage 확인 (임시)
-    const userId = localStorage.getItem('userId');
-    const userEmail = localStorage.getItem('userEmail');
-    const userAuthority = localStorage.getItem('userAuthority');
-
-    if (userId) {
-      return {
-        id: userId,
-        email: userEmail,
-        authority: userAuthority
-      };
-    }
+    // 서버 검증 실패 시 null 반환
     return null;
   }
 };
@@ -117,8 +105,8 @@ export const isAuthenticated = async () => {
     const response = await verifyToken();
     return response.valid === true;
   } catch (error) {
-    // 호환성을 위한 localStorage 확인 (임시)
-    return !!localStorage.getItem('authToken');
+    // 서버 검증 실패 시 false 반환
+    return false;
   }
 };
 
@@ -131,8 +119,7 @@ export const isAdmin = async () => {
     const user = await getCurrentUser();
     return user?.authority === 5 || user?.authority === '5';
   } catch (error) {
-    // 호환성을 위한 localStorage 확인 (임시)
-    const authority = localStorage.getItem('userAuthority');
-    return authority === '5';
+    // 서버 검증 실패 시 false 반환
+    return false;
   }
 };

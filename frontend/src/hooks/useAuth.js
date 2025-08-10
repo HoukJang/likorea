@@ -137,7 +137,7 @@ export const useAuth = () => {
       const data = await loginApi(credentials);
 
       // 서버에서 httpOnly 쿠키로 토큰 저장됨
-      // 호환성을 위해 localStorage에도 사용자 정보 저장 (임시)
+      // localStorage에 사용자 정보 저장 (UI 표시용)
       if (data.user) {
         localStorage.setItem('userId', data.user.id);
         localStorage.setItem('userEmail', data.user.email);
