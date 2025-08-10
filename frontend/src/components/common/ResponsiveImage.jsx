@@ -60,6 +60,8 @@ const ResponsiveImage = ({
         fetchPriority={fetchPriority}
         sizes={sizes}
         decoding={decoding}
+        width={imageName === 'banner' ? '1200' : undefined}
+        height={imageName === 'banner' ? '200' : undefined}
       />
     </picture>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import Loading from './components/common/Loading';
@@ -16,15 +16,15 @@ import Landing from './pages/Landing';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import BoardList from './components/BoardList';
-import BoardPostForm from './components/BoardPostForm';
 import BoardPostView from './components/BoardPostView';
 import Profile from './components/Profile';
 
-// 모든 컴포넌트 직접 import (lazy loading 제거)
-import BotManagement from './pages/BotManagement';
-import Admin from './components/Admin';
-import DesignPreview from './components/DesignPreview';
-import BotForm from './pages/BotForm';
+// 무거운 컴포넌트들은 lazy loading
+const BoardPostForm = lazy(() => import('./components/BoardPostForm')); // Quill 포함
+const BotManagement = lazy(() => import('./pages/BotManagement'));
+const Admin = lazy(() => import('./components/Admin')); // Chart.js 포함
+const DesignPreview = lazy(() => import('./components/DesignPreview'));
+const BotForm = lazy(() => import('./pages/BotForm'));
 
 function App() {
   // 전역 인증 상태 관리 - 앱 시작 시 토큰 검증 수행
@@ -65,22 +65,50 @@ function App() {
             <Route path="/login" element={<Login />} />
 
             {/* 봇 관리 페이지 - 구체적인 경로를 먼저 배치 */}
-            <Route path="/bots/new" element={<BotForm />} />
-            <Route path="/bots/edit/:botId" element={<BotForm />} />
-            <Route path="/bot-management" element={<BotManagement />} />
+            <Route path="/bots/new" element={
+              <Suspense fallback={<Loading />}>
+                <BotForm />
+              </Suspense>
+            } />
+            <Route path="/bots/edit/:botId" element={
+              <Suspense fallback={<Loading />}>
+                <BotForm />
+              </Suspense>
+            } />
+            <Route path="/bot-management" element={
+              <Suspense fallback={<Loading />}>
+                <BotManagement />
+              </Suspense>
+            } />
 
             {/* 게시판 관련 라우트 */}
             <Route path="/boards" element={<BoardList />} />
-            <Route path="/boards/new" element={<BoardPostForm />} />
+            <Route path="/boards/new" element={
+              <Suspense fallback={<Loading />}>
+                <BoardPostForm />
+              </Suspense>
+            } />
             <Route path="/boards/:postId" element={<BoardPostView />} />
-            <Route path="/boards/:postId/edit" element={<BoardPostForm />} />
+            <Route path="/boards/:postId/edit" element={
+              <Suspense fallback={<Loading />}>
+                <BoardPostForm />
+              </Suspense>
+            } />
 
             {/* 사용자 관련 라우트 */}
             <Route path="/profile" element={<Profile />} />
 
             {/* 관리자 페이지 */}
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/design-preview" element={<DesignPreview />} />
+            <Route path="/admin" element={
+              <Suspense fallback={<Loading />}>
+                <Admin />
+              </Suspense>
+            } />
+            <Route path="/design-preview" element={
+              <Suspense fallback={<Loading />}>
+                <DesignPreview />
+              </Suspense>
+            } />
           </Routes>
         </div>
       </Router>

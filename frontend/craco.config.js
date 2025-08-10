@@ -15,11 +15,47 @@ module.exports = {
         // Optimize JS bundles
         webpackConfig.optimization = {
           ...webpackConfig.optimization,
-          splitChunks: false,
+          splitChunks: {
+            chunks: 'all',
+            cacheGroups: {
+              defaultVendors: {
+                test: /[\\/]node_modules[\\/]/,
+                priority: -10,
+                reuseExistingChunk: true,
+                name: 'vendors'
+              },
+              // React Quill 분리 (약 200KB)
+              quill: {
+                test: /[\\/]node_modules[\\/](react-quill|quill)[\\/]/,
+                priority: 10,
+                reuseExistingChunk: true,
+                name: 'quill'
+              },
+              // Chart.js 분리 (약 100KB)
+              chart: {
+                test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2)[\\/]/,
+                priority: 10,
+                reuseExistingChunk: true,
+                name: 'chart'
+              },
+              // MUI 분리
+              mui: {
+                test: /[\\/]node_modules[\\/]@mui[\\/]/,
+                priority: 10,
+                reuseExistingChunk: true,
+                name: 'mui'
+              },
+              default: {
+                minChunks: 2,
+                priority: -20,
+                reuseExistingChunk: true
+              }
+            }
+          },
           // Use deterministic IDs for stable module references
           moduleIds: 'deterministic',
           chunkIds: 'deterministic',
-          runtimeChunk: false,
+          runtimeChunk: 'single',
           // Minimize JS
           minimize: true,
           minimizer: [

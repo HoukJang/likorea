@@ -25,14 +25,17 @@
     <link rel="preconnect" href="https://www.googletagmanager.com">
     
     <!-- Preload critical resources -->
-    <link rel="preload" as="font" href="https://fonts.gstatic.com/s/pretendard/v9/Pretendard-Regular.woff2" type="font/woff2" crossorigin>
-    <link rel="preload" as="font" href="https://fonts.gstatic.com/s/pretendard/v9/Pretendard-Medium.woff2" type="font/woff2" crossorigin>
     <link rel="preload" as="image" href="%PUBLIC_URL%/images/banner-mobile.webp" media="(max-width: 768px)" type="image/webp" fetchpriority="high">
     <link rel="preload" as="image" href="%PUBLIC_URL%/images/banner-desktop.webp" media="(min-width: 769px)" type="image/webp" fetchpriority="high">
     
-    <!-- Async font loading with swap -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap"></noscript>
+    <!-- Pretendard font via CDN -->
+    <link rel="stylesheet" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" crossorigin="anonymous">
+    <style>
+      /* Font fallback */
+      body {
+        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      }
+    </style>
     
     <title>Long Island Korea</title>
     
