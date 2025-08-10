@@ -57,10 +57,10 @@ function App() {
           <Routes>
             {/* 루트 경로를 랜딩 페이지로 설정 */}
             <Route path="/" element={<Landing />} />
-            
+
             {/* 게시판 리스트 페이지 */}
-            <Route path="/board" element={<BoardList />} />
-            
+            <Route path="/boards" element={<BoardList />} />
+
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
 

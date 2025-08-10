@@ -230,14 +230,19 @@ exports.getPosts = asyncHandler(async (req, res) => {
   const skip = (pageNum - 1) * limitNum;
 
   // 필터 조건 구성
-  const filter = {
-    // 승인되지 않은 봇 게시글은 제외 (일반 사용자 게시글은 자동 승인이므로 표시됨)
+  const filter = {};
+  
+  // AND 조건들을 수집할 배열
+  const andConditions = [];
+  
+  // 봇 게시글 필터 조건
+  andConditions.push({
     $or: [
       { isBot: false },
       { isBot: true, isApproved: true },
       { isBot: { $exists: false } } // 이전 게시글 호환성
     ]
-  };
+  });
 
   if (type) {
     filter['tags.type'] = type;
@@ -250,22 +255,51 @@ exports.getPosts = asyncHandler(async (req, res) => {
   if (region) {
     const regionFilter = parseRegionFilter(region);
     if (regionFilter) {
-      filter['tags.region'] = regionFilter;
+      // 지역 필터가 있을 때도 '0' (전체) 태그를 포함
+      // MongoDB의 $in 연산자 사용을 위해 배열로 변환
+      if (typeof regionFilter === 'string') {
+        // 단일 값인 경우
+        filter['tags.region'] = { $in: [regionFilter, '0'] };
+      } else if (regionFilter.$in) {
+        // 이미 $in 배열인 경우 (예: "31-41")
+        filter['tags.region'] = { $in: [...regionFilter.$in, '0'] };
+      } else if (regionFilter.$gt || regionFilter.$lt || regionFilter.$lte) {
+        // 비교 연산자인 경우
+        andConditions.push({
+          $or: [
+            { 'tags.region': regionFilter },
+            { 'tags.region': '0' }
+          ]
+        });
+      } else {
+        // 기타 경우
+        filter['tags.region'] = regionFilter;
+      }
     }
   }
 
   if (search) {
     // Regex injection 방지
     const escapedSearch = escapeRegex(search);
-    filter.$or = [
-      { title: { $regex: escapedSearch, $options: 'i' } },
-      { content: { $regex: escapedSearch, $options: 'i' } }
-    ];
+    andConditions.push({
+      $or: [
+        { title: { $regex: escapedSearch, $options: 'i' } },
+        { content: { $regex: escapedSearch, $options: 'i' } }
+      ]
+    });
   }
+  
+  // filter 객체에 있는 조건들을 andConditions에 추가
+  Object.keys(filter).forEach(key => {
+    andConditions.push({ [key]: filter[key] });
+  });
+  
+  // 최종 필터 구성
+  const finalFilter = { $and: andConditions };
 
   // Aggregation Pipeline으로 최적화
   const pipeline = [
-    { $match: filter },
+    { $match: finalFilter },
     {
       // 공지사항을 우선 정렬
       $addFields: {
@@ -319,7 +353,7 @@ exports.getPosts = asyncHandler(async (req, res) => {
   // 병렬로 실행
   const [posts, totalPosts] = await Promise.all([
     BoardPost.aggregate(pipeline),
-    BoardPost.countDocuments(filter)
+    BoardPost.countDocuments(finalFilter)
   ]);
 
   const totalPages = Math.ceil(totalPosts / limitNum);

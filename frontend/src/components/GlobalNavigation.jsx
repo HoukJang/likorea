@@ -147,7 +147,7 @@ const GlobalNavigation = () => {
       <div className="nav-container">
         <div className="nav-left">
           <button
-            onClick={() => navigate('/board')}
+            onClick={() => navigate('/boards')}
             className="nav-button main-button"
             style={buttonStyle}
             aria-label="게시판으로 이동"

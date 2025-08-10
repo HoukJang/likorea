@@ -1,9 +1,20 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { useAuth } from '../hooks/useAuth';
 import '../styles/Landing.css';
 
 const Landing = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  
+  // 로그인된 사용자는 게시판으로 리다이렉트
+  useEffect(() => {
+    if (user) {
+      navigate('/boards');
+    }
+  }, [user, navigate]);
+  
   // Schema.org 구조화된 데이터
   const schemaData = {
     '@context': 'https://schema.org',
@@ -51,51 +62,81 @@ const Landing = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const popularExits = [
-    { exit: 'Exit 38', name: '노던 블러바드', area: 'Glen Cove, Roslyn' },
-    { exit: 'Exit 41', name: '그레이트 넥', area: 'Great Neck' },
-    { exit: 'Exit 42', name: '노던 스테이트 파크웨이', area: 'Manhasset, Port Washington' },
-    { exit: 'Exit 49', name: '서비스 로드', area: 'Melville, Huntington' },
-    { exit: 'Exit 53', name: '사가모어 파크웨이', area: 'Hauppauge' },
-    { exit: 'Exit 57', name: '베테랑스 하이웨이', area: 'Smithtown, Commack' }
+  const regions = [
+    {
+      name: '롱시티, 플러싱',
+      exits: '13-30',
+      description: 'Queens 접경 지역',
+      link: '/boards?region=%3C%3D30'
+    },
+    {
+      name: '그레잇넥, 제리코, 샤요셋',
+      exits: '31-41',
+      description: 'Nassau County 서부',
+      link: '/boards?region=31-41'
+    },
+    {
+      name: '힉스빌, 플레인뷰, 멜빌',
+      exits: '42-49',
+      description: 'Nassau County 중부',
+      link: '/boards?region=42-49'
+    },
+    {
+      name: '딕스힐, 브렌트우드, 롱콩코마',
+      exits: '50-58',
+      description: 'Suffolk County 서부',
+      link: '/boards?region=50-58'
+    },
+    {
+      name: '스토니브룩, 시터켓, 패쵹, 얍행크',
+      exits: '59-68',
+      description: 'Suffolk County 중부',
+      link: '/boards?region=59-68'
+    },
+    {
+      name: '리버헤드',
+      exits: '69+',
+      description: 'Suffolk County 동부',
+      link: '/boards?region=%3E69'
+    }
   ];
 
   const services = [
     {
-      icon: '🏠',
-      title: '부동산 정보',
-      description: '롱아일랜드 지역별 부동산 매매, 렌트 정보를 공유합니다',
-      link: '/boards?tag=부동산'
+      icon: '📰',
+      title: '지역뉴스',
+      description: '롱아일랜드 지역의 최신 뉴스와 소식을 전해드립니다',
+      link: '/boards?type=생활정보&subcategory=뉴스'
     },
     {
       icon: '🍽️',
-      title: '맛집 정보',
+      title: '맛집정보',
       description: '한인 운영 레스토랑과 현지 맛집 정보를 나눕니다',
-      link: '/boards?tag=맛집'
+      link: '/boards?type=생활정보&subcategory=맛집'
     },
     {
-      icon: '💼',
-      title: '구인구직',
-      description: '롱아일랜드 지역 일자리 정보와 구인 공고를 확인하세요',
-      link: '/boards?tag=구인구직'
+      icon: '📚',
+      title: '정착가이드',
+      description: '롱아일랜드 정착에 필요한 모든 정보를 제공합니다',
+      link: '/boards?type=생활정보&subcategory=정착가이드'
     },
     {
       icon: '🛒',
       title: '사고팔고',
       description: '중고물품 거래와 개인 거래 정보를 공유합니다',
-      link: '/boards?tag=사고팔고'
+      link: '/boards?type=사고팔고'
     },
     {
       icon: '👥',
       title: '모임/이벤트',
       description: '지역 한인 모임과 이벤트 소식을 전해드립니다',
-      link: '/boards?tag=모임'
+      link: '/boards?type=모임'  // 모임 전체를 보여줍니다 (번개, 정기, 이벤트 모두 포함)
     },
     {
-      icon: '📢',
-      title: '생활정보',
-      description: '병원, 학교, 생활 편의시설 등 유용한 정보를 공유합니다',
-      link: '/boards?tag=생활정보'
+      icon: '🏠',
+      title: '부동산',
+      description: '롱아일랜드 지역별 부동산 매매, 렌트 정보를 공유합니다',
+      link: '/boards?type=부동산'
     }
   ];
 
@@ -149,7 +190,7 @@ const Landing = () => {
               뉴욕 롱아일랜드에 거주하는 한인들을 위한 생활정보 공유 플랫폼
             </p>
             <div className="hero-actions">
-              <Link to="/" className="btn btn-primary">
+              <Link to="/boards" className="btn btn-primary">
                 커뮤니티 시작하기
               </Link>
               <Link to="/signup" className="btn btn-secondary">
@@ -186,12 +227,12 @@ const Landing = () => {
               495번 고속도로 Exit 기준 한인 밀집 지역 정보
             </p>
             <div className="areas-grid">
-              {popularExits.map((exit, index) => (
+              {regions.map((region, index) => (
                 <div key={index} className="area-card">
-                  <h3 className="area-exit">{exit.exit}</h3>
-                  <h4 className="area-name">{exit.name}</h4>
-                  <p className="area-description">{exit.area}</p>
-                  <Link to={`/boards?region=${exit.exit}`} className="area-link">
+                  <h3 className="area-exit">Exit {region.exits}</h3>
+                  <h4 className="area-name">{region.name}</h4>
+                  <p className="area-description">{region.description}</p>
+                  <Link to={region.link} className="area-link">
                     지역 정보 보기 →
                   </Link>
                 </div>

@@ -15,6 +15,16 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
     search: currentFilters.search || ''
   });
 
+  // currentFilters가 변경될 때 filters 업데이트
+  useEffect(() => {
+    setFilters({
+      type: currentFilters.type || '',
+      region: currentFilters.region || '',
+      subcategory: currentFilters.subcategory || '',
+      search: currentFilters.search || ''
+    });
+  }, [currentFilters.type, currentFilters.region, currentFilters.subcategory, currentFilters.search]);
+
   useEffect(() => {
     const fetchTags = async () => {
       try {

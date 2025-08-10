@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { getBoards } from '../api/boards';
 import { getAllTags } from '../api/tags';
 import { getPendingPosts } from '../api/approval';
@@ -12,13 +13,31 @@ import { BoardLoading, BoardError, BoardEmpty } from './board/BoardStatus';
 import '../styles/BoardList.css';
 
 const BoardList = ({ pendingOnly = false }) => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [filters, setFilters] = useState({ type: '', region: '' });
+  const [filters, setFilters] = useState({
+    type: searchParams.get('tag') || searchParams.get('type') || '',
+    region: searchParams.get('region') || '',
+    subcategory: searchParams.get('subcategory') || ''
+  });
   const [tagList, setTagList] = useState(null);
+
+  // URL 파라미터 변경 감지
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    setFilters({
+      type: searchParams.get('tag') || searchParams.get('type') || '',
+      region: searchParams.get('region') || '',
+      subcategory: searchParams.get('subcategory') || ''
+    });
+    setCurrentPage(1); // 필터 변경 시 첫 페이지로
+  }, [location.search]);
 
   // 태그 정보 가져오기
   useEffect(() => {
