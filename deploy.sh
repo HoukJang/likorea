@@ -15,6 +15,7 @@
 #   --skip-git-check  Git 상태 확인을 건너뜁니다
 #   --auto            Non-interactive 모드 (CI/CD용)
 #   --quiet           조용한 모드 (최소 출력)
+#   --update-nginx    Nginx 설정 업데이트 (프로덕션 전용)
 #
 # 예시:
 #   ./deploy.sh production
@@ -22,6 +23,7 @@
 #   ./deploy.sh production --init-db
 #   ./deploy.sh production --auto --skip-tests
 #   ./deploy.sh production --force --init-db
+#   ./deploy.sh production --update-nginx
 
 set -e
 
@@ -69,6 +71,7 @@ SKIP_LINT=false
 SKIP_GIT_CHECK=false
 AUTO_MODE=false
 QUIET_MODE=false
+UPDATE_NGINX=false
 
 # 모든 매개변수를 순회하면서 옵션 확인
 shift # 첫 번째 파라미터(환경) 제거
@@ -105,6 +108,14 @@ for arg in "$@"; do
             ;;
         --quiet)
             QUIET_MODE=true
+            ;;
+        --update-nginx)
+            if [ "$ENVIRONMENT" != "production" ]; then
+                log_error "--update-nginx 옵션은 프로덕션 환경에서만 사용할 수 있습니다"
+                exit 1
+            fi
+            UPDATE_NGINX=true
+            log_info "Nginx 설정 업데이트가 활성화되었습니다"
             ;;
         *)
             log_warn "알 수 없는 옵션: $arg"
@@ -395,15 +406,82 @@ else
 fi
 cd ..
 
-# 9. Nginx 설정 확인 (프로덕션 환경에서만)
+# 9. Nginx 설정 확인 및 업데이트 (프로덕션 환경에서만)
 if [ "$ENVIRONMENT" = "production" ]; then
-    log_step "9. Nginx 설정 확인"
-    if command -v nginx &> /dev/null; then
-        log_info "Nginx 설정 테스트..."
-        nginx -t || {
-            log_error "Nginx 설정 오류가 있습니다."
+    log_step "9. Nginx 설정 확인 및 업데이트"
+    
+    # Nginx 설정 업데이트 (옵션)
+    if [ "$UPDATE_NGINX" = true ]; then
+        log_info "Nginx 설정 업데이트 시작..."
+        
+        # 설정 파일 경로
+        NGINX_CONFIG_FILE="nginx-likorea-simple.conf"
+        TARGET_DIR="/etc/nginx/sites-available"
+        TARGET_FILE="$TARGET_DIR/likorea"
+        ENABLED_DIR="/etc/nginx/sites-enabled"
+        ENABLED_FILE="$ENABLED_DIR/likorea"
+        
+        # 설정 파일 존재 확인
+        if [ ! -f "$NGINX_CONFIG_FILE" ]; then
+            log_error "Nginx 설정 파일이 없습니다: $NGINX_CONFIG_FILE"
+            log_info "프로젝트 루트에 nginx-likorea-simple.conf 파일이 필요합니다."
+            exit 1
+        fi
+        
+        # 기존 설정 백업
+        log_info "기존 Nginx 설정 백업 중..."
+        if [ -f "$TARGET_FILE" ]; then
+            sudo cp "$TARGET_FILE" "$TARGET_FILE.backup.$(date +%Y%m%d_%H%M%S)" || {
+                log_error "Nginx 설정 백업 실패"
+                exit 1
+            }
+            log_info "백업 완료: $TARGET_FILE.backup.$(date +%Y%m%d_%H%M%S)"
+        fi
+        
+        # 새 설정 복사
+        log_info "새 Nginx 설정 적용 중..."
+        sudo cp "$NGINX_CONFIG_FILE" "$TARGET_FILE" || {
+            log_error "Nginx 설정 복사 실패"
             exit 1
         }
+        
+        # sites-enabled 처리 (심볼릭 링크 제거하고 직접 복사)
+        log_info "sites-enabled 설정 중..."
+        if [ -L "$ENABLED_FILE" ]; then
+            # 심볼릭 링크면 제거
+            sudo rm "$ENABLED_FILE"
+            log_info "기존 심볼릭 링크 제거됨"
+        fi
+        # 직접 파일 복사
+        sudo cp "$TARGET_FILE" "$ENABLED_FILE" || {
+            log_error "sites-enabled 설정 실패"
+            exit 1
+        }
+        log_info "sites-enabled 설정 완료"
+    fi
+    
+    if command -v nginx &> /dev/null; then
+        log_info "Nginx 설정 테스트..."
+        if ! sudo nginx -t; then
+            log_error "Nginx 설정 오류가 있습니다."
+            
+            # 업데이트했다면 롤백 시도
+            if [ "$UPDATE_NGINX" = true ]; then
+                log_warn "이전 설정으로 롤백 시도 중..."
+                LATEST_BACKUP=$(ls -t "$TARGET_FILE.backup."* 2>/dev/null | head -1)
+                if [ -f "$LATEST_BACKUP" ]; then
+                    sudo cp "$LATEST_BACKUP" "$TARGET_FILE"
+                    sudo cp "$LATEST_BACKUP" "$ENABLED_FILE"
+                    if sudo nginx -t; then
+                        log_info "롤백 성공"
+                        sudo systemctl reload nginx
+                    else
+                        log_error "롤백 실패. 수동 복구가 필요합니다."
+                    fi
+                fi
+            fi
+            exit 1
+        fi
         
         log_info "Nginx 재시작..."
         if command -v systemctl &> /dev/null; then
@@ -413,12 +491,26 @@ if [ "$ENVIRONMENT" = "production" ]; then
                     log_warn "Nginx 재시작 실패. 수동으로 재시작해주세요."
                 }
             else
-                systemctl reload nginx || {
+                sudo systemctl reload nginx || systemctl reload nginx || {
                     log_warn "Nginx 재시작 실패. 수동으로 재시작해주세요."
                 }
             fi
         else
             log_warn "systemctl을 찾을 수 없습니다. 수동으로 Nginx를 재시작해주세요."
+        fi
+        
+        # 캐시 설정 확인 메시지
+        if [ "$UPDATE_NGINX" = true ]; then
+            log_info ""
+            log_info "========== 캐시 설정 확인 =========="
+            log_info "테스트 명령어:"
+            log_info "  curl -I https://likorea.com/static/js/[해시].chunk.js | grep Cache-Control"
+            log_info ""
+            log_info "기대 결과:"
+            log_info "  - 해시가 있는 파일: Cache-Control: public, max-age=31536000, immutable"
+            log_info "  - 일반 JS/CSS: Cache-Control: public, max-age=604800"
+            log_info "  - HTML: Cache-Control: no-cache, no-store, must-revalidate"
+            log_info ""
         fi
     else
         log_warn "Nginx가 설치되어 있지 않습니다."
@@ -468,6 +560,9 @@ log_info "  - 테스트: $([ "$SKIP_TESTS" = true ] && echo "건너뜀" || echo 
 log_info "  - 린트: $([ "$SKIP_LINT" = true ] && echo "건너뜀" || echo "실행됨")"
 log_info "  - Git 확인: $([ "$SKIP_GIT_CHECK" = true ] && echo "건너뜀" || echo "실행됨")"
 log_info "  - 모드: $([ "$AUTO_MODE" = true ] && echo "자동" || echo "수동")"
+if [ "$ENVIRONMENT" = "production" ]; then
+    log_info "  - Nginx 업데이트: $([ "$UPDATE_NGINX" = true ] && echo "완료" || echo "건너뜀")"
+fi
 
 # 종료 코드
 exit 0
