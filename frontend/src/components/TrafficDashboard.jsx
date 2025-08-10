@@ -1,8 +1,34 @@
 import { useState, useEffect } from 'react';
 import { getTrafficDashboard, getRealtimeTraffic } from '../api/traffic';
-// Use chart.js/auto which includes everything needed
-import 'chart.js/auto';
+// Chart.js v3 imports with tree-shaking
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
+
+// Register required Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 import '../styles/TrafficDashboard.css';
 
 function TrafficDashboard() {

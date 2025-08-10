@@ -22,7 +22,7 @@ import Profile from './components/Profile';
 // 무거운 컴포넌트들은 lazy loading
 const BoardPostForm = lazy(() => import('./components/BoardPostForm')); // Quill 포함
 const BotManagement = lazy(() => import('./pages/BotManagement'));
-const Admin = lazy(() => import('./components/Admin').then(module => ({ default: module.default }))); // Chart.js 포함
+const Admin = lazy(() => import('./components/Admin')); // Chart.js 포함
 const DesignPreview = lazy(() => import('./components/DesignPreview'));
 const BotForm = lazy(() => import('./pages/BotForm'));
 
