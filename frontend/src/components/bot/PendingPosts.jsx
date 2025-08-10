@@ -32,8 +32,7 @@ import {
 } from '../../api/approval';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import DOMPurify from 'dompurify';
-// Lazy load image compression library
+// Lazy load libraries
 let imageCompression;
 const loadImageCompression = async () => {
   if (!imageCompression) {
@@ -41,6 +40,16 @@ const loadImageCompression = async () => {
     imageCompression = module.default;
   }
   return imageCompression;
+};
+
+// Lazy load DOMPurify
+let DOMPurifyInstance = null;
+const loadDOMPurify = async () => {
+  if (!DOMPurifyInstance) {
+    const module = await import('dompurify');
+    DOMPurifyInstance = module.default;
+  }
+  return DOMPurifyInstance;
 };
 
 export default function PendingPosts({ posts, onApproval, onReload }) {
@@ -52,6 +61,7 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
   const [selectedPosts, setSelectedPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [sanitizedPreviewContent, setSanitizedPreviewContent] = useState('');
   const contentEditorRef = useRef(null);
 
   const handleSelectPost = (postId) => {
@@ -131,16 +141,37 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
 
   // 편집 다이얼로그가 열릴 때 contentEditable에 HTML 로드
   useEffect(() => {
-    if (editDialog.open && contentEditorRef.current && editDialog.post) {
-      const sanitizedContent = DOMPurify.sanitize(editDialog.post.content, {
+    const loadContent = async () => {
+      if (editDialog.open && contentEditorRef.current && editDialog.post) {
+        const DOMPurify = await loadDOMPurify();
+        const sanitizedContent = DOMPurify.sanitize(editDialog.post.content, {
         ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li'],
         ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
         ALLOW_DATA_ATTR: false,
         ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.-]+(?:[^a-z+.:-]|$))/i
       });
-      contentEditorRef.current.innerHTML = sanitizedContent;
-    }
+        contentEditorRef.current.innerHTML = sanitizedContent;
+      }
+    };
+    loadContent();
   }, [editDialog.open, editDialog.post]);
+
+  // 미리보기 다이얼로그가 열릴 때 콘텐츠 sanitize
+  useEffect(() => {
+    const sanitizePreviewContent = async () => {
+      if (previewDialog.open && previewDialog.post) {
+        const DOMPurify = await loadDOMPurify();
+        const sanitized = DOMPurify.sanitize(previewDialog.post.content || '', {
+          ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
+          ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target', 'loading', 'decoding'],
+          ALLOW_DATA_ATTR: false,
+          ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.-]+(?:[^a-z+.:-]|$))/i
+        });
+        setSanitizedPreviewContent(sanitized);
+      }
+    };
+    sanitizePreviewContent();
+  }, [previewDialog.open, previewDialog.post]);
 
   // 이미지 압축 설정
   const compressionOptions = {
@@ -222,6 +253,7 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
 
     // contentEditable에서 HTML 가져오기
     const rawContent = contentEditorRef.current ? contentEditorRef.current.innerHTML : editedPost.content;
+    const DOMPurify = await loadDOMPurify();
     const sanitizedContent = DOMPurify.sanitize(rawContent, {
       ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li'],
       ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target'],
@@ -448,12 +480,7 @@ export default function PendingPosts({ posts, onApproval, onReload }) {
         <DialogContent>
           <Box
             dangerouslySetInnerHTML={{
-              __html: processContent(DOMPurify.sanitize(previewDialog.post?.content || '', {
-                ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div'],
-                ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target', 'loading', 'decoding'],
-                ALLOW_DATA_ATTR: false,
-                ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|data):|[^a-z]|[a-z+.-]+(?:[^a-z+.:-]|$))/i
-              }), linkifyContentSafe)
+              __html: processContent(sanitizedPreviewContent, linkifyContentSafe)
             }}
             sx={{
               '& p': { marginBottom: 1 },

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import DOMPurify from 'dompurify';
 import { getBoardPost, createBoard, updateBoard } from '../api/boards';
 import { getCurrentUser, isAuthenticated } from '../api/auth';
 import { approvePost, rejectPost, updatePendingPost } from '../api/approval';
@@ -9,6 +8,16 @@ import QuillEditor from './QuillEditor';
 import { domPurifyConfig } from '../utils/domPurifyConfig';
 import '../styles/BoardPostForm.css';
 import '../styles/QuillEditor.css';
+
+// DOMPurify 동적 로딩
+let DOMPurifyInstance = null;
+const loadDOMPurify = async () => {
+  if (!DOMPurifyInstance) {
+    const module = await import('dompurify');
+    DOMPurifyInstance = module.default;
+  }
+  return DOMPurifyInstance;
+};
 
 function BoardPostForm() {
   const navigate = useNavigate();
@@ -73,6 +82,7 @@ function BoardPostForm() {
 
       // 내용이 수정되었다면 먼저 업데이트
       if (isPendingMode && isEditMode) {
+        const DOMPurify = await loadDOMPurify();
         const sanitizedContent = DOMPurify.sanitize(content, domPurifyConfig);
 
         await updatePendingPost(postId, {
@@ -156,6 +166,7 @@ function BoardPostForm() {
     }
 
     // HTML 컨텐츠를 새니타이즈
+    const DOMPurify = await loadDOMPurify();
     const sanitizedContent = DOMPurify.sanitize(content, domPurifyConfig);
 
     try {

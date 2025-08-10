@@ -15,11 +15,13 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <!-- DNS Prefetch for early resolution -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     
     <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://www.googletagmanager.com">
@@ -28,10 +30,18 @@
     <link rel="preload" as="image" href="%PUBLIC_URL%/images/banner-mobile.webp" media="(max-width: 768px)" type="image/webp" fetchpriority="high">
     <link rel="preload" as="image" href="%PUBLIC_URL%/images/banner-desktop.webp" media="(min-width: 769px)" type="image/webp" fetchpriority="high">
     
-    <!-- Pretendard font via CDN -->
-    <link rel="stylesheet" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" crossorigin="anonymous">
+    <!-- Pretendard font via CDN - Non-blocking load -->
+    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" media="print" onload="this.media='all'; this.onload=null;" crossorigin="anonymous">
+    <noscript>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" crossorigin="anonymous">
+    </noscript>
     <style>
-      /* Font fallback */
+      /* Font with swap for better performance */
+      @font-face {
+        font-family: 'Pretendard';
+        font-display: swap;
+      }
       body {
         font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
       }

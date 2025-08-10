@@ -12,6 +12,10 @@ module.exports = {
         // Add contenthash to chunk names for cache busting
         webpackConfig.output.chunkFilename = 'static/js/[name].[contenthash:8].chunk.js';
         
+        // Ensure all output files have contenthash for long-term caching
+        webpackConfig.output.filename = 'static/js/[name].[contenthash:8].js';
+        webpackConfig.output.assetModuleFilename = 'static/media/[name].[contenthash:8][ext]';
+        
         // Optimize JS bundles
         webpackConfig.optimization = {
           ...webpackConfig.optimization,

@@ -23,6 +23,7 @@ const {
   requestSizeLimit
 } = require('./middleware/security');
 const trafficLogger = require('./middleware/trafficLogger');
+const cacheHeaders = require('./middleware/cacheHeaders');
 
 const userRoutes = require('./routes/userRoutes');
 const boardRoutes = require('./routes/boardRoutes');
@@ -63,6 +64,9 @@ app.use(compression({
 app.use(configureHelmet());
 app.use(additionalSecurity);
 app.use(requestSizeLimit);
+
+// 캐시 헤더 미들웨어 적용
+app.use(cacheHeaders);
 
 // Cookie parser 미들웨어
 app.use(cookieParser());
