@@ -183,7 +183,8 @@ frontend/**/*.tmp
 
 # Gatsby cache
 **/.gatsby/
-**/public/
+# Gatsby public 폴더 (우리 프로젝트는 Gatsby를 사용하지 않음)
+# **/public/
 
 # VuePress cache
 **/.vuepress/dist/

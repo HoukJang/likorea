@@ -1,0 +1,55 @@
+/* Pretendard 한글 서브셋 폰트 - 최적화 버전 */
+/* 필수 한글 2,350자 + 영문/숫자/특수문자만 포함 */
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 400;
+  font-display: swap;
+  src: local('Pretendard Regular'),
+       url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/subset/Pretendard-Regular.subset.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/subset/Pretendard-Regular.subset.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 500;
+  font-display: swap;
+  src: local('Pretendard Medium'),
+       url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/subset/Pretendard-Medium.subset.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/subset/Pretendard-Medium.subset.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 600;
+  font-display: swap;
+  src: local('Pretendard SemiBold'),
+       url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/subset/Pretendard-SemiBold.subset.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/subset/Pretendard-SemiBold.subset.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 700;
+  font-display: swap;
+  src: local('Pretendard Bold'),
+       url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/subset/Pretendard-Bold.subset.woff2') format('woff2'),
+       url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/subset/Pretendard-Bold.subset.woff') format('woff');
+}
+
+/* 가변 폰트 사용 시 (더 효율적) */
+@font-face {
+  font-family: 'Pretendard Variable';
+  font-weight: 100 900;
+  font-display: swap;
+  src: local('Pretendard Variable'),
+       url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/PretendardVariable.woff2') format('woff2-variations');
+}
+
+/* 기본 폰트 설정 */
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
