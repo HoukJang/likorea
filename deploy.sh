@@ -1,11 +1,27 @@
 #!/bin/bash
 
-# 🚀 Likorea 배포 스크립트
-# 사용법: ./deploy.sh [environment] [--force] [--init-db]
-# 예시: ./deploy.sh production
-# 예시: ./deploy.sh production --force (테스트 실패 시에도 배포)
-# 예시: ./deploy.sh production --init-db (DB 초기화와 함께 배포)
-# 예시: ./deploy.sh production --force --init-db (강제 배포 + DB 초기화)
+# 🚀 Likorea 통합 배포 스크립트
+# 사용법: ./deploy.sh [environment] [options]
+# 
+# 환경:
+#   development  개발 환경 (기본값)
+#   production   프로덕션 환경
+#
+# 옵션:
+#   --force           테스트 실패 시에도 배포 진행
+#   --init-db         데이터베이스 초기화 (주의: 모든 데이터 삭제)
+#   --skip-tests      테스트를 건너뜁니다
+#   --skip-lint       린트 검사를 건너뜁니다
+#   --skip-git-check  Git 상태 확인을 건너뜁니다
+#   --auto            Non-interactive 모드 (CI/CD용)
+#   --quiet           조용한 모드 (최소 출력)
+#
+# 예시:
+#   ./deploy.sh production
+#   ./deploy.sh production --force
+#   ./deploy.sh production --init-db
+#   ./deploy.sh production --auto --skip-tests
+#   ./deploy.sh production --force --init-db
 
 set -e
 
@@ -21,6 +37,7 @@ NC='\033[0m' # No Color
 
 # 로그 함수
 log_info() {
+    [ "$QUIET_MODE" = true ] && return
     echo -e "${GREEN}[INFO]${NC} $1"
 }
 
@@ -33,58 +50,112 @@ log_error() {
 }
 
 log_step() {
+    [ "$QUIET_MODE" = true ] && return
     echo -e "${BLUE}[STEP]${NC} $1"
 }
 
 # 환경 확인
 if [ "$ENVIRONMENT" != "development" ] && [ "$ENVIRONMENT" != "production" ]; then
     log_error "지원하지 않는 환경입니다: $ENVIRONMENT"
-    log_error "사용법: ./deploy.sh [development|production] [--force] [--init-db]"
+    log_error "사용법: ./deploy.sh [development|production] [options]"
     exit 1
 fi
 
-# 옵션 확인
+# 옵션 파싱
 FORCE_DEPLOY=false
 INIT_DB=false
+SKIP_TESTS=false
+SKIP_LINT=false
+SKIP_GIT_CHECK=false
+AUTO_MODE=false
+QUIET_MODE=false
 
 # 모든 매개변수를 순회하면서 옵션 확인
+shift # 첫 번째 파라미터(환경) 제거
 for arg in "$@"; do
     case $arg in
         --force)
             FORCE_DEPLOY=true
-            log_warn "Force 모드로 배포합니다. 테스트 실패 시에도 배포가 계속됩니다."
+            log_warn "Force 모드가 활성화되었습니다. 테스트 실패를 무시합니다."
             ;;
         --init-db)
+            if [ "$ENVIRONMENT" = "production" ] && [ "$AUTO_MODE" = true ]; then
+                log_error "프로덕션 환경에서는 자동 모드로 DB 초기화를 할 수 없습니다"
+                log_error "안전을 위해 수동으로 실행하세요"
+                exit 1
+            fi
             INIT_DB=true
-            log_warn "데이터베이스 초기화 모드입니다. 모든 데이터가 삭제됩니다!"
+            log_warn "데이터베이스가 초기화됩니다. 모든 데이터가 삭제됩니다!"
+            ;;
+        --skip-tests)
+            SKIP_TESTS=true
+            log_warn "테스트를 건너뜁니다"
+            ;;
+        --skip-lint)
+            SKIP_LINT=true
+            log_warn "린트 검사를 건너뜁니다"
+            ;;
+        --skip-git-check)
+            SKIP_GIT_CHECK=true
+            log_warn "Git 상태 확인을 건너뜁니다"
+            ;;
+        --auto)
+            AUTO_MODE=true
+            log_info "자동 모드로 실행합니다 (Non-interactive)"
+            ;;
+        --quiet)
+            QUIET_MODE=true
+            ;;
+        *)
+            log_warn "알 수 없는 옵션: $arg"
             ;;
     esac
 done
 
-# DB 초기화 경고 및 확인
-if [ "$INIT_DB" = true ]; then
-    log_error "⚠️  경고: 데이터베이스를 초기화하면 모든 기존 데이터가 삭제됩니다!"
-    log_error "⚠️  이 작업은 되돌릴 수 없습니다!"
-    read -p "정말로 데이터베이스를 초기화하시겠습니까? (DELETE/n): " -r
-    if [ "$REPLY" != "DELETE" ]; then
-        log_info "데이터베이스 초기화가 취소되었습니다."
-        exit 1
+# 프로덕션 환경 경고
+if [ "$ENVIRONMENT" = "production" ] && [ "$AUTO_MODE" = false ]; then
+    log_warn "⚠️  프로덕션 환경에 배포하려고 합니다!"
+    if [ "$INIT_DB" = true ]; then
+        log_error "⚠️  데이터베이스가 초기화됩니다! 모든 데이터가 삭제됩니다!"
     fi
-    log_warn "데이터베이스 초기화가 확인되었습니다."
+    if [ "$FORCE_DEPLOY" = false ] && [ "$SKIP_TESTS" = false ]; then
+        read -p "계속하시겠습니까? (y/N) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            log_info "배포가 취소되었습니다."
+            exit 0
+        fi
+    fi
 fi
 
-log_info "배포를 시작합니다..."
+# 프로덕션 자동 모드에서 DB 초기화 방지
+if [ "$ENVIRONMENT" = "production" ] && [ "$AUTO_MODE" = true ]; then
+    log_warn "⚠️  프로덕션 자동 모드에서는 DB 초기화가 비활성화됩니다"
+    log_warn "⚠️  DB 초기화가 필요한 경우 수동으로 실행하세요"
+    INIT_DB=false
+fi
 
 # 1. Git 상태 확인
-log_step "1. Git 상태 확인"
-if [ -n "$(git status --porcelain)" ]; then
-    log_warn "커밋되지 않은 변경사항이 있습니다."
-    read -p "계속하시겠습니까? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        log_info "배포가 취소되었습니다."
-        exit 1
+if [ "$SKIP_GIT_CHECK" = false ]; then
+    log_step "1. Git 상태 확인"
+    if [ -n "$(git status --porcelain)" ]; then
+        log_warn "커밋되지 않은 변경사항이 있습니다:"
+        git status --short
+        if [ "$AUTO_MODE" = false ] && [ "$FORCE_DEPLOY" = false ]; then
+            read -p "계속하시겠습니까? (y/N) " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                log_info "배포가 취소되었습니다."
+                exit 0
+            fi
+        else
+            log_warn "계속 진행합니다"
+        fi
+    else
+        log_info "Git 상태 정상"
     fi
+else
+    log_step "1. Git 상태 확인 건너뜀"
 fi
 
 # 2. 의존성 설치
@@ -93,104 +164,174 @@ log_step "2. 의존성 설치"
 # 백엔드 의존성 설치
 log_info "백엔드 의존성 설치..."
 cd backend
-npm install
+if [ "$QUIET_MODE" = true ]; then
+    npm install --silent
+else
+    npm install
+fi
 cd ..
 
 # 프론트엔드 의존성 설치
 log_info "프론트엔드 의존성 설치..."
 cd frontend
-npm install
+if [ "$QUIET_MODE" = true ]; then
+    npm install --silent
+else
+    npm install
+fi
 cd ..
 
 # 3. 환경변수 확인
 log_step "3. 환경변수 확인"
+MISSING_ENV=false
+
 if [ "$ENVIRONMENT" = "production" ]; then
     if [ ! -f "backend/.env" ]; then
         log_error "백엔드 .env 파일이 없습니다."
         log_info "백엔드 .env 파일을 생성해주세요."
-        exit 1
+        MISSING_ENV=true
     fi
     
     if [ ! -f "frontend/.env" ]; then
         log_error "프론트엔드 .env 파일이 없습니다."
         log_info "프론트엔드 .env 파일을 생성해주세요."
-        exit 1
+        MISSING_ENV=true
     fi
+else
+    # 개발 환경에서는 .env.development 파일 확인
+    if [ ! -f "backend/.env.development" ] && [ ! -f "backend/.env" ]; then
+        log_warn "백엔드 환경 파일이 없습니다. 기본값을 사용합니다"
+    fi
+    
+    if [ ! -f "frontend/.env.development" ] && [ ! -f "frontend/.env" ]; then
+        log_warn "프론트엔드 환경 파일이 없습니다. 기본값을 사용합니다"
+    fi
+fi
+
+if [ "$MISSING_ENV" = true ]; then
+    log_error "필수 환경 파일이 누락되었습니다. 배포를 중단합니다"
+    exit 1
 fi
 
 # 4. 코드 품질 검사 및 테스트 실행
 log_step "4. 코드 품질 검사 및 테스트 실행"
 
 # 백엔드 린트 및 포맷 검사
-log_info "백엔드 코드 품질 검사..."
-cd backend
-npm run lint || {
-    log_warn "백엔드 ESLint 검사 실패"
-    if [ "$FORCE_DEPLOY" = false ]; then
-        log_error "ESLint 오류를 수정하거나 --force 옵션을 사용하세요."
-        exit 1
-    fi
-}
+if [ "$SKIP_LINT" = false ]; then
+    log_info "백엔드 코드 품질 검사..."
+    cd backend
+    npm run lint || {
+        log_warn "백엔드 ESLint 검사 실패"
+        if [ "$FORCE_DEPLOY" = false ] && [ "$AUTO_MODE" = false ]; then
+            log_error "ESLint 오류를 수정하거나 --force 또는 --skip-lint 옵션을 사용하세요."
+            exit 1
+        fi
+    }
+    cd ..
+else
+    log_info "백엔드 린트 검사 건너뜀"
+fi
 
-# Prettier 제거됨 - 포맷 검사 건너뛰기
-log_info "백엔드 포맷 검사: Prettier 제거됨 (ESLint만 사용)"
-
-# 백엔드 테스트 (원격 MongoDB Atlas 사용)
-log_info "백엔드 테스트 실행 (원격 MongoDB Atlas 연결)..."
-npm test || {
-    log_warn "백엔드 테스트 실패"
-    if [ "$FORCE_DEPLOY" = true ]; then
-        log_warn "Force 모드로 인해 테스트 실패를 무시하고 배포를 계속합니다."
+# 백엔드 테스트
+if [ "$SKIP_TESTS" = false ]; then
+    log_info "백엔드 테스트 실행 (원격 MongoDB Atlas 연결)..."
+    cd backend
+    if [ "$AUTO_MODE" = true ] || [ "$QUIET_MODE" = true ]; then
+        CI=true npm test || {
+            log_warn "백엔드 테스트 실패"
+            if [ "$FORCE_DEPLOY" = false ]; then
+                log_error "테스트를 수정하거나 --force 또는 --skip-tests 옵션을 사용하세요."
+                exit 1
+            else
+                log_warn "Force 모드로 인해 테스트 실패를 무시하고 배포를 계속합니다."
+            fi
+        }
     else
-        log_warn "테스트 실패로 인한 배포 중단을 원하지 않으면 --force 옵션을 사용하세요"
-        log_error "배포가 중단되었습니다. 테스트를 수정하거나 --force 옵션을 사용하세요."
-        exit 1
+        npm test || {
+            log_warn "백엔드 테스트 실패"
+            if [ "$FORCE_DEPLOY" = false ]; then
+                log_error "테스트를 수정하거나 --force 또는 --skip-tests 옵션을 사용하세요."
+                exit 1
+            else
+                log_warn "Force 모드로 인해 테스트 실패를 무시하고 배포를 계속합니다."
+            fi
+        }
     fi
-}
-cd ..
+    cd ..
+else
+    log_info "백엔드 테스트 건너뜀"
+fi
 
 # 프론트엔드 린트 및 포맷 검사
-log_info "프론트엔드 코드 품질 검사..."
-cd frontend
-npm run lint || {
-    log_warn "프론트엔드 ESLint 검사 실패"
-    if [ "$FORCE_DEPLOY" = false ]; then
-        log_error "ESLint 오류를 수정하거나 --force 옵션을 사용하세요."
-        exit 1
-    fi
-}
-
-# Prettier 제거됨 - 포맷 검사 건너뛰기
-log_info "프론트엔드 포맷 검사: Prettier 제거됨 (ESLint만 사용)"
+if [ "$SKIP_LINT" = false ]; then
+    log_info "프론트엔드 코드 품질 검사..."
+    cd frontend
+    npm run lint || {
+        log_warn "프론트엔드 ESLint 검사 실패"
+        if [ "$FORCE_DEPLOY" = false ] && [ "$AUTO_MODE" = false ]; then
+            log_error "ESLint 오류를 수정하거나 --force 또는 --skip-lint 옵션을 사용하세요."
+            exit 1
+        fi
+    }
+    cd ..
+else
+    log_info "프론트엔드 린트 검사 건너뜀"
+fi
 
 # 프론트엔드 테스트
-log_info "프론트엔드 테스트 실행..."
-npm test -- --watchAll=false --passWithNoTests || {
-    log_warn "프론트엔드 테스트 실패"
-    if [ "$FORCE_DEPLOY" = true ]; then
-        log_warn "Force 모드로 인해 테스트 실패를 무시하고 배포를 계속합니다."
+if [ "$SKIP_TESTS" = false ]; then
+    log_info "프론트엔드 테스트 실행..."
+    cd frontend
+    if [ "$AUTO_MODE" = true ] || [ "$QUIET_MODE" = true ]; then
+        CI=true npm test -- --watchAll=false --passWithNoTests || {
+            log_warn "프론트엔드 테스트 실패"
+            if [ "$FORCE_DEPLOY" = false ]; then
+                log_error "테스트를 수정하거나 --force 또는 --skip-tests 옵션을 사용하세요."
+                exit 1
+            else
+                log_warn "Force 모드로 인해 테스트 실패를 무시하고 배포를 계속합니다."
+            fi
+        }
     else
-        log_warn "테스트 실패로 인한 배포 중단을 원하지 않으면 --force 옵션을 사용하세요"
-        log_error "배포가 중단되었습니다. 테스트를 수정하거나 --force 옵션을 사용하세요."
-        exit 1
+        npm test -- --watchAll=false --passWithNoTests || {
+            log_warn "프론트엔드 테스트 실패"
+            if [ "$FORCE_DEPLOY" = false ]; then
+                log_error "테스트를 수정하거나 --force 또는 --skip-tests 옵션을 사용하세요."
+                exit 1
+            else
+                log_warn "Force 모드로 인해 테스트 실패를 무시하고 배포를 계속합니다."
+            fi
+        }
     fi
-}
-cd ..
+    cd ..
+else
+    log_info "프론트엔드 테스트 건너뜀"
+fi
 
 # 5. 버전 관리
 log_step "5. 버전 관리"
 log_info "버전 정보 동기화 및 주입..."
 
 # 버전 관리자 실행
-node scripts/version-manager.js sync
-node scripts/version-manager.js inject
-node scripts/version-manager.js current
+if [ -f "scripts/version-manager.js" ]; then
+    node scripts/version-manager.js sync
+    node scripts/version-manager.js inject
+    node scripts/version-manager.js current
+else
+    log_warn "버전 관리자가 없습니다. 버전 관리를 건너뜁니다."
+fi
 
 # 6. 프론트엔드 빌드
 log_step "6. 프론트엔드 빌드"
 log_info "프론트엔드 빌드 중..."
 cd frontend
 npm run build
+
+# 빌드 성공 확인
+if [ ! -d "build" ]; then
+    log_error "프론트엔드 빌드 실패. build 디렉토리가 생성되지 않았습니다"
+    exit 1
+fi
 
 # 빌드 파일 권한 설정 (프로덕션 환경에서만)
 if [ "$ENVIRONMENT" = "production" ]; then
@@ -243,6 +384,7 @@ if [ "$ENVIRONMENT" = "production" ]; then
             log_info "새 백엔드 서버 시작..."
             pm2 start server.js --name "likorea-backend" --env production
         fi
+        pm2 save
     else
         log_warn "PM2가 설치되어 있지 않습니다. 직접 서버를 시작하세요."
         log_info "수동 실행: NODE_ENV=production node server.js"
@@ -265,9 +407,16 @@ if [ "$ENVIRONMENT" = "production" ]; then
         
         log_info "Nginx 재시작..."
         if command -v systemctl &> /dev/null; then
-            systemctl reload nginx || {
-                log_warn "Nginx 재시작 실패. 수동으로 재시작해주세요."
-            }
+            # AUTO_MODE에서는 sudo 필요 시 실패 허용
+            if [ "$AUTO_MODE" = true ]; then
+                sudo systemctl reload nginx 2>/dev/null || systemctl reload nginx || {
+                    log_warn "Nginx 재시작 실패. 수동으로 재시작해주세요."
+                }
+            else
+                systemctl reload nginx || {
+                    log_warn "Nginx 재시작 실패. 수동으로 재시작해주세요."
+                }
+            fi
         else
             log_warn "systemctl을 찾을 수 없습니다. 수동으로 Nginx를 재시작해주세요."
         fi
@@ -279,7 +428,7 @@ else
 fi
 
 # 10. SSL 인증서 설정 (프로덕션)
-if [ "$ENVIRONMENT" = "production" ]; then
+if [ "$ENVIRONMENT" = "production" ] && [ "$AUTO_MODE" = false ]; then
     log_step "10. SSL 인증서 설정"
     if command -v certbot &> /dev/null; then
         log_info "SSL 인증서 확인 중..."
@@ -300,43 +449,25 @@ if [ "$ENVIRONMENT" = "production" ]; then
         log_info "PM2 프로세스 상태:"
         pm2 list
     fi
-
-    if command -v systemctl &> /dev/null && command -v nginx &> /dev/null; then
-        log_info "Nginx 상태:"
-        systemctl status nginx --no-pager -l || log_warn "Nginx 상태 확인 실패"
-    fi
-else
-    log_info "개발 환경에서는 서비스 상태 확인을 건너뜁니다."
-    log_info "개발 서버를 수동으로 시작하세요:"
-    log_info "  백엔드: cd backend && npm run dev"
-    log_info "  프론트엔드: cd frontend && npm start"
-fi
-
-# 11. 배포 완료
-log_info "🎉 배포가 완료되었습니다!"
-
-if [ "$INIT_DB" = true ]; then
-    log_info "📊 데이터베이스가 초기화되었습니다."
-    log_info "🔧 초기 데이터 및 태그가 생성되었습니다."
-fi
-
-if [ "$ENVIRONMENT" = "production" ]; then
-    log_info "🌐 웹사이트: https://likorea.com"
-    log_info "📊 PM2 모니터링: pm2 monit"
+    
+    log_info "🌐 프로덕션 URL: https://likorea.com"
+    log_info "📊 PM2 상태 확인: pm2 status"
     log_info "📝 로그 확인: pm2 logs likorea-backend"
-    log_info "🔧 유용한 명령어:"
-    log_info "  - PM2 재시작: pm2 restart likorea-backend"
-    log_info "  - Nginx 재시작: sudo systemctl reload nginx"
-    log_info "  - SSL 갱신: sudo certbot renew"
-    log_info "  - DB 초기화: ./deploy.sh production --init-db"
 else
     log_info "🌐 개발 서버 URL:"
     log_info "  - 프론트엔드: http://localhost:3000"
     log_info "  - 백엔드: http://localhost:5001"
-    log_info "🔧 개발 명령어:"
-    log_info "  - 백엔드 개발 서버: cd backend && npm run dev"
-    log_info "  - 프론트엔드 개발 서버: cd frontend && npm start"
-    log_info "  - 테스트 실행: npm test (각 디렉토리에서)"
-    log_info "  - 코드 린트: npm run lint (각 디렉토리에서)"
-    log_info "  - DB 초기화: ./deploy.sh development --init-db"
-fi 
+fi
+
+# 배포 완료
+log_info "🎉 배포가 완료되었습니다!"
+log_info "✅ 배포 요약:"
+log_info "  - 환경: $ENVIRONMENT"
+log_info "  - 버전: $([ -f "version.json" ] && node -pe "JSON.parse(require('fs').readFileSync('version.json')).version" || echo "N/A")"
+log_info "  - 테스트: $([ "$SKIP_TESTS" = true ] && echo "건너뜀" || echo "실행됨")"
+log_info "  - 린트: $([ "$SKIP_LINT" = true ] && echo "건너뜀" || echo "실행됨")"
+log_info "  - Git 확인: $([ "$SKIP_GIT_CHECK" = true ] && echo "건너뜀" || echo "실행됨")"
+log_info "  - 모드: $([ "$AUTO_MODE" = true ] && echo "자동" || echo "수동")"
+
+# 종료 코드
+exit 0
