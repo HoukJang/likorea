@@ -129,11 +129,14 @@ export const useAuth = () => {
 
     checkAuth();
 
-    // 30분마다 토큰 유효성 검증 (5분은 너무 짧음)
+    // 30분마다 토큰 유효성 검증 (로그인된 경우에만)
     const interval = setInterval(() => {
-      validateToken().catch(() => {
-        // 자동 검증 실패 시 조용히 처리
-      });
+      // 사용자가 로그인된 경우에만 검증
+      if (user) {
+        validateToken().catch(() => {
+          // 자동 검증 실패 시 조용히 처리
+        });
+      }
     }, 30 * 60 * 1000);
 
     return () => clearInterval(interval);
