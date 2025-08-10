@@ -10,8 +10,10 @@ import {
 } from '../api/admin';
 import Profile from './Profile';
 import TrafficDashboard from './TrafficDashboard';
-import BotManagement from '../pages/BotManagement';
 import packageJson from '../../package.json';
+import Loading from './common/Loading';
+// BotManagement를 직접 import
+import BotManagement from '../pages/BotManagement';
 import '../styles/Admin.css';
 
 function Admin() {

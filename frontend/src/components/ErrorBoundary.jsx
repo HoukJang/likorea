@@ -17,6 +17,9 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
+    // 콘솔에 에러 출력
+    console.error('ErrorBoundary caught an error:', error.message);
+    
     // 에러 로깅
     getErrorInfo(error);
 
@@ -106,56 +109,85 @@ class ErrorBoundary extends React.Component {
               </button>
             </div>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {/* 에러 정보 표시 - 모든 환경에서 기본 정보 표시 */}
+            {this.state.error && (
               <details
                 style={{
                   marginTop: '20px',
                   padding: '15px',
-                  backgroundColor: '#f8f9fa',
+                  backgroundColor: '#fff3cd',
                   borderRadius: '4px',
-                  border: '1px solid #dee2e6'
+                  border: '1px solid #ffc107'
                 }}
               >
                 <summary
                   style={{
                     cursor: 'pointer',
                     fontWeight: 'bold',
-                    color: '#495057'
+                    color: '#856404'
                   }}
                 >
-                  개발자 정보 (개발 환경에서만 표시)
+                  🔍 에러 상세 정보 (클릭하여 확인)
                 </summary>
                 <div
                   style={{
                     marginTop: '10px',
                     textAlign: 'left',
                     fontSize: '0.9rem',
-                    color: '#6c757d'
+                    color: '#856404'
                   }}
                 >
                   <p>
                     <strong>에러 메시지:</strong> {this.state.error.message}
                   </p>
                   <p>
+                    <strong>에러 이름:</strong> {this.state.error.name}
+                  </p>
+                  <p>
                     <strong>발생 시간:</strong> {new Date().toLocaleString()}
                   </p>
-                  {this.state.errorInfo && (
-                    <div>
-                      <p>
-                        <strong>컴포넌트 스택:</strong>
-                      </p>
-                      <pre
-                        style={{
-                          backgroundColor: '#e9ecef',
-                          padding: '10px',
-                          borderRadius: '4px',
-                          overflow: 'auto',
-                          fontSize: '0.8rem'
-                        }}
-                      >
-                        {this.state.errorInfo.componentStack}
-                      </pre>
-                    </div>
+                  {/* 스택 트레이스는 개발 환경에서만 표시 */}
+                  {(process.env.NODE_ENV === 'development' || process.env.REACT_APP_ENV === 'development') && (
+                    <>
+                      {this.state.error.stack && (
+                        <div>
+                          <p>
+                            <strong>스택 트레이스:</strong>
+                          </p>
+                          <pre
+                            style={{
+                              backgroundColor: '#e9ecef',
+                              padding: '10px',
+                              borderRadius: '4px',
+                              overflow: 'auto',
+                              fontSize: '0.8rem',
+                              maxHeight: '200px'
+                            }}
+                          >
+                            {this.state.error.stack}
+                          </pre>
+                        </div>
+                      )}
+                      {this.state.errorInfo && (
+                        <div>
+                          <p>
+                            <strong>컴포넌트 스택:</strong>
+                          </p>
+                          <pre
+                            style={{
+                              backgroundColor: '#e9ecef',
+                              padding: '10px',
+                              borderRadius: '4px',
+                              overflow: 'auto',
+                              fontSize: '0.8rem',
+                              maxHeight: '200px'
+                            }}
+                          >
+                            {this.state.errorInfo.componentStack}
+                          </pre>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               </details>

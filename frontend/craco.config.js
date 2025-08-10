@@ -7,91 +7,35 @@ module.exports = {
     configure: (webpackConfig, { env, paths }) => {
       // Production optimizations
       if (env === 'production') {
+        // Set public path for chunk loading
+        webpackConfig.output.publicPath = '/';
+        // Add contenthash to chunk names for cache busting
+        webpackConfig.output.chunkFilename = 'static/js/[name].[contenthash:8].chunk.js';
+        
         // Optimize JS bundles
         webpackConfig.optimization = {
           ...webpackConfig.optimization,
           splitChunks: {
             chunks: 'all',
-            maxInitialRequests: 30,
-            minSize: 10000,
-            maxAsyncRequests: 30,
             cacheGroups: {
-              // React core libraries - split into smaller chunks
-              reactCore: {
-                test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-                name: 'react-core',
-                priority: 35,
-                reuseExistingChunk: true,
-                enforce: true,
-              },
-              reactRouter: {
-                test: /[\\/]node_modules[\\/](react-router|react-router-dom|history)[\\/]/,
-                name: 'react-router',
-                priority: 34,
-                reuseExistingChunk: true,
-              },
-              // Material-UI components
-              mui: {
-                test: /[\\/]node_modules[\\/]@mui[\\/]/,
-                name: 'mui',
-                priority: 25,
-                reuseExistingChunk: true,
-              },
-              // Chart.js libraries
-              charts: {
-                test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2|@kurkle)[\\/]/,
-                name: 'charts',
-                priority: 20,
-                reuseExistingChunk: true,
-              },
-              // Image compression libraries
-              imageTools: {
-                test: /[\\/]node_modules[\\/](browser-image-compression|pica|blueimp)[\\/]/,
-                name: 'image-tools',
-                priority: 18,
-                reuseExistingChunk: true,
-              },
-              // Sanitization libraries
-              sanitize: {
-                test: /[\\/]node_modules[\\/](dompurify|sanitize-html)[\\/]/,
-                name: 'sanitize',
-                priority: 17,
-                reuseExistingChunk: true,
-              },
-              // Date/Time libraries
-              datetime: {
-                test: /[\\/]node_modules[\\/](date-fns|dayjs|moment)[\\/]/,
-                name: 'datetime',
-                priority: 16,
-                reuseExistingChunk: true,
-              },
-              // Emotion styling libraries
-              emotion: {
-                test: /[\\/]node_modules[\\/]@emotion[\\/]/,
-                name: 'emotion',
-                priority: 15,
-                reuseExistingChunk: true,
-              },
-              // Remaining vendor libraries
+              // 기본 vendor 설정만 유지
               vendor: {
                 test: /[\\/]node_modules[\\/]/,
-                name: 'vendor',
+                name: 'vendors',
                 priority: 10,
-                reuseExistingChunk: true,
-                minSize: 30000,
               },
-              // Common chunk for code used in multiple places
+              // 공통 코드
               common: {
                 minChunks: 2,
                 priority: 5,
                 reuseExistingChunk: true,
-                enforce: true,
               },
             },
           },
           // Use content hash for better caching
           moduleIds: 'deterministic',
-          runtimeChunk: 'single',
+          chunkIds: 'named',
+          runtimeChunk: false,
           // Minimize JS
           minimize: true,
           minimizer: [
@@ -105,7 +49,7 @@ module.exports = {
                   warnings: false,
                   comparisons: false,
                   inline: 2,
-                  drop_console: true, // Remove console logs in production
+                  drop_console: false, // Keep console logs for debugging
                 },
                 mangle: {
                   safari10: true,

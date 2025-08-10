@@ -11,25 +11,33 @@ import './styles/accessibility-improvements.css';
 import Banner from './components/Banner';
 import GlobalNavigation from './components/GlobalNavigation';
 
-// 페이지 컴포넌트는 lazy loading으로 코드 분할 with prefetch hints
-const Landing = React.lazy(() => import(/* webpackChunkName: "landing", webpackPrefetch: true */ './pages/Landing'));
-const Signup = React.lazy(() => import(/* webpackChunkName: "signup" */ './components/Signup'));
-const Login = React.lazy(() => import(/* webpackChunkName: "login" */ './components/Login'));
-const BoardList = React.lazy(() => import(/* webpackChunkName: "board-list", webpackPrefetch: true */ './components/BoardList'));
-const BoardPostForm = React.lazy(() => import(/* webpackChunkName: "board-form" */ './components/BoardPostForm'));
-const BoardPostView = React.lazy(() => import(/* webpackChunkName: "board-view", webpackPrefetch: true */ './components/BoardPostView'));
-const Admin = React.lazy(() => import(/* webpackChunkName: "admin" */ './components/Admin'));
-const Profile = React.lazy(() => import(/* webpackChunkName: "profile" */ './components/Profile'));
-const DesignPreview = React.lazy(() => import(/* webpackChunkName: "design-preview" */ './components/DesignPreview'));
-const BotManagement = React.lazy(() => import(/* webpackChunkName: "bot-management" */ './pages/BotManagement'));
-const BotForm = React.lazy(() => import(/* webpackChunkName: "bot-form" */ './pages/BotForm'));
+// 자주 사용되는 페이지는 직접 import
+import Landing from './pages/Landing';
+import Signup from './components/Signup';
+import Login from './components/Login';
+import BoardList from './components/BoardList';
+import BoardPostForm from './components/BoardPostForm';
+import BoardPostView from './components/BoardPostView';
+import Profile from './components/Profile';
 
-// Suspense wrapper for lazy loaded components
-const SuspenseWrapper = ({ children }) => (
-  <Suspense fallback={<Loading />}>
-    {children}
-  </Suspense>
-);
+// BotManagement는 직접 import (순환 의존성 문제 해결)
+import BotManagement from './pages/BotManagement';
+
+// 관리자 페이지는 lazy loading (React.lazy 사용)
+const Admin = React.lazy(() => {
+  console.log('[App] Importing Admin component...');
+  return import('./components/Admin');
+});
+
+const DesignPreview = React.lazy(() => {
+  console.log('[App] Importing DesignPreview component...');
+  return import('./components/DesignPreview');
+});
+
+const BotForm = React.lazy(() => {
+  console.log('[App] Importing BotForm component...');
+  return import('./pages/BotForm');
+});
 
 function App() {
   // 전역 인증 상태 관리 - 앱 시작 시 토큰 검증 수행
@@ -60,32 +68,32 @@ function App() {
           <Banner />
           <GlobalNavigation />
           <Routes>
-            {/* 루트 경로를 게시판 리스트로 설정 */}
-            <Route path="/" element={<SuspenseWrapper><BoardList /></SuspenseWrapper>} />
+            {/* 루트 경로를 랜딩 페이지로 설정 */}
+            <Route path="/" element={<Landing />} />
             
-            {/* SEO용 랜딩 페이지 */}
-            <Route path="/landing" element={<SuspenseWrapper><Landing /></SuspenseWrapper>} />
+            {/* 게시판 리스트 페이지 */}
+            <Route path="/board" element={<BoardList />} />
             
-            <Route path="/signup" element={<SuspenseWrapper><Signup /></SuspenseWrapper>} />
-            <Route path="/login" element={<SuspenseWrapper><Login /></SuspenseWrapper>} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
 
             {/* 봇 관리 페이지 - 구체적인 경로를 먼저 배치 */}
-            <Route path="/bots/new" element={<SuspenseWrapper><BotForm /></SuspenseWrapper>} />
-            <Route path="/bots/edit/:botId" element={<SuspenseWrapper><BotForm /></SuspenseWrapper>} />
-            <Route path="/bot-management" element={<SuspenseWrapper><BotManagement /></SuspenseWrapper>} />
+            <Route path="/bots/new" element={<Suspense fallback={<Loading />}><BotForm /></Suspense>} />
+            <Route path="/bots/edit/:botId" element={<Suspense fallback={<Loading />}><BotForm /></Suspense>} />
+            <Route path="/bot-management" element={<BotManagement />} />
 
             {/* 게시판 관련 라우트 */}
-            <Route path="/boards" element={<SuspenseWrapper><BoardList /></SuspenseWrapper>} />
-            <Route path="/boards/new" element={<SuspenseWrapper><BoardPostForm /></SuspenseWrapper>} />
-            <Route path="/boards/:postId" element={<SuspenseWrapper><BoardPostView /></SuspenseWrapper>} />
-            <Route path="/boards/:postId/edit" element={<SuspenseWrapper><BoardPostForm /></SuspenseWrapper>} />
+            <Route path="/boards" element={<BoardList />} />
+            <Route path="/boards/new" element={<BoardPostForm />} />
+            <Route path="/boards/:postId" element={<BoardPostView />} />
+            <Route path="/boards/:postId/edit" element={<BoardPostForm />} />
 
             {/* 사용자 관련 라우트 */}
-            <Route path="/profile" element={<SuspenseWrapper><Profile /></SuspenseWrapper>} />
+            <Route path="/profile" element={<Profile />} />
 
             {/* 관리자 페이지 */}
-            <Route path="/admin" element={<SuspenseWrapper><Admin /></SuspenseWrapper>} />
-            <Route path="/design-preview" element={<SuspenseWrapper><DesignPreview /></SuspenseWrapper>} />
+            <Route path="/admin" element={<Suspense fallback={<Loading />}><Admin /></Suspense>} />
+            <Route path="/design-preview" element={<Suspense fallback={<Loading />}><DesignPreview /></Suspense>} />
           </Routes>
         </div>
       </Router>
