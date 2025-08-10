@@ -8,6 +8,15 @@ const Landing = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   
+  // logout=true 파라미터가 있으면 URL 정리
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('logout') === 'true') {
+      // URL에서 logout 파라미터 제거
+      window.history.replaceState({}, '', '/');
+    }
+  }, []);
+  
   // 로그인된 사용자는 게시판으로 리다이렉트
   useEffect(() => {
     if (user) {

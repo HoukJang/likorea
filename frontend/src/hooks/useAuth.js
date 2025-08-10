@@ -38,7 +38,7 @@ export const useAuth = () => {
   /**
    * 토큰 유효성 검증
    */
-  const validateToken = useCallback(async () => {
+  const validateToken = useCallback(async (shouldLogoutOnFail = false) => {
     try {
       const response = await verifyToken();
       if (response.valid && response.user) {
@@ -50,12 +50,27 @@ export const useAuth = () => {
         localStorage.setItem('userAuthority', response.user.authority);
         return true;
       } else {
-        // 토큰이 유효하지 않으면 로그아웃
-        logout();
+        // 토큰이 유효하지 않으면 사용자 정보만 초기화
+        setUser(null);
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userAuthority');
+        // 명시적으로 요청한 경우에만 로그아웃
+        if (shouldLogoutOnFail) {
+          logout();
+        }
         return false;
       }
     } catch (error) {
-      logout();
+      // 검증 실패 시 사용자 정보만 초기화
+      setUser(null);
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('userAuthority');
+      // 명시적으로 요청한 경우에만 로그아웃
+      if (shouldLogoutOnFail) {
+        logout();
+      }
       return false;
     }
   }, [logout]);

@@ -80,8 +80,9 @@ export const logout = async () => {
   // 로그아웃 이벤트 발생
   window.dispatchEvent(new Event('logout'));
   
-  // 프로덕션 환경에서는 강제 리다이렉트로 캐시 무시
-  if (process.env.REACT_APP_ENV === 'production') {
+  // 프로덕션 환경에서는 명시적 로그아웃 시에만 리다이렉트
+  // URL에 logout=true가 없을 때만 리다이렉트하여 무한 루프 방지
+  if (process.env.REACT_APP_ENV === 'production' && !window.location.search.includes('logout=true')) {
     // 캐시를 무시하고 완전히 새로운 페이지 로드
     window.location.href = '/?logout=true';
   }
