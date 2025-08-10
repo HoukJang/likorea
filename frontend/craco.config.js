@@ -32,9 +32,9 @@ module.exports = {
               },
             },
           },
-          // Use content hash for better caching
+          // Use deterministic IDs for stable module references
           moduleIds: 'deterministic',
-          chunkIds: 'named',
+          chunkIds: 'deterministic',
           runtimeChunk: false,
           // Minimize JS
           minimize: true,

@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import Loading from './components/common/Loading';
@@ -20,24 +20,11 @@ import BoardPostForm from './components/BoardPostForm';
 import BoardPostView from './components/BoardPostView';
 import Profile from './components/Profile';
 
-// BotManagement는 직접 import (순환 의존성 문제 해결)
+// 모든 컴포넌트 직접 import (lazy loading 제거)
 import BotManagement from './pages/BotManagement';
-
-// 관리자 페이지는 lazy loading (React.lazy 사용)
-const Admin = React.lazy(() => {
-  console.log('[App] Importing Admin component...');
-  return import('./components/Admin');
-});
-
-const DesignPreview = React.lazy(() => {
-  console.log('[App] Importing DesignPreview component...');
-  return import('./components/DesignPreview');
-});
-
-const BotForm = React.lazy(() => {
-  console.log('[App] Importing BotForm component...');
-  return import('./pages/BotForm');
-});
+import Admin from './components/Admin';
+import DesignPreview from './components/DesignPreview';
+import BotForm from './pages/BotForm';
 
 function App() {
   // 전역 인증 상태 관리 - 앱 시작 시 토큰 검증 수행
@@ -78,8 +65,8 @@ function App() {
             <Route path="/login" element={<Login />} />
 
             {/* 봇 관리 페이지 - 구체적인 경로를 먼저 배치 */}
-            <Route path="/bots/new" element={<Suspense fallback={<Loading />}><BotForm /></Suspense>} />
-            <Route path="/bots/edit/:botId" element={<Suspense fallback={<Loading />}><BotForm /></Suspense>} />
+            <Route path="/bots/new" element={<BotForm />} />
+            <Route path="/bots/edit/:botId" element={<BotForm />} />
             <Route path="/bot-management" element={<BotManagement />} />
 
             {/* 게시판 관련 라우트 */}
@@ -92,8 +79,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
 
             {/* 관리자 페이지 */}
-            <Route path="/admin" element={<Suspense fallback={<Loading />}><Admin /></Suspense>} />
-            <Route path="/design-preview" element={<Suspense fallback={<Loading />}><DesignPreview /></Suspense>} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/design-preview" element={<DesignPreview />} />
           </Routes>
         </div>
       </Router>
