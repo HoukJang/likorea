@@ -2,7 +2,64 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const webpack = require('webpack');
 
+const purgecss = require('@fullhuman/postcss-purgecss');
+
 module.exports = {
+  style: {
+    postcss: {
+      plugins: (plugins) => {
+        if (process.env.NODE_ENV === 'production') {
+          return [
+            ...plugins,
+            purgecss({
+            content: [
+              './src/**/*.{js,jsx,ts,tsx}',
+              './public/index.html'
+            ],
+            defaultExtractor: content => {
+              // 클래스명 추출 개선
+              const broadMatches = content.match(/[^<>"'`\s]*[^<>"'`\s:]/g) || [];
+              const innerMatches = content.match(/[^<>"'`\s.()]*[^<>"'`\s.():]/g) || [];
+              return broadMatches.concat(innerMatches);
+            },
+            safelist: {
+              standard: [
+                // React 관련
+                /^root/,
+                /^App/,
+                // MUI 관련
+                /^Mui/,
+                /^MuiButton/,
+                /^MuiDialog/,
+                // Quill 에디터
+                /^ql-/,
+                /^quill/,
+                // 애니메이션
+                /fade/,
+                /slide/,
+                // 상태 클래스
+                /active/,
+                /disabled/,
+                /selected/,
+                /hover/,
+                /focus/,
+                /error/,
+                /success/,
+                // 동적 클래스
+                /^banner/,
+                /^header/,
+                /^board/,
+                /^admin/,
+                /^loading/
+              ]
+            }
+          })
+          ];
+        }
+        return plugins;
+      }
+    }
+  },
   webpack: {
     configure: (webpackConfig, { env, paths }) => {
       // Production optimizations
@@ -40,6 +97,13 @@ module.exports = {
               chart: {
                 test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2)[\\/]/,
                 name: 'chart',
+                priority: 10,
+                reuseExistingChunk: true
+              },
+              // browser-image-compression 분리 (UPNG/UZIP 포함)
+              imageCompression: {
+                test: /[\\/]node_modules[\\/](browser-image-compression|uzip|upng)[\\/]/,
+                name: 'image-compression',
                 priority: 10,
                 reuseExistingChunk: true
               },
