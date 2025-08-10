@@ -177,8 +177,17 @@ npm test -- --watchAll=false --passWithNoTests || {
 }
 cd ..
 
-# 5. 프론트엔드 빌드
-log_step "5. 프론트엔드 빌드"
+# 5. 버전 관리
+log_step "5. 버전 관리"
+log_info "버전 정보 동기화 및 주입..."
+
+# 버전 관리자 실행
+node scripts/version-manager.js sync
+node scripts/version-manager.js inject
+node scripts/version-manager.js current
+
+# 6. 프론트엔드 빌드
+log_step "6. 프론트엔드 빌드"
 log_info "프론트엔드 빌드 중..."
 cd frontend
 npm run build
@@ -198,9 +207,9 @@ if [ "$ENVIRONMENT" = "production" ]; then
 fi
 cd ..
 
-# 6. 데이터베이스 초기화 (옵션)
+# 7. 데이터베이스 초기화 (옵션)
 if [ "$INIT_DB" = true ]; then
-    log_step "6. 데이터베이스 초기화"
+    log_step "7. 데이터베이스 초기화"
     log_info "데이터베이스를 초기화하고 있습니다..."
     cd backend
     
@@ -221,8 +230,8 @@ if [ "$INIT_DB" = true ]; then
     cd ..
 fi
 
-# 7. 백엔드 서버 시작
-log_step "7. 백엔드 서버 시작"
+# 8. 백엔드 서버 시작
+log_step "8. 백엔드 서버 시작"
 cd backend
 
 if [ "$ENVIRONMENT" = "production" ]; then
@@ -244,9 +253,9 @@ else
 fi
 cd ..
 
-# 8. Nginx 설정 확인 (프로덕션 환경에서만)
+# 9. Nginx 설정 확인 (프로덕션 환경에서만)
 if [ "$ENVIRONMENT" = "production" ]; then
-    log_step "8. Nginx 설정 확인"
+    log_step "9. Nginx 설정 확인"
     if command -v nginx &> /dev/null; then
         log_info "Nginx 설정 테스트..."
         nginx -t || {
@@ -269,9 +278,9 @@ else
     log_info "개발 환경에서는 Nginx 설정을 건너뜁니다."
 fi
 
-# 9. SSL 인증서 설정 (프로덕션)
+# 10. SSL 인증서 설정 (프로덕션)
 if [ "$ENVIRONMENT" = "production" ]; then
-    log_step "9. SSL 인증서 설정"
+    log_step "10. SSL 인증서 설정"
     if command -v certbot &> /dev/null; then
         log_info "SSL 인증서 확인 중..."
         certbot certificates | grep -q "likorea.com" || {
@@ -283,8 +292,8 @@ if [ "$ENVIRONMENT" = "production" ]; then
     fi
 fi
 
-# 10. 서비스 상태 확인
-log_step "10. 서비스 상태 확인"
+# 11. 서비스 상태 확인
+log_step "11. 서비스 상태 확인"
 
 if [ "$ENVIRONMENT" = "production" ]; then
     if command -v pm2 &> /dev/null; then
