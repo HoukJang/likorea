@@ -116,12 +116,15 @@ exports.login = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: 24 * 60 * 60 * 1000 // 1일
+    maxAge: 24 * 60 * 60 * 1000, // 1일
+    path: '/' // 명시적 경로 설정
   };
 
-  console.log('=== 로그인 쿠키 설정 ===');
-  console.log('쿠키 옵션:', cookieOptions);
-  console.log('NODE_ENV:', process.env.NODE_ENV);
+  // 프로덕션에서는 도메인 설정 추가
+  if (process.env.NODE_ENV === 'production' && process.env.COOKIE_DOMAIN) {
+    cookieOptions.domain = process.env.COOKIE_DOMAIN;
+  }
+
 
   res.cookie('authToken', token, cookieOptions);
 
@@ -179,12 +182,21 @@ exports.checkEmailExists = async (req, res) => {
 
 // 로그아웃
 exports.logout = (req, res) => {
-  // httpOnly 쿠키 제거
-  res.clearCookie('authToken', {
+  // 쿠키 삭제 옵션 - 로그인 시와 동일하게 설정
+  const clearCookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax'
-  });
+    sameSite: 'lax',
+    path: '/' // 필수: 쿠키 설정 시와 동일한 경로
+  };
+
+  // 프로덕션에서는 도메인 설정 추가
+  if (process.env.NODE_ENV === 'production' && process.env.COOKIE_DOMAIN) {
+    clearCookieOptions.domain = process.env.COOKIE_DOMAIN;
+  }
+
+  // httpOnly 쿠키 제거
+  res.clearCookie('authToken', clearCookieOptions);
 
   res.json({ message: '로그아웃 성공' });
 };

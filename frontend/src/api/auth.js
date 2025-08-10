@@ -65,16 +65,26 @@ export const logout = async () => {
   try {
     await apiClient.post('/api/users/logout');
   } catch (error) {
-    // 로그아웃 오류는 무시
+    // 서버 오류가 발생해도 클라이언트 측 정리는 계속 진행
+    console.warn('로그아웃 API 호출 중 오류:', error);
   }
 
-  // localStorage에서 사용자 정보 제거
+  // localStorage에서 모든 사용자 정보 제거
   localStorage.removeItem('userId');
   localStorage.removeItem('userEmail');
   localStorage.removeItem('userAuthority');
+  
+  // sessionStorage도 정리 (혹시 모를 데이터)
+  sessionStorage.clear();
 
   // 로그아웃 이벤트 발생
   window.dispatchEvent(new Event('logout'));
+  
+  // 프로덕션 환경에서는 강제 리다이렉트로 캐시 무시
+  if (process.env.REACT_APP_ENV === 'production') {
+    // 캐시를 무시하고 완전히 새로운 페이지 로드
+    window.location.href = '/?logout=true';
+  }
 };
 
 /**
