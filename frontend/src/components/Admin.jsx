@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getAllUsers,
@@ -9,7 +9,8 @@ import {
   getUserDetails
 } from '../api/admin';
 import Profile from './Profile';
-import TrafficDashboard from './TrafficDashboard';
+// TrafficDashboard를 lazy load
+const TrafficDashboard = lazy(() => import('./TrafficDashboard'));
 import packageJson from '../../package.json';
 import Loading from './common/Loading';
 // BotManagement를 직접 import
@@ -310,7 +311,9 @@ function Admin() {
             <h2>트래픽 대시보드</h2>
             <p className="section-description">실시간 사이트 방문 통계 및 트래픽 분석</p>
           </div>
-          <TrafficDashboard />
+          <Suspense fallback={<Loading />}>
+            <TrafficDashboard />
+          </Suspense>
         </section>
       )}
 

@@ -36,7 +36,9 @@ module.exports = {
                 test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2)[\\/]/,
                 priority: 10,
                 reuseExistingChunk: true,
-                name: 'chart'
+                name: 'chart',
+                chunks: 'all',
+                enforce: true
               },
               // MUI 분리
               mui: {

@@ -1,32 +1,9 @@
 import { useState, useEffect } from 'react';
 import { getTrafficDashboard, getRealtimeTraffic } from '../api/traffic';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement
-} from 'chart.js';
+// Use chart.js/auto which includes everything needed
+import 'chart.js/auto';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import '../styles/TrafficDashboard.css';
-
-// Chart.js 등록
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement
-);
 
 function TrafficDashboard() {
   const [dashboardData, setDashboardData] = useState(null);
