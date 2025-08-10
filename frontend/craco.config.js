@@ -15,23 +15,7 @@ module.exports = {
         // Optimize JS bundles
         webpackConfig.optimization = {
           ...webpackConfig.optimization,
-          splitChunks: {
-            chunks: 'all',
-            cacheGroups: {
-              // 기본 vendor 설정만 유지
-              vendor: {
-                test: /[\\/]node_modules[\\/]/,
-                name: 'vendors',
-                priority: 10,
-              },
-              // 공통 코드
-              common: {
-                minChunks: 2,
-                priority: 5,
-                reuseExistingChunk: true,
-              },
-            },
-          },
+          splitChunks: false,
           // Use deterministic IDs for stable module references
           moduleIds: 'deterministic',
           chunkIds: 'deterministic',
