@@ -183,7 +183,7 @@ exports.createPost = asyncHandler(async (req, res) => {
     }
   }
 
-  // HTML sanitization
+  // HTML sanitization with whitespace preservation
   const sanitizedContent = sanitizeHtml(content, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'div']),
     allowedAttributes: {
@@ -194,6 +194,13 @@ exports.createPost = asyncHandler(async (req, res) => {
     allowedSchemes: ['http', 'https', 'ftp', 'mailto', 'data'],
     allowedSchemesByTag: {
       img: ['http', 'https', 'data']
+    },
+    // whitespace 보존을 위한 textFilter
+    textFilter: function(text) {
+      // 연속된 공백을 &nbsp;로 변환 (첫 공백은 유지)
+      return text
+        .replace(/ {2,}/g, match => ' ' + '&nbsp;'.repeat(match.length - 1))
+        .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;'); // 탭을 4개 공백으로
     }
   });
 
@@ -424,7 +431,7 @@ exports.updatePost = asyncHandler(async (req, res) => {
     updateData.title = title;
   }
   if (content) {
-    // HTML sanitization
+    // HTML sanitization with whitespace preservation
     updateData.content = sanitizeHtml(content, {
       allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'div']),
       allowedAttributes: {
@@ -435,6 +442,13 @@ exports.updatePost = asyncHandler(async (req, res) => {
       allowedSchemes: ['http', 'https', 'ftp', 'mailto', 'data'],
       allowedSchemesByTag: {
         img: ['http', 'https', 'data']
+      },
+      // whitespace 보존을 위한 textFilter
+      textFilter: function(text) {
+        // 연속된 공백을 &nbsp;로 변환 (첫 공백은 유지)
+        return text
+          .replace(/ {2,}/g, match => ' ' + '&nbsp;'.repeat(match.length - 1))
+          .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;'); // 탭을 4개 공백으로
       }
     });
   }

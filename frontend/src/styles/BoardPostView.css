@@ -321,6 +321,7 @@
 /* Quill 에디터로 작성된 콘텐츠 추가 스타일 */
 .post-content-html {
   font-family: var(--font-family);
+  white-space: pre-wrap; /* 공백과 줄바꿈 보존 */
 }
 
 /* Quill 텍스트 정렬 스타일 */
