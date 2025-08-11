@@ -1,5 +1,5 @@
 import React, { useEffect, lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import Loading from './components/common/Loading';
 import { useAuth } from './hooks/useAuth';
@@ -22,9 +22,16 @@ import Profile from './components/Profile';
 // 무거운 컴포넌트들은 lazy loading
 const BoardPostForm = lazy(() => import('./components/BoardPostForm')); // Quill 포함
 const BotManagement = lazy(() => import('./pages/BotManagement'));
-const Admin = lazy(() => import('./components/Admin')); // Chart.js 포함
 const DesignPreview = lazy(() => import('./components/DesignPreview'));
 const BotForm = lazy(() => import('./pages/BotForm'));
+
+// Admin 관련 컴포넌트들을 lazy loading
+const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
+const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
+const AdminStats = lazy(() => import('./pages/admin/AdminStats'));
+const AdminBots = lazy(() => import('./pages/admin/AdminBots'));
+const AdminTraffic = lazy(() => import('./pages/admin/AdminTraffic'));
+const AdminProfile = lazy(() => import('./pages/admin/AdminProfile'));
 
 function App() {
   // 전역 인증 상태 관리 - 앱 시작 시 토큰 검증 수행
@@ -98,12 +105,41 @@ function App() {
             {/* 사용자 관련 라우트 */}
             <Route path="/profile" element={<Profile />} />
 
-            {/* 관리자 페이지 */}
+            {/* 관리자 페이지 - Nested Routing */}
             <Route path="/admin" element={
               <Suspense fallback={<Loading />}>
-                <Admin />
+                <AdminLayout />
               </Suspense>
-            } />
+            }>
+              {/* 기본 경로는 users로 리다이렉트 */}
+              <Route index element={<Navigate to="users" replace />} />
+              <Route path="users" element={
+                <Suspense fallback={<Loading />}>
+                  <AdminUsers />
+                </Suspense>
+              } />
+              <Route path="stats" element={
+                <Suspense fallback={<Loading />}>
+                  <AdminStats />
+                </Suspense>
+              } />
+              <Route path="bots" element={
+                <Suspense fallback={<Loading />}>
+                  <AdminBots />
+                </Suspense>
+              } />
+              <Route path="traffic" element={
+                <Suspense fallback={<Loading />}>
+                  <AdminTraffic />
+                </Suspense>
+              } />
+              <Route path="profile" element={
+                <Suspense fallback={<Loading />}>
+                  <AdminProfile />
+                </Suspense>
+              } />
+            </Route>
+            
             <Route path="/design-preview" element={
               <Suspense fallback={<Loading />}>
                 <DesignPreview />
