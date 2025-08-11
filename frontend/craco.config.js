@@ -1,6 +1,7 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const webpack = require('webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const purgecss = require('@fullhuman/postcss-purgecss');
 
@@ -95,12 +96,13 @@ module.exports = {
                 priority: 10,
                 reuseExistingChunk: true
               },
-              // Chart.js 분리 (약 100KB)
+              // Chart.js 분리 - 모든 Chart.js 관련 모듈 포함
               chart: {
-                test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2)[\\/]/,
+                test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2|chartjs-)[\\/]/,
                 name: 'chart',
                 priority: 10,
-                reuseExistingChunk: true
+                reuseExistingChunk: true,
+                enforce: true
               },
               // browser-image-compression 분리 (UPNG/UZIP 포함)
               imageCompression: {
@@ -123,9 +125,9 @@ module.exports = {
               }
             }
           },
-          // Use hashed IDs to avoid conflicts
-          moduleIds: 'hashed',
-          chunkIds: 'named',
+          // Use deterministic IDs for production stability
+          moduleIds: 'deterministic',
+          chunkIds: 'deterministic',
           runtimeChunk: 'single',
           // Minimize JS
           minimize: true,
@@ -189,6 +191,15 @@ module.exports = {
             'process.env.NODE_ENV': JSON.stringify('production')
           })
         );
+        
+        // Add bundle analyzer in analyze mode
+        if (process.env.ANALYZE === 'true') {
+          webpackConfig.plugins.push(new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            reportFilename: 'bundle-report.html',
+            openAnalyzer: false
+          }));
+        }
       }
 
       // Development optimizations

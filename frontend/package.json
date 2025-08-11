@@ -29,11 +29,13 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "sharp": "^0.34.3"
+    "sharp": "^0.34.3",
+    "webpack-bundle-analyzer": "^4.10.2"
   },
   "scripts": {
     "start": "NODE_OPTIONS=--max-old-space-size=4096 craco start",
     "build": "NODE_OPTIONS=--max-old-space-size=4096 craco build",
+    "build:analyze": "NODE_OPTIONS=--max-old-space-size=4096 ANALYZE=true craco build",
     "postbuild": "node scripts/inline-critical-styles.js && node scripts/optimize-build.js",
     "test": "craco test",
     "test:nowatch": "craco test --watchAll=false",

@@ -11,7 +11,7 @@ import {
 import Profile from './Profile';
 import packageJson from '../../package.json';
 import BotManagement from '../pages/BotManagement';
-import LazyTrafficDashboard from './LazyTrafficDashboard';
+import TrafficDashboardWrapper from './TrafficDashboardWrapper';
 import '../styles/Admin.css';
 
 function Admin() {
@@ -308,7 +308,7 @@ function Admin() {
             <h2>트래픽 대시보드</h2>
             <p className="section-description">실시간 사이트 방문 통계 및 트래픽 분석</p>
           </div>
-          <LazyTrafficDashboard />
+          <TrafficDashboardWrapper />
         </section>
       )}
 
