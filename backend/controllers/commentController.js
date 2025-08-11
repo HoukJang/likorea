@@ -1,13 +1,23 @@
 const Comment = require('../models/Comment');
 const BoardPost = require('../models/BoardPost');
 const User = require('../models/User');
-const sanitizeHtml = require('sanitize-html');
 const {
   asyncHandler,
   ValidationError,
   NotFoundError,
   AuthorizationError
 } = require('../middleware/errorHandler');
+
+// HTML 특수문자 이스케이프 함수 (whitespace 보존)
+const escapeHtml = (text) => {
+  if (!text) return '';
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};
 
 // 댓글 조회: populate를 사용해 작성자의 id, email, authority를 가져옴
 exports.getComments = asyncHandler(async (req, res) => {
@@ -54,11 +64,8 @@ exports.createComment = asyncHandler(async (req, res) => {
     }
   }
 
-  // HTML sanitization
-  const sanitizedContent = sanitizeHtml(content, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.filter(tag => tag !== 'img'),
-    allowedAttributes: {}
-  });
+  // HTML 특수문자 이스케이프 (댓글은 plain text이므로 태그를 허용하지 않음)
+  const sanitizedContent = escapeHtml(content);
 
   const comment = await Comment.create({
     content: sanitizedContent,
@@ -116,11 +123,8 @@ exports.updateComment = asyncHandler(async (req, res) => {
     throw new AuthorizationError('댓글 수정 권한이 없습니다.');
   }
 
-  // HTML sanitization
-  const sanitizedContent = sanitizeHtml(content, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.filter(tag => tag !== 'img'),
-    allowedAttributes: {}
-  });
+  // HTML 특수문자 이스케이프 (댓글은 plain text이므로 태그를 허용하지 않음)
+  const sanitizedContent = escapeHtml(content);
 
   comment.content = sanitizedContent;
   await comment.save();
