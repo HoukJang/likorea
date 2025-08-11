@@ -17,6 +17,9 @@
 #   --quiet           조용한 모드 (최소 출력)
 #   --update-nginx    Nginx 설정 업데이트 (프로덕션 전용)
 #   --parallel        의존성 병렬 설치
+#   --bump-patch      버전을 패치 레벨로 증가 (1.0.0 -> 1.0.1)
+#   --bump-minor      버전을 마이너 레벨로 증가 (1.0.0 -> 1.1.0)
+#   --bump-major      버전을 메이저 레벨로 증가 (1.0.0 -> 2.0.0)
 #
 # 예시:
 #   ./deploy.sh production
@@ -108,6 +111,7 @@ AUTO_MODE=false
 QUIET_MODE=false
 UPDATE_NGINX=false
 PARALLEL_INSTALL=false
+BUMP_VERSION=""
 
 # 모든 매개변수를 순회하면서 옵션 확인
 shift # 첫 번째 파라미터(환경) 제거
@@ -156,6 +160,18 @@ for arg in "$@"; do
         --parallel)
             PARALLEL_INSTALL=true
             log_info "병렬 설치 모드가 활성화되었습니다"
+            ;;
+        --bump-patch)
+            BUMP_VERSION="patch"
+            log_info "버전을 패치 레벨로 증가시킵니다"
+            ;;
+        --bump-minor)
+            BUMP_VERSION="minor"
+            log_info "버전을 마이너 레벨로 증가시킵니다"
+            ;;
+        --bump-major)
+            BUMP_VERSION="major"
+            log_info "버전을 메이저 레벨로 증가시킵니다"
             ;;
         *)
             log_warn "알 수 없는 옵션: $arg"
@@ -458,16 +474,70 @@ fi
 
 # 5. 버전 관리
 log_step "5. 버전 관리"
-log_progress "버전 정보 동기화 및 주입 중..."
 
-# 버전 관리자 실행
-if [ -f "scripts/version-manager.js" ]; then
-    node scripts/version-manager.js sync
-    node scripts/version-manager.js inject
-    CURRENT_VERSION=$(node scripts/version-manager.js current 2>/dev/null || echo "N/A")
-    log_info "현재 버전: $CURRENT_VERSION ✅"
+# 버전 증가 처리
+if [ -n "$BUMP_VERSION" ]; then
+    log_progress "버전을 $BUMP_VERSION 레벨로 증가시킵니다..."
+    
+    # 현재 버전 확인
+    if [ -f "scripts/version-manager.js" ]; then
+        OLD_VERSION=$(node scripts/version-manager.js current 2>/dev/null || echo "1.0.0")
+        log_info "현재 버전: $OLD_VERSION"
+        
+        # npm version 명령 실행으로 새 버전 생성
+        case "$BUMP_VERSION" in
+            patch)
+                NEW_VERSION=$(npm version patch --no-git-tag-version --no-commit-hooks | sed 's/^v//')
+                ;;
+            minor)
+                NEW_VERSION=$(npm version minor --no-git-tag-version --no-commit-hooks | sed 's/^v//')
+                ;;
+            major)
+                NEW_VERSION=$(npm version major --no-git-tag-version --no-commit-hooks | sed 's/^v//')
+                ;;
+        esac
+        
+        # version.json 파일 업데이트
+        if [ -f "version.json" ]; then
+            # jq가 있으면 사용, 없으면 sed 사용
+            if command -v jq &> /dev/null; then
+                jq --arg ver "$NEW_VERSION" '.version = $ver' version.json > version.json.tmp && mv version.json.tmp version.json
+            else
+                sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$NEW_VERSION\"/" version.json
+            fi
+            log_info "version.json 업데이트 완료"
+        fi
+        
+        # 버전 동기화 (이제 version.json이 업데이트되었으므로 올바르게 동기화됨)
+        node scripts/version-manager.js sync
+        log_info "새 버전: $NEW_VERSION ✅"
+    else
+        # version-manager.js가 없으면 npm version만 실행
+        case "$BUMP_VERSION" in
+            patch)
+                NEW_VERSION=$(npm version patch --no-git-tag-version --no-commit-hooks | sed 's/^v//')
+                ;;
+            minor)
+                NEW_VERSION=$(npm version minor --no-git-tag-version --no-commit-hooks | sed 's/^v//')
+                ;;
+            major)
+                NEW_VERSION=$(npm version major --no-git-tag-version --no-commit-hooks | sed 's/^v//')
+                ;;
+        esac
+        log_info "새 버전: $NEW_VERSION"
+    fi
 else
-    log_warn "버전 관리자가 없습니다. 버전 관리를 건너뜁니다."
+    log_progress "버전 정보 동기화 및 주입 중..."
+    
+    # 버전 관리자 실행
+    if [ -f "scripts/version-manager.js" ]; then
+        node scripts/version-manager.js sync
+        node scripts/version-manager.js inject
+        CURRENT_VERSION=$(node scripts/version-manager.js current 2>/dev/null || echo "N/A")
+        log_info "현재 버전: $CURRENT_VERSION ✅"
+    else
+        log_warn "버전 관리자가 없습니다. 버전 관리를 건너뜁니다."
+    fi
 fi
 
 # 6. 프론트엔드 빌드
@@ -792,7 +862,7 @@ log_info ""
 log_info "🎉 배포가 완료되었습니다!"
 log_info "✅ 배포 요약:"
 log_info "  - 환경: $ENVIRONMENT"
-log_info "  - 버전: ${CURRENT_VERSION:-N/A}"
+log_info "  - 버전: ${NEW_VERSION:-${CURRENT_VERSION:-N/A}}"
 log_info "  - 빌드 크기: ${BUILD_SIZE:-N/A}"
 log_info "  - 테스트: $([ "$SKIP_TESTS" = true ] && echo "건너뜀" || echo "실행됨")"
 log_info "  - 린트: $([ "$SKIP_LINT" = true ] && echo "건너뜀" || echo "실행됨")"
