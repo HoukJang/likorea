@@ -7,7 +7,8 @@ process.env.JWT_SECRET = 'test-jwt-secret';
 process.env.MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/likorea-test';
 
 // Increase test timeout for slow operations
-jest.setTimeout(30000);
+// MongoDB Atlas needs more time for initial connection
+jest.setTimeout(60000);
 
 // Mock console methods to reduce noise during tests
 global.console = {
