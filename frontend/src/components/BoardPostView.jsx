@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import {
   getBoardPost,
   deleteBoard,
@@ -389,8 +390,30 @@ function BoardPostView() {
   if (error) return <p>오류 발생: {error}</p>;
   if (!post) return <p>게시글을 찾을 수 없습니다</p>;
 
+  // 게시글 설명 생성 (HTML 태그 제거)
+  const getDescription = () => {
+    if (!post.content) return '롱아일랜드 한인 커뮤니티 게시글';
+    const plainText = post.content.replace(/<[^>]*>/g, '').substring(0, 155);
+    return plainText || '롱아일랜드 한인 커뮤니티 게시글';
+  };
+
   return (
-    <div className="post-container">
+    <>
+      <Helmet>
+        <title>{post.title} | 롱아일랜드 한인 커뮤니티</title>
+        <meta name="description" content={getDescription()} />
+        <link rel="canonical" href={`https://likorea.com/boards/${postId}`} />
+        {/* Open Graph 태그 */}
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={getDescription()} />
+        <meta property="og:url" content={`https://likorea.com/boards/${postId}`} />
+        <meta property="og:type" content="article" />
+        {post.createdAt && <meta property="article:published_time" content={new Date(post.createdAt).toISOString()} />}
+        {post.updatedAt && <meta property="article:modified_time" content={new Date(post.updatedAt).toISOString()} />}
+        {post.author?.id && <meta property="article:author" content={post.author.id} />}
+      </Helmet>
+      
+      <div className="post-container">
       <div className="post-header">
         <h1 className="post-title">
           {post.title}
@@ -565,6 +588,7 @@ function BoardPostView() {
         )}
       </div>
     </div>
+    </>
   );
 }
 

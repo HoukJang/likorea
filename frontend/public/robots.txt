@@ -1,5 +1,5 @@
 # Robots.txt for Long Island Korea
-# https://longislandkorea.com
+# https://likorea.com
 
 # Allow all crawlers
 User-agent: *
@@ -20,7 +20,7 @@ Disallow: /bot-management
 Disallow: /design-preview
 
 # Sitemap location
-Sitemap: https://longislandkorea.com/sitemap.xml
+Sitemap: https://likorea.com/sitemap.xml
 
 # Crawl-delay for responsible crawling
 Crawl-delay: 1

@@ -31,11 +31,11 @@ const Landing = () => {
     '@type': 'WebSite',
     'name': '롱아일랜드 한인 커뮤니티',
     'alternateName': 'Long Island Korea',
-    'url': 'https://longislandkorea.com',
+    'url': 'https://likorea.com',
     'description': '뉴욕 롱아일랜드 한인들을 위한 생활정보, 부동산, 구인구직, 맛집 정보 커뮤니티',
     'potentialAction': {
       '@type': 'SearchAction',
-      'target': 'https://longislandkorea.com/boards?search={search_term_string}',
+      'target': 'https://likorea.com/boards?search={search_term_string}',
       'query-input': 'required name=search_term_string'
     },
     'areaServed': {
@@ -53,8 +53,8 @@ const Landing = () => {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     'name': '롱아일랜드 한인 커뮤니티',
-    'url': 'https://longislandkorea.com',
-    'logo': 'https://longislandkorea.com/logo192.png',
+    'url': 'https://likorea.com',
+    'logo': 'https://likorea.com/logo192.png',
     'sameAs': [
       'https://www.facebook.com/longislandkorea',
       'https://www.instagram.com/longislandkorea'
@@ -161,8 +161,8 @@ const Landing = () => {
         <meta property="og:title" content="롱아일랜드 한인 커뮤니티 | Long Island Korea" />
         <meta property="og:description" content="뉴욕 롱아일랜드 한인들을 위한 생활정보 커뮤니티. 부동산, 구인구직, 맛집 정보를 공유하세요." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://longislandkorea.com" />
-        <meta property="og:image" content="https://longislandkorea.com/og-image.jpg" />
+        <meta property="og:url" content="https://likorea.com" />
+        <meta property="og:image" content="https://likorea.com/og-image.jpg" />
         <meta property="og:locale" content="ko_KR" />
         <meta property="og:site_name" content="Long Island Korea" />
 
@@ -170,14 +170,14 @@ const Landing = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="롱아일랜드 한인 커뮤니티" />
         <meta name="twitter:description" content="뉴욕 롱아일랜드 한인들을 위한 생활정보 커뮤니티" />
-        <meta name="twitter:image" content="https://longislandkorea.com/og-image.jpg" />
+        <meta name="twitter:image" content="https://likorea.com/og-image.jpg" />
 
         {/* Canonical URL */}
-        <link rel="canonical" href="https://longislandkorea.com" />
+        <link rel="canonical" href="https://likorea.com" />
 
         {/* Language Alternates */}
-        <link rel="alternate" hrefLang="ko" href="https://longislandkorea.com" />
-        <link rel="alternate" hrefLang="en" href="https://longislandkorea.com/en" />
+        <link rel="alternate" hrefLang="ko" href="https://likorea.com" />
+        <link rel="alternate" hrefLang="en" href="https://likorea.com/en" />
 
         {/* Structured Data */}
         <script type="application/ld+json">

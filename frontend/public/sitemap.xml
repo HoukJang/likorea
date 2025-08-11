@@ -6,7 +6,7 @@
   
   <!-- 메인 페이지 (게시판 리스트) -->
   <url>
-    <loc>https://longislandkorea.com/</loc>
+    <loc>https://likorea.com/</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
@@ -14,7 +14,7 @@
   
   <!-- SEO 랜딩 페이지 -->
   <url>
-    <loc>https://longislandkorea.com/landing</loc>
+    <loc>https://likorea.com/landing</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -22,7 +22,7 @@
   
   <!-- 회원가입 -->
   <url>
-    <loc>https://longislandkorea.com/signup</loc>
+    <loc>https://likorea.com/signup</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -30,7 +30,7 @@
   
   <!-- 로그인 -->
   <url>
-    <loc>https://longislandkorea.com/login</loc>
+    <loc>https://likorea.com/login</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -38,63 +38,63 @@
   
   <!-- 카테고리별 게시판 페이지 -->
   <url>
-    <loc>https://longislandkorea.com/?tag=사고팔고</loc>
+    <loc>https://likorea.com/?tag=사고팔고</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?tag=부동산</loc>
+    <loc>https://likorea.com/?tag=부동산</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?tag=모임</loc>
+    <loc>https://likorea.com/?tag=모임</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?tag=맛집</loc>
+    <loc>https://likorea.com/?tag=맛집</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?tag=구인구직</loc>
+    <loc>https://likorea.com/?tag=구인구직</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?tag=생활정보</loc>
+    <loc>https://likorea.com/?tag=생활정보</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?tag=문의</loc>
+    <loc>https://likorea.com/?tag=문의</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?tag=잡담</loc>
+    <loc>https://likorea.com/?tag=잡담</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?tag=기타</loc>
+    <loc>https://likorea.com/?tag=기타</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
@@ -102,42 +102,42 @@
   
   <!-- 주요 지역별 페이지 -->
   <url>
-    <loc>https://longislandkorea.com/?region=Exit 38</loc>
+    <loc>https://likorea.com/?region=Exit 38</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?region=Exit 41</loc>
+    <loc>https://likorea.com/?region=Exit 41</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?region=Exit 42</loc>
+    <loc>https://likorea.com/?region=Exit 42</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?region=Exit 49</loc>
+    <loc>https://likorea.com/?region=Exit 49</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?region=Exit 53</loc>
+    <loc>https://likorea.com/?region=Exit 53</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://longislandkorea.com/?region=Exit 57</loc>
+    <loc>https://likorea.com/?region=Exit 57</loc>
     <lastmod>2025-08-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
