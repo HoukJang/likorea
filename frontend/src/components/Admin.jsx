@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getAllUsers,
@@ -10,14 +10,9 @@ import {
 } from '../api/admin';
 import Profile from './Profile';
 import packageJson from '../../package.json';
-import Loading from './common/Loading';
 import BotManagement from '../pages/BotManagement';
+import LazyTrafficDashboard from './LazyTrafficDashboard';
 import '../styles/Admin.css';
-
-// TrafficDashboard를 lazy load - webpack magic comment로 청크 이름 지정
-const TrafficDashboard = lazy(() => 
-  import(/* webpackChunkName: "traffic-dashboard" */ './TrafficDashboard')
-);
 
 function Admin() {
   const navigate = useNavigate();
@@ -313,14 +308,7 @@ function Admin() {
             <h2>트래픽 대시보드</h2>
             <p className="section-description">실시간 사이트 방문 통계 및 트래픽 분석</p>
           </div>
-          <Suspense fallback={
-            <div className="loading-container">
-              <Loading />
-              <p>트래픽 대시보드를 불러오는 중...</p>
-            </div>
-          }>
-            <TrafficDashboard />
-          </Suspense>
+          <LazyTrafficDashboard />
         </section>
       )}
 

@@ -68,6 +68,8 @@ module.exports = {
         webpackConfig.output.publicPath = '/';
         // Add contenthash to chunk names for cache busting
         webpackConfig.output.chunkFilename = 'static/js/[name].[contenthash:8].chunk.js';
+        // Ensure chunk loading works correctly
+        webpackConfig.output.crossOriginLoading = 'anonymous';
         
         // Ensure all output files have contenthash for long-term caching
         webpackConfig.output.filename = 'static/js/[name].[contenthash:8].js';
@@ -121,9 +123,9 @@ module.exports = {
               }
             }
           },
-          // Use deterministic IDs for stable module references
-          moduleIds: 'deterministic',
-          chunkIds: 'deterministic',
+          // Use hashed IDs to avoid conflicts
+          moduleIds: 'hashed',
+          chunkIds: 'named',
           runtimeChunk: 'single',
           // Minimize JS
           minimize: true,
