@@ -390,8 +390,16 @@ function BotConfigForm() {
                   value={formData.persona.age}
                   onChange={(e) => setFormData({
                     ...formData,
-                    persona: { ...formData.persona, age: parseInt(e.target.value) || 30 }
+                    persona: { ...formData.persona, age: e.target.value === '' ? '' : parseInt(e.target.value) || 30 }
                   })}
+                  onBlur={(e) => {
+                    if (e.target.value === '') {
+                      setFormData({
+                        ...formData,
+                        persona: { ...formData.persona, age: 30 }
+                      });
+                    }
+                  }}
                   min="20"
                   max="80"
                 />
@@ -512,8 +520,16 @@ function BotConfigForm() {
                   value={formData.apiSettings.maxTokens}
                   onChange={(e) => setFormData({
                     ...formData,
-                    apiSettings: { ...formData.apiSettings, maxTokens: parseInt(e.target.value) || 800 }
+                    apiSettings: { ...formData.apiSettings, maxTokens: e.target.value === '' ? '' : parseInt(e.target.value) || 800 }
                   })}
+                  onBlur={(e) => {
+                    if (e.target.value === '') {
+                      setFormData({
+                        ...formData,
+                        apiSettings: { ...formData.apiSettings, maxTokens: 800 }
+                      });
+                    }
+                  }}
                   min="1"
                   max="200000"
                 />
@@ -528,8 +544,16 @@ function BotConfigForm() {
                   value={formData.apiSettings.temperature}
                   onChange={(e) => setFormData({
                     ...formData,
-                    apiSettings: { ...formData.apiSettings, temperature: parseFloat(e.target.value) || 0.8 }
+                    apiSettings: { ...formData.apiSettings, temperature: e.target.value === '' ? '' : parseFloat(e.target.value) || 0.8 }
                   })}
+                  onBlur={(e) => {
+                    if (e.target.value === '') {
+                      setFormData({
+                        ...formData,
+                        apiSettings: { ...formData.apiSettings, temperature: 0.8 }
+                      });
+                    }
+                  }}
                   min="0"
                   max="1"
                   step="0.1"
@@ -547,8 +571,16 @@ function BotConfigForm() {
                   value={formData.apiSettings.topP}
                   onChange={(e) => setFormData({
                     ...formData,
-                    apiSettings: { ...formData.apiSettings, topP: parseFloat(e.target.value) || 0.95 }
+                    apiSettings: { ...formData.apiSettings, topP: e.target.value === '' ? '' : parseFloat(e.target.value) || 0.95 }
                   })}
+                  onBlur={(e) => {
+                    if (e.target.value === '') {
+                      setFormData({
+                        ...formData,
+                        apiSettings: { ...formData.apiSettings, topP: 0.95 }
+                      });
+                    }
+                  }}
                   min="0"
                   max="1"
                   step="0.05"
@@ -564,8 +596,16 @@ function BotConfigForm() {
                   value={formData.apiSettings.topK}
                   onChange={(e) => setFormData({
                     ...formData,
-                    apiSettings: { ...formData.apiSettings, topK: parseInt(e.target.value) || 0 }
+                    apiSettings: { ...formData.apiSettings, topK: e.target.value === '' ? '' : parseInt(e.target.value) || 0 }
                   })}
+                  onBlur={(e) => {
+                    if (e.target.value === '') {
+                      setFormData({
+                        ...formData,
+                        apiSettings: { ...formData.apiSettings, topK: 0 }
+                      });
+                    }
+                  }}
                   min="0"
                 />
                 <p className="form-help">샘플링할 토큰 수 (0=무제한)</p>
@@ -616,8 +656,16 @@ function BotConfigForm() {
                       value={formData.apiSettings.maxFullArticles}
                       onChange={(e) => setFormData({
                         ...formData,
-                        apiSettings: { ...formData.apiSettings, maxFullArticles: parseInt(e.target.value) || 7 }
+                        apiSettings: { ...formData.apiSettings, maxFullArticles: e.target.value === '' ? '' : parseInt(e.target.value) || 7 }
                       })}
+                      onBlur={(e) => {
+                        if (e.target.value === '') {
+                          setFormData({
+                            ...formData,
+                            apiSettings: { ...formData.apiSettings, maxFullArticles: 7 }
+                          });
+                        }
+                      }}
                       min="1"
                       max="10"
                     />
@@ -668,8 +716,16 @@ function BotConfigForm() {
                       value={formData.settings.postInterval}
                       onChange={(e) => setFormData({
                         ...formData,
-                        settings: { ...formData.settings, postInterval: parseInt(e.target.value) || 24 }
+                        settings: { ...formData.settings, postInterval: e.target.value === '' ? '' : parseInt(e.target.value) || 24 }
                       })}
+                      onBlur={(e) => {
+                        if (e.target.value === '') {
+                          setFormData({
+                            ...formData,
+                            settings: { ...formData.settings, postInterval: 24 }
+                          });
+                        }
+                      }}
                       min="1"
                       max="168"
                     />
@@ -788,31 +844,32 @@ function BotConfigForm() {
           </div>
         )}
 
-        {/* 저장 버튼 */}
-        <div className="form-actions">
-          <button
-            type="button"
-            className="btn-cancel"
-            onClick={() => navigate('/bot-board/manage')}
-            disabled={saving}
-          >
-            취소
-          </button>
-          <button
-            type="submit"
-            className="btn-save"
-            disabled={saving || !formData.name || !formData.description}
-          >
-            {saving ? '저장 중...' : (isEdit ? '수정 완료' : '봇 생성')}
-          </button>
-        </div>
-
         {error && (
           <div className="error-message" style={{ marginTop: '20px' }}>
             {error}
           </div>
         )}
       </form>
+
+      {/* 저장 버튼을 form 밖으로 이동하고 form submit을 수동으로 처리 */}
+      <div className="form-actions">
+        <button
+          type="button"
+          className="btn-cancel"
+          onClick={() => navigate('/bot-board/manage')}
+          disabled={saving}
+        >
+          취소
+        </button>
+        <button
+          type="button"
+          className="btn-save"
+          onClick={handleSubmit}
+          disabled={saving || !formData.name || !formData.description}
+        >
+          {saving ? '저장 중...' : (isEdit ? '수정 완료' : '봇 생성')}
+        </button>
+      </div>
     </div>
   );
 }
