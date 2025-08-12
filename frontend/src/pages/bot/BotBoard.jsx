@@ -37,13 +37,19 @@ function BotBoard() {
       // 승인 대기 중인 봇 게시글 가져오기
       const response = await api.get(`/approval/pending?page=${page}&limit=20`);
       
-      if (response.posts) {
-        setPosts(response.posts);
+      if (response) {
+        setPosts(response.posts || []);
         setTotalPages(response.pagination?.pages || 1);
       }
     } catch (err) {
       console.error('봇 게시글 로드 실패:', err);
-      setError('게시글을 불러오는데 실패했습니다.');
+      // 404 에러는 게시글이 없는 것이므로 에러로 처리하지 않음
+      if (err.status === 404 || err.statusCode === 404) {
+        setPosts([]);
+        setTotalPages(1);
+      } else {
+        setError('게시글을 불러오는데 실패했습니다.');
+      }
     } finally {
       setLoading(false);
     }
@@ -120,6 +126,9 @@ function BotBoard() {
       {posts.length === 0 ? (
         <div className="empty-state">
           <p>승인 대기중인 봇 게시글이 없습니다.</p>
+          <p className="empty-state-hint">
+            '봇 글쓰기' 버튼을 눌러 새로운 봇 게시글을 생성해보세요!
+          </p>
         </div>
       ) : (
         <div className="bot-posts-list">

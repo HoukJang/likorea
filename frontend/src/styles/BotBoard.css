@@ -145,6 +145,12 @@
   color: #666;
 }
 
+.empty-state-hint {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #999;
+}
+
 .error-message {
   text-align: center;
   padding: 20px;

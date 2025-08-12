@@ -34,12 +34,16 @@ function BotManagementPage() {
 
       const response = await api.get('/bots');
 
-      if (response.bots) {
-        setBots(response.bots);
+      if (response) {
+        setBots(response.bots || []);
       }
     } catch (err) {
       console.error('봇 목록 로드 실패:', err);
-      setError('봇 목록을 불러오는데 실패했습니다.');
+      if (err.status === 404 || err.statusCode === 404) {
+        setBots([]);
+      } else {
+        setError('봇 목록을 불러오는데 실패했습니다.');
+      }
     } finally {
       setLoading(false);
     }
