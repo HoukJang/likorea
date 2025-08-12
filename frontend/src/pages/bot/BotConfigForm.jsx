@@ -28,7 +28,7 @@ const DEFAULT_PROMPTS = {
 function BotConfigForm() {
   const { botId } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const api = useApi();
   const isEdit = !!botId;
 
@@ -54,11 +54,15 @@ function BotConfigForm() {
 
   // 권한 체크
   useEffect(() => {
+    if (authLoading) {
+      return;
+    }
+    
     if (!user || user.authority < 4) {
       alert('권한이 없습니다.');
       navigate('/');
     }
-  }, [user, navigate]);
+  }, [user, navigate, authLoading]);
 
   // 편집 모드일 때 봇 정보 로드
   const loadBot = useCallback(async () => {
@@ -155,7 +159,7 @@ function BotConfigForm() {
     }
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return <Loading />;
   }
 

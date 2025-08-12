@@ -7,7 +7,7 @@ import '../../styles/BotBoard.css';
 
 function BotBoard() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const api = useApi();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,11 +17,16 @@ function BotBoard() {
 
   // 권한 체크 - authority 4 이상만 접근 가능
   useEffect(() => {
+    // 인증 로딩 중이면 대기
+    if (authLoading) {
+      return;
+    }
+    
     if (!user || user.authority < 4) {
       alert('권한이 없습니다.');
       navigate('/');
     }
-  }, [user, navigate]);
+  }, [user, navigate, authLoading]);
 
   // 봇 게시글 목록 로드
   const loadBotPosts = useCallback(async () => {
@@ -79,7 +84,7 @@ function BotBoard() {
     }
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return <Loading />;
   }
 

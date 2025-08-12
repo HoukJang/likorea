@@ -7,7 +7,7 @@ import '../../styles/BotPostCreate.css';
 
 function BotPostCreate() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const api = useApi();
   const [bots, setBots] = useState([]);
   const [selectedBot, setSelectedBot] = useState('');
@@ -23,11 +23,15 @@ function BotPostCreate() {
 
   // 권한 체크
   useEffect(() => {
+    if (authLoading) {
+      return;
+    }
+    
     if (!user || user.authority < 4) {
       alert('권한이 없습니다.');
       navigate('/');
     }
-  }, [user, navigate]);
+  }, [user, navigate, authLoading]);
 
   // 봇 목록 로드
   const loadBots = useCallback(async () => {
@@ -156,7 +160,7 @@ function BotPostCreate() {
     }
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return <Loading />;
   }
 

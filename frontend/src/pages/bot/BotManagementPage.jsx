@@ -7,7 +7,7 @@ import '../../styles/BotManagementPage.css';
 
 function BotManagementPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const api = useApi();
   const [bots, setBots] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,11 +16,15 @@ function BotManagementPage() {
 
   // 권한 체크 - authority 4 이상만 접근 가능
   useEffect(() => {
+    if (authLoading) {
+      return;
+    }
+    
     if (!user || user.authority < 4) {
       alert('권한이 없습니다.');
       navigate('/');
     }
-  }, [user, navigate]);
+  }, [user, navigate, authLoading]);
 
   // 봇 목록 로드
   const loadBots = useCallback(async () => {
@@ -86,7 +90,7 @@ function BotManagementPage() {
     return <span className="status inactive">⏸️ 비활성</span>;
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return <Loading />;
   }
 
