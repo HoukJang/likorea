@@ -1,0 +1,260 @@
+.bot-management-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.bot-management-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.bot-management-header h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.bot-management-description {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.bot-management-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-back,
+.btn-create-bot {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-back {
+  background-color: #666;
+  color: white;
+}
+
+.btn-back:hover {
+  background-color: #555;
+}
+
+.btn-create-bot {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-create-bot:hover {
+  background-color: #45a049;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.btn-create-first {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-create-first:hover {
+  background-color: #45a049;
+}
+
+.bots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.bot-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+.bot-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.bot-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.bot-card-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.status.active {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status.inactive {
+  background-color: #fafafa;
+  color: #757575;
+}
+
+.status.generating {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.bot-card-body {
+  margin-bottom: 20px;
+}
+
+.bot-type {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.bot-description {
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.bot-persona {
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.bot-persona strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.bot-persona p {
+  margin: 0;
+  color: #666;
+}
+
+.bot-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.bot-card-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btn-edit,
+.btn-delete {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.btn-edit {
+  background-color: #2196F3;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-edit:hover,
+.btn-delete:hover {
+  opacity: 0.8;
+}
+
+.btn-delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  text-align: center;
+  padding: 20px;
+  color: #f44336;
+  background-color: #ffebee;
+  border-radius: 4px;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .bot-management-container {
+    padding: 15px;
+  }
+  
+  .bot-management-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .bot-management-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-back,
+  .btn-create-bot {
+    width: 100%;
+  }
+  
+  .bots-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .bot-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .bot-stats {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .bot-card-actions {
+    width: 100%;
+  }
+  
+  .btn-edit,
+  .btn-delete {
+    flex: 1;
+  }
+}

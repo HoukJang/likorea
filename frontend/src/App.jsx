@@ -25,11 +25,16 @@ const BotManagement = lazy(() => import('./pages/BotManagement'));
 const DesignPreview = lazy(() => import('./components/DesignPreview'));
 const BotForm = lazy(() => import('./pages/BotForm'));
 
+// Bot Board 시스템 컴포넌트들을 lazy loading
+const BotBoard = lazy(() => import('./pages/bot/BotBoard'));
+const BotPostCreate = lazy(() => import('./pages/bot/BotPostCreate'));
+const BotManagementPage = lazy(() => import('./pages/bot/BotManagementPage'));
+const BotConfigForm = lazy(() => import('./pages/bot/BotConfigForm'));
+
 // Admin 관련 컴포넌트들을 lazy loading
 const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminStats = lazy(() => import('./pages/admin/AdminStats'));
-const AdminBots = lazy(() => import('./pages/admin/AdminBots'));
 const AdminTraffic = lazy(() => import('./pages/admin/AdminTraffic'));
 const AdminProfile = lazy(() => import('./pages/admin/AdminProfile'));
 
@@ -88,6 +93,33 @@ function App() {
               </Suspense>
             } />
 
+            {/* Bot Board 시스템 라우트 */}
+            <Route path="/bot-board" element={
+              <Suspense fallback={<Loading />}>
+                <BotBoard />
+              </Suspense>
+            } />
+            <Route path="/bot-board/new" element={
+              <Suspense fallback={<Loading />}>
+                <BotPostCreate />
+              </Suspense>
+            } />
+            <Route path="/bot-board/manage" element={
+              <Suspense fallback={<Loading />}>
+                <BotManagementPage />
+              </Suspense>
+            } />
+            <Route path="/bot-board/manage/new" element={
+              <Suspense fallback={<Loading />}>
+                <BotConfigForm />
+              </Suspense>
+            } />
+            <Route path="/bot-board/manage/edit/:botId" element={
+              <Suspense fallback={<Loading />}>
+                <BotConfigForm />
+              </Suspense>
+            } />
+
             {/* 게시판 관련 라우트 */}
             <Route path="/boards" element={<BoardList />} />
             <Route path="/boards/new" element={
@@ -123,11 +155,6 @@ function App() {
                   <AdminStats />
                 </Suspense>
               } />
-              <Route path="bots" element={
-                <Suspense fallback={<Loading />}>
-                  <AdminBots />
-                </Suspense>
-              } />
               <Route path="traffic" element={
                 <Suspense fallback={<Loading />}>
                   <AdminTraffic />
@@ -139,7 +166,7 @@ function App() {
                 </Suspense>
               } />
             </Route>
-            
+
             <Route path="/design-preview" element={
               <Suspense fallback={<Loading />}>
                 <DesignPreview />

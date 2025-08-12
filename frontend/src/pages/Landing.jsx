@@ -8,7 +8,7 @@ import '../styles/Landing.css';
 const Landing = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  
+
   // logout=true 파라미터가 있으면 URL 정리
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -17,14 +17,14 @@ const Landing = () => {
       window.history.replaceState({}, '', '/');
     }
   }, []);
-  
+
   // 로그인된 사용자는 게시판으로 리다이렉트
   useEffect(() => {
     if (user) {
       navigate('/boards');
     }
   }, [user, navigate]);
-  
+
   // Schema.org 구조화된 데이터
   const schemaData = {
     '@context': 'https://schema.org',

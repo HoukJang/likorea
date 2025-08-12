@@ -166,6 +166,23 @@
   box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3) !important;
 }
 
+/* 봇 버튼 - 보라색 계열 */
+.bot-button {
+  background: linear-gradient(
+    135deg,
+    #8b5cf6 0%,
+    #7c3aed 100%
+  ) !important;
+  color: var(--white) !important;
+  font-size: 14px !important;
+}
+
+.bot-button:hover {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3) !important;
+}
+
 .user-button {
   background: var(--gray-100) !important;
   color: var(--gray-700) !important;

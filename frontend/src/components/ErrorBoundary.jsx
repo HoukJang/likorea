@@ -19,7 +19,7 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error, errorInfo) {
     // 콘솔에 에러 출력
     console.error('ErrorBoundary caught an error:', error.message);
-    
+
     // 에러 로깅
     getErrorInfo(error);
 

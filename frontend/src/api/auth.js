@@ -73,13 +73,13 @@ export const logout = async () => {
   localStorage.removeItem('userId');
   localStorage.removeItem('userEmail');
   localStorage.removeItem('userAuthority');
-  
+
   // sessionStorage도 정리 (혹시 모를 데이터)
   sessionStorage.clear();
 
   // 로그아웃 이벤트 발생
   window.dispatchEvent(new Event('logout'));
-  
+
   // 프로덕션 환경에서는 명시적 로그아웃 시에만 리다이렉트
   // URL에 logout=true가 없을 때만 리다이렉트하여 무한 루프 방지
   if (process.env.REACT_APP_ENV === 'production' && !window.location.search.includes('logout=true')) {

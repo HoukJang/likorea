@@ -155,14 +155,26 @@ const GlobalNavigation = () => {
             게시판
           </button>
           {user && (
-            <button
-              onClick={() => navigate('/boards/new')}
-              className="nav-button write-button"
-              style={buttonStyle}
-              aria-label="새 게시글 작성"
-            >
-              ✏️ 글쓰기
-            </button>
+            <>
+              <button
+                onClick={() => navigate('/boards/new')}
+                className="nav-button write-button"
+                style={buttonStyle}
+                aria-label="새 게시글 작성"
+              >
+                ✏️ 글쓰기
+              </button>
+              {user.authority >= 4 && (
+                <button
+                  onClick={() => navigate('/bot-board')}
+                  className="nav-button bot-button"
+                  style={buttonStyle}
+                  aria-label="봇 게시판으로 이동"
+                >
+                  🤖 글쓰기봇
+                </button>
+              )}
+            </>
           )}
         </div>
         <div className="nav-right">

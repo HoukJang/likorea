@@ -105,11 +105,11 @@ const BoardList = ({ pendingOnly = false }) => {
   const getCanonicalUrl = () => {
     const baseUrl = 'https://likorea.com/boards';
     const params = new URLSearchParams();
-    
+
     // 중요한 필터만 canonical URL에 포함
     if (filters.type) params.append('type', filters.type);
     if (filters.region && filters.region !== '0') params.append('region', filters.region);
-    
+
     const queryString = params.toString();
     return queryString ? `${baseUrl}?${queryString}` : baseUrl;
   };
@@ -120,7 +120,7 @@ const BoardList = ({ pendingOnly = false }) => {
     if (filters.type) titleParts.push(filters.type);
     if (filters.region && filters.region !== '0') titleParts.push(`지역 ${filters.region}`);
     if (pendingOnly) titleParts.push('승인 대기');
-    
+
     const prefix = titleParts.length > 0 ? titleParts.join(' - ') + ' | ' : '';
     return `${prefix}롱아일랜드 한인 커뮤니티`;
   };
@@ -136,7 +136,7 @@ const BoardList = ({ pendingOnly = false }) => {
         <meta property="og:url" content={getCanonicalUrl()} />
         <meta property="og:type" content="website" />
       </Helmet>
-      
+
       <div className="board-list-container" role="main" aria-label="게시판 목록">
         {/* 태그 필터 컴포넌트 - 승인 대기 게시물일 때는 숨김 */}
         {!pendingOnly && (

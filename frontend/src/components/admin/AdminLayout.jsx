@@ -59,16 +59,6 @@ function AdminLayout() {
           <span className="tab-text">통계</span>
         </button>
         <button
-          className={activeTab === 'bots' ? 'active' : ''}
-          onClick={() => handleTabChange('bots')}
-          role="tab"
-          aria-selected={activeTab === 'bots'}
-          aria-controls="bots-panel"
-        >
-          <span className="tab-icon">🤖</span>
-          <span className="tab-text">봇 관리</span>
-        </button>
-        <button
           className={activeTab === 'traffic' ? 'active' : ''}
           onClick={() => handleTabChange('traffic')}
           role="tab"

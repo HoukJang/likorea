@@ -412,7 +412,7 @@ function BoardPostView() {
         {post.updatedAt && <meta property="article:modified_time" content={new Date(post.updatedAt).toISOString()} />}
         {post.author?.id && <meta property="article:author" content={post.author.id} />}
       </Helmet>
-      
+
       <div className="post-container">
       <div className="post-header">
         <h1 className="post-title">

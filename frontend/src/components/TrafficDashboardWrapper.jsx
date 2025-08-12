@@ -14,15 +14,15 @@ function TrafficDashboardWrapper() {
       try {
         // Clear any previous errors
         setError(null);
-        
+
         // Dynamic import with timeout
         const module = await Promise.race([
           import('./TrafficDashboard'),
-          new Promise((_, reject) => 
+          new Promise((_, reject) =>
             setTimeout(() => reject(new Error('Loading timeout')), 10000)
           )
         ]);
-        
+
         if (mounted) {
           setComponent(() => module.default);
         }
@@ -50,7 +50,7 @@ function TrafficDashboardWrapper() {
       <div className="error-container" style={{ padding: '20px', textAlign: 'center' }}>
         <h3>트래픽 대시보드를 불러올 수 없습니다</h3>
         <p style={{ color: '#666', marginBottom: '20px' }}>{error}</p>
-        <button 
+        <button
           onClick={handleRetry}
           style={{
             padding: '10px 20px',
