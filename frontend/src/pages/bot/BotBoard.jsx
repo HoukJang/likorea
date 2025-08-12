@@ -37,15 +37,12 @@ function BotBoard() {
       // 승인 대기 중인 봇 게시글 가져오기
       const response = await api.get(`/approval/pending?page=${page}&limit=20`);
       
-      console.log('BotBoard API response:', response);
-      
       if (response.posts) {
         setPosts(response.posts);
         setTotalPages(response.pagination?.pages || 1);
       }
     } catch (err) {
       console.error('봇 게시글 로드 실패:', err);
-      console.error('Error details:', err.response || err);
       setError('게시글을 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);
