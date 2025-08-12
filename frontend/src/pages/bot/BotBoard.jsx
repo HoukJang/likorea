@@ -22,8 +22,8 @@ function BotBoard() {
       return;
     }
     
-    if (!user || user.authority < 4) {
-      alert('권한이 없습니다.');
+    if (!user || user.authority < 5) {
+      alert('관리자 권한이 필요합니다.');
       navigate('/');
     }
   }, [user, navigate, authLoading]);
@@ -34,15 +34,18 @@ function BotBoard() {
       setLoading(true);
       setError(null);
 
-      // 승인되지 않은 봇 게시글만 가져오기
-      const response = await api.get(`/boards?page=${page}&limit=20&status=pending&isBot=true`);
-
+      // 승인 대기 중인 봇 게시글 가져오기
+      const response = await api.get(`/approval/pending?page=${page}&limit=20`);
+      
+      console.log('BotBoard API response:', response);
+      
       if (response.posts) {
         setPosts(response.posts);
-        setTotalPages(response.totalPages || 1);
+        setTotalPages(response.pagination?.pages || 1);
       }
     } catch (err) {
       console.error('봇 게시글 로드 실패:', err);
+      console.error('Error details:', err.response || err);
       setError('게시글을 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);
@@ -62,7 +65,7 @@ function BotBoard() {
   const handleApprove = async (postId, e) => {
     e.stopPropagation();
     try {
-      await api.post(`/boards/${postId}/approve`);
+      await api.post(`/approval/approve/${postId}`);
       loadBotPosts(); // 목록 새로고침
     } catch (err) {
       console.error('승인 실패:', err);
@@ -75,7 +78,7 @@ function BotBoard() {
     e.stopPropagation();
     if (window.confirm('정말 거절하시겠습니까?')) {
       try {
-        await api.post(`/boards/${postId}/reject`);
+        await api.post(`/approval/reject/${postId}`);
         loadBotPosts(); // 목록 새로고침
       } catch (err) {
         console.error('거절 실패:', err);
@@ -131,7 +134,7 @@ function BotBoard() {
             >
               <div className="post-header">
                 <span className="post-title">{post.title}</span>
-                <span className="post-author">🤖 {post.author}</span>
+                <span className="post-author">🤖 {post.author?.id || post.botId?.name || '봇'}</span>
               </div>
               <div className="post-content">
                 {post.content.substring(0, 100)}...

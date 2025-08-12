@@ -164,7 +164,7 @@ const GlobalNavigation = () => {
               >
                 ✏️ 글쓰기
               </button>
-              {user.authority >= 4 && (
+              {user.authority >= 5 && (
                 <button
                   onClick={() => navigate('/bot-board')}
                   className="nav-button bot-button"

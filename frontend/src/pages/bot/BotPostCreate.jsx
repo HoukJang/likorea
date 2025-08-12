@@ -27,8 +27,8 @@ function BotPostCreate() {
       return;
     }
     
-    if (!user || user.authority < 4) {
-      alert('권한이 없습니다.');
+    if (!user || user.authority < 5) {
+      alert('관리자 권한이 필요합니다.');
       navigate('/');
     }
   }, [user, navigate, authLoading]);
