@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { getBots, deleteBot } from '../../api/bots';
+import { getBots, deleteBot, updateBotStatus } from '../../api/bots';
 import Loading from '../../components/common/Loading';
 import '../../styles/BotManagementPage.css';
 
@@ -70,6 +70,21 @@ function BotManagementPage() {
     }
   };
 
+  // 봇 상태 토글 핸들러
+  const handleToggleStatus = async (botId, currentStatus) => {
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    const statusText = newStatus === 'active' ? '활성화' : '비활성화';
+    
+    try {
+      await updateBotStatus(botId, newStatus);
+      alert(`봇이 ${statusText}되었습니다.`);
+      loadBots(); // 목록 새로고침
+    } catch (err) {
+      console.error('봇 상태 변경 실패:', err);
+      alert('봇 상태 변경에 실패했습니다.');
+    }
+  };
+
   // 봇 타입 표시
   const getBotTypeDisplay = (type) => {
     switch (type) {
@@ -87,8 +102,11 @@ function BotManagementPage() {
     if (bot.taskStatus === 'generating') {
       return <span className="status generating">🔄 작성중</span>;
     }
-    if (bot.active) {
+    if (bot.status === 'active') {
       return <span className="status active">✅ 활성</span>;
+    }
+    if (bot.status === 'maintenance') {
+      return <span className="status maintenance">🔧 유지보수</span>;
     }
     return <span className="status inactive">⏸️ 비활성</span>;
   };
@@ -163,9 +181,24 @@ function BotManagementPage() {
                     '없음'
                   }</span>
                 </div>
+
+                {bot.settings?.autoPost && (
+                  <div className="bot-schedule">
+                    <span className="schedule-badge">
+                      ⏰ 자동 게시: {Math.round(bot.settings.postInterval / 3600000)}시간마다
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div className="bot-card-actions">
+                <button
+                  className={`btn-toggle ${bot.status === 'active' ? 'btn-deactivate' : 'btn-activate'}`}
+                  onClick={() => handleToggleStatus(bot._id, bot.status)}
+                  disabled={bot.taskStatus === 'generating'}
+                >
+                  {bot.status === 'active' ? '비활성화' : '활성화'}
+                </button>
                 <button
                   className="btn-edit"
                   onClick={() => navigate(`/bot-board/manage/edit/${bot._id}`)}

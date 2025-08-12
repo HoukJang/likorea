@@ -2563,3 +2563,1350 @@ API 파라미터: {
   "ip": "127.0.0.1",
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
+[36m2025-08-12T03:49:23.899Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:49:23.924Z [INFO][0m HTTP GET /api/bots/689a9bd5d0ae2458f9a3ef44
+[36m{
+  "method": "GET",
+  "url": "/api/bots/689a9bd5d0ae2458f9a3ef44",
+  "statusCode": 200,
+  "duration": "11ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:53:40.805Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:53:40.835Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "33ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+🔍 환경 변수 검증 중...
+
+
+✅ 환경 변수 검증 완료!
+
+(node:29729) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[36m2025-08-12T03:57:17.815Z [INFO][0m 서버가 127.0.0.1:5001에서 실행 중입니다.
+[36m2025-08-12T03:57:17.815Z [INFO][0m 환경: development
+[36m2025-08-12T03:57:17.824Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T03:57:17.825Z [INFO][0m MongoDB 연결 풀 초기화 완료
+[36m{
+  "maxPoolSize": 10,
+  "minPoolSize": 2,
+  "readPreference": "primary"
+}[0m
+[36m2025-08-12T03:57:17.826Z [INFO][0m 개발 환경 감지 - DB 초기화 시작...
+🔧 개발 환경 확인 완료. DB 설정을 시작합니다...
+기존 데이터 정리 완료
+Counter 초기화 완료
+관리자 계정 생성 완료: likorea
+사용자 생성 완료: chulsu
+사용자 생성 완료: younghee
+사용자 생성 완료: minsu
+사용자 생성 완료: sujin
+공지사항 3개 생성 완료
+일반 게시글 45개 생성 완료
+댓글 100개 생성 완료
+게시글 댓글 수 업데이트 완료
+
+🎉 개발 환경 DB 설정 완료!
+📊 생성된 데이터:
+👤 관리자: likorea (비밀번호: password)
+👥 일반 사용자: 4명 (chulsu, younghee, minsu, sujin - 비밀번호: password)
+📢 공지사항: 3개
+📝 일반 게시글: 45개
+💬 댓글: 100개
+[36m2025-08-12T03:57:19.749Z [INFO][0m 개발 환경 DB 설정 완료
+태그 시스템 초기화 시작...
+태그 시스템 초기화 완료!
+- Type 태그: 6개
+- Category 태그: 13개
+- Region 태그: 62개 (Exit 13~73, Exit 73 이상)
+[36m2025-08-12T03:57:19.874Z [INFO][0m 태그 시스템 초기화 완료 (개발 환경)
+봇 시스템 초기화 시작...
+봇 사용자 계정 생성: matjipbot
+봇 사용자 계정 생성: techbot
+봇 시스템 초기화 완료! 2개의 봇이 준비되었습니다.
+[36m2025-08-12T03:57:20.416Z [INFO][0m 봇 시스템 초기화 완료 (개발 환경)
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+🔍 환경 변수 검증 중...
+
+
+✅ 환경 변수 검증 완료!
+
+(node:29788) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[36m2025-08-12T03:57:26.476Z [INFO][0m 서버가 127.0.0.1:5001에서 실행 중입니다.
+[36m2025-08-12T03:57:26.476Z [INFO][0m 환경: development
+[36m2025-08-12T03:57:26.485Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T03:57:26.486Z [INFO][0m MongoDB 연결 풀 초기화 완료
+[36m{
+  "maxPoolSize": 10,
+  "minPoolSize": 2,
+  "readPreference": "primary"
+}[0m
+[36m2025-08-12T03:57:26.488Z [INFO][0m 개발 환경 감지 - DB 초기화 시작...
+🔧 개발 환경 확인 완료. DB 설정을 시작합니다...
+기존 데이터 정리 완료
+Counter 초기화 완료
+관리자 계정 생성 완료: likorea
+사용자 생성 완료: chulsu
+사용자 생성 완료: younghee
+사용자 생성 완료: minsu
+사용자 생성 완료: sujin
+공지사항 3개 생성 완료
+일반 게시글 45개 생성 완료
+댓글 100개 생성 완료
+게시글 댓글 수 업데이트 완료
+
+🎉 개발 환경 DB 설정 완료!
+📊 생성된 데이터:
+👤 관리자: likorea (비밀번호: password)
+👥 일반 사용자: 4명 (chulsu, younghee, minsu, sujin - 비밀번호: password)
+📢 공지사항: 3개
+📝 일반 게시글: 45개
+💬 댓글: 100개
+[36m2025-08-12T03:57:28.406Z [INFO][0m 개발 환경 DB 설정 완료
+태그 시스템 초기화 시작...
+태그 시스템 초기화 완료!
+- Type 태그: 6개
+- Category 태그: 13개
+- Region 태그: 62개 (Exit 13~73, Exit 73 이상)
+[36m2025-08-12T03:57:28.531Z [INFO][0m 태그 시스템 초기화 완료 (개발 환경)
+봇 시스템 초기화 시작...
+봇 사용자 계정 생성: matjipbot
+봇 사용자 계정 생성: techbot
+봇 시스템 초기화 완료! 2개의 봇이 준비되었습니다.
+[36m2025-08-12T03:57:29.101Z [INFO][0m 봇 시스템 초기화 완료 (개발 환경)
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+🔍 환경 변수 검증 중...
+
+
+✅ 환경 변수 검증 완료!
+
+(node:29921) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[36m2025-08-12T03:57:53.298Z [INFO][0m 서버가 127.0.0.1:5001에서 실행 중입니다.
+[36m2025-08-12T03:57:53.299Z [INFO][0m 환경: development
+[36m2025-08-12T03:57:53.308Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T03:57:53.309Z [INFO][0m MongoDB 연결 풀 초기화 완료
+[36m{
+  "maxPoolSize": 10,
+  "minPoolSize": 2,
+  "readPreference": "primary"
+}[0m
+[36m2025-08-12T03:57:53.311Z [INFO][0m 개발 환경 감지 - DB 초기화 시작...
+🔧 개발 환경 확인 완료. DB 설정을 시작합니다...
+기존 데이터 정리 완료
+Counter 초기화 완료
+관리자 계정 생성 완료: likorea
+사용자 생성 완료: chulsu
+사용자 생성 완료: younghee
+사용자 생성 완료: minsu
+사용자 생성 완료: sujin
+공지사항 3개 생성 완료
+일반 게시글 45개 생성 완료
+댓글 100개 생성 완료
+게시글 댓글 수 업데이트 완료
+
+🎉 개발 환경 DB 설정 완료!
+📊 생성된 데이터:
+👤 관리자: likorea (비밀번호: password)
+👥 일반 사용자: 4명 (chulsu, younghee, minsu, sujin - 비밀번호: password)
+📢 공지사항: 3개
+📝 일반 게시글: 45개
+💬 댓글: 100개
+[36m2025-08-12T03:57:55.215Z [INFO][0m 개발 환경 DB 설정 완료
+태그 시스템 초기화 시작...
+태그 시스템 초기화 완료!
+- Type 태그: 6개
+- Category 태그: 13개
+- Region 태그: 62개 (Exit 13~73, Exit 73 이상)
+[36m2025-08-12T03:57:55.347Z [INFO][0m 태그 시스템 초기화 완료 (개발 환경)
+봇 시스템 초기화 시작...
+봇 사용자 계정 생성: matjipbot
+봇 사용자 계정 생성: techbot
+봇 시스템 초기화 완료! 2개의 봇이 준비되었습니다.
+[36m2025-08-12T03:57:55.919Z [INFO][0m 봇 시스템 초기화 완료 (개발 환경)
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+🔍 환경 변수 검증 중...
+
+
+✅ 환경 변수 검증 완료!
+
+(node:29982) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[36m2025-08-12T03:58:05.632Z [INFO][0m 서버가 127.0.0.1:5001에서 실행 중입니다.
+[36m2025-08-12T03:58:05.633Z [INFO][0m 환경: development
+[36m2025-08-12T03:58:05.643Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T03:58:05.644Z [INFO][0m MongoDB 연결 풀 초기화 완료
+[36m{
+  "maxPoolSize": 10,
+  "minPoolSize": 2,
+  "readPreference": "primary"
+}[0m
+[36m2025-08-12T03:58:05.645Z [INFO][0m 개발 환경 감지 - DB 초기화 시작...
+🔧 개발 환경 확인 완료. DB 설정을 시작합니다...
+기존 데이터 정리 완료
+Counter 초기화 완료
+관리자 계정 생성 완료: likorea
+사용자 생성 완료: chulsu
+사용자 생성 완료: younghee
+사용자 생성 완료: minsu
+사용자 생성 완료: sujin
+공지사항 3개 생성 완료
+일반 게시글 45개 생성 완료
+댓글 100개 생성 완료
+게시글 댓글 수 업데이트 완료
+
+🎉 개발 환경 DB 설정 완료!
+📊 생성된 데이터:
+👤 관리자: likorea (비밀번호: password)
+👥 일반 사용자: 4명 (chulsu, younghee, minsu, sujin - 비밀번호: password)
+📢 공지사항: 3개
+📝 일반 게시글: 45개
+💬 댓글: 100개
+[36m2025-08-12T03:58:07.577Z [INFO][0m 개발 환경 DB 설정 완료
+태그 시스템 초기화 시작...
+태그 시스템 초기화 완료!
+- Type 태그: 6개
+- Category 태그: 13개
+- Region 태그: 62개 (Exit 13~73, Exit 73 이상)
+[36m2025-08-12T03:58:07.724Z [INFO][0m 태그 시스템 초기화 완료 (개발 환경)
+봇 시스템 초기화 시작...
+봇 사용자 계정 생성: matjipbot
+봇 사용자 계정 생성: techbot
+봇 시스템 초기화 완료! 2개의 봇이 준비되었습니다.
+[36m2025-08-12T03:58:08.271Z [INFO][0m 봇 시스템 초기화 완료 (개발 환경)
+[31m2025-08-12T03:58:46.071Z [ERROR][0m [object Object]
+[31m2025-08-12T03:58:46.073Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "14ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:58:46.079Z [ERROR][0m [object Object]
+[31m2025-08-12T03:58:46.080Z [ERROR][0m HTTP GET /api/bots
+[31m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 401,
+  "duration": "15ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T04:01:42.385Z [ERROR][0m [object Object]
+[31m2025-08-12T04:01:42.386Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T04:01:55.181Z [ERROR][0m [object Object]
+[31m2025-08-12T04:01:55.181Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T04:01:55.329Z [ERROR][0m [object Object]
+[31m2025-08-12T04:01:55.330Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T04:01:55.333Z [ERROR][0m [object Object]
+[31m2025-08-12T04:01:55.354Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "8ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T04:01:57.511Z [ERROR][0m [object Object]
+[31m2025-08-12T04:01:57.512Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:00.536Z [INFO][0m HTTP POST /api/users/login
+[36m{
+  "method": "POST",
+  "url": "/api/users/login",
+  "statusCode": 200,
+  "duration": "291ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:00.559Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:00.589Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:00.612Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "31ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:00.615Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "47ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:00.638Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "6ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:00.660Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "20ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:00.727Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "43ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:00.738Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "50ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:00.762Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "52ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:00.784Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "84ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:01.834Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:01.858Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "10ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:01.860Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "16ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:05.017Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:05.042Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "22ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:12.790Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:02:12.818Z [INFO][0m HTTP GET /api/bots/689a9bd5d0ae2458f9a3ef44
+[36m{
+  "method": "GET",
+  "url": "/api/bots/689a9bd5d0ae2458f9a3ef44",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:03:01.290Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:03:01.324Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "20ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:03:01.327Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "19ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:03:02.352Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:03:02.381Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "27ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:03:21.914Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:03:21.941Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:03:21.944Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "17ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:03:23.014Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:03:23.043Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "28ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:03:27.136Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "6ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:03:27.160Z [INFO][0m HTTP GET /api/bots/688fe4258cf1c5bffa84c945
+[36m{
+  "method": "GET",
+  "url": "/api/bots/688fe4258cf1c5bffa84c945",
+  "statusCode": 200,
+  "duration": "13ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:04:39.354Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:04:39.388Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:04:39.390Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "17ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:04:40.281Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:04:40.314Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "30ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:04:50.867Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "8ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:04:50.894Z [INFO][0m HTTP GET /api/bots/688fe4258cf1c5bffa84c946
+[36m{
+  "method": "GET",
+  "url": "/api/bots/688fe4258cf1c5bffa84c946",
+  "statusCode": 200,
+  "duration": "13ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:29.993Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "6ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:30.019Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:30.024Z [INFO][0m HTTP GET /api/bots/688fe4258cf1c5bffa84c946
+[36m{
+  "method": "GET",
+  "url": "/api/bots/688fe4258cf1c5bffa84c946",
+  "statusCode": 200,
+  "duration": "33ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:30.068Z [INFO][0m HTTP GET /api/bots/688fe4258cf1c5bffa84c946
+[36m{
+  "method": "GET",
+  "url": "/api/bots/688fe4258cf1c5bffa84c946",
+  "statusCode": 200,
+  "duration": "52ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+🔍 환경 변수 검증 중...
+
+
+✅ 환경 변수 검증 완료!
+
+(node:30933) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[36m2025-08-12T04:05:45.671Z [INFO][0m 서버가 127.0.0.1:5001에서 실행 중입니다.
+[36m2025-08-12T04:05:45.671Z [INFO][0m 환경: development
+[36m2025-08-12T04:05:45.684Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T04:05:45.686Z [INFO][0m MongoDB 연결 풀 초기화 완료
+[36m{
+  "maxPoolSize": 10,
+  "minPoolSize": 2,
+  "readPreference": "primary"
+}[0m
+[36m2025-08-12T04:05:45.687Z [INFO][0m 개발 환경 감지 - DB 초기화 시작...
+🔧 개발 환경 확인 완료. DB 설정을 시작합니다...
+기존 데이터 정리 완료
+Counter 초기화 완료
+관리자 계정 생성 완료: likorea
+사용자 생성 완료: chulsu
+사용자 생성 완료: younghee
+사용자 생성 완료: minsu
+사용자 생성 완료: sujin
+공지사항 3개 생성 완료
+일반 게시글 45개 생성 완료
+댓글 100개 생성 완료
+게시글 댓글 수 업데이트 완료
+
+🎉 개발 환경 DB 설정 완료!
+📊 생성된 데이터:
+👤 관리자: likorea (비밀번호: password)
+👥 일반 사용자: 4명 (chulsu, younghee, minsu, sujin - 비밀번호: password)
+📢 공지사항: 3개
+📝 일반 게시글: 45개
+💬 댓글: 100개
+[36m2025-08-12T04:05:47.766Z [INFO][0m 개발 환경 DB 설정 완료
+태그 시스템 초기화 시작...
+태그 시스템 초기화 완료!
+- Type 태그: 6개
+- Category 태그: 13개
+- Region 태그: 62개 (Exit 13~73, Exit 73 이상)
+[36m2025-08-12T04:05:47.934Z [INFO][0m 태그 시스템 초기화 완료 (개발 환경)
+봇 시스템 초기화 시작...
+봇 사용자 계정 생성: matjipbot
+봇 사용자 계정 생성: techbot
+봇 시스템 초기화 완료! 2개의 봇이 준비되었습니다.
+[36m2025-08-12T04:05:48.519Z [INFO][0m 봇 시스템 초기화 완료 (개발 환경)
+[31m2025-08-12T04:05:48.965Z [ERROR][0m [object Object]
+[31m2025-08-12T04:05:48.969Z [ERROR][0m HTTP GET /api/approval/pending
+[31m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 401,
+  "duration": "16ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T04:05:48.998Z [ERROR][0m [object Object]
+[31m2025-08-12T04:05:48.999Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "26ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:50.253Z [INFO][0m HTTP POST /api/users/logout
+[36m{
+  "method": "POST",
+  "url": "/api/users/logout",
+  "statusCode": 200,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T04:05:52.513Z [ERROR][0m [object Object]
+[31m2025-08-12T04:05:52.514Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:56.708Z [INFO][0m HTTP POST /api/users/login
+[36m{
+  "method": "POST",
+  "url": "/api/users/login",
+  "statusCode": 200,
+  "duration": "330ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:56.732Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:56.758Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "11ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:56.781Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "9ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:56.805Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "21ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:56.828Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "77ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:56.831Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "90ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:56.859Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "24ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:56.883Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "39ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:58.103Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:58.130Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "16ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:58.132Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "14ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:59.785Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:05:59.811Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "23ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:13:51.995Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
+[36m{
+  "method": "GET",
+  "url": "/api/admin/users?page=1&limit=10",
+  "statusCode": 200,
+  "duration": "10ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:13:53.478Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:13:53.510Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "17ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:13:53.540Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "26ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:13:53.564Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "37ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:13:54.727Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:13:54.757Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "27ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:13:58.084Z [INFO][0m HTTP PATCH /api/bots/689a9bd5d0ae2458f9a3ef44/status
+[36m{
+  "method": "PATCH",
+  "url": "/api/bots/689a9bd5d0ae2458f9a3ef44/status",
+  "statusCode": 200,
+  "duration": "6ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:13:59.555Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "22ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:14:04.460Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "9ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:14:04.483Z [INFO][0m HTTP GET /api/bots/689a9bd5d0ae2458f9a3ef44
+[36m{
+  "method": "GET",
+  "url": "/api/bots/689a9bd5d0ae2458f9a3ef44",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:17:27.465Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "6ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:17:27.491Z [INFO][0m HTTP GET /api/bots/689a9bd5d0ae2458f9a3ef44
+[36m{
+  "method": "GET",
+  "url": "/api/bots/689a9bd5d0ae2458f9a3ef44",
+  "statusCode": 200,
+  "duration": "10ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:21:59.265Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:21:59.291Z [INFO][0m HTTP GET /api/bots/689a9bd5d0ae2458f9a3ef44
+[36m{
+  "method": "GET",
+  "url": "/api/bots/689a9bd5d0ae2458f9a3ef44",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:22:06.429Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "6ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:22:06.458Z [INFO][0m HTTP GET /api/bots/689a9bd5d0ae2458f9a3ef44
+[36m{
+  "method": "GET",
+  "url": "/api/bots/689a9bd5d0ae2458f9a3ef44",
+  "statusCode": 200,
+  "duration": "20ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:22:06.481Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "27ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:22:06.483Z [INFO][0m HTTP GET /api/bots/689a9bd5d0ae2458f9a3ef44
+[36m{
+  "method": "GET",
+  "url": "/api/bots/689a9bd5d0ae2458f9a3ef44",
+  "statusCode": 200,
+  "duration": "44ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:22:13.169Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:22:13.192Z [INFO][0m HTTP GET /api/bots/689a9bd5d0ae2458f9a3ef44
+[36m{
+  "method": "GET",
+  "url": "/api/bots/689a9bd5d0ae2458f9a3ef44",
+  "statusCode": 200,
+  "duration": "29ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+🔍 환경 변수 검증 중...
+
+
+✅ 환경 변수 검증 완료!
+
+(node:32792) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[36m2025-08-12T04:22:22.869Z [INFO][0m 서버가 127.0.0.1:5001에서 실행 중입니다.
+[36m2025-08-12T04:22:22.870Z [INFO][0m 환경: development
+[36m2025-08-12T04:22:22.880Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T04:22:22.882Z [INFO][0m MongoDB 연결 풀 초기화 완료
+[36m{
+  "maxPoolSize": 10,
+  "minPoolSize": 2,
+  "readPreference": "primary"
+}[0m
+[36m2025-08-12T04:22:22.883Z [INFO][0m 개발 환경 감지 - DB 초기화 시작...
+🔧 개발 환경 확인 완료. DB 설정을 시작합니다...
+기존 데이터 정리 완료
+Counter 초기화 완료
+관리자 계정 생성 완료: likorea
+사용자 생성 완료: chulsu
+사용자 생성 완료: younghee
+사용자 생성 완료: minsu
+사용자 생성 완료: sujin
+공지사항 3개 생성 완료
+일반 게시글 45개 생성 완료
+댓글 100개 생성 완료
+게시글 댓글 수 업데이트 완료
+
+🎉 개발 환경 DB 설정 완료!
+📊 생성된 데이터:
+👤 관리자: likorea (비밀번호: password)
+👥 일반 사용자: 4명 (chulsu, younghee, minsu, sujin - 비밀번호: password)
+📢 공지사항: 3개
+📝 일반 게시글: 45개
+💬 댓글: 100개
+[36m2025-08-12T04:22:24.897Z [INFO][0m 개발 환경 DB 설정 완료
+태그 시스템 초기화 시작...
+태그 시스템 초기화 완료!
+- Type 태그: 6개
+- Category 태그: 13개
+- Region 태그: 62개 (Exit 13~73, Exit 73 이상)
+[36m2025-08-12T04:22:25.045Z [INFO][0m 태그 시스템 초기화 완료 (개발 환경)
+봇 시스템 초기화 시작...
+봇 사용자 계정 생성: matjipbot
+봇 사용자 계정 생성: techbot
+봇 시스템 초기화 완료! 2개의 봇이 준비되었습니다.
+[36m2025-08-12T04:22:25.632Z [INFO][0m 봇 시스템 초기화 완료 (개발 환경)
+[31m2025-08-12T04:25:22.026Z [ERROR][0m [object Object]
+[31m2025-08-12T04:25:22.030Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:22.079Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "37ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T04:25:22.088Z [ERROR][0m [object Object]
+[31m2025-08-12T04:25:22.089Z [ERROR][0m HTTP GET /api/approval/pending
+[31m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 401,
+  "duration": "45ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T04:25:23.847Z [ERROR][0m [object Object]
+[31m2025-08-12T04:25:23.848Z [ERROR][0m HTTP GET /api/approval/pending
+[31m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 401,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T04:25:23.872Z [ERROR][0m [object Object]
+[31m2025-08-12T04:25:23.873Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "23ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:24.766Z [INFO][0m HTTP POST /api/users/logout
+[36m{
+  "method": "POST",
+  "url": "/api/users/logout",
+  "statusCode": 200,
+  "duration": "2ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T04:25:25.456Z [ERROR][0m [object Object]
+[31m2025-08-12T04:25:25.457Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:28.231Z [INFO][0m HTTP POST /api/users/login
+[36m{
+  "method": "POST",
+  "url": "/api/users/login",
+  "statusCode": 200,
+  "duration": "337ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:28.254Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:28.284Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "14ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:28.307Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "8ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:28.330Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "13ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:28.333Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "67ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:28.336Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "77ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:28.380Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "29ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:28.382Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "32ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:29.977Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:30.006Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "16ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:30.008Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "13ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:31.527Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:31.561Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "32ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:39.625Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T04:25:39.650Z [INFO][0m HTTP GET /api/bots/688ef0473c39b342750e8b5b
+[36m{
+  "method": "GET",
+  "url": "/api/bots/688ef0473c39b342750e8b5b",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m

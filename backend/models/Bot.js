@@ -52,7 +52,25 @@ const botSchema = new mongoose.Schema({
     },
     targetCategories: [{
       type: String
-    }]
+    }],
+    scheduleParams: {
+      address: {
+        type: String,
+        default: ''
+      },
+      keywords: {
+        type: String,
+        default: ''
+      },
+      topic: {
+        type: String,
+        default: ''
+      },
+      additionalRequests: {
+        type: String,
+        default: ''
+      }
+    }
   },
   stats: {
     postsCreated: {

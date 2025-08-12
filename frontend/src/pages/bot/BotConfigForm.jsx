@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { getBot, createBot, updateBot } from '../../api/bots';
@@ -22,8 +22,22 @@ const DEFAULT_PROMPTS = {
     user: `다음 키워드와 관련된 최신 뉴스를 요약해주세요:
 키워드: {keywords}
 추가 요청사항: {additionalRequests}`
+  },
+  general: {
+    system: `당신은 롱아일랜드 한인 커뮤니티의 활발한 회원입니다.
+커뮤니티에 도움이 되는 유용한 정보와 따뜻한 이야기를 공유합니다.`,
+    user: `{topic}에 대한 게시글을 작성해주세요.
+추가 요청사항: {additionalRequests}`
   }
 };
+
+// 탭 정의
+const TABS = [
+  { id: 'basic', label: '기본 정보', icon: '📝' },
+  { id: 'prompt', label: '프롬프트 설정', icon: '💬' },
+  { id: 'persona', label: '페르소나', icon: '👤' },
+  { id: 'schedule', label: '스케줄링', icon: '⏰' }
+];
 
 function BotConfigForm() {
   const { botId } = useParams();
@@ -31,6 +45,7 @@ function BotConfigForm() {
   const { user, loading: authLoading } = useAuth();
   const isEdit = !!botId;
 
+  const [activeTab, setActiveTab] = useState('basic');
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -44,18 +59,27 @@ function BotConfigForm() {
       interests: [],
       personality: '',
       location: '롱아일랜드'
+    },
+    settings: {
+      autoPost: false,
+      postInterval: 24, // 시간 단위로 변경 (기본 24시간)
+      targetCategories: [],
+      scheduleParams: {
+        address: '',
+        keywords: 'Long Island, NY', // 뉴스봇 기본 키워드
+        topic: '',
+        additionalRequests: ''
+      }
     }
   });
 
-  const [loading, setLoading] = useState(isEdit); // 편집 모드일 때만 초기 로딩 true
+  const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
   // 권한 체크
   useEffect(() => {
-    if (authLoading) {
-      return;
-    }
+    if (authLoading) return;
     
     if (!user || user.authority < 5) {
       alert('관리자 권한이 필요합니다.');
@@ -72,25 +96,35 @@ function BotConfigForm() {
 
     const fetchBot = async () => {
       try {
-        console.log('봇 정보 로드 시작, botId:', botId);
         setLoading(true);
         const response = await getBot(botId);
-        console.log('봇 정보 응답:', response);
 
         if (response.bot) {
+          const bot = response.bot;
           setFormData({
-            name: response.bot.name || '',
-            description: response.bot.description || '',
-            type: response.bot.type || 'restaurant',
-            systemPrompt: response.bot.prompt?.system || '',
-            userPrompt: response.bot.prompt?.user || '',
-            persona: response.bot.persona || {
+            name: bot.name || '',
+            description: bot.description || '',
+            type: bot.type || 'restaurant',
+            systemPrompt: bot.prompt?.system || '',
+            userPrompt: bot.prompt?.user || '',
+            persona: bot.persona || {
               age: 30,
               gender: '여성',
               occupation: '직장인',
               interests: [],
               personality: '',
               location: '롱아일랜드'
+            },
+            settings: {
+              autoPost: bot.settings?.autoPost || false,
+              postInterval: bot.settings?.postInterval ? Math.round(bot.settings.postInterval / 3600000) : 24, // ms를 시간으로 변환
+              targetCategories: bot.settings?.targetCategories || [],
+              scheduleParams: bot.settings?.scheduleParams || {
+                address: '',
+                keywords: '',
+                topic: '',
+                additionalRequests: ''
+              }
             }
           });
         }
@@ -99,235 +133,483 @@ function BotConfigForm() {
         setError('봇 정보를 불러오는데 실패했습니다.');
       } finally {
         setLoading(false);
-        console.log('로딩 완료, 로딩 상태:', false);
       }
     };
 
     fetchBot();
   }, [botId, isEdit]);
 
-  // 봇 타입 변경 핸들러
-  const handleTypeChange = (type) => {
-    setFormData(prev => ({
-      ...prev,
-      type,
-      systemPrompt: DEFAULT_PROMPTS[type].system,
-      userPrompt: DEFAULT_PROMPTS[type].user
-    }));
-  };
-
-  // 입력 변경 핸들러
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  // 페르소나 변경 핸들러
-  const handlePersonaChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      persona: {
-        ...prev.persona,
-        [field]: value
+  // 봇 타입 변경 시 프롬프트 템플릿 업데이트
+  const handleTypeChange = (e) => {
+    const newType = e.target.value;
+    setFormData({
+      ...formData,
+      type: newType,
+      systemPrompt: DEFAULT_PROMPTS[newType]?.system || '',
+      userPrompt: DEFAULT_PROMPTS[newType]?.user || '',
+      settings: {
+        ...formData.settings,
+        scheduleParams: {
+          ...formData.settings.scheduleParams,
+          keywords: newType === 'news' ? 'Long Island, NY' : '',
+          address: '',
+          topic: ''
+        }
       }
-    }));
+    });
   };
 
-  // 폼 제출 핸들러
+  // 저장 핸들러
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!formData.name || !formData.description) {
-      alert('봇 이름과 설명은 필수입니다.');
-      return;
-    }
+    setSaving(true);
+    setError(null);
 
     try {
-      setSaving(true);
-      setError(null);
-
-      const payload = {
-        ...formData,
-        aiModel: 'claude-3-haiku-20240307', // 기본 모델 사용
-        status: 'active'
+      const botData = {
+        name: formData.name,
+        description: formData.description,
+        type: formData.type,
+        systemPrompt: formData.systemPrompt,
+        userPrompt: formData.userPrompt,
+        persona: formData.persona,
+        settings: {
+          ...formData.settings,
+          postInterval: formData.settings.postInterval * 3600000 // 시간을 ms로 변환
+        }
       };
 
       if (isEdit) {
-        await updateBot(botId, payload);
+        await updateBot(botId, botData);
         alert('봇이 수정되었습니다.');
       } else {
-        await createBot(payload);
+        await createBot(botData);
         alert('봇이 생성되었습니다.');
       }
-
+      
       navigate('/bot-board/manage');
     } catch (err) {
       console.error('봇 저장 실패:', err);
-      setError(err.message || '봇 저장에 실패했습니다.');
+      setError(err.response?.data?.error || '봇 저장에 실패했습니다.');
     } finally {
       setSaving(false);
     }
   };
 
+  // 관심사 추가/제거
+  const handleInterestAdd = () => {
+    const interest = prompt('추가할 관심사를 입력하세요:');
+    if (interest && !formData.persona.interests.includes(interest)) {
+      setFormData({
+        ...formData,
+        persona: {
+          ...formData.persona,
+          interests: [...formData.persona.interests, interest]
+        }
+      });
+    }
+  };
+
+  const handleInterestRemove = (interest) => {
+    setFormData({
+      ...formData,
+      persona: {
+        ...formData.persona,
+        interests: formData.persona.interests.filter(i => i !== interest)
+      }
+    });
+  };
+
   if (authLoading || loading) {
-    console.log('로딩 상태:', { authLoading, loading, isEdit });
+    return <Loading />;
+  }
+
+  if (error && !saving) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '400px',
-        width: '100%'
-      }}>
-        <Loading />
+      <div className="bot-config-container">
+        <div className="error-message">{error}</div>
+        <button onClick={() => navigate('/bot-board/manage')}>← 목록으로</button>
       </div>
     );
   }
 
   return (
-    <div className="bot-config-form-container">
-      <div className="bot-config-form-header">
+    <div className="bot-config-container">
+      <div className="bot-config-header">
         <h1>{isEdit ? '봇 수정' : '새 봇 만들기'}</h1>
-        <p>봇의 기본 정보와 동작 방식을 설정합니다.</p>
+        <p className="bot-config-description">
+          봇의 정보와 동작을 설정합니다.
+        </p>
       </div>
 
-      {error && (
-        <div className="error-message">{error}</div>
-      )}
+      {/* 탭 네비게이션 */}
+      <div className="bot-config-tabs">
+        {TABS.map(tab => (
+          <button
+            key={tab.id}
+            className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            <span className="tab-icon">{tab.icon}</span>
+            <span className="tab-label">{tab.label}</span>
+          </button>
+        ))}
+      </div>
 
       <form onSubmit={handleSubmit} className="bot-config-form">
-        <section className="form-section">
-          <h2>기본 정보</h2>
-
-          <div className="input-group">
-            <label htmlFor="name">봇 이름 *</label>
-            <input
-              id="name"
-              type="text"
-              value={formData.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-              placeholder="예: 지수 맛집봇"
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="description">봇 설명 *</label>
-            <textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => handleInputChange('description', e.target.value)}
-              placeholder="봇의 역할과 특징을 설명해주세요..."
-              rows={3}
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <label>봇 타입 *</label>
-            <div className="bot-type-selector">
-              <button
-                type="button"
-                className={`type-option ${formData.type === 'restaurant' ? 'active' : ''}`}
-                onClick={() => handleTypeChange('restaurant')}
-              >
-                🍽️ 맛집봇
-              </button>
-              <button
-                type="button"
-                className={`type-option ${formData.type === 'news' ? 'active' : ''}`}
-                onClick={() => handleTypeChange('news')}
-              >
-                📰 뉴스봇
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <section className="form-section">
-          <h2>페르소나 설정</h2>
-
-          <div className="input-group-row">
-            <div className="input-group">
-              <label htmlFor="age">나이</label>
+        {/* 기본 정보 탭 */}
+        {activeTab === 'basic' && (
+          <div className="tab-content">
+            <div className="form-group">
+              <label htmlFor="name">봇 이름</label>
               <input
-                id="age"
-                type="number"
-                value={formData.persona.age}
-                onChange={(e) => handlePersonaChange('age', parseInt(e.target.value))}
-                min="20"
-                max="70"
+                id="name"
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="예: 맛집 리뷰어"
+                required
               />
             </div>
 
-            <div className="input-group">
-              <label htmlFor="gender">성별</label>
+            <div className="form-group">
+              <label htmlFor="description">봇 설명</label>
+              <textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="이 봇이 하는 일을 설명해주세요"
+                rows={3}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="type">봇 타입</label>
               <select
-                id="gender"
-                value={formData.persona.gender}
-                onChange={(e) => handlePersonaChange('gender', e.target.value)}
+                id="type"
+                value={formData.type}
+                onChange={handleTypeChange}
               >
-                <option value="여성">여성</option>
-                <option value="남성">남성</option>
+                <option value="restaurant">맛집 리뷰봇</option>
+                <option value="news">뉴스 요약봇</option>
+                <option value="general">일반 봇</option>
               </select>
             </div>
           </div>
+        )}
 
-          <div className="input-group">
-            <label htmlFor="occupation">직업</label>
-            <input
-              id="occupation"
-              type="text"
-              value={formData.persona.occupation}
-              onChange={(e) => handlePersonaChange('occupation', e.target.value)}
-              placeholder="예: 대학생, 직장인, 주부"
-            />
+        {/* 프롬프트 설정 탭 */}
+        {activeTab === 'prompt' && (
+          <div className="tab-content">
+            <div className="prompt-templates">
+              <h3>프롬프트 템플릿</h3>
+              <div className="template-buttons">
+                {Object.keys(DEFAULT_PROMPTS).map(type => (
+                  <button
+                    key={type}
+                    type="button"
+                    className="template-button"
+                    onClick={() => {
+                      setFormData({
+                        ...formData,
+                        systemPrompt: DEFAULT_PROMPTS[type].system,
+                        userPrompt: DEFAULT_PROMPTS[type].user
+                      });
+                    }}
+                  >
+                    {type === 'restaurant' ? '맛집 템플릿' : 
+                     type === 'news' ? '뉴스 템플릿' : '일반 템플릿'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="systemPrompt">시스템 프롬프트</label>
+              <textarea
+                id="systemPrompt"
+                value={formData.systemPrompt}
+                onChange={(e) => setFormData({ ...formData, systemPrompt: e.target.value })}
+                placeholder="봇의 역할과 성격을 정의하는 프롬프트"
+                rows={6}
+              />
+              <p className="form-help">봇의 기본 성격과 역할을 정의합니다. 페르소나 정보가 자동으로 추가됩니다.</p>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="userPrompt">사용자 프롬프트 템플릿</label>
+              <textarea
+                id="userPrompt"
+                value={formData.userPrompt}
+                onChange={(e) => setFormData({ ...formData, userPrompt: e.target.value })}
+                placeholder="게시글 생성 시 사용할 프롬프트 템플릿"
+                rows={4}
+              />
+              <p className="form-help">변수: {'{address}'}, {'{keywords}'}, {'{topic}'}, {'{additionalRequests}'}</p>
+            </div>
           </div>
+        )}
 
-          <div className="input-group">
-            <label htmlFor="personality">성격</label>
-            <input
-              id="personality"
-              type="text"
-              value={formData.persona.personality}
-              onChange={(e) => handlePersonaChange('personality', e.target.value)}
-              placeholder="예: 친근하고 활발한 성격"
-            />
+        {/* 페르소나 탭 */}
+        {activeTab === 'persona' && (
+          <div className="tab-content">
+            <p className="persona-info">
+              페르소나 정보는 봇의 시스템 프롬프트에 자동으로 추가되어 봇의 성격을 더욱 구체적으로 만듭니다.
+            </p>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="age">나이</label>
+                <input
+                  id="age"
+                  type="number"
+                  value={formData.persona.age}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    persona: { ...formData.persona, age: parseInt(e.target.value) || 30 }
+                  })}
+                  min="20"
+                  max="80"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="gender">성별</label>
+                <select
+                  id="gender"
+                  value={formData.persona.gender}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    persona: { ...formData.persona, gender: e.target.value }
+                  })}
+                >
+                  <option value="여성">여성</option>
+                  <option value="남성">남성</option>
+                  <option value="기타">기타</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="occupation">직업</label>
+              <input
+                id="occupation"
+                type="text"
+                value={formData.persona.occupation}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  persona: { ...formData.persona, occupation: e.target.value }
+                })}
+                placeholder="예: 교사, 개발자, 주부"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="personality">성격</label>
+              <input
+                id="personality"
+                type="text"
+                value={formData.persona.personality}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  persona: { ...formData.persona, personality: e.target.value }
+                })}
+                placeholder="예: 친근한, 전문적인, 유머러스한"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="location">거주지</label>
+              <input
+                id="location"
+                type="text"
+                value={formData.persona.location}
+                onChange={(e) => setFormData({
+                  ...formData,
+                  persona: { ...formData.persona, location: e.target.value }
+                })}
+                placeholder="예: 롱아일랜드, 맨하탄"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>관심사</label>
+              <div className="interests-container">
+                {formData.persona.interests.map((interest, index) => (
+                  <span key={index} className="interest-tag">
+                    {interest}
+                    <button
+                      type="button"
+                      onClick={() => handleInterestRemove(interest)}
+                      className="remove-interest"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+                <button
+                  type="button"
+                  onClick={handleInterestAdd}
+                  className="add-interest"
+                >
+                  + 추가
+                </button>
+              </div>
+            </div>
           </div>
-        </section>
+        )}
 
-        <section className="form-section">
-          <h2>프롬프트 설정</h2>
+        {/* 스케줄링 탭 */}
+        {activeTab === 'schedule' && (
+          <div className="tab-content">
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={formData.settings.autoPost}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    settings: { ...formData.settings, autoPost: e.target.checked }
+                  })}
+                />
+                <span>자동 게시 활성화</span>
+              </label>
+              <p className="form-help">활성화하면 설정된 주기에 따라 자동으로 게시글을 생성합니다.</p>
+            </div>
 
-          <div className="input-group">
-            <label htmlFor="systemPrompt">시스템 프롬프트</label>
-            <textarea
-              id="systemPrompt"
-              value={formData.systemPrompt}
-              onChange={(e) => handleInputChange('systemPrompt', e.target.value)}
-              placeholder="봇의 역할과 행동 지침을 입력하세요..."
-              rows={6}
-            />
-            <small>봇의 기본 성격과 역할을 정의합니다.</small>
+            {formData.settings.autoPost && (
+              <>
+                <div className="form-group">
+                  <label htmlFor="postInterval">게시 주기 (시간)</label>
+                  <div className="interval-input">
+                    <input
+                      id="postInterval"
+                      type="number"
+                      value={formData.settings.postInterval}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        settings: { ...formData.settings, postInterval: parseInt(e.target.value) || 24 }
+                      })}
+                      min="1"
+                      max="168"
+                    />
+                    <span className="interval-unit">시간마다</span>
+                  </div>
+                  <p className="form-help">
+                    {formData.settings.postInterval}시간마다 새로운 게시글이 생성됩니다.
+                    (하루 = 24시간, 일주일 = 168시간)
+                  </p>
+                </div>
+
+                <div className="schedule-params">
+                  <h4>자동 게시 파라미터</h4>
+                  
+                  {formData.type === 'restaurant' && (
+                    <div className="form-group">
+                      <label htmlFor="scheduleAddress">레스토랑 주소</label>
+                      <input
+                        id="scheduleAddress"
+                        type="text"
+                        value={formData.settings.scheduleParams.address}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          settings: {
+                            ...formData.settings,
+                            scheduleParams: {
+                              ...formData.settings.scheduleParams,
+                              address: e.target.value
+                            }
+                          }
+                        })}
+                        placeholder="예: 123 Main St, Syosset, NY 11791"
+                      />
+                      <p className="form-help">자동 게시 시 사용할 레스토랑 주소입니다. 비워두면 랜덤하게 선택됩니다.</p>
+                    </div>
+                  )}
+
+                  {formData.type === 'news' && (
+                    <div className="form-group">
+                      <label htmlFor="scheduleKeywords">뉴스 키워드</label>
+                      <input
+                        id="scheduleKeywords"
+                        type="text"
+                        value={formData.settings.scheduleParams.keywords}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          settings: {
+                            ...formData.settings,
+                            scheduleParams: {
+                              ...formData.settings.scheduleParams,
+                              keywords: e.target.value
+                            }
+                          }
+                        })}
+                        placeholder="예: 롱아일랜드, 한인, 커뮤니티"
+                      />
+                      <p className="form-help">뉴스 검색에 사용할 키워드입니다. 콤마로 구분하세요.</p>
+                    </div>
+                  )}
+
+                  {formData.type === 'general' && (
+                    <div className="form-group">
+                      <label htmlFor="scheduleTopic">주제</label>
+                      <input
+                        id="scheduleTopic"
+                        type="text"
+                        value={formData.settings.scheduleParams.topic}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          settings: {
+                            ...formData.settings,
+                            scheduleParams: {
+                              ...formData.settings.scheduleParams,
+                              topic: e.target.value
+                            }
+                          }
+                        })}
+                        placeholder="예: 계절별 생활 팁, 한인 행사 정보"
+                      />
+                      <p className="form-help">자동 게시할 글의 주제입니다.</p>
+                    </div>
+                  )}
+
+                  <div className="form-group">
+                    <label htmlFor="scheduleAdditional">추가 요청사항</label>
+                    <textarea
+                      id="scheduleAdditional"
+                      value={formData.settings.scheduleParams.additionalRequests}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        settings: {
+                          ...formData.settings,
+                          scheduleParams: {
+                            ...formData.settings.scheduleParams,
+                            additionalRequests: e.target.value
+                          }
+                        }
+                      })}
+                      placeholder="자동 게시 시 추가로 고려할 사항을 입력하세요"
+                      rows={3}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div className="schedule-info">
+              <h4>📌 스케줄링 안내</h4>
+              <ul>
+                <li><strong>중요:</strong> 자동 게시가 작동하려면 봇 관리 페이지에서 봇을 <strong>'활성화'</strong> 상태로 변경해야 합니다.</li>
+                <li>자동 게시를 켜고 봇을 활성화하면, 설정된 주기마다 자동으로 게시글이 생성됩니다.</li>
+                <li>생성된 게시글은 승인 대기 상태가 되며, 관리자가 검토 후 승인할 수 있습니다.</li>
+                <li>파라미터를 비워두면 봇이 자동으로 적절한 내용을 선택합니다.</li>
+              </ul>
+            </div>
           </div>
+        )}
 
-          <div className="input-group">
-            <label htmlFor="userPrompt">사용자 프롬프트 템플릿</label>
-            <textarea
-              id="userPrompt"
-              value={formData.userPrompt}
-              onChange={(e) => handleInputChange('userPrompt', e.target.value)}
-              placeholder="사용자 입력을 처리할 템플릿을 작성하세요..."
-              rows={6}
-            />
-            <small>
-              변수 사용: {'{address}'}, {'{keywords}'}, {'{additionalRequests}'}
-            </small>
-          </div>
-        </section>
-
+        {/* 저장 버튼 */}
         <div className="form-actions">
           <button
             type="button"
@@ -339,12 +621,18 @@ function BotConfigForm() {
           </button>
           <button
             type="submit"
-            className="btn-submit"
-            disabled={saving}
+            className="btn-save"
+            disabled={saving || !formData.name || !formData.description}
           >
-            {saving ? '저장 중...' : (isEdit ? '수정' : '생성')}
+            {saving ? '저장 중...' : (isEdit ? '수정 완료' : '봇 생성')}
           </button>
         </div>
+
+        {error && (
+          <div className="error-message" style={{ marginTop: '20px' }}>
+            {error}
+          </div>
+        )}
       </form>
     </div>
   );

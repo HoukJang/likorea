@@ -1035,7 +1035,9 @@ router.put('/:botId', authenticateToken, requireAdmin, async (req, res) => {
       aiModel,
       status,
       type,
-      apiSettings
+      apiSettings,
+      persona,
+      settings
     } = req.body;
 
     const bot = await Bot.findById(botId);
@@ -1057,6 +1059,23 @@ router.put('/:botId', authenticateToken, requireAdmin, async (req, res) => {
       bot.apiSettings = {
         ...bot.apiSettings.toObject ? bot.apiSettings.toObject() : bot.apiSettings,
         ...apiSettings
+      };
+    }
+
+    // 페르소나 업데이트 (계정 정보는 제외)
+    if (persona) {
+      const existingAccount = bot.persona?.likoreaAccount;
+      bot.persona = {
+        ...persona,
+        likoreaAccount: existingAccount // 기존 계정 정보 유지
+      };
+    }
+
+    // 스케줄링 설정 업데이트
+    if (settings) {
+      bot.settings = {
+        ...bot.settings.toObject ? bot.settings.toObject() : bot.settings,
+        ...settings
       };
     }
 
@@ -1137,7 +1156,8 @@ router.post('/', authenticateToken, requireAdmin, async (req, res) => {
       systemPrompt,
       userPrompt,
       apiSettings,
-      persona
+      persona,
+      settings
     } = req.body;
 
     if (!name || !description) {
@@ -1196,6 +1216,11 @@ router.post('/', authenticateToken, requireAdmin, async (req, res) => {
     // API 설정 추가 (전달된 경우)
     if (apiSettings) {
       botData.apiSettings = apiSettings;
+    }
+
+    // 스케줄링 설정 추가 (전달된 경우)
+    if (settings) {
+      botData.settings = settings;
     }
 
     // 봇 생성
