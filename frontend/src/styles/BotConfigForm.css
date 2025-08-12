@@ -377,6 +377,54 @@
   transform: none;
 }
 
+/* API 설정 */
+.news-specific-settings {
+  margin-top: 24px;
+  padding: 20px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.news-specific-settings h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.api-settings-info {
+  margin-top: 24px;
+  padding: 20px;
+  background: var(--info-bg);
+  border-radius: 8px;
+  border-left: 4px solid var(--info-color);
+}
+
+.api-settings-info h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--info-color);
+}
+
+.api-settings-info ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.api-settings-info li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.api-settings-info li strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
 /* 에러 메시지 */
 .error-message {
   padding: 16px;

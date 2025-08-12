@@ -36,6 +36,7 @@ const TABS = [
   { id: 'basic', label: '기본 정보', icon: '📝' },
   { id: 'prompt', label: '프롬프트 설정', icon: '💬' },
   { id: 'persona', label: '페르소나', icon: '👤' },
+  { id: 'api', label: 'API 설정', icon: '⚙️' },
   { id: 'schedule', label: '스케줄링', icon: '⏰' }
 ];
 
@@ -70,7 +71,17 @@ function BotConfigForm() {
         topic: '',
         additionalRequests: ''
       }
-    }
+    },
+    apiSettings: {
+      maxTokens: 800,
+      temperature: 0.8,
+      topP: 0.95,
+      topK: 0,
+      enableThinking: false,
+      extractFullArticles: false,
+      maxFullArticles: 7
+    },
+    aiModel: 'claude-3-haiku-20240307'
   });
 
   const [loading, setLoading] = useState(isEdit);
@@ -80,7 +91,7 @@ function BotConfigForm() {
   // 권한 체크
   useEffect(() => {
     if (authLoading) return;
-    
+
     if (!user || user.authority < 5) {
       alert('관리자 권한이 필요합니다.');
       navigate('/');
@@ -125,7 +136,17 @@ function BotConfigForm() {
                 topic: '',
                 additionalRequests: ''
               }
-            }
+            },
+            apiSettings: bot.apiSettings || {
+              maxTokens: 800,
+              temperature: 0.8,
+              topP: 0.95,
+              topK: 0,
+              enableThinking: false,
+              extractFullArticles: false,
+              maxFullArticles: 7
+            },
+            aiModel: bot.aiModel || 'claude-3-haiku-20240307'
           });
         }
       } catch (err) {
@@ -176,7 +197,9 @@ function BotConfigForm() {
         settings: {
           ...formData.settings,
           postInterval: formData.settings.postInterval * 3600000 // 시간을 ms로 변환
-        }
+        },
+        apiSettings: formData.apiSettings,
+        aiModel: formData.aiModel
       };
 
       if (isEdit) {
@@ -186,7 +209,7 @@ function BotConfigForm() {
         await createBot(botData);
         alert('봇이 생성되었습니다.');
       }
-      
+
       navigate('/bot-board/manage');
     } catch (err) {
       console.error('봇 저장 실패:', err);
@@ -318,7 +341,7 @@ function BotConfigForm() {
                       });
                     }}
                   >
-                    {type === 'restaurant' ? '맛집 템플릿' : 
+                    {type === 'restaurant' ? '맛집 템플릿' :
                      type === 'news' ? '뉴스 템플릿' : '일반 템플릿'}
                   </button>
                 ))}
@@ -460,6 +483,162 @@ function BotConfigForm() {
           </div>
         )}
 
+        {/* API 설정 탭 */}
+        {activeTab === 'api' && (
+          <div className="tab-content">
+            <div className="form-group">
+              <label htmlFor="aiModel">AI 모델</label>
+              <select
+                id="aiModel"
+                value={formData.aiModel}
+                onChange={(e) => setFormData({ ...formData, aiModel: e.target.value })}
+              >
+                <option value="claude-3-haiku-20240307">Claude 3 Haiku (빠른 응답)</option>
+                <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku</option>
+                <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</option>
+                <option value="claude-3-7-sonnet">Claude 3.7 Sonnet (하이브리드)</option>
+                <option value="claude-sonnet-4-20250514">Claude 4 Sonnet</option>
+                <option value="claude-opus-4-20250514">Claude 4 Opus (최고 성능)</option>
+              </select>
+              <p className="form-help">응답 품질과 속도를 고려하여 선택하세요.</p>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="maxTokens">최대 토큰 수</label>
+                <input
+                  id="maxTokens"
+                  type="number"
+                  value={formData.apiSettings.maxTokens}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    apiSettings: { ...formData.apiSettings, maxTokens: parseInt(e.target.value) || 800 }
+                  })}
+                  min="1"
+                  max="200000"
+                />
+                <p className="form-help">생성할 최대 글자 수 (1-200000)</p>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="temperature">Temperature</label>
+                <input
+                  id="temperature"
+                  type="number"
+                  value={formData.apiSettings.temperature}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    apiSettings: { ...formData.apiSettings, temperature: parseFloat(e.target.value) || 0.8 }
+                  })}
+                  min="0"
+                  max="1"
+                  step="0.1"
+                />
+                <p className="form-help">창의성 수준 (0-1, 높을수록 창의적)</p>
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="topP">Top P</label>
+                <input
+                  id="topP"
+                  type="number"
+                  value={formData.apiSettings.topP}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    apiSettings: { ...formData.apiSettings, topP: parseFloat(e.target.value) || 0.95 }
+                  })}
+                  min="0"
+                  max="1"
+                  step="0.05"
+                />
+                <p className="form-help">샘플링 임계값 (0-1)</p>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="topK">Top K</label>
+                <input
+                  id="topK"
+                  type="number"
+                  value={formData.apiSettings.topK}
+                  onChange={(e) => setFormData({
+                    ...formData,
+                    apiSettings: { ...formData.apiSettings, topK: parseInt(e.target.value) || 0 }
+                  })}
+                  min="0"
+                />
+                <p className="form-help">샘플링할 토큰 수 (0=무제한)</p>
+              </div>
+            </div>
+
+            {(formData.aiModel.includes('claude-sonnet-4') || formData.aiModel.includes('claude-opus-4')) && (
+              <div className="form-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={formData.apiSettings.enableThinking}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      apiSettings: { ...formData.apiSettings, enableThinking: e.target.checked }
+                    })}
+                  />
+                  <span>확장된 사고 기능 활성화 (Claude 4 전용)</span>
+                </label>
+                <p className="form-help">더 깊은 사고 과정을 거쳐 응답을 생성합니다. 응답 시간이 길어질 수 있습니다.</p>
+              </div>
+            )}
+
+            {formData.type === 'news' && (
+              <div className="news-specific-settings">
+                <h4>뉴스봇 전용 설정</h4>
+                <div className="form-group">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={formData.apiSettings.extractFullArticles}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        apiSettings: { ...formData.apiSettings, extractFullArticles: e.target.checked }
+                      })}
+                    />
+                    <span>전체 기사 내용 추출</span>
+                  </label>
+                  <p className="form-help">전체 기사 내용을 추출하여 더 상세한 요약을 제공합니다. (성능 주의)</p>
+                </div>
+
+                {formData.apiSettings.extractFullArticles && (
+                  <div className="form-group">
+                    <label htmlFor="maxFullArticles">최대 기사 추출 개수</label>
+                    <input
+                      id="maxFullArticles"
+                      type="number"
+                      value={formData.apiSettings.maxFullArticles}
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        apiSettings: { ...formData.apiSettings, maxFullArticles: parseInt(e.target.value) || 7 }
+                      })}
+                      min="1"
+                      max="10"
+                    />
+                    <p className="form-help">전체 내용을 추출할 기사 개수 (1-10)</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="api-settings-info">
+              <h4>📌 API 설정 안내</h4>
+              <ul>
+                <li><strong>모델 선택:</strong> Haiku는 빠르고 저렴, Sonnet은 균형잡힌 성능, Opus는 최고 품질</li>
+                <li><strong>Temperature:</strong> 0에 가까울수록 일관성 있는 응답, 1에 가까울수록 창의적인 응답</li>
+                <li><strong>토큰:</strong> 1 토큰 ≈ 한글 0.5자, 영어 0.75단어</li>
+                <li><strong>Claude 4 모델:</strong> 최신 모델로 더 높은 품질의 응답을 제공합니다</li>
+              </ul>
+            </div>
+          </div>
+        )}
+
         {/* 스케줄링 탭 */}
         {activeTab === 'schedule' && (
           <div className="tab-content">
@@ -504,7 +683,7 @@ function BotConfigForm() {
 
                 <div className="schedule-params">
                   <h4>자동 게시 파라미터</h4>
-                  
+
                   {formData.type === 'restaurant' && (
                     <div className="form-group">
                       <label htmlFor="scheduleAddress">레스토랑 주소</label>

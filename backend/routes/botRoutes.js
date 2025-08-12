@@ -139,7 +139,7 @@ async function generatePostAsync(bot, task, additionalPrompt, _adminUserId) {
     hasPersona: !!bot.persona,
     hasLikoreaAccount: !!(bot.persona && bot.persona.likoreaAccount)
   });
-  
+
   try {
     // 봇 상태를 'generating'으로 업데이트
     bot.taskStatus = 'generating';
@@ -151,11 +151,11 @@ async function generatePostAsync(bot, task, additionalPrompt, _adminUserId) {
 
     // 봇의 계정 정보 확인 및 생성
     let botUser;
-    
+
     if (bot.persona && bot.persona.likoreaAccount && bot.persona.likoreaAccount.username) {
       // 새로운 방식: persona.likoreaAccount에 정보가 있는 경우
       botUser = await User.findOne({ id: bot.persona.likoreaAccount.username });
-      
+
       if (!botUser) {
         // 봇 사용자 계정 생성
         botUser = await User.create({
@@ -168,15 +168,15 @@ async function generatePostAsync(bot, task, additionalPrompt, _adminUserId) {
     } else {
       // 레거시 봇을 위한 자동 계정 생성
       console.log('⚠️ 레거시 봇 감지, 자동 계정 생성:', bot.name);
-      
+
       // 고유한 사용자명 생성
       const username = `${bot.name.toLowerCase().replace(/\s+/g, '_')}_bot_${bot._id.toString().substr(-6)}`;
       const email = `${username}@likorea-bot.com`;
       const hashedPassword = await bcrypt.hash(crypto.randomBytes(12).toString('hex'), 10);
-      
+
       // 기존 사용자 확인
       botUser = await User.findOne({ id: username });
-      
+
       if (!botUser) {
         botUser = await User.create({
           id: username,
@@ -190,7 +190,7 @@ async function generatePostAsync(bot, task, additionalPrompt, _adminUserId) {
         });
         console.log('✅ 봇 계정 생성 완료:', username);
       }
-      
+
       // 봇의 persona 정보 업데이트
       if (!bot.persona) {
         bot.persona = {};
@@ -298,7 +298,7 @@ async function generatePostAsync(bot, task, additionalPrompt, _adminUserId) {
         debug(`✅ 실제 뉴스 ${newsData.selectedArticles}개 수집 완료 (전체 ${newsData.totalArticles}개)`);
 
         // DB에 저장된 user prompt 사용 또는 기본 템플릿
-        let userPromptTemplate = bot.prompt?.user || 
+        const userPromptTemplate = bot.prompt?.user ||
           `현재 날짜: {CURRENT_DATE}
 지역: {LOCATION}
 
@@ -879,7 +879,7 @@ ${enrichedMenus.filter(m => m.images && m.images.length > 0).map(m =>
       botId: bot._id,
       isApproved: false // 봇 게시글은 승인 대기
     };
-    
+
     console.log('📝 게시글 생성 데이터:', {
       title: postData.title,
       isBot: postData.isBot,

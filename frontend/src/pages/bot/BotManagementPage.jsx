@@ -18,7 +18,7 @@ function BotManagementPage() {
     if (authLoading) {
       return;
     }
-    
+
     if (!user || user.authority < 5) {
       alert('관리자 권한이 필요합니다.');
       navigate('/');
@@ -74,7 +74,7 @@ function BotManagementPage() {
   const handleToggleStatus = async (botId, currentStatus) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
     const statusText = newStatus === 'active' ? '활성화' : '비활성화';
-    
+
     try {
       await updateBotStatus(botId, newStatus);
       alert(`봇이 ${statusText}되었습니다.`);

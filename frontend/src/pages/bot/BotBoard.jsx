@@ -15,7 +15,7 @@ function BotBoard() {
     if (authLoading) {
       return;
     }
-    
+
     if (!user || user.authority < 5) {
       alert('관리자 권한이 필요합니다.');
       navigate('/');

@@ -238,10 +238,10 @@ exports.getPosts = asyncHandler(async (req, res) => {
 
   // 필터 조건 구성
   const filter = {};
-  
+
   // AND 조건들을 수집할 배열
   const andConditions = [];
-  
+
   // 봇 게시글 필터 조건
   andConditions.push({
     $or: [
@@ -295,12 +295,12 @@ exports.getPosts = asyncHandler(async (req, res) => {
       ]
     });
   }
-  
+
   // filter 객체에 있는 조건들을 andConditions에 추가
   Object.keys(filter).forEach(key => {
     andConditions.push({ [key]: filter[key] });
   });
-  
+
   // 최종 필터 구성
   const finalFilter = { $and: andConditions };
 
