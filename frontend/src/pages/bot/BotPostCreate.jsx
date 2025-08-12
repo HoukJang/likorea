@@ -1,14 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { useApi } from '../../hooks/useApi';
+import { getBots, createBotPost } from '../../api/bots';
 import Loading from '../../components/common/Loading';
 import '../../styles/BotPostCreate.css';
 
 function BotPostCreate() {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const api = useApi();
   const [bots, setBots] = useState([]);
   const [selectedBot, setSelectedBot] = useState('');
   const [selectedBotType, setSelectedBotType] = useState('');
@@ -39,7 +38,7 @@ function BotPostCreate() {
       setLoading(true);
       setError(null);
 
-      const response = await api.get('/bots');
+      const response = await getBots();
 
       if (response.bots) {
         setBots(response.bots);
@@ -50,7 +49,7 @@ function BotPostCreate() {
     } finally {
       setLoading(false);
     }
-  }, [api]);
+  }, []);
 
   useEffect(() => {
     loadBots();
@@ -103,15 +102,18 @@ function BotPostCreate() {
 
       const taskContent = generateTaskContent();
 
-      const response = await api.post('/bots/post', {
-        botId: selectedBot,
-        task: taskContent,
-        additionalPrompt: inputs.additionalRequests
-      });
+      const response = await createBotPost(
+        selectedBot,
+        taskContent,
+        inputs.additionalRequests
+      );
 
       if (response.success) {
         alert('봇 게시글 생성이 시작되었습니다. 잠시 후 목록에서 확인하세요.');
+        console.log('봇 게시글 생성 응답:', response);
         navigate('/bot-board');
+      } else {
+        setError('게시글 생성에 실패했습니다.');
       }
     } catch (err) {
       console.error('봇 게시글 생성 실패:', err);

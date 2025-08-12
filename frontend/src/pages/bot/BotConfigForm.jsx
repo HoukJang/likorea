@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { useApi } from '../../hooks/useApi';
+import { getBot, createBot, updateBot } from '../../api/bots';
 import Loading from '../../components/common/Loading';
 import '../../styles/BotConfigForm.css';
 
@@ -29,7 +29,6 @@ function BotConfigForm() {
   const { botId } = useParams();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const api = useApi();
   const isEdit = !!botId;
 
   const [formData, setFormData] = useState({
@@ -48,7 +47,7 @@ function BotConfigForm() {
     }
   });
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(isEdit); // 편집 모드일 때만 초기 로딩 true
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
@@ -59,40 +58,53 @@ function BotConfigForm() {
     }
     
     if (!user || user.authority < 5) {
-      alert('관리자 권한이 픔요합니다.');
+      alert('관리자 권한이 필요합니다.');
       navigate('/');
     }
   }, [user, navigate, authLoading]);
 
   // 편집 모드일 때 봇 정보 로드
-  const loadBot = useCallback(async () => {
-    if (!isEdit) return;
-
-    try {
-      setLoading(true);
-      const response = await api.get(`/bots/${botId}`);
-
-      if (response.bot) {
-        setFormData({
-          name: response.bot.name || '',
-          description: response.bot.description || '',
-          type: response.bot.type || 'restaurant',
-          systemPrompt: response.bot.systemPrompt || '',
-          userPrompt: response.bot.userPrompt || '',
-          persona: response.bot.persona || formData.persona
-        });
-      }
-    } catch (err) {
-      console.error('봇 정보 로드 실패:', err);
-      setError('봇 정보를 불러오는데 실패했습니다.');
-    } finally {
-      setLoading(false);
-    }
-  }, [api, botId, isEdit, formData.persona]);
-
   useEffect(() => {
-    loadBot();
-  }, [loadBot]);
+    if (!isEdit || !botId) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchBot = async () => {
+      try {
+        console.log('봇 정보 로드 시작, botId:', botId);
+        setLoading(true);
+        const response = await getBot(botId);
+        console.log('봇 정보 응답:', response);
+
+        if (response.bot) {
+          setFormData({
+            name: response.bot.name || '',
+            description: response.bot.description || '',
+            type: response.bot.type || 'restaurant',
+            systemPrompt: response.bot.prompt?.system || '',
+            userPrompt: response.bot.prompt?.user || '',
+            persona: response.bot.persona || {
+              age: 30,
+              gender: '여성',
+              occupation: '직장인',
+              interests: [],
+              personality: '',
+              location: '롱아일랜드'
+            }
+          });
+        }
+      } catch (err) {
+        console.error('봇 정보 로드 실패:', err);
+        setError('봇 정보를 불러오는데 실패했습니다.');
+      } finally {
+        setLoading(false);
+        console.log('로딩 완료, 로딩 상태:', false);
+      }
+    };
+
+    fetchBot();
+  }, [botId, isEdit]);
 
   // 봇 타입 변경 핸들러
   const handleTypeChange = (type) => {
@@ -143,10 +155,10 @@ function BotConfigForm() {
       };
 
       if (isEdit) {
-        await api.put(`/bots/${botId}`, payload);
+        await updateBot(botId, payload);
         alert('봇이 수정되었습니다.');
       } else {
-        await api.post('/bots', payload);
+        await createBot(payload);
         alert('봇이 생성되었습니다.');
       }
 
@@ -160,7 +172,18 @@ function BotConfigForm() {
   };
 
   if (authLoading || loading) {
-    return <Loading />;
+    console.log('로딩 상태:', { authLoading, loading, isEdit });
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '400px',
+        width: '100%'
+      }}>
+        <Loading />
+      </div>
+    );
   }
 
   return (

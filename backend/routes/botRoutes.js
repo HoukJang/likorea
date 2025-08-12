@@ -132,6 +132,14 @@ router.get('/', authenticateToken, requireAdmin, async (req, res) => {
 
 // 비동기 게시글 생성 함수
 async function generatePostAsync(bot, task, additionalPrompt, _adminUserId) {
+  console.log(`🤖 [${new Date().toLocaleTimeString()}] 봇 게시글 생성 시작:`, {
+    botName: bot.name,
+    botId: bot._id,
+    task: task,
+    hasPersona: !!bot.persona,
+    hasLikoreaAccount: !!(bot.persona && bot.persona.likoreaAccount)
+  });
+  
   try {
     // 봇 상태를 'generating'으로 업데이트
     bot.taskStatus = 'generating';
@@ -141,23 +149,60 @@ async function generatePostAsync(bot, task, additionalPrompt, _adminUserId) {
     };
     await bot.save();
 
-    // 봇의 계정 정보 확인
-    if (!bot.persona || !bot.persona.likoreaAccount) {
-      throw new Error('봇의 계정 정보가 설정되지 않았습니다');
+    // 봇의 계정 정보 확인 및 생성
+    let botUser;
+    
+    if (bot.persona && bot.persona.likoreaAccount && bot.persona.likoreaAccount.username) {
+      // 새로운 방식: persona.likoreaAccount에 정보가 있는 경우
+      botUser = await User.findOne({ id: bot.persona.likoreaAccount.username });
+      
+      if (!botUser) {
+        // 봇 사용자 계정 생성
+        botUser = await User.create({
+          id: bot.persona.likoreaAccount.username,
+          email: bot.persona.likoreaAccount.email,
+          password: bot.persona.likoreaAccount.password,
+          authority: 3 // 일반 사용자 권한
+        });
+      }
+    } else {
+      // 레거시 봇을 위한 자동 계정 생성
+      console.log('⚠️ 레거시 봇 감지, 자동 계정 생성:', bot.name);
+      
+      // 고유한 사용자명 생성
+      const username = `${bot.name.toLowerCase().replace(/\s+/g, '_')}_bot_${bot._id.toString().substr(-6)}`;
+      const email = `${username}@likorea-bot.com`;
+      const hashedPassword = await bcrypt.hash(crypto.randomBytes(12).toString('hex'), 10);
+      
+      // 기존 사용자 확인
+      botUser = await User.findOne({ id: username });
+      
+      if (!botUser) {
+        botUser = await User.create({
+          id: username,
+          email: email,
+          password: hashedPassword,
+          authority: 3,
+          profile: {
+            nickname: bot.name,
+            bio: `${bot.name} 봇입니다.`
+          }
+        });
+        console.log('✅ 봇 계정 생성 완료:', username);
+      }
+      
+      // 봇의 persona 정보 업데이트
+      if (!bot.persona) {
+        bot.persona = {};
+      }
+      bot.persona.likoreaAccount = {
+        username: username,
+        email: email,
+        password: hashedPassword
+      };
+      await bot.save();
     }
 
-    // 봇 계정으로 사용자 찾기 또는 생성
-    let botUser = await User.findOne({ id: bot.persona.likoreaAccount.username });
-
-    if (!botUser) {
-      // 봇 사용자 계정 생성
-      botUser = await User.create({
-        id: bot.persona.likoreaAccount.username,
-        email: bot.persona.likoreaAccount.email,
-        password: bot.persona.likoreaAccount.password,
-        authority: 3 // 일반 사용자 권한
-      });
-    }
 
     // 프롬프트 구성
     let systemPrompt = bot.prompt?.system || `당신은 롱아일랜드 한인 커뮤니티의 활발한 회원입니다.
@@ -252,8 +297,21 @@ async function generatePostAsync(bot, task, additionalPrompt, _adminUserId) {
 
         debug(`✅ 실제 뉴스 ${newsData.selectedArticles}개 수집 완료 (전체 ${newsData.totalArticles}개)`);
 
-        // DB에 저장된 user prompt 사용
-        userPrompt = bot.prompt?.user || '';
+        // DB에 저장된 user prompt 사용 또는 기본 템플릿
+        let userPromptTemplate = bot.prompt?.user || 
+          `현재 날짜: {CURRENT_DATE}
+지역: {LOCATION}
+
+아래는 {MONTH}월 {WEEK_OF_MONTH}째주의 주요 뉴스입니다:
+
+{NEWS_DATA}
+
+위 뉴스들을 바탕으로 한인 커뮤니티를 위한 주간 뉴스 요약 게시글을 작성해주세요.
+중요한 지역 소식, 비즈니스 정보, 학교 소식 등을 포함하여 유익하고 읽기 쉽게 정리해주세요.
+
+응답 형식:
+제목: [게시글 제목]
+내용: [게시글 내용]`;
 
         // 템플릿 변수 치환
         const currentDateTime = `${nyDate} ${nyTime.toLocaleTimeString('ko-KR', {
@@ -262,7 +320,7 @@ async function generatePostAsync(bot, task, additionalPrompt, _adminUserId) {
           minute: '2-digit'
         })} (뉴욕 시간)`;
 
-        userPrompt = userPrompt
+        userPrompt = userPromptTemplate
           .replace(/{CURRENT_DATE}/g, currentDateTime)
           .replace(/{LOCATION}/g, targetLocations.join(' · '))
           .replace(/{MONTH}/g, month.toString())
@@ -487,17 +545,21 @@ ${enrichedMenus.filter(m => m.images && m.images.length > 0).map(m =>
     }
 
     // 유저 프롬프트 구성
-    let combinedUserPrompt = bot.prompt?.user || '';
+    let combinedUserPrompt = userPrompt || '';
 
-    // 기본 유저 프롬프트가 있으면 추가
-    if (combinedUserPrompt) {
-      combinedUserPrompt += '\n\n';
-    }
-
-    // 주제와 추가 요청사항 추가
-    combinedUserPrompt += userPrompt;
+    // 추가 요청사항이 있으면 추가
     if (additionalPrompt) {
       combinedUserPrompt += `\n\n추가 요청사항: ${additionalPrompt}`;
+    }
+
+    // 프롬프트가 비어있는 경우 방지
+    if (!combinedUserPrompt || combinedUserPrompt.trim() === '') {
+      console.error('❌ 빈 프롬프트 감지');
+      combinedUserPrompt = `현재 날짜는 ${nyDate}입니다. 롱아일랜드 한인 커뮤니티를 위한 게시글을 작성해주세요.
+      
+응답 형식:
+제목: [게시글 제목]
+내용: [게시글 내용]`;
     }
 
     // 디버그 로깅: Claude API 요청 전
@@ -808,7 +870,7 @@ ${enrichedMenus.filter(m => m.images && m.images.length > 0).map(m =>
       title: generatedTitle,
       content: generatedContent,
       tags: {
-        type: bot.settings.targetCategories[0] || '기타',
+        type: bot.settings?.targetCategories?.[0] || '기타',
         region: '0'
       },
       author: botUser._id,
@@ -817,6 +879,14 @@ ${enrichedMenus.filter(m => m.images && m.images.length > 0).map(m =>
       botId: bot._id,
       isApproved: false // 봇 게시글은 승인 대기
     };
+    
+    console.log('📝 게시글 생성 데이터:', {
+      title: postData.title,
+      isBot: postData.isBot,
+      isApproved: postData.isApproved,
+      botId: postData.botId,
+      tags: postData.tags
+    });
 
     // 맛집봇의 경우 모든 메뉴 이미지 데이터 저장
     if (bot._allMenuImages && bot._allMenuImages.length > 0) {
@@ -824,6 +894,13 @@ ${enrichedMenus.filter(m => m.images && m.images.length > 0).map(m =>
     }
 
     const post = await BoardPost.create(postData);
+
+    console.log(`✅ 봇 ${bot.name}의 게시글 생성 완료:`, {
+      postId: post._id,
+      postNumber: post.postNumber,
+      title: post.title,
+      isApproved: post.isApproved
+    });
 
     // 봇 통계 업데이트
     bot.lastActivity = new Date();
@@ -833,10 +910,13 @@ ${enrichedMenus.filter(m => m.images && m.images.length > 0).map(m =>
     bot.currentTask.completedAt = new Date();
     await bot.save();
 
-    console.log(`✅ 봇 ${bot.name}의 게시글 생성 완료: ${post.title}`);
-
   } catch (error) {
-    console.error('봇 게시글 생성 실패:', error);
+    console.error('❌ 봇 게시글 생성 실패:', {
+      botName: bot.name,
+      error: error.message,
+      stack: error.stack,
+      task: bot.currentTask?.description
+    });
 
     // 에러 상태로 업데이트
     bot.taskStatus = 'failed';
@@ -861,8 +941,16 @@ router.post('/post', authenticateToken, requireAdmin, async (req, res) => {
     // 봇 찾기
     const bot = await Bot.findById(botId);
     if (!bot) {
+      console.log('❌ 봇을 찾을 수 없음:', botId);
       return res.status(404).json({ error: '봇을 찾을 수 없습니다' });
     }
+
+    console.log('📋 봇 정보:', {
+      name: bot.name,
+      type: bot.type,
+      hasPersona: !!bot.persona,
+      personaKeys: bot.persona ? Object.keys(bot.persona) : []
+    });
 
     // 이미 작업 중인지 확인
     if (bot.taskStatus === 'generating') {

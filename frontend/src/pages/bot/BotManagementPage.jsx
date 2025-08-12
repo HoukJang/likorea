@@ -1,14 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { useApi } from '../../hooks/useApi';
+import { getBots, deleteBot } from '../../api/bots';
 import Loading from '../../components/common/Loading';
 import '../../styles/BotManagementPage.css';
 
 function BotManagementPage() {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const api = useApi();
   const [bots, setBots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -32,7 +31,7 @@ function BotManagementPage() {
       setLoading(true);
       setError(null);
 
-      const response = await api.get('/bots');
+      const response = await getBots();
 
       if (response) {
         setBots(response.bots || []);
@@ -47,7 +46,7 @@ function BotManagementPage() {
     } finally {
       setLoading(false);
     }
-  }, [api]);
+  }, []);
 
   useEffect(() => {
     loadBots();
@@ -61,7 +60,7 @@ function BotManagementPage() {
 
     try {
       setDeletingBot(botId);
-      await api.delete(`/bots/${botId}`);
+      await deleteBot(botId);
       loadBots(); // 목록 새로고침
     } catch (err) {
       console.error('봇 삭제 실패:', err);

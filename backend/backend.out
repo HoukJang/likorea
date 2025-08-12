@@ -1,5 +1,5 @@
 
-> longisland-korea-backend@1.6.1 dev
+> longisland-korea-backend@1.0.2 dev
 > nodemon server.js
 
 [33m[nodemon] 3.1.10[39m
@@ -12,18 +12,18 @@
 
 ✅ 환경 변수 검증 완료!
 
-(node:73251) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(node:24989) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
 (Use `node --trace-deprecation ...` to show where the warning was created)
-[36m2025-08-02T03:55:15.455Z [INFO][0m 서버가 127.0.0.1:5001에서 실행 중입니다.
-[36m2025-08-02T03:55:15.456Z [INFO][0m 환경: development
-[36m2025-08-02T03:55:15.466Z [INFO][0m MongoDB 연결 성공
-[36m2025-08-02T03:55:15.468Z [INFO][0m MongoDB 연결 풀 초기화 완료
+[36m2025-08-12T03:15:42.521Z [INFO][0m 서버가 127.0.0.1:5001에서 실행 중입니다.
+[36m2025-08-12T03:15:42.522Z [INFO][0m 환경: development
+[36m2025-08-12T03:15:42.531Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T03:15:42.532Z [INFO][0m MongoDB 연결 풀 초기화 완료
 [36m{
   "maxPoolSize": 10,
   "minPoolSize": 2,
   "readPreference": "primary"
 }[0m
-[36m2025-08-02T03:55:15.474Z [INFO][0m 개발 환경 감지 - DB 초기화 시작...
+[36m2025-08-12T03:15:42.534Z [INFO][0m 개발 환경 감지 - DB 초기화 시작...
 🔧 개발 환경 확인 완료. DB 설정을 시작합니다...
 기존 데이터 정리 완료
 Counter 초기화 완료
@@ -44,1274 +44,2522 @@ Counter 초기화 완료
 📢 공지사항: 3개
 📝 일반 게시글: 45개
 💬 댓글: 100개
-[36m2025-08-02T03:55:17.462Z [INFO][0m 개발 환경 DB 설정 완료
+[36m2025-08-12T03:15:44.393Z [INFO][0m 개발 환경 DB 설정 완료
 태그 시스템 초기화 시작...
 태그 시스템 초기화 완료!
 - Type 태그: 6개
-- Category 태그: 12개
+- Category 태그: 13개
 - Region 태그: 62개 (Exit 13~73, Exit 73 이상)
-[36m2025-08-02T03:55:17.610Z [INFO][0m 태그 시스템 초기화 완료 (개발 환경)
+[36m2025-08-12T03:15:44.518Z [INFO][0m 태그 시스템 초기화 완료 (개발 환경)
 봇 시스템 초기화 시작...
 봇 사용자 계정 생성: matjipbot
 봇 사용자 계정 생성: techbot
 봇 시스템 초기화 완료! 2개의 봇이 준비되었습니다.
-[36m2025-08-02T03:55:18.188Z [INFO][0m 봇 시스템 초기화 완료 (개발 환경)
-[36m2025-08-02T03:57:51.367Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
-[36m{
+[36m2025-08-12T03:15:45.061Z [INFO][0m 봇 시스템 초기화 완료 (개발 환경)
+[31m2025-08-12T03:20:57.875Z [ERROR][0m [object Object]
+[31m2025-08-12T03:20:57.878Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
   "method": "GET",
-  "url": "/api/admin/users?page=1&limit=10",
-  "statusCode": 200,
-  "duration": "14ms",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "13ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T03:57:51.393Z [INFO][0m HTTP GET /api/admin/stats
-[36m{
-  "method": "GET",
-  "url": "/api/admin/stats",
-  "statusCode": 200,
-  "duration": "24ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
-[31m2025-08-02T03:57:52.077Z [ERROR][0m [object Object]
-[31m2025-08-02T03:57:52.078Z [ERROR][0m HTTP GET /api/bots
+[31m2025-08-12T03:20:57.883Z [ERROR][0m [object Object]
+[31m2025-08-12T03:20:57.884Z [ERROR][0m HTTP GET /api/bots
 [31m{
   "method": "GET",
   "url": "/api/bots",
   "statusCode": 401,
-  "duration": "14ms",
+  "duration": "12ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T03:57:52.105Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
-[36m{
-  "method": "GET",
-  "url": "/api/admin/users?page=1&limit=10",
-  "statusCode": 304,
-  "duration": "14ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[31m2025-08-02T03:57:52.107Z [ERROR][0m [object Object]
-[31m2025-08-02T03:57:52.108Z [ERROR][0m HTTP GET /api/approval/pending
+[31m2025-08-12T03:20:59.464Z [ERROR][0m [object Object]
+[31m2025-08-12T03:20:59.465Z [ERROR][0m HTTP GET /api/users/verify
 [31m{
   "method": "GET",
-  "url": "/api/approval/pending",
-  "statusCode": 401,
-  "duration": "38ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:57:52.130Z [INFO][0m HTTP GET /api/admin/stats
-[36m{
-  "method": "GET",
-  "url": "/api/admin/stats",
-  "statusCode": 304,
-  "duration": "46ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:03.076Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 200,
-  "duration": "13ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:03.107Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 200,
-  "duration": "27ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:03.148Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
-[36m{
-  "method": "GET",
-  "url": "/api/boards?page=1&limit=25",
-  "statusCode": 200,
-  "duration": "67ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:05.953Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
-[36m{
-  "method": "GET",
-  "url": "/api/admin/users?page=1&limit=10",
-  "statusCode": 304,
-  "duration": "7ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:05.980Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "14ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:06.003Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "23ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:06.027Z [INFO][0m HTTP GET /api/admin/stats
-[36m{
-  "method": "GET",
-  "url": "/api/admin/stats",
-  "statusCode": 304,
-  "duration": "61ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:06.050Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
-[36m{
-  "method": "GET",
-  "url": "/api/boards?page=1&limit=25",
-  "statusCode": 304,
-  "duration": "64ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:09.139Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
-[36m{
-  "method": "GET",
-  "url": "/api/admin/users?page=1&limit=10",
-  "statusCode": 304,
-  "duration": "6ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:09.171Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "14ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:09.180Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "21ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:09.182Z [INFO][0m HTTP GET /api/admin/stats
-[36m{
-  "method": "GET",
-  "url": "/api/admin/stats",
-  "statusCode": 304,
-  "duration": "48ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:09.224Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
-[36m{
-  "method": "GET",
-  "url": "/api/boards?page=1&limit=25",
-  "statusCode": 304,
-  "duration": "24ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:10.171Z [INFO][0m HTTP POST /api/users/logout
-[36m{
-  "method": "POST",
-  "url": "/api/users/logout",
-  "statusCode": 200,
-  "duration": "2ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:10.209Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "10ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:10.216Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "16ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:10.240Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
-[36m{
-  "method": "GET",
-  "url": "/api/boards?page=1&limit=25",
-  "statusCode": 304,
-  "duration": "30ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-=== verifyTokenMiddleware 디버깅 ===
-요청 URL: /verify
-쿠키들: [Object: null prototype] {}
-authToken 쿠키: undefined
-Authorization 헤더: undefined
-토큰이 없습니다!
-[36m2025-08-02T03:58:11.022Z [INFO][0m HTTP GET /api/users/verify
-[36m{
-  "method": "GET",
   "url": "/api/users/verify",
-  "statusCode": 200,
-  "duration": "14ms",
+  "statusCode": 401,
+  "duration": "4ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T03:58:11.043Z [INFO][0m HTTP POST /api/users/logout
+[36m2025-08-12T03:21:00.131Z [INFO][0m HTTP POST /api/users/logout
 [36m{
   "method": "POST",
   "url": "/api/users/logout",
   "statusCode": 200,
   "duration": "1ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-=== 로그인 쿠키 설정 ===
-쿠키 옵션: { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 86400000 }
-NODE_ENV: development
-[36m2025-08-02T03:58:20.691Z [INFO][0m HTTP POST /api/users/login
+[31m2025-08-12T03:21:00.731Z [ERROR][0m [object Object]
+[31m2025-08-12T03:21:00.732Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:21:05.010Z [INFO][0m HTTP POST /api/users/login
 [36m{
   "method": "POST",
   "url": "/api/users/login",
   "statusCode": 200,
-  "duration": "365ms",
+  "duration": "312ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-=== verifyTokenMiddleware 디버깅 ===
-요청 URL: /verify
-쿠키들: {
-  authToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk'
-}
-authToken 쿠키: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk
-Authorization 헤더: undefined
-[36m2025-08-02T03:58:20.717Z [INFO][0m HTTP GET /api/users/verify
+[36m2025-08-12T03:21:05.033Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
   "url": "/api/users/verify",
   "statusCode": 200,
-  "duration": "21ms",
+  "duration": "3ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-=== verifyTokenMiddleware 디버깅 ===
-요청 URL: /verify
-쿠키들: {
-  authToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk'
-}
-authToken 쿠키: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk
-Authorization 헤더: undefined
-=== verifyTokenMiddleware 디버깅 ===
-요청 URL: /verify
-쿠키들: {
-  authToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk'
-}
-authToken 쿠키: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk
-Authorization 헤더: undefined
-=== verifyTokenMiddleware 디버깅 ===
-요청 URL: /verify
-쿠키들: {
-  authToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk'
-}
-authToken 쿠키: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk
-Authorization 헤더: undefined
-[36m2025-08-02T03:58:20.749Z [INFO][0m HTTP GET /api/users/verify
+[36m2025-08-12T03:21:05.057Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
   "url": "/api/users/verify",
-  "statusCode": 304,
-  "duration": "28ms",
+  "statusCode": 200,
+  "duration": "9ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T03:58:20.774Z [INFO][0m HTTP GET /api/users/verify
+[36m2025-08-12T03:21:05.082Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
   "url": "/api/users/verify",
-  "statusCode": 304,
-  "duration": "11ms",
+  "statusCode": 200,
+  "duration": "8ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T03:58:20.797Z [INFO][0m HTTP GET /api/users/verify
+[36m2025-08-12T03:21:05.105Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
   "url": "/api/users/verify",
-  "statusCode": 304,
-  "duration": "33ms",
+  "statusCode": 200,
+  "duration": "47ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T03:58:20.820Z [INFO][0m HTTP GET /api/tags
+[36m2025-08-12T03:21:05.108Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "67ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:21:05.130Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "34ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:21:05.172Z [INFO][0m HTTP GET /api/tags
 [36m{
   "method": "GET",
   "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "12ms",
+  "statusCode": 200,
+  "duration": "34ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T03:58:20.831Z [INFO][0m HTTP GET /api/tags
+[36m2025-08-12T03:21:05.180Z [INFO][0m HTTP GET /api/tags
 [36m{
   "method": "GET",
   "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "21ms",
+  "statusCode": 200,
+  "duration": "44ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T03:58:20.877Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m2025-08-12T03:21:05.204Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
 [36m{
   "method": "GET",
   "url": "/api/boards?page=1&limit=25",
-  "statusCode": 304,
-  "duration": "66ms",
+  "statusCode": 200,
+  "duration": "47ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-=== verifyTokenMiddleware 디버깅 ===
-요청 URL: /verify
-쿠키들: {
-  authToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk'
-}
-authToken 쿠키: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk
-Authorization 헤더: undefined
-=== verifyTokenMiddleware 디버깅 ===
-요청 URL: /verify
-쿠키들: {
-  authToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk'
-}
-authToken 쿠키: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk
-Authorization 헤더: undefined
-=== verifyTokenMiddleware 디버깅 ===
-요청 URL: /verify
-쿠키들: {
-  authToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk'
-}
-authToken 쿠키: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk
-Authorization 헤더: undefined
-[36m2025-08-02T03:58:28.047Z [INFO][0m HTTP GET /api/users/verify
-[36m{
-  "method": "GET",
-  "url": "/api/users/verify",
-  "statusCode": 304,
-  "duration": "13ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:28.052Z [INFO][0m HTTP GET /api/users/verify
-[36m{
-  "method": "GET",
-  "url": "/api/users/verify",
-  "statusCode": 304,
-  "duration": "14ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:28.060Z [INFO][0m HTTP GET /api/users/verify
-[36m{
-  "method": "GET",
-  "url": "/api/users/verify",
-  "statusCode": 304,
-  "duration": "13ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:33.809Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "11ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:33.833Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "19ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:33.856Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m2025-08-12T03:21:05.225Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
 [36m{
   "method": "GET",
   "url": "/api/boards?page=1&limit=25",
-  "statusCode": 304,
-  "duration": "37ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:35.416Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
-[36m{
-  "method": "GET",
-  "url": "/api/admin/users?page=1&limit=10",
-  "statusCode": 200,
-  "duration": "6ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:35.442Z [INFO][0m HTTP GET /api/admin/stats
-[36m{
-  "method": "GET",
-  "url": "/api/admin/stats",
-  "statusCode": 304,
-  "duration": "17ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:36.632Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
-[36m{
-  "method": "GET",
-  "url": "/api/admin/users?page=1&limit=10",
-  "statusCode": 304,
-  "duration": "7ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T03:58:36.665Z [INFO][0m HTTP GET /api/approval/pending
-[36m{
-  "method": "GET",
-  "url": "/api/approval/pending",
-  "statusCode": 200,
-  "duration": "21ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:36.690Z [INFO][0m HTTP GET /api/admin/stats
-[36m{
-  "method": "GET",
-  "url": "/api/admin/stats",
-  "statusCode": 304,
-  "duration": "46ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:36.712Z [INFO][0m HTTP GET /api/bots
-[36m{
-  "method": "GET",
-  "url": "/api/bots",
   "statusCode": 200,
   "duration": "61ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-인증 미들웨어 - 요청 경로: /688d8ae13410662bf4af6228/status
-인증 미들웨어 - 요청 메서드: PATCH
-[36m2025-08-02T03:58:41.643Z [INFO][0m HTTP PATCH /api/bots/688d8ae13410662bf4af6228/status
+[36m2025-08-12T03:21:06.284Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
 [36m{
-  "method": "PATCH",
-  "url": "/api/bots/688d8ae13410662bf4af6228/status",
+  "method": "GET",
+  "url": "/api/admin/users?page=1&limit=10",
   "statusCode": 200,
-  "duration": "6ms",
+  "duration": "10ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T03:58:41.670Z [INFO][0m HTTP GET /api/approval/pending
+[36m2025-08-12T03:21:07.645Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:21:07.671Z [INFO][0m HTTP GET /api/approval/pending
 [36m{
   "method": "GET",
   "url": "/api/approval/pending",
-  "statusCode": 304,
-  "duration": "10ms",
+  "statusCode": 200,
+  "duration": "8ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T03:58:41.693Z [INFO][0m HTTP GET /api/bots
+[36m2025-08-12T03:21:08.493Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:21:08.522Z [INFO][0m HTTP GET /api/bots
 [36m{
   "method": "GET",
   "url": "/api/bots",
   "statusCode": 200,
-  "duration": "32ms",
+  "duration": "27ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-인증 미들웨어 - 요청 경로: /post
-인증 미들웨어 - 요청 메서드: POST
-[36m2025-08-02T03:58:51.642Z [INFO][0m HTTP POST /api/bots/post
+📋 봇 정보: {
+  name: 'Test News Bot',
+  type: 'news',
+  hasPersona: true,
+  personaKeys: [
+    'age',
+    'gender',
+    'occupation',
+    'interests',
+    'personality',
+    'location',
+    'likoreaAccount'
+  ]
+}
+🤖 [11:21:12 PM] 봇 게시글 생성 시작: {
+  botName: 'Test News Bot',
+  botId: new ObjectId('689a9bd5d0ae2458f9a3ef44'),
+  task: 'test',
+  hasPersona: true,
+  hasLikoreaAccount: true
+}
+[36m2025-08-12T03:21:12.432Z [INFO][0m HTTP POST /api/bots/post
 [36m{
   "method": "POST",
   "url": "/api/bots/post",
   "statusCode": 200,
-  "duration": "7ms",
+  "duration": "21ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
+⚠️ 레거시 봇 감지, 자동 계정 생성: Test News Bot
+✅ 봇 계정 생성 완료: test_news_bot_bot_a3ef44
+🔍 실제 뉴스 데이터 수집 중... (지역: test)
+📊 전체 기사 추출 설정:
+  - bot.apiSettings?.extractFullArticles: false
+  - env.EXTRACT_FULL_ARTICLES: true
+  - 최종 extractFullArticles: true
+  - maxFullArticles: 7
+📰 주간 뉴스 수집 시작... (지역: test)
+📍 지역 설정: test (4개 피드 추가)
+🔄 RSS 피드 가져오기: Google News - test
+🔄 RSS 피드 가져오기: Google News - test 한인
+🔄 RSS 피드 가져오기: Google News - test Business
+🔄 RSS 피드 가져오기: Google News - test School
+🔄 RSS 피드 가져오기: Long Island Press
+🔄 RSS 피드 가져오기: Google News - Long Island
+🔄 RSS 피드 가져오기: Google News - Nassau County
+🔄 RSS 피드 가져오기: Korea Times NY
+🔄 RSS 피드 가져오기: Google News - 롱아일랜드 한인
+🔄 RSS 피드 가져오기: Google News - 뉴욕 한인
+❌ RSS 피드 파싱 실패 (Korea Times NY): connect ECONNREFUSED 45.58.10.90:443
+🔗 Google News URL 리졸브 시작...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiwgFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiqAFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMihwFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMivgFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMigwFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMibkFVX3lxT...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiWkFVX3lxT...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMigwFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+[36m2025-08-12T03:21:14.061Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "6ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:21:14.088Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiggFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiiwFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMifEFVX3lxT...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMivgFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMirAFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMitAFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMipAFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMioAFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiYkFVX3lxT...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMitAFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiqwFBVV95c...
+📄 상위 7개 뉴스의 전체 기사 추출 시작...
+📊 추출 대상: 직접 접근 1개, Google News 19개
+🔄 기사 추출 시작: https://www.longislandpress.com/2025/08/11/nikola-...
+🔄 Google News URL 리졸빙 시도...
+✅ 기사 추출 성공: LI’s forgotten genius: Campaign to restore Tesla’s Shoreham lab reenergized
+✅ URL 리졸브 성공 (Canonical): https://news.google.com/rss/articles/CBMiwgFBVV95c...
+🔗 URL 리졸브: https://news.google.com/rss/ar... → https://news.google.com/rss/articles/CBMiwgFBVV95c...
+🔄 기사 추출 시작: https://news.google.com/rss/articles/CBMiwgFBVV95c...
+⚠️ Readability 추출 실패, 사이트별 선택자 시도...
+🔄 Google News URL 리졸빙 시도...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (Canonical): https://news.google.com/rss/articles/CBMiqAFBVV95c...
+🔗 URL 리졸브: https://news.google.com/rss/ar... → https://news.google.com/rss/articles/CBMiqAFBVV95c...
+🔄 기사 추출 시작: https://news.google.com/rss/articles/CBMiqAFBVV95c...
+✅ URL 리졸브 성공 (Canonical): https://news.google.com/rss/articles/CBMihwFBVV95c...
+🔗 URL 리졸브: https://news.google.com/rss/ar... → https://news.google.com/rss/articles/CBMihwFBVV95c...
+🔄 기사 추출 시작: https://news.google.com/rss/articles/CBMihwFBVV95c...
+⚠️ Readability 추출 실패, 사이트별 선택자 시도...
+⚠️ Readability 추출 실패, 사이트별 선택자 시도...
+🔄 Google News URL 리졸빙 시도...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (Canonical): https://news.google.com/rss/articles/CBMivgFBVV95c...
+🔗 URL 리졸브: https://news.google.com/rss/ar... → https://news.google.com/rss/articles/CBMivgFBVV95c...
+🔄 기사 추출 시작: https://news.google.com/rss/articles/CBMivgFBVV95c...
+✅ URL 리졸브 성공 (Canonical): https://news.google.com/rss/articles/CBMigwFBVV95c...
+🔗 URL 리졸브: https://news.google.com/rss/ar... → https://news.google.com/rss/articles/CBMigwFBVV95c...
+🔄 기사 추출 시작: https://news.google.com/rss/articles/CBMigwFBVV95c...
+⚠️ Readability 추출 실패, 사이트별 선택자 시도...
+⚠️ Readability 추출 실패, 사이트별 선택자 시도...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (Canonical): https://news.google.com/rss/articles/CBMibkFVX3lxT...
+🔗 URL 리졸브: https://news.google.com/rss/ar... → https://news.google.com/rss/articles/CBMibkFVX3lxT...
+🔄 기사 추출 시작: https://news.google.com/rss/articles/CBMibkFVX3lxT...
+⚠️ Readability 추출 실패, 사이트별 선택자 시도...
+✅ 전체 기사 추출 완료: 1/7개 성공
+✅ 주간 뉴스 집계 완료: 20개 선택 (전체 155개)
+✅ 실제 뉴스 20개 수집 완료 (전체 155개)
 
-=== AI 프롬프트 정보 ===
-봇 이름: 34번 뉴스 봇
-AI 모델: claude-opus-4-20250514
+=== Claude API 요청 준비 ===
+봇 정보: {
+  name: 'Test News Bot',
+  type: 'news',
+  subType: 'local',
+  model: 'claude-3-5-sonnet-20241022',
+  isNewsBot: true
+}
+
+API 설정: {
+  maxTokens: 800,
+  temperature: 0.8,
+  topP: 0.95,
+  topK: 0,
+  enableThinking: false
+}
 
 [System Prompt]
-당신은 롱아일랜드 LIE 32~36, Northern State 29~31 일대(플러싱 인접)의 전통적 한인 부촌을 위한 ‘주간 뉴스’ 전문 AI입니다.  
+ 당신은 롱아일랜드 한인 커뮤니티의 활발한 회원입니다.
 
-지금(뉴욕 Eastern Time) 날짜를 읽어 월과 (일-1)//7+1 계산으로 N번째 주차를 구하십시오.  
-제목은 “<월>월 <N>째주 Great Neck·Manhasset 뉴스” 형식.  
-
-● 헤드라인·부동산·교육·교통·문화·치안·날씨·이벤트 중 **흥미로운 항목만** 선택해 순서·개수 자유롭게 배치하되,  
-  - “TOP 헤드라인”이 있으면 가장 먼저,  
-  - 각 항목은 1문장 ≤ 20단어 + URL.  
-● 특히 **고가 부동산 매물·사립·특목 학교 변화·LIRR/LIE 통근 이슈·한인 문화행사**를 우선 취재.  
-● 전체 600자(공백 포함) 이내, URL 글자 수 제외 가능.  
-● 출처: 최근 7일 Newsday, Great Neck Patch, The Island Now, K-Radio, 미주중앙.  
-마지막에 “🔮 한 걸음 앞서보기:” 20단어 이내 전망 1문장.
-
-User Prompt 의 응답 형식을 반드시 지켜주세요.
-
-
+응답 형식:
+제목: [게시글 제목]
+내용: [게시글 내용]
 
 [User Prompt]
-다음 주제로 롱아일랜드 한인 커뮤니티에 게시글을 작성해주세요: 이번주 뉴스
-    
-요구사항:
-1. 제목은 40자 이내로 간결하게
-2. 내용은 친근하고 자연스러운 한국어로
-3. 롱아일랜드 지역 특성을 반영
-4. 자연스럽고 진정성 있는 커뮤니티 구성원의 목소리로 작성
+ 
+========================
+
+
+=== Claude API 호출 ===
+API 파라미터: {
+  "model": "claude-3-5-sonnet-20241022",
+  "max_tokens": 800,
+  "temperature": 0.8,
+  "system": "당신은 롱아일랜드 한인 커뮤니티의 활발한 회원입니다.\n\n응답 형식:\n제목: [게시글 제목]\n내용: [게시글 내용]",
+  "messages": [
+    {
+      "role": "user",
+      "content": ""
+    }
+  ]
+}
+헤더: {}
+Claude API 호출 오류: BadRequestError: 400 {"type":"error","error":{"type":"invalid_request_error","message":"messages.0: all messages must have non-empty content except for the optional final assistant message"}}
+    at APIError.generate (/Users/houkjang/likorea/backend/node_modules/@anthropic-ai/sdk/error.js:41:20)
+    at Anthropic.makeStatusError (/Users/houkjang/likorea/backend/node_modules/@anthropic-ai/sdk/core.js:275:33)
+    at Anthropic.makeRequest (/Users/houkjang/likorea/backend/node_modules/@anthropic-ai/sdk/core.js:318:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async generatePostAsync (/Users/houkjang/likorea/backend/routes/botRoutes.js:640:19) {
+  status: 400,
+  headers: {
+    'anthropic-organization-id': '796285cb-6f5d-45b5-9faa-26428297288c',
+    'cf-cache-status': 'DYNAMIC',
+    'cf-ray': '96dcd78eba238c23-EWR',
+    connection: 'keep-alive',
+    'content-length': '170',
+    'content-type': 'application/json',
+    date: 'Tue, 12 Aug 2025 03:21:20 GMT',
+    'request-id': 'req_011CS36YdAqP31jHqSGcnZ3B',
+    server: 'cloudflare',
+    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+    via: '1.1 google',
+    'x-robots-tag': 'none',
+    'x-should-retry': 'false'
+  },
+  request_id: 'req_011CS36YdAqP31jHqSGcnZ3B',
+  error: {
+    type: 'error',
+    error: {
+      type: 'invalid_request_error',
+      message: 'messages.0: all messages must have non-empty content except for the optional final assistant message'
+    }
+  }
+}
+
+API 오류 상세: {
+  message: '400 {"type":"error","error":{"type":"invalid_request_error","message":"messages.0: all messages must have non-empty content except for the optional final assistant message"}}',
+  status: 400,
+  type: undefined
+}
+❌ 봇 게시글 생성 실패: {
+  botName: 'Test News Bot',
+  error: '400 {"type":"error","error":{"type":"invalid_request_error","message":"messages.0: all messages must have non-empty content except for the optional final assistant message"}}',
+  stack: 'Error: 400 {"type":"error","error":{"type":"invalid_request_error","message":"messages.0: all messages must have non-empty content except for the optional final assistant message"}}\n' +
+    '    at APIError.generate (/Users/houkjang/likorea/backend/node_modules/@anthropic-ai/sdk/error.js:41:20)\n' +
+    '    at Anthropic.makeStatusError (/Users/houkjang/likorea/backend/node_modules/@anthropic-ai/sdk/core.js:275:33)\n' +
+    '    at Anthropic.makeRequest (/Users/houkjang/likorea/backend/node_modules/@anthropic-ai/sdk/core.js:318:30)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n' +
+    '    at async generatePostAsync (/Users/houkjang/likorea/backend/routes/botRoutes.js:640:19)',
+  task: 'test'
+}
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+🔍 환경 변수 검증 중...
+
+
+✅ 환경 변수 검증 완료!
+
+(node:25699) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[36m2025-08-12T03:23:28.600Z [INFO][0m 서버가 127.0.0.1:5001에서 실행 중입니다.
+[36m2025-08-12T03:23:28.601Z [INFO][0m 환경: development
+[36m2025-08-12T03:23:28.611Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T03:23:28.612Z [INFO][0m MongoDB 연결 풀 초기화 완료
+[36m{
+  "maxPoolSize": 10,
+  "minPoolSize": 2,
+  "readPreference": "primary"
+}[0m
+[36m2025-08-12T03:23:28.614Z [INFO][0m 개발 환경 감지 - DB 초기화 시작...
+🔧 개발 환경 확인 완료. DB 설정을 시작합니다...
+기존 데이터 정리 완료
+Counter 초기화 완료
+관리자 계정 생성 완료: likorea
+사용자 생성 완료: chulsu
+사용자 생성 완료: younghee
+사용자 생성 완료: minsu
+사용자 생성 완료: sujin
+공지사항 3개 생성 완료
+일반 게시글 45개 생성 완료
+댓글 100개 생성 완료
+게시글 댓글 수 업데이트 완료
+
+🎉 개발 환경 DB 설정 완료!
+📊 생성된 데이터:
+👤 관리자: likorea (비밀번호: password)
+👥 일반 사용자: 4명 (chulsu, younghee, minsu, sujin - 비밀번호: password)
+📢 공지사항: 3개
+📝 일반 게시글: 45개
+💬 댓글: 100개
+[36m2025-08-12T03:23:30.619Z [INFO][0m 개발 환경 DB 설정 완료
+태그 시스템 초기화 시작...
+태그 시스템 초기화 완료!
+- Type 태그: 6개
+- Category 태그: 13개
+- Region 태그: 62개 (Exit 13~73, Exit 73 이상)
+[36m2025-08-12T03:23:30.745Z [INFO][0m 태그 시스템 초기화 완료 (개발 환경)
+봇 시스템 초기화 시작...
+봇 사용자 계정 생성: matjipbot
+봇 사용자 계정 생성: techbot
+봇 시스템 초기화 완료! 2개의 봇이 준비되었습니다.
+[36m2025-08-12T03:23:31.299Z [INFO][0m 봇 시스템 초기화 완료 (개발 환경)
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+🔍 환경 변수 검증 중...
+
+
+✅ 환경 변수 검증 완료!
+
+(node:25780) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[36m2025-08-12T03:23:44.858Z [INFO][0m 서버가 127.0.0.1:5001에서 실행 중입니다.
+[36m2025-08-12T03:23:44.858Z [INFO][0m 환경: development
+[36m2025-08-12T03:23:44.869Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T03:23:44.870Z [INFO][0m MongoDB 연결 풀 초기화 완료
+[36m{
+  "maxPoolSize": 10,
+  "minPoolSize": 2,
+  "readPreference": "primary"
+}[0m
+[36m2025-08-12T03:23:44.872Z [INFO][0m 개발 환경 감지 - DB 초기화 시작...
+🔧 개발 환경 확인 완료. DB 설정을 시작합니다...
+기존 데이터 정리 완료
+Counter 초기화 완료
+관리자 계정 생성 완료: likorea
+사용자 생성 완료: chulsu
+사용자 생성 완료: younghee
+사용자 생성 완료: minsu
+사용자 생성 완료: sujin
+공지사항 3개 생성 완료
+일반 게시글 45개 생성 완료
+댓글 100개 생성 완료
+게시글 댓글 수 업데이트 완료
+
+🎉 개발 환경 DB 설정 완료!
+📊 생성된 데이터:
+👤 관리자: likorea (비밀번호: password)
+👥 일반 사용자: 4명 (chulsu, younghee, minsu, sujin - 비밀번호: password)
+📢 공지사항: 3개
+📝 일반 게시글: 45개
+💬 댓글: 100개
+[36m2025-08-12T03:23:46.767Z [INFO][0m 개발 환경 DB 설정 완료
+태그 시스템 초기화 시작...
+태그 시스템 초기화 완료!
+- Type 태그: 6개
+- Category 태그: 13개
+- Region 태그: 62개 (Exit 13~73, Exit 73 이상)
+[36m2025-08-12T03:23:46.916Z [INFO][0m 태그 시스템 초기화 완료 (개발 환경)
+봇 시스템 초기화 시작...
+봇 사용자 계정 생성: matjipbot
+봇 사용자 계정 생성: techbot
+봇 시스템 초기화 완료! 2개의 봇이 준비되었습니다.
+[36m2025-08-12T03:23:47.468Z [INFO][0m 봇 시스템 초기화 완료 (개발 환경)
+[31m2025-08-12T03:24:48.563Z [ERROR][0m [object Object]
+[31m2025-08-12T03:24:48.566Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "13ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:24:48.571Z [ERROR][0m [object Object]
+[31m2025-08-12T03:24:48.572Z [ERROR][0m HTTP GET /api/bots
+[31m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 401,
+  "duration": "13ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:24:51.420Z [ERROR][0m [object Object]
+[31m2025-08-12T03:24:51.422Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:51.984Z [INFO][0m HTTP POST /api/users/logout
+[36m{
+  "method": "POST",
+  "url": "/api/users/logout",
+  "statusCode": 200,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:24:52.527Z [ERROR][0m [object Object]
+[31m2025-08-12T03:24:52.528Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:55.312Z [INFO][0m HTTP POST /api/users/login
+[36m{
+  "method": "POST",
+  "url": "/api/users/login",
+  "statusCode": 200,
+  "duration": "300ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:55.335Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:55.363Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "8ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:55.387Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:55.410Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "17ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:55.413Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "73ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:55.417Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "74ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:55.460Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "33ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:55.486Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "37ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:55.512Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "62ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:55.535Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "84ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:57.068Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:57.094Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "8ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:57.850Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:24:57.874Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "22ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+📋 봇 정보: {
+  name: 'Test News Bot',
+  type: 'news',
+  hasPersona: true,
+  personaKeys: [
+    'age',
+    'gender',
+    'occupation',
+    'interests',
+    'personality',
+    'location',
+    'likoreaAccount'
+  ]
+}
+🤖 [11:25:05 PM] 봇 게시글 생성 시작: {
+  botName: 'Test News Bot',
+  botId: new ObjectId('689a9bd5d0ae2458f9a3ef44'),
+  task: 'test',
+  hasPersona: true,
+  hasLikoreaAccount: true
+}
+[36m2025-08-12T03:25:05.224Z [INFO][0m HTTP POST /api/bots/post
+[36m{
+  "method": "POST",
+  "url": "/api/bots/post",
+  "statusCode": 200,
+  "duration": "20ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+🔍 실제 뉴스 데이터 수집 중... (지역: test)
+📊 전체 기사 추출 설정:
+  - bot.apiSettings?.extractFullArticles: false
+  - env.EXTRACT_FULL_ARTICLES: true
+  - 최종 extractFullArticles: true
+  - maxFullArticles: 7
+📰 주간 뉴스 수집 시작... (지역: test)
+📍 지역 설정: test (4개 피드 추가)
+🔄 RSS 피드 가져오기: Google News - test
+🔄 RSS 피드 가져오기: Google News - test 한인
+🔄 RSS 피드 가져오기: Google News - test Business
+🔄 RSS 피드 가져오기: Google News - test School
+🔄 RSS 피드 가져오기: Long Island Press
+🔄 RSS 피드 가져오기: Google News - Long Island
+🔄 RSS 피드 가져오기: Google News - Nassau County
+🔄 RSS 피드 가져오기: Korea Times NY
+🔄 RSS 피드 가져오기: Google News - 롱아일랜드 한인
+🔄 RSS 피드 가져오기: Google News - 뉴욕 한인
+❌ RSS 피드 파싱 실패 (Korea Times NY): connect ECONNREFUSED 45.58.10.90:443
+🔗 Google News URL 리졸브 시작...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiwgFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiqAFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMihwFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMivgFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMigwFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+[36m2025-08-12T03:25:06.751Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "10ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:25:06.756Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMibkFVX3lxT...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiWkFVX3lxT...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMigwFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiggFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiiwFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMifEFVX3lxT...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMivgFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMirAFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMitAFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMipAFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMioAFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiYkFVX3lxT...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMitAFBVV95c...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (HEAD): https://news.google.com/rss/articles/CBMiqwFBVV95c...
+📄 상위 7개 뉴스의 전체 기사 추출 시작...
+📊 추출 대상: 직접 접근 1개, Google News 19개
+🔄 기사 추출 시작: https://www.longislandpress.com/2025/08/11/nikola-...
+🔄 Google News URL 리졸빙 시도...
+✅ 기사 추출 성공: LI’s forgotten genius: Campaign to restore Tesla’s Shoreham lab reenergized
+✅ URL 리졸브 성공 (Canonical): https://news.google.com/rss/articles/CBMiwgFBVV95c...
+🔗 URL 리졸브: https://news.google.com/rss/ar... → https://news.google.com/rss/articles/CBMiwgFBVV95c...
+🔄 기사 추출 시작: https://news.google.com/rss/articles/CBMiwgFBVV95c...
+⚠️ Readability 추출 실패, 사이트별 선택자 시도...
+[36m2025-08-12T03:25:08.516Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:25:08.548Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "30ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+🔄 Google News URL 리졸빙 시도...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (Canonical): https://news.google.com/rss/articles/CBMiqAFBVV95c...
+🔗 URL 리졸브: https://news.google.com/rss/ar... → https://news.google.com/rss/articles/CBMiqAFBVV95c...
+🔄 기사 추출 시작: https://news.google.com/rss/articles/CBMiqAFBVV95c...
+✅ URL 리졸브 성공 (Canonical): https://news.google.com/rss/articles/CBMihwFBVV95c...
+🔗 URL 리졸브: https://news.google.com/rss/ar... → https://news.google.com/rss/articles/CBMihwFBVV95c...
+🔄 기사 추출 시작: https://news.google.com/rss/articles/CBMihwFBVV95c...
+⚠️ Readability 추출 실패, 사이트별 선택자 시도...
+⚠️ Readability 추출 실패, 사이트별 선택자 시도...
+🔄 Google News URL 리졸빙 시도...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (Canonical): https://news.google.com/rss/articles/CBMivgFBVV95c...
+🔗 URL 리졸브: https://news.google.com/rss/ar... → https://news.google.com/rss/articles/CBMivgFBVV95c...
+🔄 기사 추출 시작: https://news.google.com/rss/articles/CBMivgFBVV95c...
+✅ URL 리졸브 성공 (Canonical): https://news.google.com/rss/articles/CBMigwFBVV95c...
+🔗 URL 리졸브: https://news.google.com/rss/ar... → https://news.google.com/rss/articles/CBMigwFBVV95c...
+🔄 기사 추출 시작: https://news.google.com/rss/articles/CBMigwFBVV95c...
+⚠️ Readability 추출 실패, 사이트별 선택자 시도...
+⚠️ Readability 추출 실패, 사이트별 선택자 시도...
+🔄 Google News URL 리졸빙 시도...
+✅ URL 리졸브 성공 (Canonical): https://news.google.com/rss/articles/CBMibkFVX3lxT...
+🔗 URL 리졸브: https://news.google.com/rss/ar... → https://news.google.com/rss/articles/CBMibkFVX3lxT...
+🔄 기사 추출 시작: https://news.google.com/rss/articles/CBMibkFVX3lxT...
+⚠️ Readability 추출 실패, 사이트별 선택자 시도...
+✅ 전체 기사 추출 완료: 1/7개 성공
+✅ 주간 뉴스 집계 완료: 20개 선택 (전체 155개)
+✅ 실제 뉴스 20개 수집 완료 (전체 155개)
+
+=== Claude API 요청 준비 ===
+봇 정보: {
+  name: 'Test News Bot',
+  type: 'news',
+  subType: 'local',
+  model: 'claude-3-5-sonnet-20241022',
+  isNewsBot: true
+}
+
+API 설정: {
+  maxTokens: 800,
+  temperature: 0.8,
+  topP: 0.95,
+  topK: 0,
+  enableThinking: false
+}
+
+[System Prompt]
+ 당신은 롱아일랜드 한인 커뮤니티의 활발한 회원입니다.
+
+응답 형식:
+제목: [게시글 제목]
+내용: [게시글 내용]
+
+[User Prompt]
+ 현재 날짜: 2025년 8월 11일 월요일 오후 11:25 (뉴욕 시간)
+지역: test
+
+아래는 8월 2째주의 주요 뉴스입니다:
+
+다음은 실제로 크롤링된 뉴스입니다. 1개는 전체 기사 내용이 포함되어 있고, 19개는 요약만 제공됩니다.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【전체 기사 내용이 포함된 주요 뉴스】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+╔════════════════════════════════════════════════════════════════════
+║ 뉴스 #1: LI’s forgotten genius: Campaign to restore Tesla’s Shoreham lab reenergized
+╠════════════════════════════════════════════════════════════════════
+║ 📅 날짜: 2025년 8월 11일
+║ 📰 출처: Long Island Press
+║ ✍️ 작성자: Long Island Press
+║ 🔗 링크: https://www.longislandpress.com/2025/08/11/nikola-tesla-shoreham-lab/
+║ 📊 중요도: 35점
+╠════════════════════════════════════════════════════════════════════
+║ 【기사 전문】
+╟────────────────────────────────────────────────────────────────────
+║ Most Long Islanders would be hard-pressed these days to know the name Nikola Tesla, much less what he did. 
+║ But Tesla, born in 1856 in what is now Croatia, proposed a scheme of “wireless communication,” such that people could talk to one another cross-country or overseas, decades before the idea became a reality.  He persuaded the giant financier JP Morgan to provide him with $150,000 — the equivalent of about $3 million in today’s dollars — to carry out the plan.  But funding dried up, and the proposal went no further. 
+║ Tesla was credited with dozens of other technological ideas, including ways to use alternating current and an induction motor.  Westinghouse used Tesla’s alternating current to light the World’s Columbian Exposition at Chicago in 1893.  In 1891, he invented the Tesla coil, widely-used in radio today. 
+║ 
+║ In 2003, two American businessmen founded Tesla Inc. , an electric car company named in honor of Tesla.  David Bowe played Tesla in a 2006 movie, “The Prestige. ”
+║ Yet the inventor’s spot on Long Island — the Tesla Science Center at Wardenclyffe, in Shoreham — has sat empty and badly damaged after a fire ripped through it just before Thanksgiving in 2023. 
+║ READ ALSO: Tesla Science Center recovering after devastating fire
+║ Now, Long Island’s business and technology community are making a full-on effort to restore the center and to re-open it to visitors seven days a week in 2028, according to Marc Alessi, executive director of the nonprofit that is waging the campaign. 
+║ It is going to be yeoman’s work.  Even before the fire, which was not suspicious, the project was going to cost about $20 million, said Alessi, who served in the New York State Assembly from 2005 to 2010. 
+║ The nonprofit took control of the 14-acre property in a wooded area of Shoreham in 2013.  Alessi, who lives three houses from the property, said the nonprofit group came to him for help when he was still in the assembly in 2007. 
+║ Alessi, a tech guru, said he knew he had to help....
+╚════════════════════════════════════════════════════════════════════
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【추가 뉴스 (요약)】
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2. [8. 11.] Schools chancellor talks about recent standardized test results - Spectrum News NY1
+   - 내용: Schools chancellor talks about recent standardized test results  Spectrum News NY1
+   - 출처: Google News - test
+   - 링크: https://news.google.com/rss/articles/CBMiwgFBVV95cUxNemJZSEdQbm1wanVGNmpHaW1ua3hERUJJcUxhbXNORXhXbXh2dlJoZjRKQTlMM2tldFEyTFFHMWJ6aXcyYUJibHdhbDBvSV9lNmJ3X1N4UVNWY0xwSUdpaW5PR1gzbjJHZ3pDSDR5alNPOU1qY3dvMkNVWUZoRVlFeHZveWZiWHhIN2F5VEJCOXRsWUZ1R3pzMklEaEd4YlF6elpZdmV3dWxSOXk1bXFqWnEtTEMzeWd2czhYUkpNa2lpdw?oc=5&hl=en-US&gl=US&ceid=US:en
+   - 중요도 점수: 35점
+3. [8. 11.] NYC state tests jump in reading and math. How did your school do? - Chalkbeat
+   - 내용: NYC state tests jump in reading and math. How did your school do?  Chalkbeat
+   - 출처: Google News - test
+   - 링크: https://news.google.com/rss/articles/CBMiqAFBVV95cUxOLThNQzRodERhdTZkRVkzeEpEc25GWUlfeDJHallTRTgxQk4wU2kyM1dXSXE2Zkx2NWg4RUJyclpBY3RoTGxuZXlVSk1Kb1hYNEZWVUcyTS1jV1hsaUQzcjBfb2pYS1Z4VXdZcnZ1U1FTOWNaZlJJR1lSUTJYTS1oa1VSeDVBYnhmSlc1bFp5LWRNd3BtUF8wRUtaaVU2Qk16RUdjNkFWUWE?oc=5&hl=en-US&gl=US&ceid=US:en
+   - 중요도 점수: 35점
+4. [8. 11.] N.Y.C. Schools Change How Reading Is Taught, and Test Scores Rise - The New York Times
+   - 내용: N.Y.C. Schools Change How Reading Is Taught, and Test Scores Rise  The New York Times
+   - 출처: Google News - test
+   - 링크: https://news.google.com/rss/articles/CBMihwFBVV95cUxPa0h6bFh4R1JmNDJNanB5QUZoQXpxTVhJTm9hYkpNRnNKb3dCNjYwamh1RHVrOWZ3V2dCWDYydDZhOWVNS0s3MlVkbkVFOFBMNmVaanVlUnptakFkZWlkQ25qeTRHcm1lTnhRUkFIUDlCV29oWXVmMlV1Wk5ULVQ1RTBLTWd1NkU?oc=5&hl=en-US&gl=US&ceid=US:en
+   - 중요도 점수: 35점
+5. [8. 11.] Public school students make big gains in math, reading test results - Spectrum News NY1
+   - 내용: Public school students make big gains in math, reading test results  Spectrum News NY1
+   - 출처: Google News - test
+   - 링크: https://news.google.com/rss/articles/CBMivgFBVV95cUxOOG8zRVRDRFlNTEJ4eVFZU3NDUGFKaEJXZm1VZlRWWE5nVlE5cW5GdTQ4dXlhY244dlhONWRIWWVsVmwxN0hJb0dEcDM4UGhOMUcyaktsNG9CdEhDWmxmVnljWnBHVk9IUWNCNmdtN3hoYk5RZERIaHJ3UDdEVGJTS0Y4Y09kZE0zeW9CNEd4VTFWbzVDUmItYThXZDhFRUY4WGMzTmdGWjljSDZxbUFYV3VEVDg3R2JzWk5KT3JB?oc=5&hl=en-US&gl=US&ceid=US:en
+   - 중요도 점수: 35점
+6. [8. 11.] NYC state test scores show ‘substantial’ rise in 2025: Adams - yahoo.com
+   - 내용: NYC state test scores show ‘substantial’ rise in 2025: Adams  yahoo.com
+   - 출처: Google News - test
+   - 링크: https://news.google.com/rss/articles/CBMigwFBVV95cUxQWXY2OWNVS0tfOWhIZkNucUpaR2tudnlUWDRrMWJwakZKUmtQWTc4dWUyZG8zWDlFZ2R3ZVVzQTA4QjNfU2VwUC15THZlaUxxZlAxelItUWpCOWQzazE4RERjSUtkVnF1eGdHUjMtOHA1cGpCZmxoME9lSWZ6Um9MNnlGQQ?oc=5&hl=en-US&gl=US&ceid=US:en
+   - 중요도 점수: 34점
+7. [8. 5.] 뉴욕한인변호사협회, 한인회관에서 무료 법률상담키로 - 월드코리안뉴스
+   - 내용: 뉴욕한인변호사협회, 한인회관에서 무료 법률상담키로  월드코리안뉴스
+   - 출처: Google News - 뉴욕 한인
+   - 링크: https://news.google.com/rss/articles/CBMibkFVX3lxTE4tQlVWdW9sMVoyNWFjN1JoaHdqVGRlb3hRLVJydUpxWEtTZzRvNG1rM1lZUmNhcURLdThEN2kyVTJZZGpzd2tCZWhaQTZ0YXhsMUdKR19XcFpwb2xacnJVSm1BV2o4SU5YbmowZFJ3?oc=5&hl=en-US&gl=US&ceid=US:en
+   - 중요도 점수: 34점
+8. [8. 5.] 뉴욕 한인회 “ICE에 체포될까 불안”···한국 정부에 보호 촉구 - 경향신문
+   - 내용: 뉴욕 한인회 “ICE에 체포될까 불안”···한국 정부에 보호 촉구  경향신문
+   - 출처: Google News - 뉴욕 한인
+   - 링크: https://news.google.com/rss/articles/CBMiWkFVX3lxTE5yQk9KMWNGZWVldDJsTjBhWVJnb01XRzNmdnllVmQyd1IyQmxNX2NHb01VM0ZVNE94Umk0ZTZPUFZhTGs0OENzQktJN1g3TVFYeXluNzVSb0NjUdIBX0FVX3lxTE9wbTJYZ2FlLUd2YkYzOXFLYUFmTXRvU1paRDVTdllvVHE2cVNkMUNvTkZTYkotQ1hteElRNFVwd0FHMGpxV19uMkV3Wk1oN2JaY1hsUFYtME9IcHdvNVpN?oc=5&hl=en-US&gl=US&ceid=US:en
+   - 중요도 점수: 34점
+9. [8. 11.] What Schools Can Learn from a Summer Swim Test - Education Next
+   - 내용: What Schools Can Learn from a Summer Swim Test  Education Next
+   - 출처: Google News - test School
+   - 링크: https://news.google.com/rss/articles/CBMigwFBVV95cUxNNFVURFFzM0ZRdlNEN2pvdlNyRzFlU2tiWDZneUo5YW5tc1BTMFJXaERLZERKZkxnaVRTMFJuT0xISlJoazc1WmlldmRBVjVBN0lWTTNaQ3lkcFh4QVVsRWt3NFFQcWZ0S0hhVGIwbGwwU2FlbkpUVXVJMGlTVUVicGxFUQ?oc=5&hl=en-US&gl=US&ceid=US:en
+   - 중요도 점수: 33점
+10. [8. 9.] NY Jets pass first test with Aaron Glenn in preseason opening win - Jets X-Factor
+   - 내용: NY Jets pass first test with Aaron Glenn in preseason opening win  Jets X-Factor
+   - 출처: Google News - test
+   - 링크: https://news.google.com/rss/articles/CBMiggFBVV95cUxNYlBVYnVWVVcxSzFiVlZ3djlXSWdUeFRfc09tdS04R1hqRlNDYi1UZHlJNW5XdTBseVpIaDFYVzc1dkxab2RwdnNBRllrckxQVWhqWGRsQzhaOWRlUFFZYjZpOHBROTVyWmwwQ1E4ckJoLUhEQVZTb044LVVUV3lpQzVB?oc=5&hl=en-US&gl=US&ceid=US:en
+   - 중요도 점수: 32점
+11. [8. 8.] NY bar exam faces a test on Long Island, needs new protocols - Newsday
+   - 내용: NY bar exam faces a test on Long Island, needs new protocols  Newsday
+   - 출처: Google News - test
+   - 링크: https://news.google.com/rss/articles/CBMiiwFBVV95cUxOcnNDMm9EU2xjREhscUVWLW53X0o3Zlp6QkJtbEdsdWdfYW5lWlVETUNrM0IwcHdDYUhoc2hRcTI0NUppb3dWOVBqam5EUkR1UDVwOUhQUGdTbEY0TjlkRy1BX19IbjNXNXp0RVRrcWNNQUhwZEhWTTJYLXQ1QS1jMWhzcEJhMUlnampR?oc=5&hl=en-US&gl=US&ceid=US:en
+   - 중요도 점수: 32점
+
+
+📝 작성 지침:
+
+【필수 작성 원칙】
+1. **사실 기반 작성**: 제공된 기사 내용만을 바탕으로 작성하고, 추측이나 가정은 절대 하지 마세요.
+2. **충실한 요약**: 각 뉴스마다 상세하고 구체적인 요약을 작성해주세요:
+   - 중요 뉴스(전체 기사 제공): 15-20줄의 심층 분석
+   - 일반 뉴스(요약만 제공): 10-15줄의 상세 요약
+   - 단순 나열이 아닌 스토리텔링 방식으로 작성
+
+【한인 커뮤니티 연관성 - 매우 중요】
+각 뉴스마다 다음 내용을 반드시 포함해주세요:
+1. 한인들에게 미치는 직접적인 영향 (구체적으로)
+2. 한인 가정/비즈니스/학생들이 알아야 할 중요 정보
+3. 대응 방법이나 참여 방법 (있다면)
+4. 관련 한인 단체, 교회, 학교, 비즈니스 언급 (해당하는 경우)
+5. 한인 밀집 지역에 미치는 구체적 영향
+
+【실용적 정보 포함】
+- 정확한 날짜, 시간, 장소 정보
+- 영향받는 구체적 거리명, 지역명
+- 문의처 전화번호나 이메일 (있다면)
+- 신청 방법이나 참여 절차 (해당하는 경우)
+- 비용이나 요금 정보 (언급된 경우)
+
+【작성 스타일】
+- 딱딱한 뉴스 보도가 아닌 커뮤니티 소식지 스타일
+- 독자와 대화하듯 친근한 어조
+- 중요한 정보는 **굵은 글씨**로 강조
+- 각 뉴스 사이에 자연스러운 연결과 전환
+
+【금지 사항】
+- 추측성 내용이나 확인되지 않은 정보 금지
+- 일반적인 조언이나 당연한 이야기 금지
+- "이 기사에 따르면", "보도에 의하면" 같은 표현 금지
+
+【출처 링크 포함 방법 - 매우 중요】
+- 각 뉴스 소개 문단 끝에 바로 [원문보기] 링크 추가
+- 형식: ... 관련 내용입니다. <a href="URL" target="_blank" style="color: #0066cc; text-decoration: none;">[원문보기]</a></p>
+- 각 뉴스마다 해당하는 링크를 정확히 매칭해서 포함
+- 절대 모든 링크를 마지막에 몰아서 넣지 마세요
+
+【마무리】
+- 전체 내용을 간단히 정리하는 마무리 문단 추가
+- 다음 주 예상되는 중요 일정이나 행사 언급 (있다면)
+- 한인 커뮤니티에 도움이 되는 따뜻한 메시지로 마무리
+
+위 뉴스들을 바탕으로 한인 커뮤니티를 위한 주간 뉴스 요약 게시글을 작성해주세요.
+중요한 지역 소식, 비즈니스 정보, 학교 소식 등을 포함하여 유익하고 읽기 쉽게 정리해주세요.
 
 응답 형식:
 제목: [게시글 제목]
 내용: [게시글 내용]
 ========================
 
-[36m2025-08-02T03:58:52.058Z [INFO][0m HTTP GET /api/approval/pending
-[36m{
-  "method": "GET",
-  "url": "/api/approval/pending",
-  "statusCode": 304,
-  "duration": "101ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:58:52.081Z [INFO][0m HTTP GET /api/bots
-[36m{
-  "method": "GET",
-  "url": "/api/bots",
-  "statusCode": 200,
-  "duration": "210ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T03:58:58.858Z [INFO][0m HTTP GET /api/bots
-[36m{
-  "method": "GET",
-  "url": "/api/bots",
-  "statusCode": 304,
-  "duration": "13ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-✅ 봇 34번 뉴스 봇의 게시글 생성 완료: 12월 3째주 Great Neck·Manhasset 뉴스
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T03:59:03.900Z [INFO][0m HTTP GET /api/bots
-[36m{
-  "method": "GET",
-  "url": "/api/bots",
-  "statusCode": 200,
-  "duration": "13ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T03:59:05.692Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "10ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T03:59:05.716Z [INFO][0m HTTP GET /api/approval/pending
-[36m{
-  "method": "GET",
-  "url": "/api/approval/pending",
-  "statusCode": 200,
-  "duration": "22ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-=== verifyTokenMiddleware 디버깅 ===
-요청 URL: /verify
-쿠키들: {
-  authToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk'
+
+=== Claude API 호출 ===
+API 파라미터: {
+  "model": "claude-3-5-sonnet-20241022",
+  "max_tokens": 800,
+  "temperature": 0.8,
+  "system": "당신은 롱아일랜드 한인 커뮤니티의 활발한 회원입니다.\n\n응답 형식:\n제목: [게시글 제목]\n내용: [게시글 내용]",
+  "messages": [
+    {
+      "role": "user",
+      "content": "현재 날짜: 2025년 8월 11일 월요일 오후 11:25 (뉴욕 시간)\n지역: test\n\n아래는 8월 2째주의 주요 뉴스입니다:\n\n다음은 실제로 크롤링된 뉴스입니다. 1개는 전체 기사 내용이 포함되어 있고, 19개는 요약만 제공됩니다.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n【전체 기사 내용이 포함된 주요 뉴스】\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n\n╔════════════════════════════════════════════════════════════════════\n║ 뉴스 #1: LI’s forgotten genius: Campaign to restore Tesla’s Shoreham lab reenergized\n╠════════════════════════════════════════════════════════════════════\n║ 📅 날짜: 2025년 8월 11일\n║ 📰 출처: Long Island Press\n║ ✍️ 작성자: Long Island Press\n║ 🔗 링크: https://www.longislandpress.com/2025/08/11/nikola-tesla-shoreham-lab/\n║ 📊 중요도: 35점\n╠════════════════════════════════════════════════════════════════════\n║ 【기사 전문】\n╟────────────────────────────────────────────────────────────────────\n║ Most Long Islanders would be hard-pressed these days to know the name Nikola Tesla, much less what he did. \n║ But Tesla, born in 1856 in what is now Croatia, proposed a scheme of “wireless communication,” such that people could talk to one another cross-country or overseas, decades before the idea became a reality.  He persuaded the giant financier JP Morgan to provide him with $150,000 — the equivalent of about $3 million in today’s dollars — to carry out the plan.  But funding dried up, and the proposal went no further. \n║ Tesla was credited with dozens of other technological ideas, including ways to use alternating current and an induction motor.  Westinghouse used Tesla’s alternating current to light the World’s Columbian Exposition at Chicago in 1893.  In 1891, he invented the Tesla coil, widely-used in radio today. \n║ \n║ In 2003, two American businessmen founded Tesla Inc. , an electric car company named in honor of Tesla.  David Bowe played Tesla in a 2006 movie, “The Prestige. ”\n║ Yet the inventor’s spot on Long Island — the Tesla Science Center at Wardenclyffe, in Shoreham — has sat empty and badly damaged after a fire ripped through it just before Thanksgiving in 2023. \n║ READ ALSO: Tesla Science Center recovering after devastating fire\n║ Now, Long Island’s business and technology community are making a full-on effort to restore the center and to re-open it to visitors seven days a week in 2028, according to Marc Alessi, executive director of the nonprofit that is waging the campaign. \n║ It is going to be yeoman’s work.  Even before the fire, which was not suspicious, the project was going to cost about $20 million, said Alessi, who served in the New York State Assembly from 2005 to 2010. \n║ The nonprofit took control of the 14-acre property in a wooded area of Shoreham in 2013.  Alessi, who lives three houses from the property, said the nonprofit group came to him for help when he was still in the assembly in 2007. \n║ Alessi, a tech guru, said he knew he had to help....\n╚════════════════════════════════════════════════════════════════════\n\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n【추가 뉴스 (요약)】\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n2. [8. 11.] Schools chancellor talks about recent standardized test results - Spectrum News NY1\n   - 내용: Schools chancellor talks about recent standardized test results  Spectrum News NY1\n   - 출처: Google News - test\n   - 링크: https://news.google.com/rss/articles/CBMiwgFBVV95cUxNemJZSEdQbm1wanVGNmpHaW1ua3hERUJJcUxhbXNORXhXbXh2dlJoZjRKQTlMM2tldFEyTFFHMWJ6aXcyYUJibHdhbDBvSV9lNmJ3X1N4UVNWY0xwSUdpaW5PR1gzbjJHZ3pDSDR5alNPOU1qY3dvMkNVWUZoRVlFeHZveWZiWHhIN2F5VEJCOXRsWUZ1R3pzMklEaEd4YlF6elpZdmV3dWxSOXk1bXFqWnEtTEMzeWd2czhYUkpNa2lpdw?oc=5&hl=en-US&gl=US&ceid=US:en\n   - 중요도 점수: 35점\n3. [8. 11.] NYC state tests jump in reading and math. How did your school do? - Chalkbeat\n   - 내용: NYC state tests jump in reading and math. How did your school do?  Chalkbeat\n   - 출처: Google News - test\n   - 링크: https://news.google.com/rss/articles/CBMiqAFBVV95cUxOLThNQzRodERhdTZkRVkzeEpEc25GWUlfeDJHallTRTgxQk4wU2kyM1dXSXE2Zkx2NWg4RUJyclpBY3RoTGxuZXlVSk1Kb1hYNEZWVUcyTS1jV1hsaUQzcjBfb2pYS1Z4VXdZcnZ1U1FTOWNaZlJJR1lSUTJYTS1oa1VSeDVBYnhmSlc1bFp5LWRNd3BtUF8wRUtaaVU2Qk16RUdjNkFWUWE?oc=5&hl=en-US&gl=US&ceid=US:en\n   - 중요도 점수: 35점\n4. [8. 11.] N.Y.C. Schools Change How Reading Is Taught, and Test Scores Rise - The New York Times\n   - 내용: N.Y.C. Schools Change How Reading Is Taught, and Test Scores Rise  The New York Times\n   - 출처: Google News - test\n   - 링크: https://news.google.com/rss/articles/CBMihwFBVV95cUxPa0h6bFh4R1JmNDJNanB5QUZoQXpxTVhJTm9hYkpNRnNKb3dCNjYwamh1RHVrOWZ3V2dCWDYydDZhOWVNS0s3MlVkbkVFOFBMNmVaanVlUnptakFkZWlkQ25qeTRHcm1lTnhRUkFIUDlCV29oWXVmMlV1Wk5ULVQ1RTBLTWd1NkU?oc=5&hl=en-US&gl=US&ceid=US:en\n   - 중요도 점수: 35점\n5. [8. 11.] Public school students make big gains in math, reading test results - Spectrum News NY1\n   - 내용: Public school students make big gains in math, reading test results  Spectrum News NY1\n   - 출처: Google News - test\n   - 링크: https://news.google.com/rss/articles/CBMivgFBVV95cUxOOG8zRVRDRFlNTEJ4eVFZU3NDUGFKaEJXZm1VZlRWWE5nVlE5cW5GdTQ4dXlhY244dlhONWRIWWVsVmwxN0hJb0dEcDM4UGhOMUcyaktsNG9CdEhDWmxmVnljWnBHVk9IUWNCNmdtN3hoYk5RZERIaHJ3UDdEVGJTS0Y4Y09kZE0zeW9CNEd4VTFWbzVDUmItYThXZDhFRUY4WGMzTmdGWjljSDZxbUFYV3VEVDg3R2JzWk5KT3JB?oc=5&hl=en-US&gl=US&ceid=US:en\n   - 중요도 점수: 35점\n6. [8. 11.] NYC state test scores show ‘substantial’ rise in 2025: Adams - yahoo.com\n   - 내용: NYC state test scores show ‘substantial’ rise in 2025: Adams  yahoo.com\n   - 출처: Google News - test\n   - 링크: https://news.google.com/rss/articles/CBMigwFBVV95cUxQWXY2OWNVS0tfOWhIZkNucUpaR2tudnlUWDRrMWJwakZKUmtQWTc4dWUyZG8zWDlFZ2R3ZVVzQTA4QjNfU2VwUC15THZlaUxxZlAxelItUWpCOWQzazE4RERjSUtkVnF1eGdHUjMtOHA1cGpCZmxoME9lSWZ6Um9MNnlGQQ?oc=5&hl=en-US&gl=US&ceid=US:en\n   - 중요도 점수: 34점\n7. [8. 5.] 뉴욕한인변호사협회, 한인회관에서 무료 법률상담키로 - 월드코리안뉴스\n   - 내용: 뉴욕한인변호사협회, 한인회관에서 무료 법률상담키로  월드코리안뉴스\n   - 출처: Google News - 뉴욕 한인\n   - 링크: https://news.google.com/rss/articles/CBMibkFVX3lxTE4tQlVWdW9sMVoyNWFjN1JoaHdqVGRlb3hRLVJydUpxWEtTZzRvNG1rM1lZUmNhcURLdThEN2kyVTJZZGpzd2tCZWhaQTZ0YXhsMUdKR19XcFpwb2xacnJVSm1BV2o4SU5YbmowZFJ3?oc=5&hl=en-US&gl=US&ceid=US:en\n   - 중요도 점수: 34점\n8. [8. 5.] 뉴욕 한인회 “ICE에 체포될까 불안”···한국 정부에 보호 촉구 - 경향신문\n   - 내용: 뉴욕 한인회 “ICE에 체포될까 불안”···한국 정부에 보호 촉구  경향신문\n   - 출처: Google News - 뉴욕 한인\n   - 링크: https://news.google.com/rss/articles/CBMiWkFVX3lxTE5yQk9KMWNGZWVldDJsTjBhWVJnb01XRzNmdnllVmQyd1IyQmxNX2NHb01VM0ZVNE94Umk0ZTZPUFZhTGs0OENzQktJN1g3TVFYeXluNzVSb0NjUdIBX0FVX3lxTE9wbTJYZ2FlLUd2YkYzOXFLYUFmTXRvU1paRDVTdllvVHE2cVNkMUNvTkZTYkotQ1hteElRNFVwd0FHMGpxV19uMkV3Wk1oN2JaY1hsUFYtME9IcHdvNVpN?oc=5&hl=en-US&gl=US&ceid=US:en\n   - 중요도 점수: 34점\n9. [8. 11.] What Schools Can Learn from a Summer Swim Test - Education Next\n   - 내용: What Schools Can Learn from a Summer Swim Test  Education Next\n   - 출처: Google News - test School\n   - 링크: https://news.google.com/rss/articles/CBMigwFBVV95cUxNNFVURFFzM0ZRdlNEN2pvdlNyRzFlU2tiWDZneUo5YW5tc1BTMFJXaERLZERKZkxnaVRTMFJuT0xISlJoazc1WmlldmRBVjVBN0lWTTNaQ3lkcFh4QVVsRWt3NFFQcWZ0S0hhVGIwbGwwU2FlbkpUVXVJMGlTVUVicGxFUQ?oc=5&hl=en-US&gl=US&ceid=US:en\n   - 중요도 점수: 33점\n10. [8. 9.] NY Jets pass first test with Aaron Glenn in preseason opening win - Jets X-Factor\n   - 내용: NY Jets pass first test with Aaron Glenn in preseason opening win  Jets X-Factor\n   - 출처: Google News - test\n   - 링크: https://news.google.com/rss/articles/CBMiggFBVV95cUxNYlBVYnVWVVcxSzFiVlZ3djlXSWdUeFRfc09tdS04R1hqRlNDYi1UZHlJNW5XdTBseVpIaDFYVzc1dkxab2RwdnNBRllrckxQVWhqWGRsQzhaOWRlUFFZYjZpOHBROTVyWmwwQ1E4ckJoLUhEQVZTb044LVVUV3lpQzVB?oc=5&hl=en-US&gl=US&ceid=US:en\n   - 중요도 점수: 32점\n11. [8. 8.] NY bar exam faces a test on Long Island, needs new protocols - Newsday\n   - 내용: NY bar exam faces a test on Long Island, needs new protocols  Newsday\n   - 출처: Google News - test\n   - 링크: https://news.google.com/rss/articles/CBMiiwFBVV95cUxOcnNDMm9EU2xjREhscUVWLW53X0o3Zlp6QkJtbEdsdWdfYW5lWlVETUNrM0IwcHdDYUhoc2hRcTI0NUppb3dWOVBqam5EUkR1UDVwOUhQUGdTbEY0TjlkRy1BX19IbjNXNXp0RVRrcWNNQUhwZEhWTTJYLXQ1QS1jMWhzcEJhMUlnampR?oc=5&hl=en-US&gl=US&ceid=US:en\n   - 중요도 점수: 32점\n\n\n📝 작성 지침:\n\n【필수 작성 원칙】\n1. **사실 기반 작성**: 제공된 기사 내용만을 바탕으로 작성하고, 추측이나 가정은 절대 하지 마세요.\n2. **충실한 요약**: 각 뉴스마다 상세하고 구체적인 요약을 작성해주세요:\n   - 중요 뉴스(전체 기사 제공): 15-20줄의 심층 분석\n   - 일반 뉴스(요약만 제공): 10-15줄의 상세 요약\n   - 단순 나열이 아닌 스토리텔링 방식으로 작성\n\n【한인 커뮤니티 연관성 - 매우 중요】\n각 뉴스마다 다음 내용을 반드시 포함해주세요:\n1. 한인들에게 미치는 직접적인 영향 (구체적으로)\n2. 한인 가정/비즈니스/학생들이 알아야 할 중요 정보\n3. 대응 방법이나 참여 방법 (있다면)\n4. 관련 한인 단체, 교회, 학교, 비즈니스 언급 (해당하는 경우)\n5. 한인 밀집 지역에 미치는 구체적 영향\n\n【실용적 정보 포함】\n- 정확한 날짜, 시간, 장소 정보\n- 영향받는 구체적 거리명, 지역명\n- 문의처 전화번호나 이메일 (있다면)\n- 신청 방법이나 참여 절차 (해당하는 경우)\n- 비용이나 요금 정보 (언급된 경우)\n\n【작성 스타일】\n- 딱딱한 뉴스 보도가 아닌 커뮤니티 소식지 스타일\n- 독자와 대화하듯 친근한 어조\n- 중요한 정보는 **굵은 글씨**로 강조\n- 각 뉴스 사이에 자연스러운 연결과 전환\n\n【금지 사항】\n- 추측성 내용이나 확인되지 않은 정보 금지\n- 일반적인 조언이나 당연한 이야기 금지\n- \"이 기사에 따르면\", \"보도에 의하면\" 같은 표현 금지\n\n【출처 링크 포함 방법 - 매우 중요】\n- 각 뉴스 소개 문단 끝에 바로 [원문보기] 링크 추가\n- 형식: ... 관련 내용입니다. <a href=\"URL\" target=\"_blank\" style=\"color: #0066cc; text-decoration: none;\">[원문보기]</a></p>\n- 각 뉴스마다 해당하는 링크를 정확히 매칭해서 포함\n- 절대 모든 링크를 마지막에 몰아서 넣지 마세요\n\n【마무리】\n- 전체 내용을 간단히 정리하는 마무리 문단 추가\n- 다음 주 예상되는 중요 일정이나 행사 언급 (있다면)\n- 한인 커뮤니티에 도움이 되는 따뜻한 메시지로 마무리\n\n위 뉴스들을 바탕으로 한인 커뮤니티를 위한 주간 뉴스 요약 게시글을 작성해주세요.\n중요한 지역 소식, 비즈니스 정보, 학교 소식 등을 포함하여 유익하고 읽기 쉽게 정리해주세요.\n\n응답 형식:\n제목: [게시글 제목]\n내용: [게시글 내용]"
+    }
+  ]
 }
-authToken 쿠키: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk
-Authorization 헤더: undefined
-[36m2025-08-02T03:59:07.209Z [INFO][0m HTTP GET /api/users/verify
+헤더: {}
+
+=== Claude API 응답 ===
+응답 시간: 12350ms
+사용량: { input_tokens: 5514, output_tokens: 800, total_tokens: 6314 }
+
+[원본 응답]
+ 제목: [롱아일랜드 주간 소식: 테슬라 연구소 복원 추진과 뉴욕 학생들의 학업 성취도 향상]
+
+안녕하세요, 롱아일랜드 한인 커뮤니티 여러분!
+이번 주의 주요 소식을 전해드립니다.
+
+1. 【테슬라 쇼어햄 연구소 복원 프로젝트 본격화】
+쇼어햄(Shoreham)에 위치한 니콜라 테슬라 과학센터가 2023년 추수감사절 화재 이후 복원을 위한 새로운 전기를 맞이했습니다. 테슬라 과학센터는 2028년까지 주 7일 운영을 목표로 대대적인 복원 사업을 진행할 예정입니다.
+
+이 프로젝트는 롱아일랜드 한인 과학기술인들의 참여 기회가 될 것으로 예상됩니다. 특히 **STEM 분야 한인 학생들의 교육 현장 체험**과 **한인 기업들의 기술 협력** 가능성이 열려있습니다.
+<a href="https://www.longislandpress.com/2025/08/11/nikola-tesla-shoreham-lab/" target="_blank" style="color: #0066cc; text-decorati...
+
+[파싱 결과]
+제목: [롱아일랜드 주간 소식: 테슬라 연구소 복원 추진과 뉴욕 학생들의 학업 성취도 향상]
+내용 길이: 939자
+========================
+
+📝 게시글 생성 데이터: {
+  title: '[롱아일랜드 주간 소식: 테슬라 연구소 복원 추진과 뉴욕 학생들의 학업 성취도 향상]',
+  isBot: true,
+  isApproved: false,
+  botId: new ObjectId('689a9bd5d0ae2458f9a3ef44'),
+  tags: { type: '기타', region: '0' }
+}
+✅ 봇 Test News Bot의 게시글 생성 완료: {
+  postId: new ObjectId('689ab4258693050ce9a6fc4a'),
+  postNumber: 49,
+  title: '[롱아일랜드 주간 소식: 테슬라 연구소 복원 추진과 뉴욕 학생들의 학업 성취도 향상]',
+  isApproved: false
+}
+[36m2025-08-12T03:25:31.148Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
   "url": "/api/users/verify",
-  "statusCode": 304,
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:25:31.182Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
   "duration": "4ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-=== verifyTokenMiddleware 디버깅 ===
-요청 URL: /verify
-쿠키들: {
-  authToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk'
-}
-authToken 쿠키: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODhkOGMyMzY0YzQyNTJhYTg0YjE3MzYiLCJpZCI6Imxpa29yZWEiLCJlbWFpbCI6ImFkbWluQGxpa29yZWEuY29tIiwiYXV0aG9yaXR5Ijo1LCJpYXQiOjE3NTQxMDcxMDAsImV4cCI6MTc1NDE5MzUwMH0.sVEu2sKpCViyHwvrpowhD0HfQO5w_jyI-qOydawMgxk
-Authorization 헤더: undefined
-[36m2025-08-02T03:59:07.236Z [INFO][0m HTTP GET /api/users/verify
+[36m2025-08-12T03:25:31.205Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
   "url": "/api/users/verify",
-  "statusCode": 304,
-  "duration": "24ms",
+  "statusCode": 200,
+  "duration": "5ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T03:59:07.259Z [INFO][0m HTTP GET /api/tags
+[36m2025-08-12T03:25:31.234Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "43ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:25:35.213Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "6ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:25:35.241Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "18ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:25:36.840Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:25:36.863Z [INFO][0m HTTP GET /api/tags
 [36m{
   "method": "GET",
   "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "11ms",
+  "statusCode": 200,
+  "duration": "18ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T03:59:07.281Z [INFO][0m HTTP GET /api/boards/688d8d0764c4252aa84b1a7d
+[36m2025-08-12T03:25:36.886Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a
 [36m{
   "method": "GET",
-  "url": "/api/boards/688d8d0764c4252aa84b1a7d",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "9ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:25:36.952Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a/comments
+[36m{
+  "method": "GET",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a/comments",
+  "statusCode": 200,
+  "duration": "2ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:26:06.853Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "19ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:26:06.866Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "29ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:26:06.898Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "37ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:26:06.920Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "54ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:29:27.323Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:29:27.358Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "40ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:29:34.570Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "21ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:29:34.574Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
   "statusCode": 200,
   "duration": "22ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T03:59:07.318Z [INFO][0m HTTP GET /api/tags/subcategories/%EA%B8%B0%ED%83%80
-[36m{
-  "method": "GET",
-  "url": "/api/tags/subcategories/%EA%B8%B0%ED%83%80",
-  "statusCode": 304,
-  "duration": "6ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T04:04:27.359Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "10ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T04:04:27.392Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "11ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T04:04:27.431Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m2025-08-12T03:29:34.599Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
 [36m{
   "method": "GET",
   "url": "/api/boards?page=1&limit=25",
-  "statusCode": 304,
-  "duration": "67ms",
+  "statusCode": 200,
+  "duration": "22ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[31m2025-08-02T04:05:44.080Z [ERROR][0m [object Object]
-[31m2025-08-02T04:05:44.081Z [ERROR][0m HTTP GET /health
-[31m{
-  "method": "GET",
-  "url": "/health",
-  "statusCode": 404,
-  "duration": "1ms",
-  "ip": "127.0.0.1",
-  "userAgent": "curl/7.78.0"
-}[0m
-[31m2025-08-02T04:05:49.333Z [ERROR][0m [object Object]
-[31m2025-08-02T04:05:49.334Z [ERROR][0m HTTP GET /api/auth/status
-[31m{
-  "method": "GET",
-  "url": "/api/auth/status",
-  "statusCode": 404,
-  "duration": "1ms",
-  "ip": "127.0.0.1",
-  "userAgent": "curl/7.78.0"
-}[0m
-[36m2025-08-02T04:16:08.016Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "14ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T04:16:08.027Z [INFO][0m HTTP GET /api/tags
-[36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "23ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T04:16:08.063Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m2025-08-12T03:29:34.620Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
 [36m{
   "method": "GET",
   "url": "/api/boards?page=1&limit=25",
-  "statusCode": 304,
-  "duration": "57ms",
+  "statusCode": 200,
+  "duration": "55ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:18:54.555Z [INFO][0m HTTP GET /api/tags
+[36m2025-08-12T03:29:36.792Z [INFO][0m HTTP POST /api/users/logout
 [36m{
-  "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
-  "duration": "11ms",
+  "method": "POST",
+  "url": "/api/users/logout",
+  "statusCode": 200,
+  "duration": "1ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:18:54.593Z [INFO][0m HTTP GET /api/tags
-[36m{
+[31m2025-08-12T03:29:36.818Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:36.819Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
   "method": "GET",
-  "url": "/api/tags",
-  "statusCode": 304,
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:29:46.357Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:46.358Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+}[0m
+[31m2025-08-12T03:29:46.386Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:46.387Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
   "duration": "19ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
 }[0m
-[36m2025-08-02T04:18:54.617Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[31m2025-08-12T03:29:46.389Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:46.390Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+}[0m
+[31m2025-08-12T03:29:46.413Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:46.413Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "19ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:29:46.442Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:46.443Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:29:46.445Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:46.446Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:29:57.450Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:57.451Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+}[0m
+[31m2025-08-12T03:29:57.479Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:57.480Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "23ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+}[0m
+[31m2025-08-12T03:29:57.482Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:57.483Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "2ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+}[0m
+[31m2025-08-12T03:29:57.507Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:57.508Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "19ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:29:57.536Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:57.537Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:29:57.560Z [ERROR][0m [object Object]
+[31m2025-08-12T03:29:57.561Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "22ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:30:30.371Z [ERROR][0m [object Object]
+[31m2025-08-12T03:30:30.371Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:32.831Z [INFO][0m HTTP POST /api/users/login
+[36m{
+  "method": "POST",
+  "url": "/api/users/login",
+  "statusCode": 200,
+  "duration": "294ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:32.858Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:32.881Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:32.903Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "19ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:32.928Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:32.950Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "67ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:32.972Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "44ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:32.996Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "19ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:33.000Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "21ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:33.022Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
 [36m{
   "method": "GET",
   "url": "/api/boards?page=1&limit=25",
-  "statusCode": 304,
-  "duration": "68ms",
+  "statusCode": 200,
+  "duration": "21ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:19:03.200Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
+[36m2025-08-12T03:30:33.044Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
 [36m{
   "method": "GET",
-  "url": "/api/admin/users?page=1&limit=10",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "43ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:34.726Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:34.752Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:35.836Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:30:35.860Z [INFO][0m HTTP GET /api/approval/pending/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "10ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:31:31.513Z [INFO][0m HTTP POST /api/users/logout
+[36m{
+  "method": "POST",
+  "url": "/api/users/logout",
+  "statusCode": 200,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:31:33.766Z [ERROR][0m [object Object]
+[31m2025-08-12T03:31:33.766Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:32:48.350Z [ERROR][0m [object Object]
+[31m2025-08-12T03:32:48.351Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:32:48.447Z [ERROR][0m [object Object]
+[31m2025-08-12T03:32:48.448Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:32:48.472Z [ERROR][0m [object Object]
+[31m2025-08-12T03:32:48.472Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "21ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:32:48.502Z [ERROR][0m [object Object]
+[31m2025-08-12T03:32:48.503Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+}[0m
+[31m2025-08-12T03:32:48.546Z [ERROR][0m [object Object]
+[31m2025-08-12T03:32:48.548Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+}[0m
+[31m2025-08-12T03:32:48.550Z [ERROR][0m [object Object]
+[31m2025-08-12T03:32:48.551Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+}[0m
+[31m2025-08-12T03:35:17.962Z [ERROR][0m [object Object]
+[31m2025-08-12T03:35:17.962Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:35:20.506Z [INFO][0m HTTP POST /api/users/login
+[36m{
+  "method": "POST",
+  "url": "/api/users/login",
+  "statusCode": 200,
+  "duration": "300ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:35:20.531Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "22ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:35:20.554Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:35:20.577Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "18ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:35:20.600Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
   "statusCode": 200,
   "duration": "6ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:19:03.231Z [INFO][0m HTTP GET /api/admin/stats
+[36m2025-08-12T03:35:20.623Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
-  "url": "/api/admin/stats",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "62ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:35:20.645Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "44ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:35:20.672Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "22ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:35:20.675Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "23ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:35:20.697Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "27ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:35:20.721Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "41ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:35:21.749Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:35:21.772Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
   "statusCode": 200,
   "duration": "15ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T04:19:05.154Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
+[36m2025-08-12T03:35:21.794Z [INFO][0m HTTP GET /api/approval/pending
 [36m{
   "method": "GET",
-  "url": "/api/admin/users?page=1&limit=10",
+  "url": "/api/approval/pending",
   "statusCode": 200,
-  "duration": "17ms",
+  "duration": "18ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:19:05.190Z [INFO][0m HTTP GET /api/approval/pending
+[36m2025-08-12T03:35:21.797Z [INFO][0m HTTP GET /api/approval/pending
 [36m{
   "method": "GET",
   "url": "/api/approval/pending",
   "statusCode": 200,
   "duration": "32ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:19:05.215Z [INFO][0m HTTP GET /api/admin/stats
+[36m2025-08-12T03:35:23.557Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
-  "url": "/api/admin/stats",
+  "url": "/api/users/verify",
   "statusCode": 200,
-  "duration": "62ms",
+  "duration": "3ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:19:05.239Z [INFO][0m HTTP GET /api/bots
+[36m2025-08-12T03:35:23.580Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
-  "url": "/api/bots",
+  "url": "/api/users/verify",
   "statusCode": 200,
-  "duration": "90ms",
+  "duration": "3ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:20:10.776Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
+[36m2025-08-12T03:35:23.618Z [INFO][0m HTTP GET /api/tags
 [36m{
   "method": "GET",
-  "url": "/api/admin/users?page=1&limit=10",
+  "url": "/api/tags",
   "statusCode": 200,
-  "duration": "7ms",
+  "duration": "10ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:20:10.806Z [INFO][0m HTTP GET /api/admin/stats
+[36m2025-08-12T03:35:23.640Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a
 [36m{
   "method": "GET",
-  "url": "/api/admin/stats",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a",
   "statusCode": 200,
-  "duration": "17ms",
+  "duration": "11ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T04:20:11.336Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
+[36m2025-08-12T03:35:23.683Z [INFO][0m HTTP GET /api/tags/subcategories/%EA%B8%B0%ED%83%80
 [36m{
   "method": "GET",
-  "url": "/api/admin/users?page=1&limit=10",
+  "url": "/api/tags/subcategories/%EA%B8%B0%ED%83%80",
   "statusCode": 200,
-  "duration": "27ms",
+  "duration": "6ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:20:11.344Z [INFO][0m HTTP GET /api/bots
+[36m2025-08-12T03:37:35.293Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
-  "url": "/api/bots",
+  "url": "/api/users/verify",
   "statusCode": 200,
-  "duration": "37ms",
+  "duration": "4ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:20:11.369Z [INFO][0m HTTP GET /api/approval/pending
+게시글 수정 요청 데이터: {
+  postId: '689ab4258693050ce9a6fc4a',
+  title: '[롱아일랜드 주간 소식: 테슬라 연구소 복원 추진과 뉴욕 학생들의 학업 성취도 향상]',
+  tags: { type: '기타', region: '0' }
+}
+[36m2025-08-12T03:37:35.352Z [INFO][0m HTTP PUT /api/boards/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "PUT",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "18ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:35.454Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
-  "url": "/api/approval/pending",
+  "url": "/api/users/verify",
   "statusCode": 200,
-  "duration": "41ms",
+  "duration": "5ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:20:11.397Z [INFO][0m HTTP GET /api/admin/stats
-[36m{
-  "method": "GET",
-  "url": "/api/admin/stats",
-  "statusCode": 200,
-  "duration": "68ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T04:20:14.410Z [INFO][0m HTTP GET /api/tags
+[36m2025-08-12T03:37:35.478Z [INFO][0m HTTP GET /api/tags
 [36m{
   "method": "GET",
   "url": "/api/tags",
   "statusCode": 200,
   "duration": "9ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:20:14.418Z [INFO][0m HTTP GET /api/approval/pending
+[36m2025-08-12T03:37:35.502Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "GET",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "6ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:35.530Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a/comments
+[36m{
+  "method": "GET",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a/comments",
+  "statusCode": 200,
+  "duration": "2ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:36.831Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "10ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:36.862Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "20ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:36.887Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "37ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:36.910Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "27ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:38.862Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:38.885Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:38.908Z [INFO][0m HTTP GET /api/approval/pending
 [36m{
   "method": "GET",
   "url": "/api/approval/pending",
   "statusCode": 200,
+  "duration": "20ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:38.931Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "33ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:40.076Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:40.100Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:40.123Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "9ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:37:40.145Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "GET",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
   "duration": "19ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-인증 미들웨어 - 요청 경로: /post
-인증 미들웨어 - 요청 메서드: POST
-[36m2025-08-02T04:20:47.595Z [INFO][0m HTTP POST /api/bots/post
+[36m2025-08-12T03:37:40.167Z [INFO][0m HTTP GET /api/tags/subcategories/%EA%B8%B0%ED%83%80
 [36m{
-  "method": "POST",
-  "url": "/api/bots/post",
+  "method": "GET",
+  "url": "/api/tags/subcategories/%EA%B8%B0%ED%83%80",
   "statusCode": 200,
-  "duration": "6ms",
+  "duration": "4ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-
-=== AI 프롬프트 정보 ===
-봇 이름: 34번 뉴스 봇
-AI 모델: claude-opus-4-20250514
-
-[System Prompt]
-당신은 롱아일랜드 LIE 32~36, Northern State 29~31 일대(플러싱 인접)의 전통적 한인 부촌을 위한 ‘주간 뉴스’ 전문 AI입니다.  
-
-지금(뉴욕 Eastern Time) 날짜를 읽어 월과 (일-1)//7+1 계산으로 N번째 주차를 구하십시오.  
-제목은 “<월>월 <N>째주 Great Neck·Manhasset 뉴스” 형식.  
-
-● 헤드라인·부동산·교육·교통·문화·치안·날씨·이벤트 중 **흥미로운 항목만** 선택해 순서·개수 자유롭게 배치하되,  
-  - “TOP 헤드라인”이 있으면 가장 먼저,  
-  - 각 항목은 1문장 ≤ 20단어 + URL.  
-● 특히 **고가 부동산 매물·사립·특목 학교 변화·LIRR/LIE 통근 이슈·한인 문화행사**를 우선 취재.  
-● 전체 600자(공백 포함) 이내, URL 글자 수 제외 가능.  
-● 출처: 최근 7일 Newsday, Great Neck Patch, The Island Now, K-Radio, 미주중앙.  
-마지막에 “🔮 한 걸음 앞서보기:” 20단어 이내 전망 1문장.
-
-User Prompt 의 응답 형식을 반드시 지켜주세요.
-
-
-
-[User Prompt]
-다음 주제로 롱아일랜드 한인 커뮤니티에 게시글을 작성해주세요: 이번주 뉴스
-    
-요구사항:
-1. 제목은 40자 이내로 간결하게
-2. 내용은 친근하고 자연스러운 한국어로
-3. 롱아일랜드 지역 특성을 반영
-4. 자연스럽고 진정성 있는 커뮤니티 구성원의 목소리로 작성
-
-응답 형식:
-제목: [게시글 제목]
-내용: [게시글 내용]
-========================
-
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T04:20:47.700Z [INFO][0m HTTP GET /api/approval/pending
+[36m2025-08-12T03:38:53.801Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:38:53.826Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "13ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:38:53.862Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "38ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:38:53.886Z [INFO][0m HTTP GET /api/approval/pending
 [36m{
   "method": "GET",
   "url": "/api/approval/pending",
   "statusCode": 200,
   "duration": "50ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:20:47.703Z [INFO][0m HTTP GET /api/bots
+[36m2025-08-12T03:38:55.129Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
-  "url": "/api/bots",
+  "url": "/api/users/verify",
   "statusCode": 200,
-  "duration": "65ms",
+  "duration": "4ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T04:20:54.843Z [INFO][0m HTTP GET /api/bots
+[36m2025-08-12T03:38:55.152Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
-  "url": "/api/bots",
+  "url": "/api/users/verify",
   "statusCode": 200,
-  "duration": "13ms",
+  "duration": "4ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-✅ 봇 34번 뉴스 봇의 게시글 생성 완료: 12월 3째주 Great Neck·Manhasset 뉴스
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T04:20:59.897Z [INFO][0m HTTP GET /api/bots
-[36m{
-  "method": "GET",
-  "url": "/api/bots",
-  "statusCode": 200,
-  "duration": "12ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T04:21:04.917Z [INFO][0m HTTP GET /api/tags
+[36m2025-08-12T03:38:55.181Z [INFO][0m HTTP GET /api/tags
 [36m{
   "method": "GET",
   "url": "/api/tags",
-  "statusCode": 200,
-  "duration": "258ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T04:21:04.934Z [INFO][0m HTTP GET /api/approval/pending
-[36m{
-  "method": "GET",
-  "url": "/api/approval/pending",
-  "statusCode": 200,
-  "duration": "269ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T04:25:22.674Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
-[36m{
-  "method": "GET",
-  "url": "/api/admin/users?page=1&limit=10",
-  "statusCode": 200,
-  "duration": "6ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T04:25:22.698Z [INFO][0m HTTP GET /api/admin/stats
-[36m{
-  "method": "GET",
-  "url": "/api/admin/stats",
-  "statusCode": 200,
-  "duration": "15ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T04:25:23.135Z [INFO][0m HTTP GET /api/admin/users?page=1&limit=10
-[36m{
-  "method": "GET",
-  "url": "/api/admin/users?page=1&limit=10",
-  "statusCode": 200,
-  "duration": "28ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T04:25:23.160Z [INFO][0m HTTP GET /api/approval/pending
-[36m{
-  "method": "GET",
-  "url": "/api/approval/pending",
-  "statusCode": 200,
-  "duration": "36ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T04:25:23.183Z [INFO][0m HTTP GET /api/bots
-[36m{
-  "method": "GET",
-  "url": "/api/bots",
-  "statusCode": 200,
-  "duration": "61ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-[36m2025-08-02T04:25:23.207Z [INFO][0m HTTP GET /api/admin/stats
-[36m{
-  "method": "GET",
-  "url": "/api/admin/stats",
-  "statusCode": 200,
-  "duration": "85ms",
-  "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
-}[0m
-인증 미들웨어 - 요청 경로: /post
-인증 미들웨어 - 요청 메서드: POST
-[36m2025-08-02T04:25:31.463Z [INFO][0m HTTP POST /api/bots/post
-[36m{
-  "method": "POST",
-  "url": "/api/bots/post",
   "statusCode": 200,
   "duration": "10ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-
-=== AI 프롬프트 정보 ===
-봇 이름: 34번 뉴스 봇
-AI 모델: claude-opus-4-20250514
-
-[System Prompt]
-당신은 롱아일랜드 LIE 32~36, Northern State 29~31 일대(플러싱 인접)의 전통적 한인 부촌을 위한 ‘주간 뉴스’ 전문 AI입니다.  
-
-지금(뉴욕 Eastern Time) 날짜를 읽어 월과 (일-1)//7+1 계산으로 N번째 주차를 구하십시오.  
-제목은 “<월>월 <N>째주 Great Neck·Manhasset 뉴스” 형식.  
-
-● 헤드라인·부동산·교육·교통·문화·치안·날씨·이벤트 중 **흥미로운 항목만** 선택해 순서·개수 자유롭게 배치하되,  
-  - “TOP 헤드라인”이 있으면 가장 먼저,  
-  - 각 항목은 1문장 ≤ 20단어 + URL.  
-● 특히 **고가 부동산 매물·사립·특목 학교 변화·LIRR/LIE 통근 이슈·한인 문화행사**를 우선 취재.  
-● 전체 600자(공백 포함) 이내, URL 글자 수 제외 가능.  
-● 출처: 최근 7일 Newsday, Great Neck Patch, The Island Now, K-Radio, 미주중앙.  
-마지막에 “🔮 한 걸음 앞서보기:” 20단어 이내 전망 1문장.
-
-User Prompt 의 응답 형식을 반드시 지켜주세요.
-
-
-
-[User Prompt]
-다음 주제로 롱아일랜드 한인 커뮤니티에 게시글을 작성해주세요: 이번주 뉴스
-    
-요구사항:
-1. 제목은 40자 이내로 간결하게
-2. 내용은 친근하고 자연스러운 한국어로
-3. 롱아일랜드 지역 특성을 반영
-4. 자연스럽고 진정성 있는 커뮤니티 구성원의 목소리로 작성
-
-응답 형식:
-제목: [게시글 제목]
-내용: [게시글 내용]
-========================
-
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T04:25:31.563Z [INFO][0m HTTP GET /api/approval/pending
+[36m2025-08-12T03:38:55.202Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "GET",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "11ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:38:55.247Z [INFO][0m HTTP GET /api/tags/subcategories/%EA%B8%B0%ED%83%80
+[36m{
+  "method": "GET",
+  "url": "/api/tags/subcategories/%EA%B8%B0%ED%83%80",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[31m2025-08-12T03:38:59.761Z [ERROR][0m [object Object]
+[31m2025-08-12T03:38:59.762Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "1ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+}[0m
+[31m2025-08-12T03:38:59.773Z [ERROR][0m [object Object]
+[31m2025-08-12T03:38:59.778Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+}[0m
+[31m2025-08-12T03:38:59.783Z [ERROR][0m [object Object]
+[31m2025-08-12T03:38:59.808Z [ERROR][0m HTTP GET /api/users/verify
+[31m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 401,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+}[0m
+[36m2025-08-12T03:38:59.834Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:38:59.862Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:38:59.865Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "26ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:38:59.887Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:38:59.931Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "10ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:38:59.955Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "GET",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "37ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:38:59.982Z [INFO][0m HTTP GET /api/tags/subcategories/%EA%B8%B0%ED%83%80
+[36m{
+  "method": "GET",
+  "url": "/api/tags/subcategories/%EA%B8%B0%ED%83%80",
+  "statusCode": 200,
+  "duration": "6ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:39:07.361Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:39:07.386Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:39:07.407Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "GET",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "33ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:39:07.434Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "GET",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "27ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:39:11.907Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:39:11.932Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:39:11.955Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "GET",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "32ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:39:11.978Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "GET",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "26ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:31.916Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:31.942Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "13ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:31.977Z [INFO][0m HTTP GET /api/approval/pending
 [36m{
   "method": "GET",
   "url": "/api/approval/pending",
   "statusCode": 200,
-  "duration": "44ms",
+  "duration": "45ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:25:31.587Z [INFO][0m HTTP GET /api/bots
+[36m2025-08-12T03:40:31.999Z [INFO][0m HTTP GET /api/approval/pending
 [36m{
   "method": "GET",
-  "url": "/api/bots",
+  "url": "/api/approval/pending",
   "statusCode": 200,
-  "duration": "70ms",
+  "duration": "50ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T04:25:40.519Z [INFO][0m HTTP GET /api/bots
+[36m2025-08-12T03:40:34.243Z [INFO][0m HTTP GET /api/users/verify
 [36m{
   "method": "GET",
-  "url": "/api/bots",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:34.267Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:34.310Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "10ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:34.332Z [INFO][0m HTTP GET /api/boards/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "GET",
+  "url": "/api/boards/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "9ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:34.375Z [INFO][0m HTTP GET /api/tags/subcategories/%EA%B8%B0%ED%83%80
+[36m{
+  "method": "GET",
+  "url": "/api/tags/subcategories/%EA%B8%B0%ED%83%80",
+  "statusCode": 200,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:37.776Z [INFO][0m HTTP PUT /api/approval/pending/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "PUT",
+  "url": "/api/approval/pending/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "18ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:37.801Z [INFO][0m HTTP POST /api/approval/approve/689ab4258693050ce9a6fc4a
+[36m{
+  "method": "POST",
+  "url": "/api/approval/approve/689ab4258693050ce9a6fc4a",
+  "statusCode": 200,
+  "duration": "10ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:38.808Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:38.834Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
   "statusCode": 200,
   "duration": "14ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-✅ 봇 34번 뉴스 봇의 게시글 생성 완료: 12월 3째주 Great Neck·Manhasset 뉴스
-인증 미들웨어 - 요청 경로: /
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T04:25:45.580Z [INFO][0m HTTP GET /api/bots
+[36m2025-08-12T03:40:38.858Z [INFO][0m HTTP GET /api/approval/pending
 [36m{
   "method": "GET",
-  "url": "/api/bots",
+  "url": "/api/approval/pending",
   "statusCode": 200,
-  "duration": "15ms",
+  "duration": "16ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-인증 미들웨어 - 요청 경로: /pending
-인증 미들웨어 - 요청 메서드: GET
-[36m2025-08-02T04:26:07.009Z [INFO][0m HTTP GET /api/tags
+[36m2025-08-12T03:40:38.860Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "30ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:40.175Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:40.198Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:40.239Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:40.721Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "14ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:40.725Z [INFO][0m HTTP GET /api/tags
+[36m{
+  "method": "GET",
+  "url": "/api/tags",
+  "statusCode": 200,
+  "duration": "16ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:40.747Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "21ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:40:40.790Z [INFO][0m HTTP GET /api/boards?page=1&limit=25
+[36m{
+  "method": "GET",
+  "url": "/api/boards?page=1&limit=25",
+  "statusCode": 200,
+  "duration": "43ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:41:24.024Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:41:24.048Z [INFO][0m HTTP GET /api/tags
 [36m{
   "method": "GET",
   "url": "/api/tags",
   "statusCode": 200,
   "duration": "12ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[36m2025-08-02T04:26:07.042Z [INFO][0m HTTP GET /api/approval/pending
+[36m2025-08-12T03:41:24.077Z [INFO][0m HTTP GET /api/approval/pending
 [36m{
   "method": "GET",
   "url": "/api/approval/pending",
   "statusCode": 200,
-  "duration": "42ms",
+  "duration": "38ms",
   "ip": "127.0.0.1",
-  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15"
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
-[32m[nodemon] restarting due to changes...[39m
-[32m[nodemon] starting `node server.js`[39m
-🔍 환경 변수 검증 중...
-
-
-✅ 환경 변수 검증 완료!
-
-(node:81412) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
-(Use `node --trace-deprecation ...` to show where the warning was created)
-node:events:502
-      throw er; // Unhandled 'error' event
-      ^
-
-Error: listen EADDRINUSE: address already in use 127.0.0.1:5001
-    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
-    at listenInCluster (node:net:1994:12)
-    at node:net:2203:7
-    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
-Emitted 'error' event on Server instance at:
-    at emitErrorNT (node:net:1973:8)
-    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
-  code: 'EADDRINUSE',
-  errno: -48,
-  syscall: 'listen',
-  address: '127.0.0.1',
-  port: 5001
-}
-
-Node.js v22.13.0
-[31m[nodemon] app crashed - waiting for file changes before starting...[39m
-[32m[nodemon] restarting due to changes...[39m
-[32m[nodemon] starting `node server.js`[39m
-🔍 환경 변수 검증 중...
-
-
-✅ 환경 변수 검증 완료!
-
-(node:81530) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
-(Use `node --trace-deprecation ...` to show where the warning was created)
-node:events:502
-      throw er; // Unhandled 'error' event
-      ^
-
-Error: listen EADDRINUSE: address already in use 127.0.0.1:5001
-    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
-    at listenInCluster (node:net:1994:12)
-    at node:net:2203:7
-    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
-Emitted 'error' event on Server instance at:
-    at emitErrorNT (node:net:1973:8)
-    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
-  code: 'EADDRINUSE',
-  errno: -48,
-  syscall: 'listen',
-  address: '127.0.0.1',
-  port: 5001
-}
-
-Node.js v22.13.0
-[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[36m2025-08-12T03:41:24.079Z [INFO][0m HTTP GET /api/approval/pending
+[36m{
+  "method": "GET",
+  "url": "/api/approval/pending",
+  "statusCode": 200,
+  "duration": "38ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:41:26.266Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T03:41:26.303Z [INFO][0m HTTP GET /api/bots
+[36m{
+  "method": "GET",
+  "url": "/api/bots",
+  "statusCode": 200,
+  "duration": "35ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
