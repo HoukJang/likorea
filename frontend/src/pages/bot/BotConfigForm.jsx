@@ -31,6 +31,80 @@ const DEFAULT_PROMPTS = {
   }
 };
 
+// API 설정 프리셋
+const API_PRESETS = {
+  restaurant: {
+    name: '맛집봇 기본',
+    description: '맛집 리뷰에 최적화된 설정',
+    apiSettings: {
+      maxTokens: 1200,
+      temperature: 0.85,
+      topP: 0.95,
+      topK: 0,
+      enableThinking: false,
+      extractFullArticles: false,
+      maxFullArticles: 7
+    },
+    aiModel: 'claude-3-5-sonnet-20241022'
+  },
+  news: {
+    name: '뉴스봇 기본',
+    description: '뉴스 요약에 최적화된 설정',
+    apiSettings: {
+      maxTokens: 2000,
+      temperature: 0.3,
+      topP: 0.9,
+      topK: 10,
+      enableThinking: false,
+      extractFullArticles: true,
+      maxFullArticles: 7
+    },
+    aiModel: 'claude-3-5-sonnet-20241022'
+  },
+  creative: {
+    name: '창의적 글쓰기',
+    description: '더 창의적이고 다양한 표현',
+    apiSettings: {
+      maxTokens: 1500,
+      temperature: 0.95,
+      topP: 0.98,
+      topK: 0,
+      enableThinking: false,
+      extractFullArticles: false,
+      maxFullArticles: 7
+    },
+    aiModel: 'claude-3-5-sonnet-20241022'
+  },
+  balanced: {
+    name: '균형잡힌 설정',
+    description: '일반적인 용도에 적합',
+    apiSettings: {
+      maxTokens: 1000,
+      temperature: 0.7,
+      topP: 0.95,
+      topK: 0,
+      enableThinking: false,
+      extractFullArticles: false,
+      maxFullArticles: 7
+    },
+    aiModel: 'claude-3-haiku-20240307'
+  },
+  factual: {
+    name: '사실 기반',
+    description: '정확성과 일관성 중시',
+    apiSettings: {
+      maxTokens: 1000,
+      temperature: 0.2,
+      topP: 0.85,
+      topK: 20,
+      enableThinking: false,
+      extractFullArticles: false,
+      maxFullArticles: 7
+    },
+    aiModel: 'claude-3-5-sonnet-20241022'
+  }
+};
+
 // 탭 정의
 const TABS = [
   { id: 'basic', label: '기본 정보', icon: '📝' },
@@ -163,11 +237,29 @@ function BotConfigForm() {
   // 봇 타입 변경 시 프롬프트 템플릿 업데이트
   const handleTypeChange = (e) => {
     const newType = e.target.value;
+    
+    // 타입에 맞는 기본 API 설정 가져오기
+    let apiPreset = {};
+    let aiModel = formData.aiModel;
+    
+    if (newType === 'restaurant' && API_PRESETS.restaurant) {
+      apiPreset = API_PRESETS.restaurant.apiSettings;
+      aiModel = API_PRESETS.restaurant.aiModel;
+    } else if (newType === 'news' && API_PRESETS.news) {
+      apiPreset = API_PRESETS.news.apiSettings;
+      aiModel = API_PRESETS.news.aiModel;
+    } else {
+      apiPreset = API_PRESETS.balanced.apiSettings;
+      aiModel = API_PRESETS.balanced.aiModel;
+    }
+    
     setFormData({
       ...formData,
       type: newType,
       systemPrompt: DEFAULT_PROMPTS[newType]?.system || '',
       userPrompt: DEFAULT_PROMPTS[newType]?.user || '',
+      apiSettings: apiPreset,
+      aiModel: aiModel,
       settings: {
         ...formData.settings,
         scheduleParams: {
@@ -494,6 +586,37 @@ function BotConfigForm() {
         {/* API 설정 탭 */}
         {activeTab === 'api' && (
           <div className="tab-content">
+            {/* 프리셋 선택 */}
+            <div className="preset-section">
+              <h3>빠른 설정 (프리셋)</h3>
+              <div className="preset-buttons">
+                {Object.entries(API_PRESETS).map(([key, preset]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    className={`preset-button ${
+                      (key === 'restaurant' && formData.type === 'restaurant') ||
+                      (key === 'news' && formData.type === 'news') ? 'recommended' : ''
+                    }`}
+                    onClick={() => {
+                      setFormData({
+                        ...formData,
+                        apiSettings: preset.apiSettings,
+                        aiModel: preset.aiModel
+                      });
+                    }}
+                  >
+                    <div className="preset-name">{preset.name}</div>
+                    <div className="preset-description">{preset.description}</div>
+                    {((key === 'restaurant' && formData.type === 'restaurant') ||
+                      (key === 'news' && formData.type === 'news')) && (
+                      <div className="preset-badge">추천</div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="form-group">
               <label htmlFor="aiModel">AI 모델</label>
               <select
@@ -511,106 +634,122 @@ function BotConfigForm() {
               <p className="form-help">응답 품질과 속도를 고려하여 선택하세요.</p>
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="maxTokens">최대 토큰 수</label>
+            <div className="form-group slider-group">
+              <label htmlFor="maxTokens">
+                최대 토큰 수
+                <span className="slider-value">{formData.apiSettings.maxTokens}</span>
+              </label>
+              <div className="slider-container">
                 <input
                   id="maxTokens"
-                  type="number"
+                  type="range"
+                  className="slider"
                   value={formData.apiSettings.maxTokens}
                   onChange={(e) => setFormData({
                     ...formData,
-                    apiSettings: { ...formData.apiSettings, maxTokens: e.target.value === '' ? '' : parseInt(e.target.value) || 800 }
+                    apiSettings: { ...formData.apiSettings, maxTokens: parseInt(e.target.value) }
                   })}
-                  onBlur={(e) => {
-                    if (e.target.value === '') {
-                      setFormData({
-                        ...formData,
-                        apiSettings: { ...formData.apiSettings, maxTokens: 800 }
-                      });
-                    }
-                  }}
-                  min="1"
-                  max="200000"
+                  min="100"
+                  max="4000"
+                  step="100"
                 />
-                <p className="form-help">생성할 최대 글자 수 (1-200000)</p>
+                <div className="slider-labels">
+                  <span>100</span>
+                  <span>2000</span>
+                  <span>4000</span>
+                </div>
               </div>
+              <p className="form-help">생성할 최대 글자 수 (1 토큰 ≈ 한글 0.5자)</p>
+            </div>
 
-              <div className="form-group">
-                <label htmlFor="temperature">Temperature</label>
+            <div className="form-group slider-group">
+              <label htmlFor="temperature">
+                Temperature (창의성)
+                <span className="slider-value">{formData.apiSettings.temperature.toFixed(1)}</span>
+              </label>
+              <div className="slider-container">
                 <input
                   id="temperature"
-                  type="number"
+                  type="range"
+                  className="slider"
                   value={formData.apiSettings.temperature}
                   onChange={(e) => setFormData({
                     ...formData,
-                    apiSettings: { ...formData.apiSettings, temperature: e.target.value === '' ? '' : parseFloat(e.target.value) || 0.8 }
+                    apiSettings: { ...formData.apiSettings, temperature: parseFloat(e.target.value) }
                   })}
-                  onBlur={(e) => {
-                    if (e.target.value === '') {
-                      setFormData({
-                        ...formData,
-                        apiSettings: { ...formData.apiSettings, temperature: 0.8 }
-                      });
-                    }
-                  }}
-                  min="0"
-                  max="1"
-                  step="0.1"
-                />
-                <p className="form-help">창의성 수준 (0-1, 높을수록 창의적)</p>
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="topP">Top P</label>
-                <input
-                  id="topP"
-                  type="number"
-                  value={formData.apiSettings.topP}
-                  onChange={(e) => setFormData({
-                    ...formData,
-                    apiSettings: { ...formData.apiSettings, topP: e.target.value === '' ? '' : parseFloat(e.target.value) || 0.95 }
-                  })}
-                  onBlur={(e) => {
-                    if (e.target.value === '') {
-                      setFormData({
-                        ...formData,
-                        apiSettings: { ...formData.apiSettings, topP: 0.95 }
-                      });
-                    }
-                  }}
                   min="0"
                   max="1"
                   step="0.05"
                 />
-                <p className="form-help">샘플링 임계값 (0-1)</p>
+                <div className="slider-labels">
+                  <span>정확</span>
+                  <span>균형</span>
+                  <span>창의적</span>
+                </div>
+              </div>
+              <p className="form-help">0에 가까울수록 일관성, 1에 가까울수록 창의성</p>
+            </div>
+
+            {/* 고급 설정 (접을 수 있는 섹션) */}
+            <details className="advanced-settings">
+              <summary>고급 설정</summary>
+              
+              <div className="form-group slider-group">
+                <label htmlFor="topP">
+                  Top P
+                  <span className="slider-value">{formData.apiSettings.topP.toFixed(2)}</span>
+                </label>
+                <div className="slider-container">
+                  <input
+                    id="topP"
+                    type="range"
+                    className="slider"
+                    value={formData.apiSettings.topP}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      apiSettings: { ...formData.apiSettings, topP: parseFloat(e.target.value) }
+                    })}
+                    min="0"
+                    max="1"
+                    step="0.05"
+                  />
+                  <div className="slider-labels">
+                    <span>0</span>
+                    <span>0.5</span>
+                    <span>1</span>
+                  </div>
+                </div>
+                <p className="form-help">샘플링 임계값 (일반적으로 0.9-0.95)</p>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="topK">Top K</label>
-                <input
-                  id="topK"
-                  type="number"
-                  value={formData.apiSettings.topK}
-                  onChange={(e) => setFormData({
-                    ...formData,
-                    apiSettings: { ...formData.apiSettings, topK: e.target.value === '' ? '' : parseInt(e.target.value) || 0 }
-                  })}
-                  onBlur={(e) => {
-                    if (e.target.value === '') {
-                      setFormData({
-                        ...formData,
-                        apiSettings: { ...formData.apiSettings, topK: 0 }
-                      });
-                    }
-                  }}
-                  min="0"
-                />
+              <div className="form-group slider-group">
+                <label htmlFor="topK">
+                  Top K
+                  <span className="slider-value">{formData.apiSettings.topK || '무제한'}</span>
+                </label>
+                <div className="slider-container">
+                  <input
+                    id="topK"
+                    type="range"
+                    className="slider"
+                    value={formData.apiSettings.topK}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      apiSettings: { ...formData.apiSettings, topK: parseInt(e.target.value) }
+                    })}
+                    min="0"
+                    max="100"
+                    step="5"
+                  />
+                  <div className="slider-labels">
+                    <span>0</span>
+                    <span>50</span>
+                    <span>100</span>
+                  </div>
+                </div>
                 <p className="form-help">샘플링할 토큰 수 (0=무제한)</p>
               </div>
-            </div>
+            </details>
 
             {(formData.aiModel.includes('claude-sonnet-4') || formData.aiModel.includes('claude-opus-4')) && (
               <div className="form-group">
