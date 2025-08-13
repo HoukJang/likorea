@@ -288,7 +288,10 @@ function BotConfigForm() {
         persona: formData.persona,
         settings: {
           ...formData.settings,
-          postInterval: formData.settings.postInterval * 3600000 // 시간을 ms로 변환
+          // postInterval이 숫자가 아니거나 비어있으면 기본값 24시간 사용
+          postInterval: (typeof formData.settings.postInterval === 'number' && formData.settings.postInterval > 0) 
+            ? formData.settings.postInterval * 3600000 
+            : 24 * 3600000 // 기본값 24시간
         },
         apiSettings: formData.apiSettings,
         aiModel: formData.aiModel
