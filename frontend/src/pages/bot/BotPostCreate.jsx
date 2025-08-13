@@ -151,7 +151,7 @@ function BotPostCreate() {
               type="text"
               value={inputs.newsKeywords}
               onChange={(e) => handleInputChange('newsKeywords', e.target.value)}
-              placeholder="예: Great Neck, 한인 커뮤니티"
+              placeholder="예: Great Neck/한인 커뮤니티"
             />
             <small>특정 키워드를 입력하면 관련 뉴스를 우선적으로 선택합니다.</small>
           </div>
