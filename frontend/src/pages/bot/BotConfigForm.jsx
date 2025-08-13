@@ -37,7 +37,7 @@ const API_PRESETS = {
     name: '맛집봇 기본',
     description: '맛집 리뷰에 최적화된 설정',
     apiSettings: {
-      maxTokens: 1200,
+      maxTokens: 2000,
       temperature: 0.85,
       topP: 0.95,
       topK: 0,
@@ -51,7 +51,7 @@ const API_PRESETS = {
     name: '뉴스봇 기본',
     description: '뉴스 요약에 최적화된 설정',
     apiSettings: {
-      maxTokens: 2000,
+      maxTokens: 3000,
       temperature: 0.3,
       topP: 0.9,
       topK: 10,
@@ -65,7 +65,7 @@ const API_PRESETS = {
     name: '창의적 글쓰기',
     description: '더 창의적이고 다양한 표현',
     apiSettings: {
-      maxTokens: 1500,
+      maxTokens: 2500,
       temperature: 0.95,
       topP: 0.98,
       topK: 0,
@@ -79,7 +79,7 @@ const API_PRESETS = {
     name: '균형잡힌 설정',
     description: '일반적인 용도에 적합',
     apiSettings: {
-      maxTokens: 1000,
+      maxTokens: 1500,
       temperature: 0.7,
       topP: 0.95,
       topK: 0,
@@ -93,7 +93,7 @@ const API_PRESETS = {
     name: '사실 기반',
     description: '정확성과 일관성 중시',
     apiSettings: {
-      maxTokens: 1000,
+      maxTokens: 1200,
       temperature: 0.2,
       topP: 0.85,
       topK: 20,
@@ -650,13 +650,13 @@ function BotConfigForm() {
                     apiSettings: { ...formData.apiSettings, maxTokens: parseInt(e.target.value) }
                   })}
                   min="100"
-                  max="8000"
+                  max="15000"
                   step="100"
                 />
                 <div className="slider-labels">
                   <span>100</span>
-                  <span>2000</span>
-                  <span>8000</span>
+                  <span>7500</span>
+                  <span>15000</span>
                 </div>
               </div>
               <p className="form-help">생성할 최대 글자 수 (1 토큰 ≈ 한글 0.5자)</p>
