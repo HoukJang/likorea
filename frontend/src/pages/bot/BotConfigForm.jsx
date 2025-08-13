@@ -224,7 +224,6 @@ function BotConfigForm() {
           });
         }
       } catch (err) {
-        console.error('봇 정보 로드 실패:', err);
         setError('봇 정보를 불러오는데 실패했습니다.');
       } finally {
         setLoading(false);
@@ -296,12 +295,6 @@ function BotConfigForm() {
         apiSettings: formData.apiSettings,
         aiModel: formData.aiModel
       };
-      
-      console.log('봇 저장 데이터:', {
-        isEdit,
-        botId,
-        botData: JSON.stringify(botData, null, 2)
-      });
 
       if (isEdit) {
         await updateBot(botId, botData);
@@ -313,16 +306,6 @@ function BotConfigForm() {
 
       navigate('/bot-board/manage');
     } catch (err) {
-      console.error('봇 저장 실패:', err);
-      console.error('에러 전체 정보:', {
-        message: err.message,
-        response: err.response,
-        data: err.data,
-        status: err.response?.status || err.statusCode,
-        statusText: err.response?.statusText,
-        config: err.config,
-        requestData: err.config?.data
-      });
       setError(err.data?.error || err.data?.details || err.message || '봇 저장에 실패했습니다.');
     } finally {
       setSaving(false);

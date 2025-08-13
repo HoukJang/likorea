@@ -1085,153 +1085,62 @@ router.get('/:botId', authenticateToken, requireAdmin, async (req, res) => {
 router.put('/:botId', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { botId } = req.params;
-    console.log('[PUT /:botId] 봇 수정 요청 받음:', botId);
-    console.log('[PUT /:botId] 요청 본문:', JSON.stringify(req.body, null, 2));
-    
-    const {
-      name,
-      description,
-      systemPrompt,
-      userPrompt,
-      aiModel,
-      status,
-      type,
-      apiSettings,
-      persona,
-      settings
-    } = req.body;
+    const updateData = req.body;
 
-    const bot = await Bot.findById(botId);
-    if (!bot) {
-      console.log('[PUT /:botId] 봇을 찾을 수 없음:', botId);
+    // Mongoose의 findByIdAndUpdate를 사용하여 더 안전하게 업데이트
+    const updatedBot = await Bot.findByIdAndUpdate(
+      botId,
+      {
+        $set: {
+          ...(updateData.name && { name: updateData.name }),
+          ...(updateData.description && { description: updateData.description }),
+          ...(updateData.type && { type: updateData.type }),
+          ...(updateData.aiModel && { aiModel: updateData.aiModel }),
+          ...(updateData.status && { status: updateData.status }),
+          ...(updateData.systemPrompt !== undefined && { 'prompt.system': updateData.systemPrompt }),
+          ...(updateData.userPrompt !== undefined && { 'prompt.user': updateData.userPrompt }),
+          ...(updateData.apiSettings && {
+            'apiSettings.maxTokens': updateData.apiSettings.maxTokens,
+            'apiSettings.temperature': updateData.apiSettings.temperature,
+            'apiSettings.topP': updateData.apiSettings.topP,
+            'apiSettings.topK': updateData.apiSettings.topK,
+            'apiSettings.enableThinking': updateData.apiSettings.enableThinking,
+            'apiSettings.extractFullArticles': updateData.apiSettings.extractFullArticles,
+            'apiSettings.maxFullArticles': updateData.apiSettings.maxFullArticles
+          }),
+          ...(updateData.persona && { 
+            'persona.age': updateData.persona.age,
+            'persona.gender': updateData.persona.gender,
+            'persona.occupation': updateData.persona.occupation,
+            'persona.interests': updateData.persona.interests,
+            'persona.personality': updateData.persona.personality,
+            'persona.location': updateData.persona.location
+          }),
+          ...(updateData.settings && {
+            'settings.autoPost': updateData.settings.autoPost,
+            'settings.postInterval': updateData.settings.postInterval,
+            'settings.targetCategories': updateData.settings.targetCategories,
+            'settings.scheduleParams': updateData.settings.scheduleParams
+          })
+        }
+      },
+      { 
+        new: true,
+        runValidators: true
+      }
+    );
+
+    if (!updatedBot) {
       return res.status(404).json({ error: '봇을 찾을 수 없습니다' });
     }
-    
-    console.log('[PUT /:botId] 봇 찾음:', bot.name);
-
-    // 업데이트할 필드
-    console.log('[PUT /:botId] 필드 업데이트 시작');
-    
-    if (name) {
-      bot.name = name;
-      console.log('[PUT /:botId] name 업데이트:', name);
-    }
-    
-    if (description) {
-      bot.description = description;
-      console.log('[PUT /:botId] description 업데이트');
-    }
-    
-    // prompt 필드가 없을 경우 초기화
-    if (systemPrompt !== undefined || userPrompt !== undefined) {
-      console.log('[PUT /:botId] prompt 업데이트 시작');
-      if (!bot.prompt) {
-        bot.prompt = {};
-        console.log('[PUT /:botId] prompt 객체 초기화됨');
-      }
-      if (systemPrompt !== undefined) {
-        bot.prompt.system = systemPrompt;
-        console.log('[PUT /:botId] systemPrompt 업데이트');
-      }
-      if (userPrompt !== undefined) {
-        bot.prompt.user = userPrompt;
-        console.log('[PUT /:botId] userPrompt 업데이트');
-      }
-    }
-    
-    if (aiModel) {
-      bot.aiModel = aiModel;
-      console.log('[PUT /:botId] aiModel 업데이트:', aiModel);
-    }
-    
-    if (status) {
-      bot.status = status;
-      console.log('[PUT /:botId] status 업데이트:', status);
-    }
-    
-    if (type) {
-      bot.type = type;
-      console.log('[PUT /:botId] type 업데이트:', type);
-    }
-
-    // API 설정 업데이트
-    if (apiSettings) {
-      console.log('[PUT /:botId] apiSettings 업데이트 시작');
-      
-      try {
-        // 기존 apiSettings가 없으면 빈 객체로 초기화
-        if (!bot.apiSettings) {
-          bot.apiSettings = {};
-          console.log('[PUT /:botId] apiSettings 초기화됨');
-        }
-        
-        // betaHeaders 제외한 나머지 설정만 업데이트
-        const { betaHeaders, ...otherApiSettings } = apiSettings;
-        
-        Object.assign(bot.apiSettings, otherApiSettings);
-        console.log('[PUT /:botId] apiSettings 업데이트 완료');
-        
-        // betaHeaders는 MongoDB Map 타입이므로 특별 처리 불필요
-        // 프론트엔드에서는 betaHeaders를 보내지 않으므로 기존 값 유지
-      } catch (apiError) {
-        console.error('[PUT /:botId] apiSettings 업데이트 중 에러:', apiError);
-        throw apiError;
-      }
-    }
-
-    // 페르소나 업데이트 (계정 정보는 제외)
-    if (persona) {
-      console.log('[PUT /:botId] persona 업데이트 시작');
-      try {
-        const existingAccount = bot.persona?.likoreaAccount;
-        bot.persona = {
-          ...persona,
-          likoreaAccount: existingAccount // 기존 계정 정보 유지
-        };
-        console.log('[PUT /:botId] persona 업데이트 완료');
-      } catch (personaError) {
-        console.error('[PUT /:botId] persona 업데이트 중 에러:', personaError);
-        throw personaError;
-      }
-    }
-
-    // 스케줄링 설정 업데이트
-    if (settings) {
-      console.log('[PUT /:botId] settings 업데이트 시작');
-      try {
-        // 기존 settings가 없으면 빈 객체로 초기화
-        if (!bot.settings) {
-          bot.settings = {};
-          console.log('[PUT /:botId] settings 초기화됨');
-        }
-        
-        Object.assign(bot.settings, settings);
-        console.log('[PUT /:botId] settings 업데이트 완료');
-      } catch (settingsError) {
-        console.error('[PUT /:botId] settings 업데이트 중 에러:', settingsError);
-        throw settingsError;
-      }
-    }
-
-    console.log('[PUT /:botId] 봇 저장 직전 상태:', {
-      name: bot.name,
-      hasPrompt: !!bot.prompt,
-      hasApiSettings: !!bot.apiSettings,
-      hasSettings: !!bot.settings
-    });
-
-    await bot.save();
-
-    console.log('[PUT /:botId] 봇 저장 성공');
 
     res.json({
       success: true,
       message: '봇 정보가 수정되었습니다',
-      bot
+      bot: updatedBot
     });
   } catch (error) {
-    console.error('[PUT /:botId] 봇 수정 에러:', error);
-    console.error('[PUT /:botId] 에러 스택:', error.stack);
+    console.error('봇 수정 에러:', error);
     res.status(500).json({
       error: '봇 수정에 실패했습니다',
       details: error.message,
