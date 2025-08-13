@@ -60,7 +60,8 @@
 }
 
 .btn-back,
-.btn-create-bot {
+.btn-create-bot,
+.btn-notifications {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -85,6 +86,121 @@
 
 .btn-create-bot:hover {
   background-color: #45a049;
+}
+
+.btn-notifications {
+  background-color: #ff9800;
+  color: white;
+  position: relative;
+}
+
+.btn-notifications:hover {
+  background-color: #f57c00;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #f44336;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* 알림 패널 */
+.notifications-panel {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.notifications-panel .notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.notifications-panel h3 {
+  margin: 0;
+  color: #333;
+}
+
+.btn-mark-all-read {
+  padding: 6px 12px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-mark-all-read:hover {
+  background-color: #1976d2;
+}
+
+.no-notifications {
+  color: #999;
+  text-align: center;
+  padding: 20px;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notification-item {
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.notification-item:hover {
+  background-color: #f5f5f5;
+}
+
+.notification-item.unread {
+  background-color: #fff3e0;
+  border-color: #ff9800;
+}
+
+.notification-item .notification-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.severity-badge {
+  font-size: 1.2rem;
+}
+
+.notification-message {
+  color: #666;
+  margin: 5px 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.notification-time {
+  color: #999;
+  font-size: 0.85rem;
 }
 
 .empty-state {
@@ -161,6 +277,11 @@
   color: #e65100;
 }
 
+.status.failed {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
 .bot-card-body {
   margin-bottom: 20px;
 }
@@ -216,6 +337,43 @@
   border-radius: 12px;
   font-size: 0.85rem;
   font-weight: 500;
+}
+
+/* 실패 정보 및 재시도 버튼 */
+.bot-error-info {
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 12px;
+}
+
+.bot-error-info .error-message {
+  color: #d32f2f;
+  margin: 0 0 10px 0;
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+.btn-retry {
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.btn-retry:hover {
+  background-color: #f57c00;
+}
+
+.btn-retry:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .bot-card-actions {
@@ -301,7 +459,8 @@
   }
   
   .btn-back,
-  .btn-create-bot {
+  .btn-create-bot,
+  .btn-notifications {
     width: 100%;
   }
   

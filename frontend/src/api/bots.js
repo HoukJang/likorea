@@ -124,3 +124,27 @@ export const getBotLatestPost = async (botId) => {
   const response = await client.get(`/api/bots/${botId}/latest-post`);
   return response;
 };
+
+// 실패한 작업 재시도
+export const retryBotTask = async (botId) => {
+  const response = await client.post(`/api/bots/${botId}/retry`);
+  return response;
+};
+
+// 관리자 알림 조회
+export const getAdminNotifications = async (unreadOnly = false, limit = 20) => {
+  const response = await client.get(`/api/bots/notifications/admin?unreadOnly=${unreadOnly}&limit=${limit}`);
+  return response;
+};
+
+// 알림 읽음 처리
+export const markNotificationRead = async (notificationId) => {
+  const response = await client.patch(`/api/bots/notifications/${notificationId}/read`);
+  return response;
+};
+
+// 모든 알림 읽음 처리
+export const markAllNotificationsRead = async () => {
+  const response = await client.patch('/api/bots/notifications/read-all');
+  return response;
+};

@@ -1,7 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { getBots, deleteBot, updateBotStatus, resetBotTask } from '../../api/bots';
+import { 
+  getBots, 
+  deleteBot, 
+  updateBotStatus, 
+  resetBotTask, 
+  retryBotTask,
+  getAdminNotifications,
+  markNotificationRead,
+  markAllNotificationsRead 
+} from '../../api/bots';
 import Loading from '../../components/common/Loading';
 import '../../styles/BotManagementPage.css';
 
@@ -12,6 +21,10 @@ function BotManagementPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deletingBot, setDeletingBot] = useState(null);
+  const [retryingBot, setRetryingBot] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   // 권한 체크 - authority 4 이상만 접근 가능
   useEffect(() => {
@@ -48,9 +61,21 @@ function BotManagementPage() {
     }
   }, []);
 
+  // 알림 로드
+  const loadNotifications = useCallback(async () => {
+    try {
+      const data = await getAdminNotifications(false, 20);
+      setNotifications(data.notifications || []);
+      setUnreadCount(data.unreadCount || 0);
+    } catch (err) {
+      console.error('알림 로드 실패:', err);
+    }
+  }, []);
+
   useEffect(() => {
     loadBots();
-  }, [loadBots]);
+    loadNotifications();
+  }, [loadBots, loadNotifications]);
 
   // 봇 삭제 핸들러
   const handleDeleteBot = async (botId) => {
@@ -101,6 +126,46 @@ function BotManagementPage() {
     }
   };
 
+  // 실패한 작업 재시도 핸들러
+  const handleRetryTask = async (botId, botName) => {
+    if (!window.confirm(`${botName}의 실패한 작업을 다시 시도하시겠습니까?`)) {
+      return;
+    }
+
+    try {
+      setRetryingBot(botId);
+      await retryBotTask(botId);
+      alert('작업 재시도를 시작했습니다.');
+      loadBots(); // 목록 새로고침
+      loadNotifications(); // 알림 새로고침
+    } catch (err) {
+      console.error('재시도 실패:', err);
+      alert('작업 재시도에 실패했습니다: ' + (err.message || '알 수 없는 오류'));
+    } finally {
+      setRetryingBot(null);
+    }
+  };
+
+  // 알림 읽음 처리
+  const handleMarkNotificationRead = async (notificationId) => {
+    try {
+      await markNotificationRead(notificationId);
+      loadNotifications();
+    } catch (err) {
+      console.error('알림 읽음 처리 실패:', err);
+    }
+  };
+
+  // 모든 알림 읽음 처리
+  const handleMarkAllRead = async () => {
+    try {
+      await markAllNotificationsRead();
+      loadNotifications();
+    } catch (err) {
+      console.error('모든 알림 읽음 처리 실패:', err);
+    }
+  };
+
   // 봇 타입 표시
   const getBotTypeDisplay = (type) => {
     switch (type) {
@@ -117,6 +182,9 @@ function BotManagementPage() {
   const getBotStatusDisplay = (bot) => {
     if (bot.taskStatus === 'generating') {
       return <span className="status generating">🔄 작성중</span>;
+    }
+    if (bot.taskStatus === 'failed') {
+      return <span className="status failed">❌ 실패</span>;
     }
     if (bot.status === 'active') {
       return <span className="status active">✅ 활성</span>;
@@ -152,6 +220,16 @@ function BotManagementPage() {
             ← 봇 게시판
           </button>
           <button
+            className="btn-notifications"
+            onClick={() => setShowNotifications(!showNotifications)}
+            style={{ position: 'relative' }}
+          >
+            🔔 알림
+            {unreadCount > 0 && (
+              <span className="notification-badge">{unreadCount}</span>
+            )}
+          </button>
+          <button
             className="btn-create-bot"
             onClick={() => navigate('/bot-board/manage/new')}
           >
@@ -159,6 +237,46 @@ function BotManagementPage() {
           </button>
         </div>
       </div>
+
+      {/* 알림 패널 */}
+      {showNotifications && (
+        <div className="notifications-panel">
+          <div className="notifications-header">
+            <h3>관리자 알림</h3>
+            {unreadCount > 0 && (
+              <button className="btn-mark-all-read" onClick={handleMarkAllRead}>
+                모두 읽음
+              </button>
+            )}
+          </div>
+          {notifications.length === 0 ? (
+            <p className="no-notifications">알림이 없습니다.</p>
+          ) : (
+            <div className="notifications-list">
+              {notifications.map(notification => (
+                <div
+                  key={notification._id}
+                  className={`notification-item ${!notification.isRead ? 'unread' : ''}`}
+                  onClick={() => !notification.isRead && handleMarkNotificationRead(notification._id)}
+                >
+                  <div className="notification-header">
+                    <span className={`severity-badge severity-${notification.severity}`}>
+                      {notification.severity === 'critical' ? '🚨' : 
+                       notification.severity === 'high' ? '⚠️' : 
+                       notification.severity === 'medium' ? '📢' : 'ℹ️'}
+                    </span>
+                    <strong>{notification.title}</strong>
+                  </div>
+                  <p className="notification-message">{notification.message}</p>
+                  <small className="notification-time">
+                    {new Date(notification.createdAt).toLocaleString()}
+                  </small>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {bots.length === 0 ? (
         <div className="empty-state">
@@ -203,6 +321,22 @@ function BotManagementPage() {
                     <span className="schedule-badge">
                       ⏰ 자동 게시: {Math.round(bot.settings.postInterval / 3600000)}시간마다
                     </span>
+                  </div>
+                )}
+
+                {/* 실패한 작업 정보 표시 */}
+                {bot.taskStatus === 'failed' && bot.currentTask && (
+                  <div className="bot-error-info">
+                    <p className="error-message">
+                      ⚠️ 마지막 작업 실패: {bot.currentTask.error || '알 수 없는 오류'}
+                    </p>
+                    <button
+                      className="btn-retry"
+                      onClick={() => handleRetryTask(bot._id, bot.name)}
+                      disabled={retryingBot === bot._id}
+                    >
+                      {retryingBot === bot._id ? '재시도 중...' : '🔄 재시도'}
+                    </button>
                   </div>
                 )}
               </div>

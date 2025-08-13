@@ -11,6 +11,7 @@ const newsAggregatorService = require('../services/newsAggregatorService');
 const restaurantAnalyzerService = require('../services/restaurantAnalyzerService');
 const menuExtractionService = require('../services/menuExtractionService');
 const menuEnrichmentService = require('../services/menuEnrichmentService');
+const AdminNotification = require('../models/AdminNotification');
 
 // Claude 클라이언트 초기화
 const anthropic = new Anthropic({
@@ -922,7 +923,39 @@ ${enrichedMenus.filter(m => m.images && m.images.length > 0).map(m =>
     bot.taskStatus = 'failed';
     bot.currentTask.completedAt = new Date();
     bot.currentTask.error = error.message;
+    
+    // 원본 작업 정보 보존 (재시도를 위해)
+    if (!bot.currentTask.originalTask) {
+      bot.currentTask.originalTask = {
+        description: bot.currentTask.description,
+        additionalPrompt: bot.currentTask.additionalPrompt
+      };
+    }
+    bot.currentTask.retryCount = (bot.currentTask.retryCount || 0);
+    
     await bot.save();
+
+    // 관리자 알림 생성
+    try {
+      await AdminNotification.create({
+        type: 'bot_failure',
+        severity: error.message.includes('Overloaded') ? 'medium' : 'high',
+        title: `봇 작업 실패: ${bot.name}`,
+        message: `작업 "${bot.currentTask?.description}"이(가) 실패했습니다.\n에러: ${error.message}`,
+        botId: bot._id,
+        metadata: {
+          botName: bot.name,
+          task: bot.currentTask?.description,
+          error: error.message,
+          errorStack: error.stack,
+          timestamp: new Date(),
+          retryCount: bot.currentTask.retryCount
+        }
+      });
+      console.log('📧 관리자 알림 생성됨');
+    } catch (notifyError) {
+      console.error('알림 생성 실패:', notifyError);
+    }
   }
 }
 
@@ -1371,6 +1404,76 @@ router.patch('/:botId/reset-task', authenticateToken, requireAdmin, async (req, 
   }
 });
 
+// 실패한 작업 재시도 (관리자만)
+router.post('/:botId/retry', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { botId } = req.params;
+    
+    const bot = await Bot.findById(botId);
+    if (!bot) {
+      return res.status(404).json({ error: '봇을 찾을 수 없습니다' });
+    }
+
+    // 실패 상태인 경우만 재시도 가능
+    if (bot.taskStatus !== 'failed') {
+      return res.status(400).json({ 
+        error: '실패한 작업만 재시도할 수 있습니다',
+        currentStatus: bot.taskStatus 
+      });
+    }
+
+    // 원본 작업 정보 가져오기 (originalTask가 있으면 사용, 없으면 currentTask 사용)
+    const taskInfo = bot.currentTask?.originalTask || bot.currentTask;
+    const lastTask = taskInfo?.description || '';
+    const lastPrompt = taskInfo?.additionalPrompt || '';
+
+    if (!lastTask) {
+      return res.status(400).json({ 
+        error: '재시도할 작업 정보가 없습니다' 
+      });
+    }
+
+    // 재시도 횟수 증가
+    bot.currentTask.retryCount = (bot.currentTask.retryCount || 0) + 1;
+    bot.currentTask.lastRetryAt = new Date();
+    
+    // 상태를 idle로 리셋하여 작업 시작 가능하게 함
+    bot.taskStatus = 'idle';
+    await bot.save();
+
+    // 기존 작업을 다시 시작 (비동기)
+    generatePostAsync(bot, lastTask, lastPrompt, req.user.userId);
+
+    // 재시도 시작 알림 생성
+    await AdminNotification.create({
+      type: 'system_alert',
+      severity: 'low',
+      title: `봇 작업 재시도: ${bot.name}`,
+      message: `작업 "${lastTask}"을(를) 재시도합니다. (시도 횟수: ${bot.currentTask.retryCount})`,
+      botId: bot._id,
+      metadata: {
+        botName: bot.name,
+        task: lastTask,
+        retryCount: bot.currentTask.retryCount,
+        timestamp: new Date()
+      }
+    });
+
+    res.json({
+      success: true,
+      message: '작업 재시도를 시작했습니다',
+      taskDescription: lastTask,
+      retryCount: bot.currentTask.retryCount
+    });
+  } catch (error) {
+    console.error('작업 재시도 실패:', error);
+    res.status(500).json({
+      error: '작업 재시도에 실패했습니다',
+      details: error.message
+    });
+  }
+});
+
 // 봇 상태 변경 (관리자만)
 router.patch('/:botId/status', authenticateToken, requireAdmin, async (req, res) => {
   try {
@@ -1511,6 +1614,87 @@ router.get('/:botId/latest-post', authenticateToken, requireAdmin, async (req, r
     console.error('Error fetching bot latest post:', error);
     res.status(500).json({
       error: '봇 최근 게시글 조회에 실패했습니다',
+      details: error.message
+    });
+  }
+});
+
+// 관리자 알림 목록 조회 (관리자만)
+router.get('/notifications/admin', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { limit = 20, unreadOnly = false } = req.query;
+    
+    const query = unreadOnly === 'true' ? { isRead: false } : {};
+    
+    const notifications = await AdminNotification.find(query)
+      .sort({ createdAt: -1 })
+      .limit(parseInt(limit))
+      .populate('botId', 'name type')
+      .populate('readBy', 'username');
+      
+    const unreadCount = await AdminNotification.getUnreadCount();
+    
+    res.json({
+      notifications,
+      unreadCount,
+      total: notifications.length
+    });
+  } catch (error) {
+    console.error('알림 조회 실패:', error);
+    res.status(500).json({
+      error: '알림 조회에 실패했습니다',
+      details: error.message
+    });
+  }
+});
+
+// 알림 읽음 처리 (관리자만)
+router.patch('/notifications/:notificationId/read', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { notificationId } = req.params;
+    
+    const notification = await AdminNotification.findById(notificationId);
+    if (!notification) {
+      return res.status(404).json({ error: '알림을 찾을 수 없습니다' });
+    }
+    
+    await notification.markAsRead(req.user.userId);
+    const unreadCount = await AdminNotification.getUnreadCount();
+    
+    res.json({
+      success: true,
+      notification,
+      unreadCount
+    });
+  } catch (error) {
+    console.error('알림 읽음 처리 실패:', error);
+    res.status(500).json({
+      error: '알림 읽음 처리에 실패했습니다',
+      details: error.message
+    });
+  }
+});
+
+// 모든 알림 읽음 처리 (관리자만)
+router.patch('/notifications/read-all', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    await AdminNotification.updateMany(
+      { isRead: false },
+      {
+        isRead: true,
+        readAt: new Date(),
+        readBy: req.user.userId
+      }
+    );
+    
+    res.json({
+      success: true,
+      message: '모든 알림을 읽음 처리했습니다'
+    });
+  } catch (error) {
+    console.error('알림 읽음 처리 실패:', error);
+    res.status(500).json({
+      error: '알림 읽음 처리에 실패했습니다',
       details: error.message
     });
   }
