@@ -29,8 +29,8 @@ function Signup() {
       return;
     }
 
-    if (password.length < 6) {
-      setMessage('비밀번호는 최소 6자 이상이어야 합니다.');
+    if (password.length < 8) {
+      setMessage('비밀번호는 최소 8자 이상이어야 합니다.');
       return;
     }
 
@@ -126,11 +126,11 @@ function Signup() {
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
-            minLength="6"
+            minLength="8"
             disabled={loading}
-            placeholder="6자 이상 입력"
+            placeholder="8자 이상 입력"
             label="비밀번호"
-            helperText="최소 6자 이상, 소문자와 숫자를 포함해주세요"
+            helperText="최소 8자 이상, 대문자, 소문자, 숫자, 특수문자를 모두 포함해주세요"
           />
         </div>
         <div className="form-group">

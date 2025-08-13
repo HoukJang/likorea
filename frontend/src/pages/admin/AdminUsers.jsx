@@ -128,8 +128,8 @@ function AdminUsers() {
           return;
         }
 
-        if (editingUser.newPassword.length < 6) {
-          setMessage('비밀번호는 최소 6자 이상이어야 합니다.');
+        if (editingUser.newPassword.length < 8) {
+          setMessage('비밀번호는 최소 8자 이상이어야 합니다.');
           return;
         }
       }
@@ -255,8 +255,8 @@ function AdminUsers() {
               name="newPassword"
               value={editingUser.newPassword || ''}
               onChange={handleEditChange}
-              placeholder="새 비밀번호 (6자 이상, 변경시에만 입력)"
-              minLength={6}
+              placeholder="새 비밀번호 (8자 이상, 대/소문자, 숫자, 특수문자 포함)"
+              minLength={8}
             />
           </div>
           <div className="form-group">
