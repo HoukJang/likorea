@@ -541,7 +541,7 @@ function BoardPostView() {
                       </div>
                       <div className="comment-divider-vertical"></div>
                       <div className="comment-main">
-                        <div className="comment-text">{comment.content}</div>
+                        <div className="comment-text" dangerouslySetInnerHTML={{ __html: comment.content }} />
                         {hasPermission && (
                           <div className="comment-actions">
                             <button

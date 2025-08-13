@@ -16,7 +16,13 @@ const escapeHtml = (text) => {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    .replace(/'/g, '&#39;')
+    // 연속된 공백을 &nbsp;로 변환 (첫 공백은 유지)
+    .replace(/ {2,}/g, match => ' ' + '&nbsp;'.repeat(match.length - 1))
+    // 탭을 4개의 &nbsp;로 변환
+    .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
+    // 줄 시작 부분의 공백도 보존
+    .replace(/^ /gm, '&nbsp;');
 };
 
 // 댓글 조회: populate를 사용해 작성자의 id, email, authority를 가져옴
