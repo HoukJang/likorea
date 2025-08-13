@@ -626,6 +626,37 @@
   color: var(--primary-color);
 }
 
+.advanced-settings-info {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--info-bg);
+  border-radius: 8px;
+  border-left: 4px solid var(--info-color);
+}
+
+.advanced-settings-info h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--info-color);
+}
+
+.advanced-settings-info p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.advanced-settings-info p:last-child {
+  margin-bottom: 0;
+}
+
+.advanced-settings-info strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
 /* 에러 메시지 */
 .error-message {
   padding: 16px;

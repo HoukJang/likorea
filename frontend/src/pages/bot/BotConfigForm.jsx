@@ -650,13 +650,13 @@ function BotConfigForm() {
                     apiSettings: { ...formData.apiSettings, maxTokens: parseInt(e.target.value) }
                   })}
                   min="100"
-                  max="4000"
+                  max="8000"
                   step="100"
                 />
                 <div className="slider-labels">
                   <span>100</span>
                   <span>2000</span>
-                  <span>4000</span>
+                  <span>8000</span>
                 </div>
               </div>
               <p className="form-help">생성할 최대 글자 수 (1 토큰 ≈ 한글 0.5자)</p>
@@ -694,6 +694,22 @@ function BotConfigForm() {
             <details className="advanced-settings">
               <summary>고급 설정</summary>
               
+              <div className="advanced-settings-info">
+                <h4>🔧 고급 설정 설명</h4>
+                <p>
+                  <strong>Top P (Nucleus Sampling):</strong> AI가 다음 단어를 선택할 때 고려하는 단어들의 누적 확률 임계값입니다. 
+                  0.95로 설정하면 상위 95% 확률에 해당하는 단어들만 고려합니다. 낮을수록 안정적이고, 높을수록 다양한 표현이 가능합니다.
+                </p>
+                <p>
+                  <strong>Top K:</strong> AI가 다음 단어를 선택할 때 고려하는 후보 단어의 개수를 제한합니다. 
+                  예를 들어 40으로 설정하면 가장 가능성 높은 40개 단어만 고려합니다. 0은 제한이 없음을 의미합니다.
+                </p>
+                <p>
+                  <strong>Temperature와의 관계:</strong> Temperature가 창의성의 '정도'를 조절한다면, Top P와 Top K는 창의성의 '범위'를 조절합니다. 
+                  일반적으로 Temperature만 조절해도 충분하며, 고급 설정은 특수한 경우에만 사용하세요.
+                </p>
+              </div>
+              
               <div className="form-group slider-group">
                 <label htmlFor="topP">
                   Top P
@@ -719,7 +735,7 @@ function BotConfigForm() {
                     <span>1</span>
                   </div>
                 </div>
-                <p className="form-help">샘플링 임계값 (일반적으로 0.9-0.95)</p>
+                <p className="form-help">상위 확률 누적 임계값. 높을수록 다양한 표현, 낮을수록 안정적인 표현. 보통 0.9-0.95를 사용합니다.</p>
               </div>
 
               <div className="form-group slider-group">
@@ -747,7 +763,7 @@ function BotConfigForm() {
                     <span>100</span>
                   </div>
                 </div>
-                <p className="form-help">샘플링할 토큰 수 (0=무제한)</p>
+                <p className="form-help">선택 가능한 단어 후보 개수. 0은 제한 없음. 작을수록 일관성, 클수록 다양성이 증가합니다.</p>
               </div>
             </details>
 

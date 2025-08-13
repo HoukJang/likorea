@@ -4909,3 +4909,39 @@ Counter 초기화 완료
   "ip": "127.0.0.1",
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
+[36m2025-08-13T00:58:42.656Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "6ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-13T00:58:42.681Z [INFO][0m HTTP GET /api/bots/688fcce44c42bad92caad50e
+[36m{
+  "method": "GET",
+  "url": "/api/bots/688fcce44c42bad92caad50e",
+  "statusCode": 200,
+  "duration": "13ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-13T00:59:11.523Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "7ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-13T00:59:11.551Z [INFO][0m HTTP GET /api/bots/688fcce44c42bad92caad50e
+[36m{
+  "method": "GET",
+  "url": "/api/bots/688fcce44c42bad92caad50e",
+  "statusCode": 200,
+  "duration": "10ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
