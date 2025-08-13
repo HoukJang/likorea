@@ -109,8 +109,20 @@ router.get('/', authenticateToken, requireAdmin, async (req, res) => {
         isApproved: false
       });
 
+      const botObject = bot.toObject();
+      
+      // betaHeaders Map을 일반 객체로 변환
+      if (botObject.apiSettings?.betaHeaders instanceof Map) {
+        botObject.apiSettings.betaHeaders = Object.fromEntries(botObject.apiSettings.betaHeaders);
+      } else if (!botObject.apiSettings?.betaHeaders) {
+        // betaHeaders가 없으면 빈 객체로 초기화
+        if (botObject.apiSettings) {
+          botObject.apiSettings.betaHeaders = {};
+        }
+      }
+
       return {
-        ...bot.toObject(),
+        ...botObject,
         stats: {
           ...bot.stats,
           totalPosts: postCount,
@@ -1043,8 +1055,21 @@ router.get('/:botId', authenticateToken, requireAdmin, async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(5);
 
+    // Bot 객체를 일반 객체로 변환 (Map 타입 처리)
+    const botObject = bot.toObject();
+    
+    // betaHeaders Map을 일반 객체로 변환
+    if (botObject.apiSettings?.betaHeaders instanceof Map) {
+      botObject.apiSettings.betaHeaders = Object.fromEntries(botObject.apiSettings.betaHeaders);
+    } else if (!botObject.apiSettings?.betaHeaders) {
+      // betaHeaders가 없으면 빈 객체로 초기화
+      if (botObject.apiSettings) {
+        botObject.apiSettings.betaHeaders = {};
+      }
+    }
+
     res.json({
-      bot,
+      bot: botObject,
       recentPosts
     });
   } catch (error) {
@@ -1089,10 +1114,29 @@ router.put('/:botId', authenticateToken, requireAdmin, async (req, res) => {
 
     // API 설정 업데이트
     if (apiSettings) {
+      // 기존 betaHeaders Map 보존
+      const existingBetaHeaders = bot.apiSettings?.betaHeaders || new Map();
+      
+      // apiSettings 업데이트 (betaHeaders 제외)
+      const { betaHeaders, ...otherApiSettings } = apiSettings;
+      
       bot.apiSettings = {
         ...bot.apiSettings.toObject ? bot.apiSettings.toObject() : bot.apiSettings,
-        ...apiSettings
+        ...otherApiSettings
       };
+      
+      // betaHeaders가 있으면 Map으로 변환하여 설정
+      if (betaHeaders) {
+        if (betaHeaders instanceof Map) {
+          bot.apiSettings.betaHeaders = betaHeaders;
+        } else if (typeof betaHeaders === 'object' && betaHeaders !== null) {
+          // 일반 객체를 Map으로 변환
+          bot.apiSettings.betaHeaders = new Map(Object.entries(betaHeaders));
+        }
+      } else {
+        // betaHeaders가 없으면 기존 값 유지
+        bot.apiSettings.betaHeaders = existingBetaHeaders;
+      }
     }
 
     // 페르소나 업데이트 (계정 정보는 제외)
