@@ -1085,6 +1085,9 @@ router.get('/:botId', authenticateToken, requireAdmin, async (req, res) => {
 router.put('/:botId', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { botId } = req.params;
+    console.log('[PUT /:botId] 봇 수정 요청 받음:', botId);
+    console.log('[PUT /:botId] 요청 본문:', JSON.stringify(req.body, null, 2));
+    
     const {
       name,
       description,
@@ -1100,63 +1103,126 @@ router.put('/:botId', authenticateToken, requireAdmin, async (req, res) => {
 
     const bot = await Bot.findById(botId);
     if (!bot) {
+      console.log('[PUT /:botId] 봇을 찾을 수 없음:', botId);
       return res.status(404).json({ error: '봇을 찾을 수 없습니다' });
     }
+    
+    console.log('[PUT /:botId] 봇 찾음:', bot.name);
 
     // 업데이트할 필드
-    if (name) bot.name = name;
-    if (description) bot.description = description;
-    if (systemPrompt !== undefined) bot.prompt.system = systemPrompt;
-    if (userPrompt !== undefined) bot.prompt.user = userPrompt;
-    if (aiModel) bot.aiModel = aiModel;
-    if (status) bot.status = status;
-    if (type) bot.type = type;
+    console.log('[PUT /:botId] 필드 업데이트 시작');
+    
+    if (name) {
+      bot.name = name;
+      console.log('[PUT /:botId] name 업데이트:', name);
+    }
+    
+    if (description) {
+      bot.description = description;
+      console.log('[PUT /:botId] description 업데이트');
+    }
+    
+    // prompt 필드가 없을 경우 초기화
+    if (systemPrompt !== undefined || userPrompt !== undefined) {
+      console.log('[PUT /:botId] prompt 업데이트 시작');
+      if (!bot.prompt) {
+        bot.prompt = {};
+        console.log('[PUT /:botId] prompt 객체 초기화됨');
+      }
+      if (systemPrompt !== undefined) {
+        bot.prompt.system = systemPrompt;
+        console.log('[PUT /:botId] systemPrompt 업데이트');
+      }
+      if (userPrompt !== undefined) {
+        bot.prompt.user = userPrompt;
+        console.log('[PUT /:botId] userPrompt 업데이트');
+      }
+    }
+    
+    if (aiModel) {
+      bot.aiModel = aiModel;
+      console.log('[PUT /:botId] aiModel 업데이트:', aiModel);
+    }
+    
+    if (status) {
+      bot.status = status;
+      console.log('[PUT /:botId] status 업데이트:', status);
+    }
+    
+    if (type) {
+      bot.type = type;
+      console.log('[PUT /:botId] type 업데이트:', type);
+    }
 
     // API 설정 업데이트
     if (apiSettings) {
-      // 기존 betaHeaders Map 보존
-      const existingBetaHeaders = bot.apiSettings?.betaHeaders || new Map();
+      console.log('[PUT /:botId] apiSettings 업데이트 시작');
       
-      // apiSettings 업데이트 (betaHeaders 제외)
-      const { betaHeaders, ...otherApiSettings } = apiSettings;
-      
-      bot.apiSettings = {
-        ...bot.apiSettings.toObject ? bot.apiSettings.toObject() : bot.apiSettings,
-        ...otherApiSettings
-      };
-      
-      // betaHeaders가 있으면 Map으로 변환하여 설정
-      if (betaHeaders) {
-        if (betaHeaders instanceof Map) {
-          bot.apiSettings.betaHeaders = betaHeaders;
-        } else if (typeof betaHeaders === 'object' && betaHeaders !== null) {
-          // 일반 객체를 Map으로 변환
-          bot.apiSettings.betaHeaders = new Map(Object.entries(betaHeaders));
+      try {
+        // 기존 apiSettings가 없으면 빈 객체로 초기화
+        if (!bot.apiSettings) {
+          bot.apiSettings = {};
+          console.log('[PUT /:botId] apiSettings 초기화됨');
         }
-      } else {
-        // betaHeaders가 없으면 기존 값 유지
-        bot.apiSettings.betaHeaders = existingBetaHeaders;
+        
+        // betaHeaders 제외한 나머지 설정만 업데이트
+        const { betaHeaders, ...otherApiSettings } = apiSettings;
+        
+        Object.assign(bot.apiSettings, otherApiSettings);
+        console.log('[PUT /:botId] apiSettings 업데이트 완료');
+        
+        // betaHeaders는 MongoDB Map 타입이므로 특별 처리 불필요
+        // 프론트엔드에서는 betaHeaders를 보내지 않으므로 기존 값 유지
+      } catch (apiError) {
+        console.error('[PUT /:botId] apiSettings 업데이트 중 에러:', apiError);
+        throw apiError;
       }
     }
 
     // 페르소나 업데이트 (계정 정보는 제외)
     if (persona) {
-      const existingAccount = bot.persona?.likoreaAccount;
-      bot.persona = {
-        ...persona,
-        likoreaAccount: existingAccount // 기존 계정 정보 유지
-      };
+      console.log('[PUT /:botId] persona 업데이트 시작');
+      try {
+        const existingAccount = bot.persona?.likoreaAccount;
+        bot.persona = {
+          ...persona,
+          likoreaAccount: existingAccount // 기존 계정 정보 유지
+        };
+        console.log('[PUT /:botId] persona 업데이트 완료');
+      } catch (personaError) {
+        console.error('[PUT /:botId] persona 업데이트 중 에러:', personaError);
+        throw personaError;
+      }
     }
 
     // 스케줄링 설정 업데이트
     if (settings) {
-      bot.settings = {
-        ...bot.settings.toObject ? bot.settings.toObject() : bot.settings,
-        ...settings
-      };
+      console.log('[PUT /:botId] settings 업데이트 시작');
+      try {
+        // 기존 settings가 없으면 빈 객체로 초기화
+        if (!bot.settings) {
+          bot.settings = {};
+          console.log('[PUT /:botId] settings 초기화됨');
+        }
+        
+        Object.assign(bot.settings, settings);
+        console.log('[PUT /:botId] settings 업데이트 완료');
+      } catch (settingsError) {
+        console.error('[PUT /:botId] settings 업데이트 중 에러:', settingsError);
+        throw settingsError;
+      }
     }
 
+    console.log('[PUT /:botId] 봇 저장 직전 상태:', {
+      name: bot.name,
+      hasPrompt: !!bot.prompt,
+      hasApiSettings: !!bot.apiSettings,
+      hasSettings: !!bot.settings
+    });
+
     await bot.save();
+
+    console.log('[PUT /:botId] 봇 저장 성공');
 
     res.json({
       success: true,
@@ -1164,10 +1230,12 @@ router.put('/:botId', authenticateToken, requireAdmin, async (req, res) => {
       bot
     });
   } catch (error) {
-    console.error('Error updating bot:', error);
+    console.error('[PUT /:botId] 봇 수정 에러:', error);
+    console.error('[PUT /:botId] 에러 스택:', error.stack);
     res.status(500).json({
       error: '봇 수정에 실패했습니다',
-      details: error.message
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 });
