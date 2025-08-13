@@ -29,7 +29,8 @@ export const createBot = async (botData) => {
     systemPrompt: botData.systemPrompt,
     userPrompt: botData.userPrompt,
     apiSettings: botData.apiSettings,
-    persona: botData.persona
+    persona: botData.persona,
+    settings: botData.settings
   };
 
   const response = await client.post('/api/bots', formattedData);
@@ -47,7 +48,9 @@ export const updateBot = async (botId, botData) => {
     aiModel: botData.aiModel,
     systemPrompt: botData.systemPrompt,
     userPrompt: botData.userPrompt,
-    apiSettings: botData.apiSettings
+    apiSettings: botData.apiSettings,
+    persona: botData.persona,
+    settings: botData.settings
   };
 
   const response = await client.put(`/api/bots/${botId}`, formattedData);
