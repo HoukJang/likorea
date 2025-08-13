@@ -1,3 +1,35 @@
+/* CSS 변수 정의 */
+:root {
+  /* 색상 팔레트 */
+  --primary-color: #1976d2;
+  --primary-hover: #1565c0;
+  --secondary-color: #dc004e;
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --danger-color: #f44336;
+  --info-color: #2196f3;
+  
+  /* 배경색 */
+  --primary-bg: #ffffff;
+  --secondary-bg: #f5f5f5;
+  --tertiary-bg: #e0e0e0;
+  
+  /* 텍스트 색상 */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  
+  /* 테두리 색상 */
+  --border-color: #e0e0e0;
+  
+  /* 기타 색상 */
+  --white: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e0e0e0;
+  --danger-bg: #ffebee;
+  --info-bg: #e3f2fd;
+}
+
 .bot-management-container {
   max-width: 1200px;
   margin: 0 auto;

@@ -4440,3 +4440,301 @@ Counter 초기화 완료
   "ip": "127.0.0.1",
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
 }[0m
+[33m2025-08-12T05:40:45.258Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T05:40:45.747Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T05:40:55.966Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T05:40:55.966Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-12T05:51:47.565Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "41ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-12T06:32:54.340Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T06:32:54.543Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T06:33:04.604Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T06:33:04.604Z [INFO][0m MongoDB 재연결 성공
+[33m2025-08-12T06:55:04.209Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T06:55:04.307Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T06:55:14.342Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T06:55:14.342Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-12T06:57:17.808Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "28ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-12T07:31:27.269Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T07:31:27.569Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T07:31:37.680Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T07:31:37.680Z [INFO][0m MongoDB 재연결 성공
+[33m2025-08-12T08:19:48.443Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T08:19:48.642Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T08:19:58.760Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T08:19:58.760Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-12T08:28:19.671Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "17ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T08:58:19.508Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-12T09:53:56.118Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T09:53:56.494Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T09:54:06.562Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T09:54:06.562Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-12T09:58:59.478Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "13ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T10:29:47.188Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "11ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-12T10:45:47.626Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T10:45:48.075Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T10:45:58.089Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T10:45:58.089Z [INFO][0m MongoDB 재연결 성공
+[33m2025-08-12T11:00:08.677Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T11:00:08.891Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T11:00:18.897Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T11:00:18.898Z [INFO][0m MongoDB 재연결 성공
+[33m2025-08-12T11:37:03.702Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T11:37:03.784Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T11:37:13.882Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T11:37:13.882Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-12T11:43:57.092Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "14ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T12:14:20.338Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-12T12:50:16.817Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T12:50:17.215Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T12:50:27.515Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T12:50:27.516Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-12T13:15:42.963Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "10ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-12T13:59:50.794Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T13:59:50.848Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T14:00:00.925Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T14:00:00.925Z [INFO][0m MongoDB 재연결 성공
+[33m2025-08-12T14:46:39.836Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T14:46:40.037Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T14:46:50.054Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T14:46:50.054Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-12T14:47:54.508Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "17ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T15:18:31.607Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "3ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-12T15:49:16.079Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-12T16:05:01.684Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T16:05:02.144Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T16:05:12.212Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T16:05:12.212Z [INFO][0m MongoDB 재연결 성공
+[33m2025-08-12T16:45:06.990Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T17:06:10.519Z [WARN][0m MongoDB 연결 상태: disconnected
+[36m2025-08-12T17:07:50.366Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "27ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-12T17:43:48.777Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T18:26:52.775Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T18:26:53.259Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T18:27:03.368Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T18:27:03.368Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-12T18:40:12.902Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "48ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-12T19:11:53.321Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T19:11:53.624Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T19:12:03.686Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T19:12:03.686Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-12T19:40:41.231Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "12ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-12T20:24:24.197Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T20:24:24.442Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T20:24:34.451Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T20:24:34.451Z [INFO][0m MongoDB 재연결 성공
+[33m2025-08-12T20:47:13.164Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T20:47:13.237Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T20:47:23.254Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T20:47:23.254Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-12T20:48:18.028Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "82ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-12T21:07:51.949Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T21:07:51.988Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T21:08:01.993Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T21:08:01.993Z [INFO][0m MongoDB 재연결 성공
+[33m2025-08-12T21:48:21.452Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T21:48:21.644Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T21:48:31.656Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T21:48:31.656Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-12T22:03:39.138Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "66ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-12T22:35:09.369Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T22:35:09.575Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T22:35:19.635Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T22:35:19.636Z [INFO][0m MongoDB 재연결 성공
+[33m2025-08-12T23:29:04.710Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-12T23:29:04.754Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-12T23:29:14.761Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-12T23:29:14.761Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-12T23:36:09.610Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "62ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[33m2025-08-13T00:23:55.067Z [WARN][0m MongoDB 연결 상태: disconnected
+[33m2025-08-13T00:23:55.150Z [WARN][0m MongoDB 연결 해제됨
+[36m2025-08-13T00:24:05.208Z [INFO][0m MongoDB 연결 성공
+[36m2025-08-13T00:24:05.208Z [INFO][0m MongoDB 재연결 성공
+[36m2025-08-13T00:38:06.170Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "57ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-13T00:40:09.857Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "4ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-13T00:40:09.900Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "5ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-13T00:40:09.976Z [INFO][0m HTTP GET /api/users/verify
+[36m{
+  "method": "GET",
+  "url": "/api/users/verify",
+  "statusCode": 200,
+  "duration": "8ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
+[36m2025-08-13T00:40:10.038Z [INFO][0m HTTP GET /api/bots/689a9bd5d0ae2458f9a3ef3a
+[36m{
+  "method": "GET",
+  "url": "/api/bots/689a9bd5d0ae2458f9a3ef3a",
+  "statusCode": 200,
+  "duration": "58ms",
+  "ip": "127.0.0.1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15"
+}[0m
