@@ -935,9 +935,9 @@ function BotConfigForm() {
                             }
                           }
                         })}
-                        placeholder="예: 롱아일랜드, 한인, 커뮤니티"
+                        placeholder="예: 롱아일랜드/한인/커뮤니티"
                       />
-                      <p className="form-help">뉴스 검색에 사용할 키워드입니다. 콤마로 구분하세요.</p>
+                      <p className="form-help">뉴스 검색에 사용할 키워드입니다. 슬래시(/)로 구분하세요.</p>
                     </div>
                   )}
 
