@@ -75,6 +75,12 @@ export const updateBotStatus = async (botId, status) => {
   return response;
 };
 
+// 봇 작업 상태 리셋
+export const resetBotTask = async (botId) => {
+  const response = await client.patch(`/api/bots/${botId}/reset-task`);
+  return response;
+};
+
 // 봇으로 게시글 작성
 export const createBotPost = async (botId, task, additionalPrompt = '') => {
   const response = await client.post('/api/bots/post', {

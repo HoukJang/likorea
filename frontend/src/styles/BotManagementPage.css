@@ -226,7 +226,8 @@
 
 .btn-edit,
 .btn-delete,
-.btn-toggle {
+.btn-toggle,
+.btn-reset {
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
@@ -258,9 +259,15 @@
   color: white;
 }
 
+.btn-reset {
+  background-color: #9c27b0;
+  color: white;
+}
+
 .btn-edit:hover,
 .btn-delete:hover,
-.btn-toggle:hover {
+.btn-toggle:hover,
+.btn-reset:hover {
   opacity: 0.8;
 }
 

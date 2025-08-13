@@ -1332,6 +1332,45 @@ router.get('/:botId/task-status', authenticateToken, requireAdmin, async (req, r
   }
 });
 
+// 봇 작업 상태 리셋 (관리자만)
+router.patch('/:botId/reset-task', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { botId } = req.params;
+    
+    const bot = await Bot.findById(botId);
+    if (!bot) {
+      return res.status(404).json({ error: '봇을 찾을 수 없습니다' });
+    }
+
+    // taskStatus를 idle로 리셋
+    bot.taskStatus = 'idle';
+    bot.currentTask = {
+      description: null,
+      startedAt: null,
+      completedAt: null,
+      error: null
+    };
+    
+    await bot.save();
+
+    res.json({
+      success: true,
+      message: '봇 작업 상태가 리셋되었습니다',
+      bot: {
+        name: bot.name,
+        taskStatus: bot.taskStatus,
+        currentTask: bot.currentTask
+      }
+    });
+  } catch (error) {
+    console.error('Error resetting bot task status:', error);
+    res.status(500).json({
+      error: '봇 작업 상태 리셋에 실패했습니다',
+      details: error.message
+    });
+  }
+});
+
 // 봇 상태 변경 (관리자만)
 router.patch('/:botId/status', authenticateToken, requireAdmin, async (req, res) => {
   try {

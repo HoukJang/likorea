@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { getBots, deleteBot, updateBotStatus } from '../../api/bots';
+import { getBots, deleteBot, updateBotStatus, resetBotTask } from '../../api/bots';
 import Loading from '../../components/common/Loading';
 import '../../styles/BotManagementPage.css';
 
@@ -82,6 +82,22 @@ function BotManagementPage() {
     } catch (err) {
       console.error('봇 상태 변경 실패:', err);
       alert('봇 상태 변경에 실패했습니다.');
+    }
+  };
+
+  // 봇 작업 상태 리셋 핸들러
+  const handleResetTask = async (botId, botName) => {
+    if (!window.confirm(`${botName}의 작업 상태를 리셋하시겠습니까?`)) {
+      return;
+    }
+
+    try {
+      await resetBotTask(botId);
+      alert('작업 상태가 리셋되었습니다.');
+      loadBots(); // 목록 새로고침
+    } catch (err) {
+      console.error('작업 상태 리셋 실패:', err);
+      alert('작업 상태 리셋에 실패했습니다.');
     }
   };
 
@@ -199,6 +215,15 @@ function BotManagementPage() {
                 >
                   {bot.status === 'active' ? '비활성화' : '활성화'}
                 </button>
+                {bot.taskStatus === 'generating' && (
+                  <button
+                    className="btn-reset"
+                    onClick={() => handleResetTask(bot._id, bot.name)}
+                    title="작업 상태 리셋"
+                  >
+                    리셋
+                  </button>
+                )}
                 <button
                   className="btn-edit"
                   onClick={() => navigate(`/bot-board/manage/edit/${bot._id}`)}
