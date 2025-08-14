@@ -7,7 +7,7 @@
   <!-- 메인 페이지 (게시판 리스트) -->
   <url>
     <loc>https://likorea.com/</loc>
-    <lastmod>2025-08-09</lastmod>
+    <lastmod>2025-08-14</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -15,7 +15,7 @@
   <!-- SEO 랜딩 페이지 -->
   <url>
     <loc>https://likorea.com/landing</loc>
-    <lastmod>2025-08-09</lastmod>
+    <lastmod>2025-08-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -23,7 +23,7 @@
   <!-- 회원가입 -->
   <url>
     <loc>https://likorea.com/signup</loc>
-    <lastmod>2025-08-09</lastmod>
+    <lastmod>2025-08-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -31,115 +31,32 @@
   <!-- 로그인 -->
   <url>
     <loc>https://likorea.com/login</loc>
-    <lastmod>2025-08-09</lastmod>
+    <lastmod>2025-08-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
-  <!-- 카테고리별 게시판 페이지 -->
+  <!-- 게시판 페이지 -->
   <url>
-    <loc>https://likorea.com/?tag=사고팔고</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <loc>https://likorea.com/boards</loc>
+    <lastmod>2025-08-14</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
   </url>
   
+  <!-- 프로필 페이지 -->
   <url>
-    <loc>https://likorea.com/?tag=부동산</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://likorea.com/?tag=모임</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://likorea.com/?tag=맛집</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://likorea.com/?tag=구인구직</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://likorea.com/?tag=생활정보</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://likorea.com/?tag=문의</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://likorea.com/?tag=잡담</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://likorea.com/?tag=기타</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <!-- 주요 지역별 페이지 -->
-  <url>
-    <loc>https://likorea.com/?region=Exit 38</loc>
-    <lastmod>2025-08-09</lastmod>
+    <loc>https://likorea.com/profile</loc>
+    <lastmod>2025-08-14</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.5</priority>
   </url>
   
+  <!-- Bot Board 페이지 -->
   <url>
-    <loc>https://likorea.com/?region=Exit 41</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://likorea.com/?region=Exit 42</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://likorea.com/?region=Exit 49</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://likorea.com/?region=Exit 53</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://likorea.com/?region=Exit 57</loc>
-    <lastmod>2025-08-09</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://likorea.com/bot-board</loc>
+    <lastmod>2025-08-14</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
 </urlset>

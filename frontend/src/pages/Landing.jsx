@@ -162,7 +162,7 @@ const Landing = () => {
         <meta property="og:description" content="뉴욕 롱아일랜드 한인들을 위한 생활정보 커뮤니티. 부동산, 구인구직, 맛집 정보를 공유하세요." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://likorea.com" />
-        <meta property="og:image" content="https://likorea.com/og-image.jpg" />
+        <meta property="og:image" content="https://likorea.com/images/banner-desktop.png" />
         <meta property="og:locale" content="ko_KR" />
         <meta property="og:site_name" content="Long Island Korea" />
 
@@ -170,7 +170,7 @@ const Landing = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="롱아일랜드 한인 커뮤니티" />
         <meta name="twitter:description" content="뉴욕 롱아일랜드 한인들을 위한 생활정보 커뮤니티" />
-        <meta name="twitter:image" content="https://likorea.com/og-image.jpg" />
+        <meta name="twitter:image" content="https://likorea.com/images/banner-desktop.png" />
 
         {/* Canonical URL */}
         <link rel="canonical" href="https://likorea.com" />
