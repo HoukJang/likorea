@@ -1,5 +1,6 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import ErrorBoundary from './components/ErrorBoundary';
 import Loading from './components/common/Loading';
 import { useAuth } from './hooks/useAuth';
@@ -18,6 +19,7 @@ import Login from './components/Login';
 import BoardList from './components/BoardList';
 import BoardPostView from './components/BoardPostView';
 import Profile from './components/Profile';
+import NotFound from './pages/NotFound';
 
 // 무거운 컴포넌트들은 lazy loading
 const BoardPostForm = lazy(() => import('./components/BoardPostForm')); // Quill 포함
@@ -62,11 +64,12 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <div className="App">
-          <Banner />
-          <GlobalNavigation />
-          <Routes>
+      <HelmetProvider>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <div className="App">
+            <Banner />
+            <GlobalNavigation />
+            <Routes>
             {/* 루트 경로를 랜딩 페이지로 설정 */}
             <Route path="/" element={<Landing />} />
 
@@ -172,9 +175,13 @@ function App() {
                 <DesignPreview />
               </Suspense>
             } />
+            
+            {/* 404 페이지 - 모든 매치되지 않는 경로 처리 */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </Router>
+      </HelmetProvider>
     </ErrorBoundary>
   );
 }

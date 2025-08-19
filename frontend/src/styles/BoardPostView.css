@@ -67,6 +67,9 @@
   padding: 0 20px;
   background: var(--white);
   font-family: var(--font-family);
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* 현대화된 글보기 헤더 */
@@ -461,6 +464,10 @@
 /* 통일된 댓글 섹션 */
 .comment-section {
   margin-bottom: 30px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .comment-form {
@@ -546,6 +553,10 @@
 
 .comment-list {
   margin-bottom: 30px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* 통일된 댓글 아이템 */
@@ -556,6 +567,10 @@
   border-radius: 8px;
   border: 1px solid var(--gray-200);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .comment-item:hover {
@@ -641,6 +656,7 @@
 
 .comment-edit-textarea {
   width: 100%;
+  max-width: 100%;
   padding: 8px 12px;
   border: 1px solid var(--gray-300);
   border-radius: 6px;
@@ -651,6 +667,9 @@
   background: var(--white);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: pre-wrap; /* 공백과 줄바꿈 보존 */
+  box-sizing: border-box;
+  overflow-x: hidden;
+  word-break: break-word;
 }
 
 .comment-edit-textarea:focus {
@@ -712,6 +731,9 @@
   align-items: flex-start;
   gap: 16px;
   width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .comment-author-info {
@@ -719,11 +741,14 @@
   flex-direction: column;
   align-items: flex-start;
   min-width: 120px;
+  max-width: 120px;
   padding: 8px 12px;
   background: transparent;
   border-radius: 0;
   border: none;
   box-shadow: none;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .comment-author-id {
@@ -731,6 +756,9 @@
   color: var(--primary-blue);
   font-size: var(--font-size-sm);
   margin-bottom: 4px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .comment-date {
@@ -752,6 +780,10 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .comment-text {
@@ -759,7 +791,11 @@
   color: var(--primary-text);
   font-size: var(--font-size-sm);
   word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
   white-space: pre-wrap;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* 댓글 내부 HTML 요소들의 간격 설정 */
@@ -858,14 +894,17 @@
   .comment-content-wrapper {
     flex-direction: column;
     gap: 12px;
+    padding: 0;
   }
 
   .comment-author-info {
-    min-width: auto;
+    min-width: 100%;
+    max-width: 100%;
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding: 8px 0;
   }
 
   .comment-divider-vertical {
@@ -874,5 +913,25 @@
 
   .comment-main {
     width: 100%;
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  .comment-item {
+    padding: 12px;
+    overflow-x: hidden;
+  }
+  
+  .comment-text {
+    font-size: var(--font-size-sm);
+    max-width: 100%;
+    overflow-x: hidden;
+    word-break: break-word;
+  }
+  
+  .comment-actions {
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: 100%;
   }
 }
