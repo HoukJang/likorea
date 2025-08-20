@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { 
-  getBots, 
-  deleteBot, 
-  updateBotStatus, 
-  resetBotTask, 
+import {
+  getBots,
+  deleteBot,
+  updateBotStatus,
+  resetBotTask,
   retryBotTask,
   getAdminNotifications,
   markNotificationRead,
-  markAllNotificationsRead 
+  markAllNotificationsRead
 } from '../../api/bots';
 import Loading from '../../components/common/Loading';
 import '../../styles/BotManagementPage.css';
@@ -261,8 +261,8 @@ function BotManagementPage() {
                 >
                   <div className="notification-header">
                     <span className={`severity-badge severity-${notification.severity}`}>
-                      {notification.severity === 'critical' ? '🚨' : 
-                       notification.severity === 'high' ? '⚠️' : 
+                      {notification.severity === 'critical' ? '🚨' :
+                       notification.severity === 'high' ? '⚠️' :
                        notification.severity === 'medium' ? '📢' : 'ℹ️'}
                     </span>
                     <strong>{notification.title}</strong>

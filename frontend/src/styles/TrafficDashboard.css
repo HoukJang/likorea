@@ -150,9 +150,16 @@
   color: #333;
 }
 
+/* 경로별 통계 테이블 컨테이너 */
+.path-stats {
+  overflow-x: auto; /* 모바일에서 가로 스크롤 허용 */
+  -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 */
+}
+
 /* 경로별 통계 테이블 */
 .path-table {
   width: 100%;
+  min-width: 400px; /* 최소 넓이 설정으로 가독성 확보 */
   border-collapse: collapse;
   margin-top: 10px;
 }
@@ -405,6 +412,12 @@
     padding: 2px 0;
   }
 
+  /* 테이블 컨테이너 모바일 최적화 */
+  .path-stats {
+    margin: 0 -10px; /* 양쪽 패딩 보정 */
+    padding: 0 10px;
+  }
+
   .path-table {
     font-size: var(--font-size-xs);
   }
@@ -412,6 +425,13 @@
   .path-table th,
   .path-table td {
     padding: 8px 4px;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  }
+
+  .path-name {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .status-code-stats,
@@ -474,6 +494,12 @@
     font-size: var(--font-size-xs);
   }
 
+  /* 작은 화면에서 테이블 스크롤 강화 */
+  .path-stats {
+    margin: 0 -15px;
+    padding: 0 15px;
+  }
+
   .path-table {
     font-size: var(--font-size-xs);
   }
@@ -481,6 +507,10 @@
   .path-table th,
   .path-table td {
     padding: 6px 3px;
+  }
+
+  .path-name {
+    max-width: 120px;
   }
 
   .status-code-item,

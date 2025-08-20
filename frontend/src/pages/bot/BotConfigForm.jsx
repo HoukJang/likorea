@@ -236,11 +236,11 @@ function BotConfigForm() {
   // 봇 타입 변경 시 프롬프트 템플릿 업데이트
   const handleTypeChange = (e) => {
     const newType = e.target.value;
-    
+
     // 타입에 맞는 기본 API 설정 가져오기
     let apiPreset = {};
     let aiModel = formData.aiModel;
-    
+
     if (newType === 'restaurant' && API_PRESETS.restaurant) {
       apiPreset = API_PRESETS.restaurant.apiSettings;
       aiModel = API_PRESETS.restaurant.aiModel;
@@ -251,7 +251,7 @@ function BotConfigForm() {
       apiPreset = API_PRESETS.balanced.apiSettings;
       aiModel = API_PRESETS.balanced.aiModel;
     }
-    
+
     setFormData({
       ...formData,
       type: newType,
@@ -288,8 +288,8 @@ function BotConfigForm() {
         settings: {
           ...formData.settings,
           // postInterval이 숫자가 아니거나 비어있으면 기본값 24시간 사용
-          postInterval: (typeof formData.settings.postInterval === 'number' && formData.settings.postInterval > 0) 
-            ? formData.settings.postInterval * 3600000 
+          postInterval: (typeof formData.settings.postInterval === 'number' && formData.settings.postInterval > 0)
+            ? formData.settings.postInterval * 3600000
             : 24 * 3600000 // 기본값 24시간
         },
         apiSettings: formData.apiSettings,
@@ -694,23 +694,23 @@ function BotConfigForm() {
             {/* 고급 설정 (접을 수 있는 섹션) */}
             <details className="advanced-settings">
               <summary>고급 설정</summary>
-              
+
               <div className="advanced-settings-info">
                 <h4>🔧 고급 설정 설명</h4>
                 <p>
-                  <strong>Top P (Nucleus Sampling):</strong> AI가 다음 단어를 선택할 때 고려하는 단어들의 누적 확률 임계값입니다. 
+                  <strong>Top P (Nucleus Sampling):</strong> AI가 다음 단어를 선택할 때 고려하는 단어들의 누적 확률 임계값입니다.
                   0.95로 설정하면 상위 95% 확률에 해당하는 단어들만 고려합니다. 낮을수록 안정적이고, 높을수록 다양한 표현이 가능합니다.
                 </p>
                 <p>
-                  <strong>Top K:</strong> AI가 다음 단어를 선택할 때 고려하는 후보 단어의 개수를 제한합니다. 
+                  <strong>Top K:</strong> AI가 다음 단어를 선택할 때 고려하는 후보 단어의 개수를 제한합니다.
                   예를 들어 40으로 설정하면 가장 가능성 높은 40개 단어만 고려합니다. 0은 제한이 없음을 의미합니다.
                 </p>
                 <p>
-                  <strong>Temperature와의 관계:</strong> Temperature가 창의성의 '정도'를 조절한다면, Top P와 Top K는 창의성의 '범위'를 조절합니다. 
+                  <strong>Temperature와의 관계:</strong> Temperature가 창의성의 '정도'를 조절한다면, Top P와 Top K는 창의성의 '범위'를 조절합니다.
                   일반적으로 Temperature만 조절해도 충분하며, 고급 설정은 특수한 경우에만 사용하세요.
                 </p>
               </div>
-              
+
               <div className="form-group slider-group">
                 <label htmlFor="topP">
                   Top P

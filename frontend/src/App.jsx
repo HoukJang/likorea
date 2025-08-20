@@ -175,7 +175,7 @@ function App() {
                 <DesignPreview />
               </Suspense>
             } />
-            
+
             {/* 404 페이지 - 모든 매치되지 않는 경로 처리 */}
             <Route path="*" element={<NotFound />} />
           </Routes>

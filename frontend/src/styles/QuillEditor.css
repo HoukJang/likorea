@@ -29,13 +29,18 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 16px;
   min-height: 300px;
+  max-height: 600px; /* 최대 높이 제한 */
+  overflow-y: auto; /* 내용이 많을 때 스크롤 표시 */
 }
 
 /* 에디터 내부 스타일 */
 .quill-editor-container .ql-editor {
   min-height: 300px;
+  max-height: 550px; /* 스크롤바 공간 확보 */
   padding: 15px 20px;
   line-height: 1.6;
+  overflow-y: auto; /* 내용 오버플로우 처리 */
+  word-wrap: break-word; /* 긴 단어 자동 줄바꿈 */
 }
 
 /* placeholder 스타일 */
@@ -197,6 +202,7 @@
   
   .quill-editor-container .ql-editor {
     min-height: 250px;
+    max-height: 400px; /* 모바일에서도 최대 높이 제한 */
     padding: 12px 15px;
     font-size: 16px; /* iOS 자동 줌 방지 */
   }
