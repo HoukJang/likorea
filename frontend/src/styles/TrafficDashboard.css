@@ -2,6 +2,8 @@
   padding: 0;
   background-color: transparent;
   min-height: auto;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 .traffic-header {
@@ -305,6 +307,8 @@
 /* 차트 섹션 */
 .charts-section {
   margin-bottom: 30px;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .chart-container {
@@ -314,6 +318,9 @@
   margin-bottom: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--border-color);
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
 }
 
 .chart-container h3 {
@@ -369,10 +376,18 @@
 }
 
 @media (max-width: 768px) {
+  .traffic-dashboard {
+    padding: 0 10px;
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+  }
+
   .traffic-header {
     flex-direction: column;
     gap: 15px;
     text-align: center;
+    padding: 15px;
+    margin: 0 -10px 20px -10px;
   }
 
   .traffic-header h2 {
@@ -387,10 +402,14 @@
   .summary-stats {
     grid-template-columns: 1fr;
     gap: 15px;
+    margin: 0 -10px;
+    padding: 0 10px;
   }
 
   .stat-card {
     padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .stat-card h3 {
@@ -399,6 +418,11 @@
 
   .stat-card p {
     font-size: var(--font-size-lg);
+  }
+
+  .stats-section {
+    margin: 0 -10px 20px -10px;
+    padding: 20px 10px;
   }
 
   .traffic-item {
@@ -450,12 +474,19 @@
   }
 
   .charts-section {
-    margin-bottom: 20px;
+    margin: 0 -10px 20px -10px;
+    padding: 0 10px;
+    width: calc(100% + 20px);
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
 
   .chart-container {
     padding: 15px;
     margin-bottom: 15px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .chart-container h3 {
@@ -465,20 +496,50 @@
 
   .chart-container canvas {
     height: 200px !important;
+    max-width: 100% !important;
+  }
+
+  .charts-grid {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .charts-grid .chart-container {
+    width: 100%;
+    max-width: 100%;
   }
 
   .charts-grid .chart-container canvas {
     height: 180px !important;
+    max-width: 100% !important;
   }
 }
 
 @media (max-width: 480px) {
+  .traffic-dashboard {
+    padding: 0 5px;
+    width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  .traffic-header {
+    padding: 10px;
+    margin: 0 -5px 15px -5px;
+  }
+
   .traffic-header h2 {
     font-size: var(--font-size-base);
   }
 
+  .summary-stats {
+    margin: 0 -5px;
+    padding: 0 5px;
+  }
+
   .stat-card {
     padding: 15px;
+    margin: 0;
+    width: 100%;
   }
 
   .stat-card h3 {
@@ -489,6 +550,11 @@
     font-size: var(--font-size-base);
   }
 
+  .stats-section {
+    margin: 0 -5px 15px -5px;
+    padding: 15px 5px;
+  }
+
   .traffic-item {
     padding: 8px;
     font-size: var(--font-size-xs);
@@ -496,8 +562,8 @@
 
   /* 작은 화면에서 테이블 스크롤 강화 */
   .path-stats {
-    margin: 0 -15px;
-    padding: 0 15px;
+    margin: 0 -5px;
+    padding: 0 5px;
   }
 
   .path-table {
@@ -521,9 +587,17 @@
     font-size: var(--font-size-xs);
   }
 
+  .charts-section {
+    margin: 0 -5px 15px -5px;
+    padding: 0 5px;
+    width: calc(100% + 10px);
+  }
+
   .chart-container {
     padding: 10px;
     margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .chart-container h3 {
@@ -533,10 +607,14 @@
 
   .chart-container canvas {
     height: 180px !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   .charts-grid .chart-container canvas {
     height: 150px !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
 
