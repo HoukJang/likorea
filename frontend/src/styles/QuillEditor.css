@@ -4,6 +4,8 @@
 .quill-editor-container {
   width: 100%;
   margin-bottom: 20px;
+  position: relative;
+  z-index: 1; /* 버튼보다 낮은 z-index */
 }
 
 /* Quill 에디터 기본 스타일 */
@@ -37,6 +39,7 @@
 .quill-editor-container .ql-editor {
   min-height: 300px;
   max-height: 550px; /* 스크롤바 공간 확보 */
+  height: auto; /* 컨텐츠에 맞춰 자동 조절 */
   padding: 15px 20px;
   line-height: 1.6;
   overflow-y: auto; /* 내용 오버플로우 처리 */
@@ -202,9 +205,15 @@
   
   .quill-editor-container .ql-editor {
     min-height: 250px;
-    max-height: 400px; /* 모바일에서도 최대 높이 제한 */
+    max-height: 350px; /* 모바일에서 더 작게 제한 */
+    height: auto; /* 컨텐츠에 맞춰 자동 조절 */
     padding: 12px 15px;
     font-size: 16px; /* iOS 자동 줌 방지 */
+  }
+  
+  /* 모바일에서 에디터 컨테이너 간격 */
+  .quill-editor-container {
+    margin-bottom: 30px; /* 버튼과 분리 */
   }
   
   /* 모바일에서 일부 툴바 아이템 숨기기 */

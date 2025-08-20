@@ -171,9 +171,8 @@ function QuillEditor({ value, onChange, placeholder = '내용을 입력하세요
     }
   }, []);
 
-  // 스타일 설정
+  // 스타일 설정 - 높이는 CSS에서 관리
   const editorStyle = {
-    height: '400px',
     backgroundColor: 'white'
   };
 
