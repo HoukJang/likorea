@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { getUnreadCount } from '../api/message';
 import '../styles/GlobalNavigation.css';
 
 const GlobalNavigation = () => {
@@ -9,6 +10,7 @@ const GlobalNavigation = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const [fontSize, setFontSize] = useState('14px');
+  const [unreadCount, setUnreadCount] = useState(0);
 
   // 동적 글자 크기 조정
   const adjustFontSize = useCallback(() => {
@@ -119,6 +121,26 @@ const GlobalNavigation = () => {
     };
   }, [adjustFontSize]);
 
+  // 읽지 않은 메시지 수 조회
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      if (user) {
+        try {
+          const response = await getUnreadCount();
+          setUnreadCount(response.data.count || 0);
+        } catch (error) {
+          console.error('읽지 않은 메시지 수 조회 실패:', error);
+        }
+      }
+    };
+
+    fetchUnreadCount();
+    // 30초마다 읽지 않은 메시지 수 업데이트
+    const interval = setInterval(fetchUnreadCount, 30000);
+
+    return () => clearInterval(interval);
+  }, [user]);
+
   const handleLogout = useCallback(async () => {
     await logout();
     navigate('/');
@@ -187,6 +209,9 @@ const GlobalNavigation = () => {
                 aria-label={user.authority >= 5 ? '관리자 페이지로 이동' : '프로필로 이동'}
               >
                 {user.authority >= 5 && '👑'} {user.id}
+                {unreadCount > 0 && (
+                  <span className="user-unread-badge">{unreadCount}</span>
+                )}
               </button>
               <button
                 onClick={handleLogout}

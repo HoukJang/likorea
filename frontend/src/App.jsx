@@ -19,6 +19,8 @@ import Login from './components/Login';
 import BoardList from './components/BoardList';
 import BoardPostView from './components/BoardPostView';
 import Profile from './components/Profile';
+import ProfileLayout from './components/profile/ProfileLayout';
+import Messages from './components/message/Messages';
 import NotFound from './pages/NotFound';
 
 // 무거운 컴포넌트들은 lazy loading
@@ -137,8 +139,16 @@ function App() {
               </Suspense>
             } />
 
-            {/* 사용자 관련 라우트 */}
-            <Route path="/profile" element={<Profile />} />
+            {/* 쪽지함 독립 라우트 (유지) */}
+            <Route path="/messages" element={<Messages />} />
+
+            {/* 프로필 페이지 - Nested Routing */}
+            <Route path="/profile" element={<ProfileLayout />}>
+              {/* 기본 경로는 info로 리다이렉트 */}
+              <Route index element={<Navigate to="info" replace />} />
+              <Route path="info" element={<Profile />} />
+              <Route path="messages" element={<Messages />} />
+            </Route>
 
             {/* 관리자 페이지 - Nested Routing */}
             <Route path="/admin" element={
@@ -161,6 +171,11 @@ function App() {
               <Route path="traffic" element={
                 <Suspense fallback={<Loading />}>
                   <AdminTraffic />
+                </Suspense>
+              } />
+              <Route path="messages" element={
+                <Suspense fallback={<Loading />}>
+                  <Messages />
                 </Suspense>
               } />
               <Route path="profile" element={

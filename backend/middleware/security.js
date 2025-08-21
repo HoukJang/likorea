@@ -15,7 +15,8 @@ const createRateLimiters = () => {
       postLimiter: noopLimiter,
       commentLimiter: noopLimiter,
       adminLimiter: noopLimiter,
-      verifyLimiter: noopLimiter
+      verifyLimiter: noopLimiter,
+      messageLimiter: noopLimiter
     };
   }
 
@@ -93,13 +94,40 @@ const createRateLimiters = () => {
     legacyHeaders: false
   });
 
+  // 댓글 작성 제한
+  const commentLimiter = rateLimit({
+    windowMs: 5 * 60 * 1000, // 5분
+    max: 20, // 최대 20개 댓글 작성
+    message: {
+      error: '댓글 작성이 너무 많습니다. 5분 후에 다시 시도해주세요.',
+      retryAfter: 5 * 60
+    },
+    standardHeaders: true,
+    legacyHeaders: false
+  });
+
+  // 메시지 전송 제한
+  const messageLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10분
+    max: 20, // 최대 20개 메시지 전송
+    message: {
+      error: '메시지 전송이 너무 많습니다. 10분 후에 다시 시도해주세요.',
+      retryAfter: 10 * 60
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+    skipSuccessfulRequests: true // 성공한 요청은 카운트하지 않음
+  });
+
   return {
     generalLimiter,
     loginLimiter,
     signupLimiter,
     postLimiter,
     adminLimiter,
-    verifyLimiter
+    verifyLimiter,
+    commentLimiter,
+    messageLimiter
   };
 };
 

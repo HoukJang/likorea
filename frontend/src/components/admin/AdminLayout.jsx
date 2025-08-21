@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { getUnreadCount } from '../../api/message';
 import packageJson from '../../../package.json';
 import '../../styles/Admin.css';
 
@@ -7,6 +8,7 @@ function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [message, setMessage] = useState('');
+  const [unreadCount, setUnreadCount] = useState(0);
 
   // URL 경로에서 현재 탭 결정
   const getActiveTab = () => {
@@ -24,6 +26,24 @@ function AdminLayout() {
       navigate('/');
     }
   }, [navigate]);
+
+  // 읽지 않은 메시지 수 조회
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const response = await getUnreadCount();
+        setUnreadCount(response.data.count || 0);
+      } catch (error) {
+        console.error('읽지 않은 메시지 수 조회 실패:', error);
+      }
+    };
+
+    fetchUnreadCount();
+    // 30초마다 읽지 않은 메시지 수 업데이트
+    const interval = setInterval(fetchUnreadCount, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // 탭 변경 핸들러
   const handleTabChange = (tab) => {
@@ -67,6 +87,19 @@ function AdminLayout() {
         >
           <span className="tab-icon">📈</span>
           <span className="tab-text">트래픽</span>
+        </button>
+        <button
+          className={activeTab === 'messages' ? 'active' : ''}
+          onClick={() => handleTabChange('messages')}
+          role="tab"
+          aria-selected={activeTab === 'messages'}
+          aria-controls="messages-panel"
+        >
+          <span className="tab-icon">✉️</span>
+          <span className="tab-text">쪽지함</span>
+          {unreadCount > 0 && (
+            <span className="unread-count">{unreadCount}</span>
+          )}
         </button>
         <button
           className={activeTab === 'profile' ? 'active' : ''}

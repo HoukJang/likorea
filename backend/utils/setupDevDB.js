@@ -3,6 +3,7 @@ const User = require('../models/User');
 const BoardPost = require('../models/BoardPost');
 const Comment = require('../models/Comment');
 const Counter = require('../models/Counter');
+const Message = require('../models/Message');
 require('dotenv').config();
 
 // 개발 환경 기본 DB 설정
@@ -28,6 +29,7 @@ async function setupDevDB() {
     await BoardPost.deleteMany({});
     await Comment.deleteMany({});
     await Counter.deleteMany({});
+    await Message.deleteMany({});
     console.log('기존 데이터 정리 완료');
 
     // Counter 초기화
@@ -299,6 +301,43 @@ async function setupDevDB() {
     }
     console.log('게시글 댓글 수 업데이트 완료');
 
+    // 6. 메시지 5개 생성 (likorea에게 받은 메시지)
+    const messageContents = [
+      {
+        content: '안녕하세요 관리자님! 사이트가 정말 잘 만들어졌네요. 롱아일랜드 한인분들에게 큰 도움이 될 것 같습니다. 감사합니다!',
+        sender: randomUsers[0]
+      },
+      {
+        content: '관리자님, 게시판에 스팸 글이 올라와서 신고합니다. Exit 45 지역 부동산 카테고리에 이상한 광고글이 있어요. 확인 부탁드립니다.',
+        sender: randomUsers[1]
+      },
+      {
+        content: '혹시 사이트에 중고거래 사기 신고 기능을 추가할 수 있을까요? 최근에 사기를 당한 분들이 있어서 문의드립니다.',
+        sender: randomUsers[2]
+      },
+      {
+        content: '안녕하세요! 롱아일랜드 한인 모임을 계획하고 있는데, 공지사항에 올려도 될까요? 많은 분들이 참여하셨으면 좋겠습니다.',
+        sender: randomUsers[3]
+      },
+      {
+        content: '사이트 이용 중에 모바일에서 글쓰기 버튼이 잘 안 눌러지는 것 같아요. 아이폰 사파리에서 테스트했습니다. 확인 부탁드려요!',
+        sender: randomUsers[0]
+      }
+    ];
+
+    for (let i = 0; i < messageContents.length; i++) {
+      const messageData = messageContents[i];
+      
+      await Message.create({
+        sender: messageData.sender._id,
+        receiver: adminUser._id,
+        content: messageData.content,
+        isRead: false,
+        createdAt: new Date(Date.now() - (i * 60 * 60 * 1000)) // 1시간씩 차이나게
+      });
+    }
+    console.log('메시지 5개 생성 완료');
+
     console.log('\n🎉 개발 환경 DB 설정 완료!');
     console.log('📊 생성된 데이터:');
     console.log('👤 관리자: likorea (비밀번호: password)');
@@ -306,6 +345,7 @@ async function setupDevDB() {
     console.log('📢 공지사항: 3개');
     console.log('📝 일반 게시글: 45개');
     console.log('💬 댓글: 100개');
+    console.log('📨 메시지: 5개 (likorea가 받은 메시지)');
   } catch (error) {
     console.error('DB 설정 중 오류 발생:', error);
   } finally {

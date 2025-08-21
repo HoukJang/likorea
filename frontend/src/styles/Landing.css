@@ -60,11 +60,14 @@
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
+  align-items: center; /* 버튼들을 수직 정렬 */
 }
 
 /* Buttons */
 .btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 12px 24px;
   font-size: 1rem;
   font-weight: 500;
@@ -74,6 +77,9 @@
   cursor: pointer;
   border: none;
   text-align: center;
+  min-height: 48px;
+  line-height: 1.5;
+  box-sizing: border-box;
 }
 
 .btn-primary {
@@ -92,6 +98,7 @@
   background: transparent;
   color: white;
   border: 2px solid white;
+  padding: 10px 24px; /* border 2px를 고려하여 padding 조정 */
 }
 
 .btn-secondary:hover {
@@ -103,8 +110,9 @@
   background: #2563eb;
   color: white;
   font-size: 1.125rem;
-  padding: 16px 32px;
+  padding: 14px 32px; /* 높이를 다른 버튼과 맞춤 */
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  min-height: 48px;
 }
 
 .btn-cta:hover {
@@ -516,7 +524,8 @@
   
   .btn-cta {
     font-size: 1rem;
-    padding: 14px 28px;
+    padding: 12px 28px;
+    min-height: 48px;
   }
   
   /* SEO Content Mobile */

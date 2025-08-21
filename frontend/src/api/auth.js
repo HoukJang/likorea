@@ -32,6 +32,21 @@ export const getUser = async userId => {
 };
 
 /**
+ * 사용자 목록 조회
+ * @param {Object} options - 조회 옵션
+ * @param {string} options.search - 검색어
+ * @param {number} options.limit - 결과 제한
+ * @returns {Promise} 사용자 목록
+ */
+export const getUsers = async (options = {}) => {
+  const params = new URLSearchParams();
+  if (options.search) params.append('search', options.search);
+  if (options.limit) params.append('limit', options.limit.toString());
+  
+  return apiClient.get(`/api/users?${params.toString()}`);
+};
+
+/**
  * 사용자 정보 수정
  * @param {string} userId - 사용자 ID
  * @param {Object} userData - 수정할 사용자 정보

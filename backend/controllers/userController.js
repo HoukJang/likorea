@@ -137,13 +137,22 @@ exports.login = asyncHandler(async (req, res) => {
 
 // 사용자 목록 조회 (pagination 및 필요한 필드 반환)
 exports.getUsers = async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, search } = req.query;
   try {
-    const users = await User.find({}, 'id email authority createdAt updatedAt')
+    // 검색 조건 설정
+    const query = {};
+    if (search) {
+      query.$or = [
+        { id: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const users = await User.find(query, 'id email authority createdAt updatedAt')
       .skip((page - 1) * Number(limit))
       .limit(Number(limit))
       .sort({ createdAt: -1 });
-    const total = await User.countDocuments({});
+    const total = await User.countDocuments(query);
     res.json({ total, page: Number(page), limit: Number(limit), data: users });
   } catch (error) {
     res.status(400).json({ message: '사용자 목록 조회 실패', error: error.message });

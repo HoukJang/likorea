@@ -142,10 +142,6 @@ function Profile() {
 
   return (
     <div className="profile-container">
-      <div className="profile-header">
-        <h2 className="profile-title">프로필</h2>
-      </div>
-
       <div className="profile-content">
         {!isEditing ? (
           <div className="profile-info">

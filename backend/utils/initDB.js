@@ -4,6 +4,7 @@ const BoardPost = require('../models/BoardPost');
 const Comment = require('../models/Comment');
 const Counter = require('../models/Counter');
 const Tag = require('../models/Tag');
+const Message = require('../models/Message');
 const { initializeTags } = require('./initTags');
 const { safeDbOperation, getSafeConnectionOptions } = require('./db-protection');
 require('dotenv').config();
@@ -36,6 +37,7 @@ async function initDB() {
       await Comment.deleteMany({});
       await Counter.deleteMany({});
       await Tag.deleteMany({});
+      await Message.deleteMany({});
       console.log('✅ 기존 데이터 정리 완료');
     });
 
