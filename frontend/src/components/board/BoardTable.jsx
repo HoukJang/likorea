@@ -4,7 +4,7 @@ import { getTagDisplayName, getTagDisplayText } from '../../utils/tagUtils';
 import { formatDate, getAuthorId } from '../../utils/dataUtils';
 import UserMenu from '../common/UserMenu';
 
-const BoardTable = React.memo(({ posts, tagList, pendingOnly = false }) => {
+const BoardTable = React.memo(({ posts, tagList, pendingOnly = false, userScrapIds = new Set() }) => {
   const navigate = useNavigate();
   const [openMenuRowId, setOpenMenuRowId] = React.useState(null);
 
@@ -74,6 +74,9 @@ const BoardTable = React.memo(({ posts, tagList, pendingOnly = false }) => {
                     }}
                     aria-label={`게시글 제목: ${post.title}`}
                   >
+                    {userScrapIds.has(post._id || post.id) && (
+                      <span style={{ marginRight: '6px', color: '#f59e0b' }} title="스크랩한 글">📌</span>
+                    )}
                     {post.title}
                     {pendingOnly && <span style={{ marginLeft: '8px', padding: '2px 6px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.75em' }}>승인 대기</span>}
                     <span className="comment-count">[{post.commentCount || 0}]</span>

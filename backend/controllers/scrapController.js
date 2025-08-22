@@ -5,7 +5,12 @@ const BoardPost = require('../models/BoardPost');
 exports.toggleScrap = async (req, res) => {
   try {
     const { postId } = req.params;
-    const userId = req.userId;
+    const userId = req.user?._id;
+
+    // 사용자 인증 확인
+    if (!userId) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
 
     // 게시글 존재 여부 확인
     const post = await BoardPost.findById(postId);
@@ -46,7 +51,12 @@ exports.toggleScrap = async (req, res) => {
 // 사용자의 스크랩 목록 조회
 exports.getUserScraps = async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.user?._id;
+
+    // 사용자 인증 확인
+    if (!userId) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const skip = (page - 1) * limit;
@@ -87,7 +97,12 @@ exports.getUserScraps = async (req, res) => {
 exports.checkScrapStatus = async (req, res) => {
   try {
     const { postId } = req.params;
-    const userId = req.userId;
+    const userId = req.user?._id;
+
+    // 사용자 인증 확인
+    if (!userId) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
 
     const scrap = await Scrap.findOne({ user: userId, post: postId });
     
@@ -121,8 +136,13 @@ exports.getScrapCount = async (req, res) => {
 // 전체 스크랩 목록 조회 (관리자용)
 exports.getAllScrapsAdmin = async (req, res) => {
   try {
+    // 디버깅을 위한 로그
+    console.log('getAllScrapsAdmin - req.user:', req.user);
+    console.log('getAllScrapsAdmin - req.user._id:', req.user?._id);
+    console.log('getAllScrapsAdmin - req.user.authority:', req.user?.authority);
+    
     // 관리자 권한 확인
-    if (req.userAuthority !== 5) {
+    if (!req.user || req.user.authority !== 5) {
       return res.status(403).json({ message: '관리자 권한이 필요합니다.' });
     }
 

@@ -5,7 +5,9 @@ import { Helmet } from 'react-helmet-async';
 import { getBoards } from '../api/boards';
 import { getAllTags } from '../api/tags';
 import { getPendingPosts } from '../api/approval';
+import { getUserScraps } from '../api/scrap';
 import { processPostsList } from '../utils/dataUtils';
+import { useAuth } from '../hooks/useAuth';
 import TagFilter from './TagFilter';
 import BoardTable from './board/BoardTable';
 import BoardCards from './board/BoardCards';
@@ -16,6 +18,7 @@ import '../styles/BoardList.css';
 const BoardList = ({ pendingOnly = false }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+  const { user } = useAuth();
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,6 +31,7 @@ const BoardList = ({ pendingOnly = false }) => {
     subcategory: searchParams.get('subcategory') || ''
   });
   const [tagList, setTagList] = useState(null);
+  const [userScrapIds, setUserScrapIds] = useState(new Set());
 
   // URL 파라미터 변경 감지
   useEffect(() => {
@@ -52,6 +56,26 @@ const BoardList = ({ pendingOnly = false }) => {
     };
     fetchTags();
   }, []);
+
+  // 사용자의 스크랩 목록 가져오기
+  useEffect(() => {
+    const fetchUserScraps = async () => {
+      if (!user) return;
+      
+      try {
+        // 모든 스크랩을 가져오기 위해 limit을 크게 설정
+        const response = await getUserScraps({ page: 1, limit: 1000 });
+        if (response.scraps) {
+          const scrapIds = new Set(response.scraps.map(scrap => scrap.post?._id).filter(Boolean));
+          setUserScrapIds(scrapIds);
+        }
+      } catch (error) {
+        console.error('스크랩 목록 조회 실패:', error);
+      }
+    };
+    
+    fetchUserScraps();
+  }, [user]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -154,10 +178,10 @@ const BoardList = ({ pendingOnly = false }) => {
       ) : (
         <>
           {/* 데스크톱 테이블 뷰 */}
-          <BoardTable posts={posts} tagList={tagList} pendingOnly={pendingOnly} />
+          <BoardTable posts={posts} tagList={tagList} pendingOnly={pendingOnly} userScrapIds={userScrapIds} />
 
           {/* 모바일 카드 뷰 */}
-          <BoardCards posts={posts} tagList={tagList} pendingOnly={pendingOnly} />
+          <BoardCards posts={posts} tagList={tagList} pendingOnly={pendingOnly} userScrapIds={userScrapIds} />
         </>
       )}
 

@@ -32,7 +32,7 @@ function AdminLayout() {
     const fetchUnreadCount = async () => {
       try {
         const response = await getUnreadCount();
-        setUnreadCount(response.data.count || 0);
+        setUnreadCount(response.count || 0);
       } catch (error) {
         console.error('읽지 않은 메시지 수 조회 실패:', error);
       }

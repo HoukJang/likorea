@@ -4,7 +4,7 @@ import { getTagDisplayName, getTagDisplayText } from '../../utils/tagUtils';
 import { formatDate, getAuthorId } from '../../utils/dataUtils';
 import UserMenu from '../common/UserMenu';
 
-const BoardCards = React.memo(({ posts, tagList, pendingOnly = false }) => {
+const BoardCards = React.memo(({ posts, tagList, pendingOnly = false, userScrapIds = new Set() }) => {
   const navigate = useNavigate();
   const [openMenuPostId, setOpenMenuPostId] = useState(null);
 
@@ -51,6 +51,9 @@ const BoardCards = React.memo(({ posts, tagList, pendingOnly = false }) => {
               <span className="mobile-card-views">조회 {post.viewCount ?? 0}</span>
             </div>
             <div className="mobile-card-title">
+              {userScrapIds.has(post._id || post.id) && (
+                <span style={{ marginRight: '6px', color: '#f59e0b' }} title="스크랩한 글">📌</span>
+              )}
               {post.title}
               {pendingOnly && <span style={{ marginLeft: '8px', padding: '2px 6px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.75em' }}>승인 대기</span>}
               <span className="mobile-comment-count">[{post.commentCount || 0}]</span>

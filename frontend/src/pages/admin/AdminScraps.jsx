@@ -29,11 +29,11 @@ function AdminScraps() {
         sortOrder 
       });
       
-      if (response.data.success) {
-        setScraps(response.data.scraps);
-        setCurrentPage(response.data.currentPage);
-        setTotalPages(response.data.totalPages);
-        setTotalCount(response.data.totalCount);
+      if (response.success) {
+        setScraps(response.scraps);
+        setCurrentPage(response.currentPage);
+        setTotalPages(response.totalPages);
+        setTotalCount(response.totalCount);
       }
     } catch (err) {
       console.error('스크랩 목록 조회 실패:', err);

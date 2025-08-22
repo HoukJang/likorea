@@ -99,7 +99,7 @@ function BoardPostView() {
       if (user) {
         try {
           const scrapResponse = await checkScrapStatus(postId);
-          setIsScraped(scrapResponse.data.isScraped);
+          setIsScraped(scrapResponse.isScraped);
         } catch (error) {
           console.error('스크랩 상태 확인 실패:', error);
         }
@@ -158,9 +158,9 @@ function BoardPostView() {
       setScrapLoading(true);
       const response = await toggleScrap(postId);
       
-      if (response.data.success) {
-        setIsScraped(response.data.isScraped);
-        const message = response.data.isScraped ? '스크랩되었습니다.' : '스크랩이 해제되었습니다.';
+      if (response.success) {
+        setIsScraped(response.isScraped);
+        const message = response.isScraped ? '스크랩되었습니다.' : '스크랩이 해제되었습니다.';
         // 간단한 피드백을 위해 alert 사용 (추후 토스트 메시지로 개선 가능)
         alert(message);
       }
