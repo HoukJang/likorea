@@ -1,13 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import MessageList from './MessageList';
 import MessageCompose from './MessageCompose';
 import MessageDetail from './MessageDetail';
 import './Messages.css';
 
 const Messages = () => {
+  const location = useLocation();
   const [view, setView] = useState('inbox'); // inbox, sent, compose, detail
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [replyTo, setReplyTo] = useState(null);
+
+  // URL 경로에 따라 view 설정
+  useEffect(() => {
+    if (location.pathname.endsWith('/compose')) {
+      setView('compose');
+    }
+  }, [location.pathname]);
 
   const handleMessageClick = (message) => {
     setSelectedMessage(message);

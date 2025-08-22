@@ -25,10 +25,10 @@ function MessageList({ type = 'inbox', onMessageClick }) {
   const fetchMessages = async () => {
     try {
       setLoading(true);
-      const response = type === 'inbox' 
-        ? await getInbox({ page }) 
+      const response = type === 'inbox'
+        ? await getInbox({ page })
         : await getSentMessages({ page });
-      
+
       setMessages(response.data.messages || []);
       setTotalPages(response.data.pagination?.totalPages || 1);
     } catch (error) {
@@ -86,8 +86,8 @@ function MessageList({ type = 'inbox', onMessageClick }) {
   };
 
   const handleSelectMessage = (messageId) => {
-    setSelectedMessages(prev => 
-      prev.includes(messageId) 
+    setSelectedMessages(prev =>
+      prev.includes(messageId)
         ? prev.filter(id => id !== messageId)
         : [...prev, messageId]
     );
@@ -111,7 +111,7 @@ function MessageList({ type = 'inbox', onMessageClick }) {
     const date = new Date(dateString);
     const now = new Date();
     const diff = now - date;
-    
+
     if (diff < 60 * 60 * 1000) {
       return `${Math.floor(diff / (60 * 1000))}분 전`;
     } else if (diff < 24 * 60 * 60 * 1000) {
@@ -167,15 +167,16 @@ function MessageList({ type = 'inbox', onMessageClick }) {
                   {type === 'inbox' ? '보낸 사람' : '받는 사람'}
                 </th>
                 <th>내용</th>
+                <th style={{ width: '80px' }}>상태</th>
                 <th style={{ width: '100px' }}>날짜</th>
                 <th style={{ width: '80px' }}>작업</th>
               </tr>
             </thead>
             <tbody>
               {messages.map(message => (
-                <tr 
-                  key={message._id} 
-                  className={`${!message.isRead && type === 'inbox' ? 'unread' : ''}`}
+                <tr
+                  key={message._id}
+                  className={`${!message.isRead ? 'unread' : ''}`}
                 >
                   <td>
                     <input
@@ -187,24 +188,27 @@ function MessageList({ type = 'inbox', onMessageClick }) {
                   <td>
                     {type === 'inbox' ? message.sender?.id : message.receiver?.id}
                   </td>
-                  <td 
+                  <td
                     className="message-content-preview"
                     onClick={() => handleViewMessage(message)}
                   >
                     {message.content ? message.content.substring(0, 50) + (message.content.length > 50 ? '...' : '') : '내용 없음'}
-                    {!message.isRead && type === 'inbox' && (
-                      <span className="new-badge">New</span>
+                  </td>
+                  <td>
+                    {message.isRead ? (
+                      <span className="read-status">읽음</span>
+                    ) : (
+                      <span className="unread-status">{type === 'inbox' ? '안 읽음' : '안 읽음'}</span>
                     )}
                   </td>
                   <td>{formatDate(message.createdAt)}</td>
                   <td>
-                    <Button
+                    <button
                       onClick={() => handleDelete(message._id)}
-                      variant="danger"
-                      size="small"
+                      className="delete-link"
                     >
                       삭제
-                    </Button>
+                    </button>
                   </td>
                 </tr>
               ))}

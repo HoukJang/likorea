@@ -5,6 +5,29 @@
   color: #666;
 }
 
+/* 삭제 링크 스타일 */
+.delete-link {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.delete-link:hover {
+  color: #dc2626;
+  text-decoration: underline;
+}
+
+.delete-link:focus {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .message-error {
   text-align: center;
   padding: 40px;

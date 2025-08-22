@@ -29,7 +29,7 @@ export const getInbox = async (options = {}) => {
     page: page.toString(),
     limit: limit.toString()
   });
-  
+
   return apiClient.get(`/api/messages/inbox?${params.toString()}`);
 };
 
@@ -46,7 +46,7 @@ export const getSentMessages = async (options = {}) => {
     page: page.toString(),
     limit: limit.toString()
   });
-  
+
   return apiClient.get(`/api/messages/sent?${params.toString()}`);
 };
 
@@ -99,6 +99,6 @@ export const getConversation = async (otherUserId, options = {}) => {
     page: page.toString(),
     limit: limit.toString()
   });
-  
+
   return apiClient.get(`/api/messages/conversation/${otherUserId}?${params.toString()}`);
 };

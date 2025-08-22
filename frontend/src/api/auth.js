@@ -42,7 +42,7 @@ export const getUsers = async (options = {}) => {
   const params = new URLSearchParams();
   if (options.search) params.append('search', options.search);
   if (options.limit) params.append('limit', options.limit.toString());
-  
+
   return apiClient.get(`/api/users?${params.toString()}`);
 };
 

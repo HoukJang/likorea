@@ -129,6 +129,23 @@
   }
 }
 
+/* 읽음 상태 스타일 */
+.read-status {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.unread-status {
+  color: #ef4444;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.unread td {
+  font-weight: 600;
+}
+
+
 @media (max-width: 480px) {
   .messages-container {
     padding: 10px;

@@ -33,9 +33,9 @@ function MessageDetail({ messageId, onReply, onBack }) {
       setLoading(true);
       const response = await getMessage(messageId);
       setMessage(response.data);
-      
+
       // 받은 메시지이고 읽지 않은 경우 자동으로 읽음 처리
-      if (response.data && !response.data.isRead && 
+      if (response.data && !response.data.isRead &&
           currentUser && response.data.receiver._id === currentUser._id) {
         await markAsRead(messageId);
       }
@@ -115,15 +115,17 @@ function MessageDetail({ messageId, onReply, onBack }) {
       <div className="message-detail-header">
         <h3>쪽지 상세보기</h3>
         <div className="message-actions">
-          <Button onClick={handleReply} variant="primary" size="small">
-            답장
-          </Button>
-          <Button onClick={handleDelete} variant="danger" size="small">
+          {isReceiver && (
+            <Button onClick={handleReply} variant="primary" size="small">
+              답장
+            </Button>
+          )}
+          <button onClick={handleDelete} className="delete-link">
             삭제
-          </Button>
-          <Button 
-            onClick={onBack || (() => navigate('/messages'))} 
-            variant="secondary" 
+          </button>
+          <Button
+            onClick={onBack || (() => navigate('/messages'))}
+            variant="secondary"
             size="small"
           >
             목록

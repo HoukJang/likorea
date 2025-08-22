@@ -141,6 +141,7 @@ function App() {
 
             {/* 쪽지함 독립 라우트 (유지) */}
             <Route path="/messages" element={<Messages />} />
+            <Route path="/messages/compose" element={<Messages />} />
 
             {/* 프로필 페이지 - Nested Routing */}
             <Route path="/profile" element={<ProfileLayout />}>
@@ -148,6 +149,7 @@ function App() {
               <Route index element={<Navigate to="info" replace />} />
               <Route path="info" element={<Profile />} />
               <Route path="messages" element={<Messages />} />
+              <Route path="messages/compose" element={<Messages />} />
             </Route>
 
             {/* 관리자 페이지 - Nested Routing */}

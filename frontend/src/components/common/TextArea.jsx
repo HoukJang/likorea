@@ -1,13 +1,13 @@
 import React from 'react';
 import './Input.css';
 
-function TextArea({ 
-  label, 
-  error, 
-  className = '', 
+function TextArea({
+  label,
+  error,
+  className = '',
   disabled = false,
   required = false,
-  ...props 
+  ...props
 }) {
   return (
     <div className={`input-group ${className}`}>

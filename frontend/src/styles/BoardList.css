@@ -212,6 +212,7 @@
   border-left: 4px solid var(--accent-blue);
 }
 
+
 .board-table tbody tr:focus-within {
   background-color: var(--gray-light);
   border-left: 4px solid var(--accent-blue);
@@ -642,6 +643,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+
 /* 글종류별 호버 효과 */
 .mobile-card[data-post-type='생활정보']:hover {
   border-color: #2563eb;
@@ -821,13 +823,58 @@
 .mobile-card-footer {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   font-size: 0.9rem;
   color: var(--secondary-text);
   width: 100%;
   padding: 8px 0;
   border-top: 1px solid var(--border-color);
   margin-top: 8px;
+}
+
+.mobile-card-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+/* 더보기 버튼 스타일 */
+.more-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--secondary-text);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.more-button:hover {
+  background: var(--gray-light);
+  color: var(--primary-text);
+}
+
+.more-button:focus {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 1px;
+}
+
+/* 모바일 카드 내 UserMenu 스타일 조정 */
+.mobile-card .user-menu-container {
+  display: inline-block;
+}
+
+.mobile-card .user-menu-trigger {
+  padding: 2px 4px;
+  font-size: 0.9rem;
+  background: none;
+  border: none;
 }
 
 .mobile-card-author {

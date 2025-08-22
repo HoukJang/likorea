@@ -2,9 +2,11 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getTagDisplayName, getTagDisplayText } from '../../utils/tagUtils';
 import { formatDate, getAuthorId } from '../../utils/dataUtils';
+import UserMenu from '../common/UserMenu';
 
 const BoardTable = React.memo(({ posts, tagList, pendingOnly = false }) => {
   const navigate = useNavigate();
+  const [openMenuRowId, setOpenMenuRowId] = React.useState(null);
 
   // 키보드 이벤트 핸들러
   const handleKeyDown = (e, action) => {
@@ -46,12 +48,14 @@ const BoardTable = React.memo(({ posts, tagList, pendingOnly = false }) => {
                 ? getTagDisplayName(post.tags.type, tagList, 'type')
                 : post.type || '일반';
 
+            const postId = post._id || post.id;
             return (
               <tr
-                key={post._id || post.id || idx}
+                key={postId || idx}
                 role="row"
                 tabIndex={0}
                 data-post-type={postType}
+                className={openMenuRowId === postId ? 'menu-open' : ''}
                 aria-label={`게시글 ${post.postNumber}: ${post.title}`}
                 onKeyDown={e => handleKeyDown(e, () => navigate(pendingOnly ? `/boards/${post.id || post._id}/edit?pending=true` : `/boards/${post.id}`))}
               >
@@ -86,9 +90,29 @@ const BoardTable = React.memo(({ posts, tagList, pendingOnly = false }) => {
                         ? `Exit ${post.region}`
                         : '전체'}
                 </td>
-                <td className="post-author" style={{ textAlign: 'center' }} role="cell">
+                <td 
+                  className="post-author" 
+                  style={{ textAlign: 'center' }} 
+                  role="cell"
+                  onMouseEnter={(e) => {
+                    if (e.target.closest('.user-menu-container')) {
+                      e.stopPropagation();
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (e.target.closest('.user-menu-container')) {
+                      e.stopPropagation();
+                    }
+                  }}
+                >
                   {pendingOnly && post.botId?.name ? (
                     <span style={{ fontStyle: 'italic' }}>🤖 {post.botId.name}</span>
+                  ) : post.author && typeof post.author === 'object' ? (
+                    <UserMenu
+                      username={getAuthorId(post.author)}
+                      userId={post.author._id || post.author.id}
+                      onOpenChange={(isOpen) => setOpenMenuRowId(isOpen ? postId : null)}
+                    />
                   ) : (
                     getAuthorId(post.author)
                   )}

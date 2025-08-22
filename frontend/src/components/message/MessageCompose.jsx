@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { sendMessage } from '../../api/message';
 import { getUsers } from '../../api/auth';
 import Button from '../common/Button';
@@ -10,15 +10,20 @@ import '../../styles/Message.css';
 function MessageCompose({ replyTo = null, onComplete, onCancel }) {
   const navigate = useNavigate();
   const { userId } = useParams();
+  const location = useLocation();
+
+  // location.state에서 recipient 정보 가져오기
+  const recipient = location.state?.recipient;
+
   const [formData, setFormData] = useState({
-    receiverId: replyTo ? replyTo.sender?.id : (userId || ''),
+    receiverId: replyTo ? replyTo.sender?.id : (recipient?.id || userId || ''),
     content: ''
   });
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(recipient?.username || '');
   const [showUserList, setShowUserList] = useState(false);
 
   useEffect(() => {
@@ -44,17 +49,17 @@ function MessageCompose({ replyTo = null, onComplete, onCancel }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.receiverId) {
       setError('받는 사람을 입력해주세요.');
       return;
     }
-    
+
     if (!formData.content.trim()) {
       setError('내용을 입력해주세요.');
       return;
     }
-    
+
     if (formData.content.length > 1000) {
       setError('내용은 1000자를 초과할 수 없습니다.');
       return;
@@ -129,12 +134,12 @@ function MessageCompose({ replyTo = null, onComplete, onCancel }) {
             />
             {searching && <span className="searching-indicator">검색 중...</span>}
           </div>
-          
+
           {showUserList && users.length > 0 && (
             <ul className="user-search-results">
               {users.map(user => (
-                <li 
-                  key={user.id} 
+                <li
+                  key={user.id}
                   onClick={() => handleSelectUser(user)}
                   className="user-search-item"
                 >
