@@ -79,6 +79,16 @@ function AdminLayout() {
           <span className="tab-text">통계</span>
         </button>
         <button
+          className={activeTab === 'scraps' ? 'active' : ''}
+          onClick={() => handleTabChange('scraps')}
+          role="tab"
+          aria-selected={activeTab === 'scraps'}
+          aria-controls="scraps-panel"
+        >
+          <span className="tab-icon">📌</span>
+          <span className="tab-text">스크랩</span>
+        </button>
+        <button
           className={activeTab === 'traffic' ? 'active' : ''}
           onClick={() => handleTabChange('traffic')}
           role="tab"

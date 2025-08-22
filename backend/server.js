@@ -33,6 +33,7 @@ const trafficRoutes = require('./routes/trafficRoutes');
 const botRoutes = require('./routes/botRoutes');
 const approvalRoutes = require('./routes/approvalRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const scrapRoutes = require('./routes/scrapRoutes');
 
 // Swagger 설정
 const swaggerUi = require('swagger-ui-express');
@@ -163,6 +164,7 @@ app.use('/api/traffic', adminLimiter, trafficRoutes);  // 트래픽도 관리자
 app.use('/api/bots', adminLimiter, botRoutes);  // 봇 관리도 관리자 전용
 app.use('/api/approval', adminLimiter, approvalRoutes);  // 승인도 관리자 전용
 app.use('/api/messages', generalLimiter, messageRoutes);  // 메시지(쪽지) 기능
+app.use('/api/scraps', generalLimiter, scrapRoutes);  // 스크랩 기능
 
 // 404 에러 처리 (라우트 설정 후에 위치)
 app.use(notFound);

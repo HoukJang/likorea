@@ -58,6 +58,16 @@ function ProfileLayout() {
           <span className="tab-text">프로필</span>
         </button>
         <button
+          className={activeTab === 'scraps' ? 'active' : ''}
+          onClick={() => handleTabChange('scraps')}
+          role="tab"
+          aria-selected={activeTab === 'scraps'}
+          aria-controls="scraps-panel"
+        >
+          <span className="tab-icon">📌</span>
+          <span className="tab-text">스크랩</span>
+        </button>
+        <button
           className={activeTab === 'messages' ? 'active' : ''}
           onClick={() => handleTabChange('messages')}
           role="tab"

@@ -11,6 +11,7 @@ import {
 } from '../api/boards';
 import { getAllTags } from '../api/tags';
 import { getPendingPost, approvePost, rejectPost } from '../api/approval';
+import { toggleScrap, checkScrapStatus } from '../api/scrap';
 import { processPostData, processCommentsList } from '../utils/dataUtils';
 import { createTagDisplayData } from '../utils/tagUtils';
 import { linkifyContentSafe } from '../utils/linkifyContentSafe';
@@ -35,6 +36,8 @@ function BoardPostView() {
   const [tagList, setTagList] = useState(null);
   const [isPending, setIsPending] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isScraped, setIsScraped] = useState(false);
+  const [scrapLoading, setScrapLoading] = useState(false);
 
   const { canModify: checkCanModify } = usePermission();
   const { user } = useAuth();
@@ -91,6 +94,16 @@ function BoardPostView() {
       // 관리자 권한 및 승인 대기 상태 확인
       setIsAdmin(user?.authority >= 5);
       setIsPending(processedPost.isApproved === false);
+
+      // 로그인한 사용자의 스크랩 여부 확인
+      if (user) {
+        try {
+          const scrapResponse = await checkScrapStatus(postId);
+          setIsScraped(scrapResponse.data.isScraped);
+        } catch (error) {
+          console.error('스크랩 상태 확인 실패:', error);
+        }
+      }
     } catch (error) {
       const processedError = handleError(error, '게시글 조회');
       setError(processedError.message);
@@ -131,6 +144,31 @@ function BoardPostView() {
       } catch (error) {
         alert('삭제 권한이 없거나 오류가 발생했습니다.');
       }
+    }
+  };
+
+  // 스크랩 토글 핸들러
+  const handleScrapToggle = async () => {
+    if (!user) {
+      alert('로그인 후 스크랩할 수 있습니다.');
+      return;
+    }
+
+    try {
+      setScrapLoading(true);
+      const response = await toggleScrap(postId);
+      
+      if (response.data.success) {
+        setIsScraped(response.data.isScraped);
+        const message = response.data.isScraped ? '스크랩되었습니다.' : '스크랩이 해제되었습니다.';
+        // 간단한 피드백을 위해 alert 사용 (추후 토스트 메시지로 개선 가능)
+        alert(message);
+      }
+    } catch (error) {
+      console.error('스크랩 토글 실패:', error);
+      alert('스크랩 처리 중 오류가 발생했습니다.');
+    } finally {
+      setScrapLoading(false);
     }
   };
 
@@ -420,6 +458,15 @@ function BoardPostView() {
           {isPending && <span style={{ marginLeft: '12px', padding: '4px 8px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.8em' }}>승인 대기</span>}
         </h1>
         <div className="post-actions">
+          {user && (
+            <button
+              onClick={handleScrapToggle}
+              className={`action-button scrap-button ${isScraped ? 'scraped' : ''}`}
+              disabled={scrapLoading}
+            >
+              {scrapLoading ? '처리중...' : (isScraped ? '📌 스크랩 해제' : '📌 스크랩')}
+            </button>
+          )}
           {canModify && (
             <>
               <button

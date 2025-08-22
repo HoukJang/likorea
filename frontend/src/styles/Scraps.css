@@ -1,0 +1,217 @@
+/* 스크랩 컨테이너 */
+.scraps-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 스크랩 헤더 */
+.scraps-header {
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 20px;
+}
+
+.scraps-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.scraps-count {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* 빈 스크랩 */
+.empty-scraps {
+  text-align: center;
+  padding: 60px 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.empty-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.empty-scraps p {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.empty-subtitle {
+  font-size: 14px !important;
+  color: #9ca3af !important;
+}
+
+/* 스크랩 리스트 */
+.scraps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+/* 스크랩 아이템 */
+.scrap-item {
+  display: block;
+  padding: 20px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.scrap-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #3b82f6;
+}
+
+/* 스크랩 헤더 정보 */
+.scrap-header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.scrap-type {
+  font-size: 12px;
+  font-weight: 600;
+  color: #3b82f6;
+  background: #eff6ff;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.scrap-date {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* 스크랩 제목 */
+.scrap-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 12px;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scrap-title .comment-count {
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 스크랩 메타 정보 */
+.scrap-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.scrap-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 페이지네이션 (BoardList.css와 통일) */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 30px;
+}
+
+.pagination-btn {
+  padding: 10px 14px;
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  color: #111827;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 40px;
+  text-align: center;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+  transform: translateY(-1px);
+}
+
+.pagination-btn.active {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+  font-weight: 700;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 에러 메시지 */
+.error-message {
+  background: #fef2f2;
+  color: #ef4444;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+  text-align: center;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .scraps-container {
+    padding: 16px;
+  }
+
+  .scrap-item {
+    padding: 16px;
+  }
+
+  .scrap-title {
+    font-size: 16px;
+  }
+
+  .scrap-meta {
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .scrap-header-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .pagination-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+    min-width: 35px;
+  }
+}

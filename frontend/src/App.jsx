@@ -20,6 +20,7 @@ import BoardList from './components/BoardList';
 import BoardPostView from './components/BoardPostView';
 import Profile from './components/Profile';
 import ProfileLayout from './components/profile/ProfileLayout';
+import Scraps from './components/profile/Scraps';
 import Messages from './components/message/Messages';
 import NotFound from './pages/NotFound';
 
@@ -41,6 +42,7 @@ const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminStats = lazy(() => import('./pages/admin/AdminStats'));
 const AdminTraffic = lazy(() => import('./pages/admin/AdminTraffic'));
 const AdminProfile = lazy(() => import('./pages/admin/AdminProfile'));
+const AdminScraps = lazy(() => import('./pages/admin/AdminScraps'));
 
 function App() {
   // 전역 인증 상태 관리 - 앱 시작 시 토큰 검증 수행
@@ -148,6 +150,7 @@ function App() {
               {/* 기본 경로는 info로 리다이렉트 */}
               <Route index element={<Navigate to="info" replace />} />
               <Route path="info" element={<Profile />} />
+              <Route path="scraps" element={<Scraps />} />
               <Route path="messages" element={<Messages />} />
               <Route path="messages/compose" element={<Messages />} />
             </Route>
@@ -168,6 +171,11 @@ function App() {
               <Route path="stats" element={
                 <Suspense fallback={<Loading />}>
                   <AdminStats />
+                </Suspense>
+              } />
+              <Route path="scraps" element={
+                <Suspense fallback={<Loading />}>
+                  <AdminScraps />
                 </Suspense>
               } />
               <Route path="traffic" element={
