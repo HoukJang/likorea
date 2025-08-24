@@ -1,0 +1,276 @@
+/* Floating Action Button Styles - Ultra Minimal Design */
+
+/* 미니 로고 - 좌측 상단 */
+.mini-logo {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.mini-logo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.mini-logo:active {
+  transform: scale(0.98);
+}
+
+.logo-li {
+  color: #CD2E3A;
+}
+
+.logo-korea {
+  color: #0047A0;
+}
+
+/* FAB 컨테이너 */
+.fab-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+/* FAB 메뉴 */
+.fab-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fab-container.open .fab-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* FAB 메뉴 아이템 */
+.fab-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 24px;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  transform: scale(0.8);
+  opacity: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.fab-container.open .fab-menu-item {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.fab-container.open .fab-menu-item:nth-child(1) {
+  transition-delay: 0.05s;
+}
+
+.fab-container.open .fab-menu-item:nth-child(2) {
+  transition-delay: 0.1s;
+}
+
+.fab-menu-item:hover {
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateX(-4px);
+}
+
+.fab-menu-item:active {
+  transform: translateX(-2px) scale(0.98);
+}
+
+.fab-menu-item.accent {
+  background: #0047A0;
+  color: white;
+}
+
+.fab-menu-item.accent:hover {
+  background: #003a87;
+}
+
+/* FAB 아이콘 */
+.fab-icon {
+  font-size: 18px;
+  width: 20px;
+  text-align: center;
+}
+
+.fab-label {
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+/* 메인 FAB 버튼 */
+.fab-main {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #0047A0;
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 71, 160, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.fab-main:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 71, 160, 0.4);
+}
+
+.fab-main:active {
+  transform: scale(0.95);
+}
+
+.fab-container.open .fab-main {
+  background: #CD2E3A;
+  transform: rotate(90deg);
+}
+
+.fab-container.open .fab-main:hover {
+  transform: rotate(90deg) scale(1.1);
+}
+
+.fab-main-icon {
+  transition: all 0.3s ease;
+  line-height: 1;
+}
+
+/* 포커스 스타일 */
+.mini-logo:focus-visible,
+.fab-menu-item:focus-visible,
+.fab-main:focus-visible {
+  outline: 2px solid #0047A0;
+  outline-offset: 3px;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .mini-logo {
+    top: 16px;
+    left: 16px;
+    font-size: 16px;
+    padding: 6px 10px;
+  }
+
+  .fab-container {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .fab-main {
+    width: 52px;
+    height: 52px;
+    font-size: 22px;
+  }
+
+  .fab-menu-item {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .fab-icon {
+    font-size: 16px;
+  }
+}
+
+/* 다크모드 지원 */
+@media (prefers-color-scheme: dark) {
+  .mini-logo {
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+  }
+
+  .mini-logo:hover {
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+  }
+
+  .fab-menu-item {
+    background: rgba(0, 0, 0, 0.9);
+    color: #e5e7eb;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+  }
+
+  .fab-menu-item:hover {
+    background: rgba(10, 10, 10, 0.95);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+  }
+
+  .fab-menu-item.accent {
+    background: #0066cc;
+  }
+
+  .fab-menu-item.accent:hover {
+    background: #0052a3;
+  }
+
+  .fab-main {
+    background: #0066cc;
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4);
+  }
+
+  .fab-container.open .fab-main {
+    background: #dc2626;
+  }
+
+  .mini-logo:focus-visible,
+  .fab-menu-item:focus-visible,
+  .fab-main:focus-visible {
+    outline-color: #60a5fa;
+  }
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.mini-logo,
+.fab-container {
+  animation: fadeIn 0.3s ease-out;
+}

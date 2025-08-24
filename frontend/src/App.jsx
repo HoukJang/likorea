@@ -12,7 +12,8 @@ import './styles/theme-minimal.css';
 
 // 핵심 컴포넌트는 직접 import
 import Banner from './components/Banner';
-import AlternativeNavigation from './components/AlternativeNavigation';
+import FloatingActionButton from './components/FloatingActionButton';
+import UserMenu from './components/UserMenu';
 
 // 자주 사용되는 페이지는 직접 import
 import Landing from './pages/Landing';
@@ -75,7 +76,8 @@ function App() {
         <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <div className="App">
             <Banner />
-            <AlternativeNavigation />
+            <FloatingActionButton />
+            <UserMenu />
             <Routes>
             {/* 루트 경로를 랜딩 페이지로 설정 */}
             <Route path="/" element={<Landing />} />

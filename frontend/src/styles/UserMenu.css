@@ -1,0 +1,333 @@
+/* User Menu - Floating Style */
+
+/* 로그인/회원가입 플로팅 버튼 */
+.auth-float-buttons {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  gap: 12px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.auth-float-btn {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.auth-float-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.auth-float-btn.login {
+  color: #374151;
+}
+
+.auth-float-btn.login:hover {
+  background: #ffffff;
+  color: #111827;
+}
+
+.auth-float-btn.signup {
+  background: #0047A0;
+  color: white;
+}
+
+.auth-float-btn.signup:hover {
+  background: #003a87;
+}
+
+/* 사용자 메뉴 플로팅 */
+.user-menu-float {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.user-menu-trigger-float {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-menu-trigger-float:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.user-menu-trigger-float:active {
+  transform: scale(0.98);
+}
+
+.user-avatar-float {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #0047A0;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.notification-dot-float {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background: #CD2E3A;
+  border: 2px solid white;
+  border-radius: 50%;
+}
+
+/* 메뉴 백드롭 */
+.menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* 드롭다운 메뉴 */
+.user-dropdown-float {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+  animation: slideDown 0.2s ease-out;
+  z-index: 1001;
+}
+
+.dropdown-header {
+  padding: 16px;
+}
+
+.user-name {
+  display: block;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.message-count {
+  font-size: 13px;
+  color: #0047A0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: all 0.2s ease;
+  display: block;
+  margin-top: 4px;
+}
+
+.message-count:hover {
+  color: #003a87;
+  transform: translateX(2px);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 0;
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.dropdown-item:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.dropdown-item.danger {
+  color: #dc2626;
+}
+
+.dropdown-item.danger:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* 포커스 스타일 */
+.auth-float-btn:focus-visible,
+.user-menu-trigger-float:focus-visible,
+.dropdown-item:focus-visible {
+  outline: 2px solid #0047A0;
+  outline-offset: 2px;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .auth-float-buttons {
+    top: 16px;
+    right: 16px;
+    gap: 10px;
+  }
+
+  .auth-float-btn {
+    padding: 7px 16px;
+    font-size: 13px;
+  }
+
+  .user-menu-float {
+    top: 16px;
+    right: 16px;
+  }
+
+  .user-menu-trigger-float {
+    width: 40px;
+    height: 40px;
+  }
+
+  .user-avatar-float {
+    font-size: 15px;
+  }
+}
+
+/* 다크모드 지원 */
+@media (prefers-color-scheme: dark) {
+  .auth-float-btn {
+    background: rgba(0, 0, 0, 0.9);
+    color: #e5e7eb;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+  }
+
+  .auth-float-btn:hover {
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+  }
+
+  .auth-float-btn.login:hover {
+    background: rgba(10, 10, 10, 0.95);
+    color: white;
+  }
+
+  .auth-float-btn.signup {
+    background: #0066cc;
+  }
+
+  .auth-float-btn.signup:hover {
+    background: #0052a3;
+  }
+
+  .user-menu-trigger-float {
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+  }
+
+  .user-menu-trigger-float:hover {
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+  }
+
+  .user-avatar-float {
+    background: #0066cc;
+  }
+
+  .user-dropdown-float {
+    background: #1f2937;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .user-name {
+    color: #f3f4f6;
+  }
+
+  .dropdown-divider {
+    background: #374151;
+  }
+
+  .dropdown-item {
+    color: #e5e7eb;
+  }
+
+  .dropdown-item:hover {
+    background: #111827;
+    color: white;
+  }
+
+  .dropdown-item.danger {
+    color: #ef4444;
+  }
+
+  .dropdown-item.danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+  }
+
+  .auth-float-btn:focus-visible,
+  .user-menu-trigger-float:focus-visible,
+  .dropdown-item:focus-visible {
+    outline-color: #60a5fa;
+  }
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

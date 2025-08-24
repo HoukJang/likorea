@@ -64,7 +64,7 @@
 .board-list-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 40px 20px 0; /* 헤더 제거로 상단 패딩 추가 */
   font-family: var(--font-family);
 }
 

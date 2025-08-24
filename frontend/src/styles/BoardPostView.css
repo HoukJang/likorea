@@ -5,7 +5,7 @@
 .post-container {
   margin: 0 auto;
   max-width: 1200px;
-  padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-3xl);
+  padding: calc(var(--spacing-xl) + 40px) var(--spacing-xl) var(--spacing-3xl); /* 헤더 제거로 상단 패딩 추가 */
   background: var(--color-background);
   font-family: var(--font-family);
   width: 100%;
