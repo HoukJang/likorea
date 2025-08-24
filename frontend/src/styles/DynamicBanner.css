@@ -1,0 +1,278 @@
+/* Dynamic Banner Styles - Ultra Minimal Design */
+@import './design-system.css';
+
+.dynamic-banner {
+  position: relative;
+  width: 100%;
+  min-height: 40px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  animation: slideDown 0.3s ease-out;
+  transition: all 0.3s ease;
+}
+
+.banner-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.banner-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.banner-message {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #111827;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.banner-link {
+  font-size: 14px;
+  color: #0047A0;
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  padding: 4px 12px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+.banner-link:hover {
+  background: rgba(0, 71, 160, 0.08);
+  color: #003a87;
+}
+
+.banner-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 8px;
+  margin: -8px -8px -8px 0;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.banner-close:hover {
+  opacity: 1;
+  color: #374151;
+}
+
+/* Type Variants */
+.banner-info {
+  background: linear-gradient(to right, #f0f9ff 0%, #ffffff 100%);
+}
+
+.banner-info .banner-icon {
+  color: #0047A0;
+}
+
+.banner-warning {
+  background: linear-gradient(to right, #fffbeb 0%, #ffffff 100%);
+}
+
+.banner-warning .banner-icon {
+  color: #f59e0b;
+}
+
+.banner-warning .banner-message {
+  color: #92400e;
+}
+
+.banner-success {
+  background: linear-gradient(to right, #f0fdf4 0%, #ffffff 100%);
+}
+
+.banner-success .banner-icon {
+  color: #10b981;
+}
+
+.banner-success .banner-message {
+  color: #065f46;
+}
+
+.banner-event {
+  background: linear-gradient(to right, #fef3f2 0%, #ffffff 100%);
+}
+
+.banner-event .banner-icon {
+  color: #CD2E3A;
+}
+
+.banner-event .banner-message {
+  color: #991b1b;
+}
+
+.banner-event .banner-link {
+  color: #CD2E3A;
+}
+
+.banner-event .banner-link:hover {
+  background: rgba(205, 46, 58, 0.08);
+  color: #b91c1c;
+}
+
+/* Exit Animation */
+.banner-exit {
+  animation: slideUp 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+/* Animations */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .banner-inner {
+    padding: 0 16px;
+  }
+
+  .banner-content {
+    gap: 10px;
+  }
+
+  .banner-icon {
+    font-size: 16px;
+  }
+
+  .banner-message {
+    font-size: 13px;
+  }
+
+  .banner-link {
+    font-size: 13px;
+    padding: 3px 10px;
+    margin-left: 4px;
+  }
+
+  .banner-close {
+    font-size: 22px;
+    padding: 6px;
+    margin: -6px -6px -6px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-message {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+
+  .banner-link {
+    display: none; /* 모바일에서는 링크 숨김 */
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .dynamic-banner {
+    background: #1f2937;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .banner-message {
+    color: #f3f4f6;
+  }
+
+  .banner-link {
+    color: #60a5fa;
+  }
+
+  .banner-link:hover {
+    background: rgba(96, 165, 250, 0.15);
+    color: #93bbfc;
+  }
+
+  .banner-close {
+    color: #9ca3af;
+  }
+
+  .banner-close:hover {
+    color: #e5e7eb;
+  }
+
+  .banner-info {
+    background: linear-gradient(to right, rgba(0, 71, 160, 0.1) 0%, #1f2937 100%);
+  }
+
+  .banner-info .banner-icon {
+    color: #60a5fa;
+  }
+
+  .banner-warning {
+    background: linear-gradient(to right, rgba(245, 158, 11, 0.1) 0%, #1f2937 100%);
+  }
+
+  .banner-warning .banner-message {
+    color: #fbbf24;
+  }
+
+  .banner-success {
+    background: linear-gradient(to right, rgba(16, 185, 129, 0.1) 0%, #1f2937 100%);
+  }
+
+  .banner-success .banner-message {
+    color: #34d399;
+  }
+
+  .banner-event {
+    background: linear-gradient(to right, rgba(205, 46, 58, 0.1) 0%, #1f2937 100%);
+  }
+
+  .banner-event .banner-message {
+    color: #f87171;
+  }
+
+  .banner-event .banner-link {
+    color: #f87171;
+  }
+}
+
+/* Focus States */
+.banner-link:focus-visible,
+.banner-close:focus-visible {
+  outline: 2px solid #0047A0;
+  outline-offset: 2px;
+  border-radius: 4px;
+}

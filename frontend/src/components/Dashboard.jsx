@@ -88,6 +88,12 @@ function Dashboard() {
       label: '트래픽',
       icon: '📈',
       description: '실시간 트래픽 모니터링'
+    },
+    {
+      id: 'banners',
+      label: '배너 관리',
+      icon: '📢',
+      description: '공지 배너 관리'
     }
   ];
 

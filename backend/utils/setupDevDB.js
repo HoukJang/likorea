@@ -4,6 +4,7 @@ const BoardPost = require('../models/BoardPost');
 const Comment = require('../models/Comment');
 const Counter = require('../models/Counter');
 const Message = require('../models/Message');
+const Banner = require('../models/Banner');
 require('dotenv').config();
 
 // 개발 환경 기본 DB 설정
@@ -30,6 +31,7 @@ async function setupDevDB() {
     await Comment.deleteMany({});
     await Counter.deleteMany({});
     await Message.deleteMany({});
+    await Banner.deleteMany({});
     console.log('기존 데이터 정리 완료');
 
     // Counter 초기화
@@ -338,6 +340,42 @@ async function setupDevDB() {
     }
     console.log('메시지 5개 생성 완료');
 
+    // 7. 샘플 배너 생성
+    const bannerEndDate = new Date();
+    bannerEndDate.setDate(bannerEndDate.getDate() + 7); // 7일 후 만료
+
+    await Banner.create({
+      message: '🎉 롱아일랜드 한인 커뮤니티가 새롭게 단장했습니다! 많은 이용 부탁드립니다.',
+      type: 'event',
+      icon: '🎉',
+      link: {
+        url: '/boards',
+        text: '게시판 둘러보기'
+      },
+      isActive: true,
+      priority: 10,
+      endDate: bannerEndDate,
+      dismissible: true,
+      createdBy: adminUser._id
+    });
+
+    // 두 번째 배너 (비활성 상태)
+    const secondBannerEndDate = new Date();
+    secondBannerEndDate.setDate(secondBannerEndDate.getDate() + 14);
+
+    await Banner.create({
+      message: '⚠️ 서버 점검 안내: 12월 25일 오전 2시-4시 서비스가 일시 중단됩니다.',
+      type: 'warning',
+      icon: '⚠️',
+      isActive: false,
+      priority: 5,
+      endDate: secondBannerEndDate,
+      dismissible: true,
+      createdBy: adminUser._id
+    });
+
+    console.log('샘플 배너 2개 생성 완료');
+
     console.log('\n🎉 개발 환경 DB 설정 완료!');
     console.log('📊 생성된 데이터:');
     console.log('👤 관리자: likorea (비밀번호: password)');
@@ -346,6 +384,7 @@ async function setupDevDB() {
     console.log('📝 일반 게시글: 45개');
     console.log('💬 댓글: 100개');
     console.log('📨 메시지: 5개 (likorea가 받은 메시지)');
+    console.log('🎯 배너: 2개 (1개 활성, 1개 비활성)');
   } catch (error) {
     console.error('DB 설정 중 오류 발생:', error);
   } finally {

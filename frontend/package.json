@@ -1,6 +1,6 @@
 {
   "name": "longisland-korea-frontend",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",

@@ -11,7 +11,7 @@ import './styles/accessibility-improvements.css';
 import './styles/theme-minimal.css';
 
 // 핵심 컴포넌트는 직접 import
-import Banner from './components/Banner';
+import DynamicBanner from './components/DynamicBanner';
 import FloatingActionButton from './components/FloatingActionButton';
 import UserMenu from './components/UserMenu';
 
@@ -47,6 +47,7 @@ const BotConfigForm = lazy(() => import('./pages/bot/BotConfigForm'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminStats = lazy(() => import('./pages/admin/AdminStats'));
 const AdminTraffic = lazy(() => import('./pages/admin/AdminTraffic'));
+const AdminBanners = lazy(() => import('./pages/admin/AdminBanners'));
 
 function App() {
   // 전역 인증 상태 관리 - 앱 시작 시 토큰 검증 수행
@@ -63,7 +64,7 @@ function App() {
     return (
       <ErrorBoundary>
         <div className="App">
-          <Banner />
+          <DynamicBanner />
           <Loading />
         </div>
       </ErrorBoundary>
@@ -75,7 +76,7 @@ function App() {
       <HelmetProvider>
         <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <div className="App">
-            <Banner />
+            <DynamicBanner />
             <FloatingActionButton />
             <UserMenu />
             <Routes>
@@ -176,6 +177,11 @@ function App() {
               <Route path="traffic" element={
                 <Suspense fallback={<Loading />}>
                   <AdminTraffic />
+                </Suspense>
+              } />
+              <Route path="banners" element={
+                <Suspense fallback={<Loading />}>
+                  <AdminBanners />
                 </Suspense>
               } />
             </Route>

@@ -8,7 +8,7 @@
 .hero-section {
   background: linear-gradient(135deg, #1a5490 0%, #2563eb 100%);
   color: white;
-  padding: 120px 20px 80px; /* 헤더 제거로 상단 패딩 증가 */
+  padding: 80px 20px; /* 상단 패딩 조정 (배너 40px 고려) */
   text-align: center;
   position: relative;
   overflow: hidden;
