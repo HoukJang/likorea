@@ -1,5 +1,5 @@
 /* Admin Banners Styles */
-@import '../design-system.css';
+@import './design-system.css';
 
 .admin-banners {
   padding: var(--spacing-xl);

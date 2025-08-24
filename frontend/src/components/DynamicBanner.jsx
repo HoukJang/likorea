@@ -14,11 +14,11 @@ const DynamicBanner = () => {
   const fetchBanner = async () => {
     try {
       const response = await getActiveBanner();
-      if (response.data.banner) {
+      if (response.banner) {
         // 로컬 스토리지에서 이미 닫은 배너인지 확인
         const dismissedBanners = JSON.parse(localStorage.getItem('dismissedBanners') || '[]');
-        if (!dismissedBanners.includes(response.data.banner.id)) {
-          setBanner(response.data.banner);
+        if (!dismissedBanners.includes(response.banner.id)) {
+          setBanner(response.banner);
         }
       }
     } catch (error) {

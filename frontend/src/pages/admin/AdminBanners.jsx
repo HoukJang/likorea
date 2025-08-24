@@ -32,7 +32,7 @@ function AdminBanners() {
     try {
       setLoading(true);
       const response = await getAllBanners();
-      setBanners(response.data.banners);
+      setBanners(response.banners);
     } catch (error) {
       setError('배너 목록을 불러오는데 실패했습니다.');
       console.error(error);

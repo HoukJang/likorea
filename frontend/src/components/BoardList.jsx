@@ -13,7 +13,7 @@ import BoardTable from './board/BoardTable';
 import BoardCards from './board/BoardCards';
 import BoardPagination from './board/BoardPagination';
 import { BoardLoading, BoardError, BoardEmpty } from './board/BoardStatus';
-import FloatingWriteButton from './FloatingWriteButton';
+// import FloatingWriteButton from './FloatingWriteButton'; // FAB에 통합됨
 import '../styles/BoardList.css';
 
 const BoardList = ({ pendingOnly = false }) => {
@@ -192,8 +192,8 @@ const BoardList = ({ pendingOnly = false }) => {
         onPageChange={handlePageChange}
       />
       
-      {/* Floating Write Button for Mobile */}
-      <FloatingWriteButton />
+      {/* Floating Write Button for Mobile - FAB에 통합됨 */}
+      {/* <FloatingWriteButton /> */}
     </div>
     </>
   );
