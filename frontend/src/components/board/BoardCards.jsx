@@ -43,12 +43,15 @@ const BoardCards = React.memo(({ posts, tagList, pendingOnly = false, userScrapI
             aria-label={`게시글 ${post.postNumber}: ${post.title}, 작성자: ${getAuthorId(post.author)}, 조회수: ${post.viewCount ?? 0}`}
           >
             <div className="mobile-card-header">
-              <span className="mobile-card-number">
-                {tagList && post.tags && post.tags.type
-                  ? getTagDisplayText(post.tags)
-                  : post.type || '일반'}
-              </span>
-              <span className="mobile-card-views">조회 {post.viewCount ?? 0}</span>
+              <div className="mobile-card-left">
+                <span className="mobile-card-category">
+                  {tagList && post.tags && post.tags.type
+                    ? getTagDisplayName(post.tags.type, tagList, 'type')
+                    : post.type || '일반'}
+                </span>
+                <span className="mobile-card-number">#{post.postNumber}</span>
+              </div>
+              <span className="mobile-card-views">{post.viewCount ?? 0}</span>
             </div>
             <div className="mobile-card-title">
               {userScrapIds.has(post._id || post.id) && (

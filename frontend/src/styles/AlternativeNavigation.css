@@ -1,0 +1,587 @@
+/* Alternative Navigation - Ultra Minimal Design */
+@import './design-system.css';
+
+.alt-navigation {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.alt-nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 66px;
+}
+
+/* Brand/Logo */
+.alt-nav-brand {
+  flex-shrink: 0;
+}
+
+.brand-button {
+  background: none;
+  border: none;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: -0.03em;
+  transition: transform var(--transition-fast);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.brand-button:hover {
+  opacity: 0.8;
+}
+
+.brand-accent {
+  color: var(--color-primary);
+}
+
+.brand-li {
+  color: var(--taegeuk-red);
+  font-weight: var(--font-weight-bold);
+}
+
+.brand-korea {
+  color: var(--taegeuk-blue);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Navigation Menu */
+.alt-nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  flex: 1;
+  justify-content: center;
+}
+
+/* Text Navigation Items */
+.text-nav-item {
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 15px;
+  font-weight: 400;
+  padding: 8px 0;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.text-nav-item:hover {
+  color: #111827;
+}
+
+.text-nav-item.active {
+  color: #111827;
+  font-weight: 500;
+}
+
+/* Underline effect */
+.text-nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+  transition: width var(--transition-fast);
+}
+
+.text-nav-item:hover::after,
+.text-nav-item.active::after {
+  width: 100%;
+}
+
+/* Accent nav item */
+.text-nav-item.accent {
+  color: #0047A0;
+  font-weight: 500;
+}
+
+.text-nav-item.accent:hover {
+  color: #003a87;
+}
+
+/* User Menu */
+.alt-nav-user {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-menu-group {
+  position: relative;
+}
+
+.user-menu-trigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-fast);
+}
+
+.user-menu-trigger:hover .user-avatar {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
+}
+
+/* Notification Dot */
+.notification-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background: var(--color-danger);
+  border: 2px solid white;
+  border-radius: 50%;
+}
+
+/* User Dropdown */
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + var(--spacing-sm));
+  right: 0;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  min-width: 220px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all var(--transition-fast);
+}
+
+.user-menu-group:hover .user-dropdown,
+.user-menu-group:focus-within .user-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-header {
+  padding: var(--spacing-lg);
+}
+
+.user-name {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.message-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: all var(--transition-fast);
+  display: block;
+  margin-top: var(--spacing-xs);
+}
+
+.message-count:hover {
+  color: var(--color-primary-hover);
+  transform: translateX(2px);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 0;
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.dropdown-item:hover {
+  background: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+.dropdown-item.danger {
+  color: var(--color-danger);
+}
+
+.dropdown-item.danger:hover {
+  background: var(--color-danger-light);
+  color: var(--color-danger-hover);
+}
+
+/* Auth Links - Ultra Minimal Text Style */
+.auth-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.auth-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #6b7280;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+  letter-spacing: -0.01em;
+}
+
+.auth-link:hover {
+  color: #374151;
+}
+
+/* 호버 시 밑줄 효과 */
+.auth-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: currentColor;
+  transition: width 0.2s ease;
+}
+
+.auth-link:hover::after {
+  width: 100%;
+}
+
+/* 회원가입 링크 - 조금 더 강조 */
+.auth-link-signup {
+  color: #374151;
+  font-weight: 500;
+}
+
+.auth-link-signup:hover {
+  color: #111827;
+}
+
+/* 포커스 스타일 */
+.auth-link:focus-visible {
+  outline: 2px solid #0047A0;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* 공통 버튼 스타일 - 미니멀 */
+.auth-button {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  line-height: 1.5;
+}
+
+/* 로그인 버튼 - 미니멀 텍스트 스타일 */
+.auth-button.login-button {
+  background: transparent !important;
+  color: #525252 !important;
+  border: none !important;
+  padding: 10px 20px !important;
+  font-weight: 400 !important;
+}
+
+.auth-button.login-button:hover {
+  color: #161616 !important;
+  background: #f4f4f4 !important;
+  border-radius: 8px !important;
+}
+
+/* 회원가입 버튼 - 미니멀 프라이머리 */
+.auth-button.signup-button {
+  background: #161616 !important;
+  color: white !important;
+  border: none !important;
+  font-weight: 500 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.auth-button.signup-button:hover {
+  background: #000000 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 포커스 상태 - 미니멀 */
+.auth-button:focus-visible {
+  outline: 2px solid #0047A0;
+  outline-offset: 3px;
+}
+
+/* 구버전 primary-button 호환성 유지 */
+.primary-button {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.primary-button:hover {
+  background: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: var(--font-size-xl);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background: white;
+  box-shadow: var(--shadow-lg);
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-base);
+}
+
+.mobile-menu.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-nav-item {
+  width: 100%;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-nav-item:active {
+  background: var(--color-background);
+}
+
+.mobile-nav-item.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.mobile-nav-item.accent {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.mobile-nav-item.primary {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.mobile-nav-item.danger {
+  color: var(--color-danger);
+}
+
+.mobile-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--spacing-sm) 0;
+}
+
+.mobile-badge {
+  background: var(--color-danger);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-xs);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .alt-nav-container {
+    padding: 0 20px;
+    height: 60px;
+  }
+  
+  .desktop-menu {
+    display: none;
+  }
+  
+  .mobile-menu-toggle {
+    display: block;
+  }
+  
+  .brand-button {
+    font-size: var(--font-size-lg);
+  }
+  
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: var(--font-size-sm);
+  }
+  
+  /* 모바일에서 로그인 링크 */
+  .auth-links {
+    gap: 16px;
+  }
+  
+  .auth-link {
+    font-size: 14px;
+  }
+  
+  .auth-button {
+    padding: 9px 18px;
+    font-size: 14px;
+  }
+  
+  .auth-button.login-button {
+    padding: 9px 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .alt-nav-container {
+    padding: 0 16px;
+  }
+  
+  .auth-links {
+    gap: 14px;
+  }
+  
+  .auth-link {
+    font-size: 13px;
+  }
+  
+  .auth-button {
+    padding: 8px 14px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+  
+  .auth-button.login-button {
+    padding: 8px 12px !important;
+  }
+}
+
+/* Focus States */
+.brand-button:focus-visible,
+.text-nav-item:focus-visible,
+.user-menu-trigger:focus-visible,
+.primary-button:focus-visible,
+.auth-button:focus-visible,
+.mobile-menu-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Safe Area Support */
+@supports (padding: max(0px)) {
+  .alt-nav-container {
+    padding-left: max(var(--spacing-xl), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-xl), env(safe-area-inset-right));
+  }
+  
+  .mobile-nav-item {
+    padding-left: max(var(--spacing-xl), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-xl), env(safe-area-inset-right));
+  }
+}
+
+/* 다크모드 지원 - 미니멀 디자인 유지 */
+@media (prefers-color-scheme: dark) {
+  .alt-navigation {
+    background: rgba(0, 0, 0, 0.98);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
+  
+  .auth-button.login-button {
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    border: none !important;
+  }
+  
+  .auth-button.login-button:hover {
+    color: rgba(255, 255, 255, 0.9) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+  
+  .auth-button.signup-button {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #000 !important;
+    border: none !important;
+  }
+  
+  .auth-button.signup-button:hover {
+    background: rgba(255, 255, 255, 0.8) !important;
+  }
+}

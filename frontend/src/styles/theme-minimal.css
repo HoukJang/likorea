@@ -1,0 +1,334 @@
+/* 
+ * 미니멀 테마 오버라이드
+ * 기존 스타일을 덮어쓰는 미니멀한 디자인 시스템
+ */
+
+/* ===== 색상 체계 오버라이드 ===== */
+:root {
+  /* 단일 브랜드 색상 */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: #dbeafe;
+  
+  /* 그레이스케일 */
+  --gray-50: #fafafa;
+  --gray-100: #f4f4f5;
+  --gray-200: #e4e4e7;
+  --gray-300: #d4d4d8;
+  --gray-400: #a1a1aa;
+  --gray-500: #71717a;
+  --gray-600: #52525b;
+  --gray-700: #3f3f46;
+  --gray-800: #27272a;
+  --gray-900: #18181b;
+  
+  /* 시맨틱 색상 (최소한만) */
+  --success: #16a34a;
+  --error: #dc2626;
+  --warning: #ea580c;
+  
+  /* 기존 변수 오버라이드 */
+  --primary-blue: var(--primary);
+  --accent-blue: var(--primary);
+  --border-color: var(--gray-200);
+  --secondary-text: var(--gray-600);
+}
+
+/* ===== 버튼 스타일 오버라이드 ===== */
+.btn,
+.common-button {
+  /* 크기 축소 */
+  padding: 8px 16px !important;
+  min-height: 36px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  
+  /* 플랫 디자인 */
+  background: var(--gray-900) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  
+  /* 빠른 전환 */
+  transition: all 0.15s ease !important;
+}
+
+.btn:hover,
+.common-button:hover {
+  background: var(--gray-800) !important;
+  transform: scale(1.02) !important;
+  box-shadow: none !important;
+}
+
+.btn:active,
+.common-button:active {
+  transform: scale(0.98) !important;
+}
+
+/* Primary 버튼 */
+.btn-primary,
+.common-button--primary {
+  background: var(--gray-900) !important;
+  color: white !important;
+}
+
+.btn-primary:hover,
+.common-button--primary:hover {
+  background: var(--gray-800) !important;
+}
+
+/* Secondary 버튼 */
+.btn-secondary,
+.common-button--secondary {
+  background: transparent !important;
+  color: var(--gray-700) !important;
+  border: 1px solid var(--gray-200) !important;
+}
+
+.btn-secondary:hover,
+.common-button--secondary:hover {
+  background: var(--gray-50) !important;
+  border-color: var(--gray-300) !important;
+}
+
+/* Danger 버튼 */
+.btn-danger,
+.common-button--danger {
+  background: transparent !important;
+  color: var(--error) !important;
+  border: 1px solid var(--error) !important;
+}
+
+.btn-danger:hover,
+.common-button--danger:hover {
+  background: var(--error) !important;
+  color: white !important;
+}
+
+/* ===== 테이블 스타일 오버라이드 ===== */
+.board-table {
+  border-collapse: collapse;
+}
+
+.board-table thead {
+  background-color: var(--gray-50) !important;
+  border-bottom: 1px solid var(--gray-200) !important;
+}
+
+.board-table th {
+  padding: 12px !important;
+  font-weight: 500 !important;
+  color: var(--gray-600) !important;
+  font-size: 13px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.board-table td {
+  padding: 12px !important;
+  border-bottom: 1px solid var(--gray-100) !important;
+}
+
+.board-table tbody tr {
+  transition: all 0.15s ease !important;
+  border-left: 3px solid transparent !important;
+}
+
+.board-table tbody tr:hover {
+  background-color: var(--gray-50) !important;
+  transform: none !important;
+  box-shadow: none !important;
+  border-left: 3px solid transparent !important;
+}
+
+/* 글 종류 색상 제거 - 모두 그레이로 통일 */
+.board-table .post-number {
+  color: var(--gray-600) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+/* 공지만 강조 */
+.board-table tr[data-post-type='공지'] .post-number {
+  color: var(--error) !important;
+  font-weight: 600 !important;
+}
+
+/* ===== 모바일 카드 스타일 오버라이드 ===== */
+.mobile-card {
+  background-color: white !important;
+  border: 1px solid var(--gray-200) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  transition: all 0.15s ease !important;
+}
+
+.mobile-card:hover {
+  background-color: var(--gray-50) !important;
+  border-color: var(--gray-300) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* 모바일 카드 색상 제거 */
+.mobile-card[data-post-type] {
+  border-color: var(--gray-200) !important;
+  border-left: 1px solid var(--gray-200) !important;
+}
+
+/* 공지 카드만 강조 */
+.mobile-card[data-post-type='공지'] {
+  border-left: 3px solid var(--error) !important;
+}
+
+.mobile-card-number {
+  font-weight: 500 !important;
+  color: var(--gray-600) !important;
+  font-size: 12px !important;
+  padding: 4px 8px !important;
+  background: var(--gray-100) !important;
+  border-radius: 4px !important;
+}
+
+.mobile-card[data-post-type='공지'] .mobile-card-number {
+  background: var(--error) !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.mobile-card-title {
+  font-weight: 500 !important;
+  color: var(--gray-900) !important;
+  font-size: 15px !important;
+}
+
+.mobile-card-author {
+  color: var(--gray-700) !important;
+}
+
+/* ===== 페이지네이션 오버라이드 ===== */
+.pagination-btn {
+  padding: 8px 12px !important;
+  min-height: 36px !important;
+  min-width: 36px !important;
+  border: 1px solid var(--gray-200) !important;
+  background-color: white !important;
+  color: var(--gray-700) !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: all 0.15s ease !important;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: var(--gray-100) !important;
+  border-color: var(--gray-300) !important;
+  transform: none !important;
+}
+
+.pagination-btn.active {
+  background-color: var(--gray-900) !important;
+  color: white !important;
+  border-color: var(--gray-900) !important;
+}
+
+/* ===== 로딩 스피너 오버라이드 ===== */
+.loading-spinner {
+  border: 3px solid var(--gray-200) !important;
+  border-top: 3px solid var(--primary) !important;
+}
+
+/* ===== 댓글 수 스타일 ===== */
+.comment-count,
+.mobile-comment-count {
+  color: var(--gray-500) !important;
+  font-weight: 400 !important;
+}
+
+/* ===== 전체적인 여백 개선 ===== */
+.board-list-container {
+  padding: 20px !important;
+}
+
+.page-header {
+  margin-bottom: 24px !important;
+}
+
+.table-responsive {
+  margin-bottom: 24px !important;
+}
+
+/* ===== 타이포그래피 개선 ===== */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--gray-900) !important;
+  font-weight: 600 !important;
+}
+
+h1 { font-size: 24px !important; }
+h2 { font-size: 20px !important; }
+h3 { font-size: 18px !important; }
+h4 { font-size: 16px !important; }
+
+body {
+  color: var(--gray-700) !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
+/* ===== 링크 스타일 ===== */
+a {
+  color: var(--primary) !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease !important;
+}
+
+a:hover {
+  color: var(--primary-hover) !important;
+}
+
+/* ===== 폼 요소 스타일 ===== */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+  border: 1px solid var(--gray-200) !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  transition: all 0.15s ease !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--primary) !important;
+  outline-offset: 2px !important;
+  border-color: var(--primary) !important;
+}
+
+/* ===== 애니메이션 감소 ===== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ===== 다크 모드 대응 (선택적) ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-bg: #111111;
+    --gray-50: #18181b;
+    --gray-100: #27272a;
+    --gray-900: #fafafa;
+  }
+  
+  body {
+    background-color: var(--primary-bg) !important;
+    color: var(--gray-100) !important;
+  }
+}

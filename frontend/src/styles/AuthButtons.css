@@ -1,0 +1,53 @@
+/* Auth Buttons - Text Style Customization */
+
+/* 회원가입 버튼 - 텍스트이지만 더 강조 */
+.signup-text-button {
+  font-weight: 600 !important;
+  color: #111827 !important;
+  position: relative;
+}
+
+.signup-text-button:hover {
+  color: #000000 !important;
+}
+
+/* 언더라인 효과 추가 (선택사항) */
+.signup-text-button::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 1.5px;
+  background-color: currentColor;
+  transition: width 0.2s ease;
+}
+
+.signup-text-button:hover::after {
+  width: 100%;
+}
+
+/* 다크모드에서 회원가입 버튼 */
+@media (prefers-color-scheme: dark) {
+  .signup-text-button {
+    color: #e5e7eb !important;
+  }
+  
+  .signup-text-button:hover {
+    color: #ffffff !important;
+  }
+}
+
+/* 네비게이션 바에서 텍스트 버튼 간격 조정 */
+.auth-buttons .btn-text {
+  padding: 6px 12px;
+}
+
+/* 모바일에서 더 작게 */
+@media (max-width: 768px) {
+  .auth-buttons .btn-text {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+}

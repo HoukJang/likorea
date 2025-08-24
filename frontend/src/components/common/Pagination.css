@@ -49,6 +49,10 @@
 @media (max-width: 768px) {
   .pagination {
     gap: 3px;
+    width: calc(100% - 32px);
+    margin-left: 16px;
+    margin-right: 16px;
+    box-sizing: border-box;
   }
 
   .pagination-btn {

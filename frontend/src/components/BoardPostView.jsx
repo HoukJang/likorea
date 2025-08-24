@@ -19,6 +19,8 @@ import { processContent } from '../utils/optimizeImages';
 import { usePermission } from '../hooks/usePermission';
 import { useAuth } from '../hooks/useAuth';
 import { useErrorHandler } from '../utils/errorHandler';
+import FloatingActionButtons from './FloatingActionButtons';
+import PostActionBar from './PostActionBar';
 import '../styles/BoardPostView.css';
 
 function BoardPostView() {
@@ -457,48 +459,58 @@ function BoardPostView() {
           {post.title}
           {isPending && <span style={{ marginLeft: '12px', padding: '4px 8px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.8em' }}>승인 대기</span>}
         </h1>
-        <div className="post-actions">
+        <div className="post-actions-minimal">
           {user && (
             <button
               onClick={handleScrapToggle}
-              className={`action-button scrap-button ${isScraped ? 'scraped' : ''}`}
+              className={`minimal-action-button ${isScraped ? 'active' : ''}`}
               disabled={scrapLoading}
+              aria-label={isScraped ? '스크랩 해제' : '스크랩'}
             >
-              {scrapLoading ? '처리중...' : (isScraped ? '📌 스크랩 해제' : '📌 스크랩')}
+              <span className="action-icon">📌</span>
+              <span className="action-text">
+                {scrapLoading ? '처리중' : (isScraped ? '스크랩됨' : '스크랩')}
+              </span>
             </button>
           )}
           {canModify && (
-            <>
+            <div className="modify-actions">
               <button
                 onClick={() => navigate(`/boards/${postId}/edit`)}
-                className="action-button edit-button"
+                className="minimal-action-button text-only"
+                aria-label="게시글 수정"
               >
                 수정
               </button>
-              <button onClick={handleDelete} className="action-button delete-button">
+              <span className="action-divider">·</span>
+              <button 
+                onClick={handleDelete} 
+                className="minimal-action-button text-only danger"
+                aria-label="게시글 삭제"
+              >
                 삭제
               </button>
-            </>
+            </div>
           )}
           {isAdmin && isPending && (
-            <>
+            <div className="admin-actions">
               <button
                 onClick={handleApprove}
-                className="action-button"
-                style={{ backgroundColor: '#4caf50', color: 'white' }}
+                className="minimal-action-button approve"
                 disabled={loading}
+                aria-label="게시글 승인"
               >
-                승인
+                {loading ? '처리중' : '승인'}
               </button>
               <button
                 onClick={handleReject}
-                className="action-button"
-                style={{ backgroundColor: '#f44336', color: 'white' }}
+                className="minimal-action-button reject"
                 disabled={loading}
+                aria-label="게시글 거절"
               >
-                거절
+                {loading ? '처리중' : '거절'}
               </button>
-            </>
+            </div>
           )}
         </div>
       </div>
@@ -568,11 +580,11 @@ function BoardPostView() {
                         <button
                           onClick={() => handleUpdateComment(commentId)}
                           disabled={loading}
-                          className="comment-edit-button"
+                          className="minimal-comment-button primary"
                         >
                           저장
                         </button>
-                        <button onClick={handleCancelEditComment} className="comment-cancel-button">
+                        <button onClick={handleCancelEditComment} className="minimal-comment-button">
                           취소
                         </button>
                       </div>
@@ -590,15 +602,16 @@ function BoardPostView() {
                       <div className="comment-main">
                         <div className="comment-text" dangerouslySetInnerHTML={{ __html: comment.content }} />
                         {hasPermission && (
-                          <div className="comment-actions">
+                          <div className="comment-actions-minimal">
                             <button
-                              className="comment-action-button edit-button"
+                              className="minimal-comment-action"
                               onClick={() => handleEditComment(comment)}
                             >
                               수정
                             </button>
+                            <span className="action-divider">·</span>
                             <button
-                              className="comment-action-button delete-button"
+                              className="minimal-comment-action danger"
                               onClick={() => handleDeleteComment(commentId)}
                             >
                               삭제
@@ -617,23 +630,53 @@ function BoardPostView() {
         )}
 
         {user ? (
-          <form className="comment-form" onSubmit={handleCommentSubmit}>
-            <textarea
-              placeholder="댓글 작성..."
-              className="comment-textarea"
-              value={commentText}
-              onChange={e => setCommentText(e.target.value)}
-              disabled={loading}
-              required
-            />
-            <button type="submit" className="comment-submit-button" disabled={loading}>
-              {loading ? '작성 중...' : '댓글 달기'}
-            </button>
-          </form>
+          <div className="comment-form-container">
+            <form className="comment-form" onSubmit={handleCommentSubmit}>
+              <textarea
+                placeholder="생각을 공유해주세요..."
+                className="comment-textarea"
+                value={commentText}
+                onChange={e => setCommentText(e.target.value)}
+                disabled={loading}
+                required
+              />
+              <button type="submit" className="minimal-submit-button" disabled={loading || !commentText.trim()} aria-label="댓글 전송">
+                <span className="sr-only">{loading ? '전송 중' : '전송'}</span>
+              </button>
+            </form>
+          </div>
         ) : (
-          <p className="login-message">댓글을 작성하려면 로그인이 필요합니다.</p>
+          <p className="login-message">💬 댓글을 작성하려면 로그인이 필요합니다.</p>
         )}
       </div>
+      
+      {/* Desktop Action Bar */}
+      <PostActionBar
+        postId={postId}
+        onScrapToggle={handleScrapToggle}
+        isScraped={isScraped}
+        scrapLoading={scrapLoading}
+        showScrap={true}
+        user={user}
+        canModify={canModify}
+        onEdit={() => navigate(`/boards/${postId}/edit`)}
+        onDelete={handleDelete}
+      />
+    </div>
+    
+    {/* Floating Action Buttons - Mobile Only */}
+    <div className="mobile-only">
+      <FloatingActionButtons
+        onScrapToggle={handleScrapToggle}
+        isScraped={isScraped}
+        scrapLoading={scrapLoading}
+        showScrap={user ? true : false}
+        showShare={true}
+        showTop={true}
+        canModify={canModify}
+        onEdit={() => navigate(`/boards/${postId}/edit`)}
+        onDelete={handleDelete}
+      />
     </div>
     </>
   );

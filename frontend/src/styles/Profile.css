@@ -28,37 +28,7 @@
   --font-size-xl: 1.25rem; /* 20px - 매우 큰 텍스트 */
 }
 
-/* ProfileLayout 스타일 */
-.profile-layout-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: var(--font-family);
-}
-
-.profile-layout-container .profile-header {
-  text-align: center;
-  margin-bottom: 30px;
-  padding: 20px;
-  background: var(--white);
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--border-color);
-}
-
-.profile-layout-container .profile-header h1 {
-  color: var(--accent-blue);
-  margin: 0 0 8px 0;
-  font-size: var(--font-size-xl);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.profile-subtitle {
-  color: var(--secondary-text);
-  font-size: var(--font-size-sm);
-  margin: 0;
-}
+/* 프로필 컴포넌트 전용 스타일 */
 
 .profile-container {
   max-width: 600px;
@@ -78,72 +48,7 @@
   margin-bottom: 20px;
 }
 
-/* 탭 네비게이션 스타일 */
-.profile-tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 30px;
-  border-bottom: 2px solid var(--border-color);
-  padding-bottom: 0;
-  background: var(--white);
-  border-radius: 12px 12px 0 0;
-  padding: 10px 10px 0 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.profile-tabs button {
-  background: none;
-  border: none;
-  padding: 12px 20px;
-  cursor: pointer;
-  font-size: var(--font-size-base);
-  font-weight: 600;
-  color: var(--secondary-text);
-  border-bottom: 2px solid transparent;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-  margin-bottom: -2px;
-}
-
-.profile-tabs button:hover {
-  color: var(--primary-text);
-  background: var(--gray-light);
-}
-
-.profile-tabs button.active {
-  color: var(--accent-blue);
-  border-bottom-color: var(--accent-blue);
-}
-
-.profile-tabs button:focus {
-  outline: var(--focus-outline);
-  outline-offset: var(--focus-outline-offset);
-}
-
-.tab-icon {
-  font-size: 20px;
-}
-
-.tab-text {
-  font-size: var(--font-size-base);
-}
-
-.unread-count {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: var(--accent-red);
-  color: white;
-  font-size: var(--font-size-xs);
-  padding: 2px 6px;
-  border-radius: 10px;
-  min-width: 18px;
-  text-align: center;
-  font-weight: bold;
-}
+/* Dashboard로 이동된 탭 스타일 - 삭제 예정 */
 
 .back-button {
   padding: 8px 16px;

@@ -13,6 +13,7 @@ import BoardTable from './board/BoardTable';
 import BoardCards from './board/BoardCards';
 import BoardPagination from './board/BoardPagination';
 import { BoardLoading, BoardError, BoardEmpty } from './board/BoardStatus';
+import FloatingWriteButton from './FloatingWriteButton';
 import '../styles/BoardList.css';
 
 const BoardList = ({ pendingOnly = false }) => {
@@ -190,6 +191,9 @@ const BoardList = ({ pendingOnly = false }) => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
+      
+      {/* Floating Write Button for Mobile */}
+      <FloatingWriteButton />
     </div>
     </>
   );

@@ -1,45 +1,45 @@
-/* 현대화된 색상 체계 */
+/* 미니멀한 색상 체계 */
 :root {
   --primary-bg: #ffffff;
   --secondary-bg: #111111;
   --primary-text: #111111;
-  --secondary-text: #6b7280;
+  --secondary-text: #71717a;
 
-  /* 현대화된 Primary Colors */
-  --primary-blue: #3b82f6;
-  --primary-blue-dark: #2563eb;
-  --primary-blue-light: #60a5fa;
+  /* 단일 브랜드 색상 */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: #dbeafe;
+  --primary-dark: #1e40af;
 
-  /* 현대화된 Secondary Colors */
-  --secondary-green: #10b981;
-  --secondary-green-dark: #059669;
-  --secondary-green-light: #34d399;
+  /* 그레이스케일 - 주요 색상 */
+  --gray-50: #fafafa;
+  --gray-100: #f4f4f5;
+  --gray-200: #e4e4e7;
+  --gray-300: #d4d4d8;
+  --gray-400: #a1a1aa;
+  --gray-500: #71717a;
+  --gray-600: #52525b;
+  --gray-700: #3f3f46;
+  --gray-800: #27272a;
+  --gray-900: #18181b;
 
-  /* 현대화된 Danger Colors */
-  --accent-red: #ef4444;
-  --accent-red-dark: #dc2626;
-
-  /* 세밀한 Gray Scale */
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
-
-  /* Semantic Colors */
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --info: #3b82f6;
+  /* 시맨틱 색상 - 최소한만 사용 */
+  --success: #16a34a;
+  --warning: #ea580c;
+  --error: #dc2626;
+  --info: var(--primary);
 
   /* Legacy Support (기존 코드 호환성) */
-  --accent-blue: var(--primary-blue);
-  --accent-blue-dark: var(--primary-blue-dark);
+  --primary-blue: var(--primary);
+  --primary-blue-dark: var(--primary-dark);
+  --primary-blue-light: var(--primary-light);
+  --secondary-green: var(--success);
+  --secondary-green-dark: #15803d;
+  --secondary-green-light: #86efac;
+  --accent-red: var(--error);
+  --accent-red-dark: #b91c1c;
+  --accent-blue: var(--primary);
+  --accent-blue-dark: var(--primary-dark);
   --gray-light: var(--gray-100);
   --gray-medium: var(--gray-500);
   --gray-dark: var(--gray-700);
@@ -47,9 +47,9 @@
   --text-primary: var(--primary-text);
   --text-secondary: var(--secondary-text);
   --white: var(--primary-bg);
-  --focus-outline: 2px solid var(--primary-blue);
+  --focus-outline: 2px solid var(--primary);
   --focus-outline-offset: 2px;
-  --btn-radius: 8px;
+  --btn-radius: 6px;
   --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
 
   /* 통일된 글자 크기 체계 */

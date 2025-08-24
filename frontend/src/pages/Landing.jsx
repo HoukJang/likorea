@@ -113,22 +113,16 @@ const Landing = () => {
 
   const services = [
     {
-      icon: '📰',
-      title: '지역뉴스',
-      description: '롱아일랜드 지역의 최신 뉴스와 소식을 전해드립니다',
-      link: '/boards?type=생활정보&subcategory=뉴스'
+      icon: '👶',
+      title: '육아/교육',
+      description: '학군 정보, 학원, 보육시설, 육아 팁을 공유합니다',
+      link: '/boards?type=생활정보&subcategory=육아/교육'
     },
     {
       icon: '🍽️',
       title: '맛집정보',
-      description: '한인 운영 레스토랑과 현지 맛집 정보를 나눕니다',
+      description: '롱아일랜드 현지 맛집과 레스토랑 정보를 나눕니다',
       link: '/boards?type=생활정보&subcategory=맛집'
-    },
-    {
-      icon: '📚',
-      title: '정착가이드',
-      description: '롱아일랜드 정착에 필요한 모든 정보를 제공합니다',
-      link: '/boards?type=생활정보&subcategory=정착가이드'
     },
     {
       icon: '🛒',
@@ -143,10 +137,16 @@ const Landing = () => {
       link: '/boards?type=모임'  // 모임 전체를 보여줍니다 (번개, 정기, 이벤트 모두 포함)
     },
     {
-      icon: '🏠',
-      title: '부동산',
-      description: '롱아일랜드 지역별 부동산 매매, 렌트 정보를 공유합니다',
-      link: '/boards?type=부동산'
+      icon: '🎡',
+      title: '여행/나들이',
+      description: '롱아일랜드 주변 여행지와 나들이 정보를 공유합니다',
+      link: '/boards?type=생활정보&subcategory=여행/나들이'
+    },
+    {
+      icon: '📰',
+      title: '지역뉴스',
+      description: '롱아일랜드 지역의 최신 뉴스와 소식을 전해드립니다',
+      link: '/boards?type=생활정보&subcategory=뉴스'
     }
   ];
 
@@ -251,71 +251,6 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* Features Section */}
-        <section className="features-section">
-          <div className="container">
-            <h2 className="section-title">커뮤니티 특징</h2>
-            <div className="features-grid">
-              <div className="feature-card">
-                <div className="feature-icon">🌏</div>
-                <h3>지역 기반 정보</h3>
-                <p>495 Exit 번호로 세분화된 지역별 정보 제공</p>
-              </div>
-              <div className="feature-card">
-                <div className="feature-icon">🤝</div>
-                <h3>한인 네트워크</h3>
-                <p>롱아일랜드 한인들과의 활발한 교류와 정보 공유</p>
-              </div>
-              <div className="feature-card">
-                <div className="feature-icon">📱</div>
-                <h3>모바일 최적화</h3>
-                <p>언제 어디서나 편리하게 이용 가능한 반응형 디자인</p>
-              </div>
-              <div className="feature-card">
-                <div className="feature-icon">🔒</div>
-                <h3>안전한 거래</h3>
-                <p>신뢰할 수 있는 한인 커뮤니티 내 안전한 정보 교환</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="cta-section">
-          <div className="container">
-            <h2 className="cta-title">지금 바로 롱아일랜드 한인 커뮤니티에 참여하세요</h2>
-            <p className="cta-description">
-              함께 만들어가는 따뜻한 한인 커뮤니티
-            </p>
-            <Link to="/signup" className="btn btn-cta">
-              무료 회원가입
-            </Link>
-          </div>
-        </section>
-
-        {/* SEO Content Section */}
-        <section className="seo-content">
-          <div className="container">
-            <h2>뉴욕 롱아일랜드 한인 생활 가이드</h2>
-            <div className="seo-text">
-              <p>
-                롱아일랜드(Long Island)는 뉴욕주에서 한인들이 많이 거주하는 지역 중 하나입니다.
-                특히 Great Neck, Manhasset, Port Washington, Syosset 등의 지역은
-                우수한 학군과 안전한 주거환경으로 많은 한인 가족들이 선호하는 지역입니다.
-              </p>
-              <p>
-                저희 롱아일랜드 한인 커뮤니티는 이러한 지역에 거주하는 한인들을 위해
-                부동산 정보, 학교 정보, 병원 및 의료 서비스, 한국 식품점, 한인 운영 비즈니스 등
-                실생활에 필요한 모든 정보를 제공하고 있습니다.
-              </p>
-              <p>
-                롱아일랜드 한인 커뮤니티를 통해 새로 이주하신 분들은 정착에 필요한 정보를 얻고,
-                기존 거주자들은 일상생활에 유용한 정보를 공유하며,
-                함께 더 나은 한인 커뮤니티를 만들어가고 있습니다.
-              </p>
-            </div>
-          </div>
-        </section>
       </main>
       <VersionDisplay position="bottom-right" showCodename={true} />
     </>

@@ -5,19 +5,28 @@
   --primary-text: #111111;
   --secondary-text: #6b7280;
 
-  /* 현대화된 Primary Colors */
-  --primary-blue: #3b82f6;
-  --primary-blue-dark: #2563eb;
-  --primary-blue-light: #60a5fa;
+  /* Taegeukgi Colors - 태극기 색상 */
+  --taegeuk-red: #CD2E3A;
+  --taegeuk-red-hover: #ba1b1f;
+  --taegeuk-red-light: #fef2f2;
+  --taegeuk-blue: #0047A0;
+  --taegeuk-blue-hover: #003a87;
+  --taegeuk-blue-light: #eff6ff;
+  --taegeuk-white: #FFFFFF;
+
+  /* 현대화된 Primary Colors - Updated with Taegeukgi */
+  --primary-blue: var(--taegeuk-blue);
+  --primary-blue-dark: var(--taegeuk-blue-hover);
+  --primary-blue-light: var(--taegeuk-blue-light);
 
   /* 현대화된 Secondary Colors */
   --secondary-green: #10b981;
   --secondary-green-dark: #059669;
   --secondary-green-light: #34d399;
 
-  /* 현대화된 Danger Colors */
-  --accent-red: #ef4444;
-  --accent-red-dark: #dc2626;
+  /* 현대화된 Danger Colors - Updated with Taegeukgi */
+  --accent-red: var(--taegeuk-red);
+  --accent-red-dark: var(--taegeuk-red-hover);
 
   /* 세밀한 Gray Scale */
   --gray-50: #f9fafb;

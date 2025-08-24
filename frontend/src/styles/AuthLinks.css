@@ -1,0 +1,22 @@
+/* Dark Mode Support for Auth Links */
+@media (prefers-color-scheme: dark) {
+  .auth-link {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .auth-link:hover {
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .auth-link-signup {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .auth-link-signup:hover {
+    color: #ffffff;
+  }
+  
+  .auth-link:focus-visible {
+    outline-color: #60a5fa;
+  }
+}

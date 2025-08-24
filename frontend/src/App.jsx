@@ -5,12 +5,14 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Loading from './components/common/Loading';
 import { useAuth } from './hooks/useAuth';
 import { initViewportHandlers } from './utils/viewportUtils';
+import './styles/design-system.css';
 import './styles/App.css';
 import './styles/accessibility-improvements.css';
+import './styles/theme-minimal.css';
 
 // 핵심 컴포넌트는 직접 import
 import Banner from './components/Banner';
-import GlobalNavigation from './components/GlobalNavigation';
+import AlternativeNavigation from './components/AlternativeNavigation';
 
 // 자주 사용되는 페이지는 직접 import
 import Landing from './pages/Landing';
@@ -19,7 +21,6 @@ import Login from './components/Login';
 import BoardList from './components/BoardList';
 import BoardPostView from './components/BoardPostView';
 import Profile from './components/Profile';
-import ProfileLayout from './components/profile/ProfileLayout';
 import Scraps from './components/profile/Scraps';
 import Messages from './components/message/Messages';
 import NotFound from './pages/NotFound';
@@ -27,8 +28,13 @@ import NotFound from './pages/NotFound';
 // 무거운 컴포넌트들은 lazy loading
 const BoardPostForm = lazy(() => import('./components/BoardPostForm')); // Quill 포함
 const BotManagement = lazy(() => import('./pages/BotManagement'));
+const ButtonDemo = lazy(() => import('./pages/ButtonDemo'));
 const DesignPreview = lazy(() => import('./components/DesignPreview'));
+const DesignSystemPreview = lazy(() => import('./pages/DesignSystemPreview'));
 const BotForm = lazy(() => import('./pages/BotForm'));
+
+// 통합 대시보드 컴포넌트
+const Dashboard = lazy(() => import('./components/Dashboard'));
 
 // Bot Board 시스템 컴포넌트들을 lazy loading
 const BotBoard = lazy(() => import('./pages/bot/BotBoard'));
@@ -37,12 +43,9 @@ const BotManagementPage = lazy(() => import('./pages/bot/BotManagementPage'));
 const BotConfigForm = lazy(() => import('./pages/bot/BotConfigForm'));
 
 // Admin 관련 컴포넌트들을 lazy loading
-const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminStats = lazy(() => import('./pages/admin/AdminStats'));
 const AdminTraffic = lazy(() => import('./pages/admin/AdminTraffic'));
-const AdminProfile = lazy(() => import('./pages/admin/AdminProfile'));
-const AdminScraps = lazy(() => import('./pages/admin/AdminScraps'));
 
 function App() {
   // 전역 인증 상태 관리 - 앱 시작 시 토큰 검증 수행
@@ -72,7 +75,7 @@ function App() {
         <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <div className="App">
             <Banner />
-            <GlobalNavigation />
+            <AlternativeNavigation />
             <Routes>
             {/* 루트 경로를 랜딩 페이지로 설정 */}
             <Route path="/" element={<Landing />} />
@@ -141,28 +144,23 @@ function App() {
               </Suspense>
             } />
 
-            {/* 쪽지함 독립 라우트 (유지) */}
-            <Route path="/messages" element={<Messages />} />
-            <Route path="/messages/compose" element={<Messages />} />
+            {/* 쪽지함 독립 라우트 - 대시보드로 리다이렉트 */}
+            <Route path="/messages" element={<Navigate to="/dashboard/messages" replace />} />
+            <Route path="/messages/compose" element={<Navigate to="/dashboard/messages/compose" replace />} />
 
-            {/* 프로필 페이지 - Nested Routing */}
-            <Route path="/profile" element={<ProfileLayout />}>
-              {/* 기본 경로는 info로 리다이렉트 */}
-              <Route index element={<Navigate to="info" replace />} />
-              <Route path="info" element={<Profile />} />
+            {/* 통합 대시보드 - Nested Routing */}
+            <Route path="/dashboard" element={
+              <Suspense fallback={<Loading />}>
+                <Dashboard />
+              </Suspense>
+            }>
+              {/* 기본 경로는 profile로 리다이렉트 */}
+              <Route index element={<Navigate to="profile" replace />} />
+              <Route path="profile" element={<Profile />} />
               <Route path="scraps" element={<Scraps />} />
               <Route path="messages" element={<Messages />} />
               <Route path="messages/compose" element={<Messages />} />
-            </Route>
-
-            {/* 관리자 페이지 - Nested Routing */}
-            <Route path="/admin" element={
-              <Suspense fallback={<Loading />}>
-                <AdminLayout />
-              </Suspense>
-            }>
-              {/* 기본 경로는 users로 리다이렉트 */}
-              <Route index element={<Navigate to="users" replace />} />
+              {/* 관리자 전용 라우트 - Dashboard 내부에서 권한 체크 */}
               <Route path="users" element={
                 <Suspense fallback={<Loading />}>
                   <AdminUsers />
@@ -173,34 +171,37 @@ function App() {
                   <AdminStats />
                 </Suspense>
               } />
-              <Route path="scraps" element={
-                <Suspense fallback={<Loading />}>
-                  <AdminScraps />
-                </Suspense>
-              } />
               <Route path="traffic" element={
                 <Suspense fallback={<Loading />}>
                   <AdminTraffic />
                 </Suspense>
               } />
-              <Route path="messages" element={
-                <Suspense fallback={<Loading />}>
-                  <Messages />
-                </Suspense>
-              } />
-              <Route path="profile" element={
-                <Suspense fallback={<Loading />}>
-                  <AdminProfile />
-                </Suspense>
-              } />
             </Route>
+
+            {/* 기존 경로 리다이렉트 */}
+            <Route path="/profile/*" element={<Navigate to="/dashboard/profile" replace />} />
+            <Route path="/admin/*" element={<Navigate to="/dashboard/users" replace />} />
 
             <Route path="/design-preview" element={
               <Suspense fallback={<Loading />}>
                 <DesignPreview />
               </Suspense>
             } />
+            
+            {/* Design System Preview */}
+            <Route path="/design-system" element={
+              <Suspense fallback={<Loading />}>
+                <DesignSystemPreview />
+              </Suspense>
+            } />
 
+            {/* Button Demo Page - Development Only */}
+            <Route path="/button-demo" element={
+              <Suspense fallback={<Loading />}>
+                <ButtonDemo />
+              </Suspense>
+            } />
+            
             {/* 404 페이지 - 모든 매치되지 않는 경로 처리 */}
             <Route path="*" element={<NotFound />} />
           </Routes>

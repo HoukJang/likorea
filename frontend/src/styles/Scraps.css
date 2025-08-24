@@ -1,8 +1,8 @@
-/* 스크랩 컨테이너 */
+/* 사용자 스크랩 페이지 스타일 - Admin 형식과 동일 */
 .scraps-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
 }
 
 /* 스크랩 헤더 */
@@ -19,9 +19,80 @@
   margin-bottom: 8px;
 }
 
-.scraps-count {
+.scraps-stats {
   color: #6b7280;
   font-size: 14px;
+}
+
+/* 검색 및 필터 컨트롤 */
+.scraps-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+/* 검색 박스 */
+.search-box {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 40px 10px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* 정렬 컨트롤 */
+.sort-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.sort-btn {
+  padding: 8px 16px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.sort-btn:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.sort-btn.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
 }
 
 /* 빈 스크랩 */
@@ -51,87 +122,96 @@
   color: #9ca3af !important;
 }
 
-/* 스크랩 리스트 */
-.scraps-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 30px;
-}
-
-/* 스크랩 아이템 */
-.scrap-item {
-  display: block;
-  padding: 20px;
+/* 스크랩 테이블 */
+.scraps-table {
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: all 0.2s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 30px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.scrap-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-color: #3b82f6;
+.scraps-table table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-/* 스크랩 헤더 정보 */
-.scrap-header-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.scrap-type {
-  font-size: 12px;
+.scraps-table th {
+  background: #f9fafb;
+  padding: 12px 16px;
+  text-align: left;
   font-weight: 600;
-  color: #3b82f6;
-  background: #eff6ff;
-  padding: 4px 10px;
-  border-radius: 6px;
-}
-
-.scrap-date {
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-/* 스크랩 제목 */
-.scrap-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #111827;
-  margin-bottom: 12px;
-  line-height: 1.4;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.scrap-title .comment-count {
-  color: #ef4444;
   font-size: 14px;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.scraps-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+}
+
+.scraps-table tr:last-child td {
+  border-bottom: none;
+}
+
+.scraps-table tr:hover {
+  background: #f9fafb;
+}
+
+/* 게시글 링크 */
+.post-link {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
+}
+
+.post-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.comment-count {
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* 태그 배지 */
+.tag-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #eff6ff;
+  color: #3b82f6;
+  border-radius: 4px;
+  font-size: 12px;
   font-weight: 500;
 }
 
-/* 스크랩 메타 정보 */
-.scrap-meta {
+/* 사용자 정보 */
+.user-info {
   display: flex;
-  gap: 16px;
-  font-size: 14px;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-id {
+  font-weight: 600;
+  color: #111827;
+}
+
+.user-email {
+  font-size: 12px;
   color: #6b7280;
 }
 
-.scrap-meta span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* 페이지네이션 (BoardList.css와 통일) */
+/* 페이지네이션 (Admin.css 스타일과 통일) */
 .pagination {
   display: flex;
   justify-content: center;
@@ -173,6 +253,11 @@
   cursor: not-allowed;
 }
 
+.pagination span {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
 /* 에러 메시지 */
 .error-message {
   background: #fef2f2;
@@ -186,27 +271,29 @@
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .scraps-container {
-    padding: 16px;
+    padding: 0;
   }
 
-  .scrap-item {
-    padding: 16px;
-  }
-
-  .scrap-title {
-    font-size: 16px;
-  }
-
-  .scrap-meta {
-    flex-wrap: wrap;
-    gap: 12px;
-    font-size: 13px;
-  }
-
-  .scrap-header-info {
+  .scraps-controls {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+    align-items: stretch;
+  }
+
+  .search-box {
+    max-width: 100%;
+  }
+
+  .sort-controls {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .scraps-table {
+    overflow-x: auto;
+  }
+
+  .scraps-table table {
+    min-width: 600px;
   }
 
   .pagination-btn {

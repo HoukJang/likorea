@@ -5,10 +5,19 @@
   --primary-text: #111111;
   --secondary-text: #6b7280;
 
-  /* 현대화된 Primary Colors */
-  --primary-blue: #3b82f6;
-  --primary-blue-dark: #2563eb;
-  --primary-blue-light: #60a5fa;
+  /* Taegeukgi Colors - 태극기 색상 */
+  --taegeuk-red: #CD2E3A;
+  --taegeuk-red-hover: #ba1b1f;
+  --taegeuk-red-light: #fef2f2;
+  --taegeuk-blue: #0047A0;
+  --taegeuk-blue-hover: #003a87;
+  --taegeuk-blue-light: #eff6ff;
+  --taegeuk-white: #FFFFFF;
+
+  /* 현대화된 Primary Colors - Updated with Taegeukgi */
+  --primary-blue: var(--taegeuk-blue);
+  --primary-blue-dark: var(--taegeuk-blue-hover);
+  --primary-blue-light: var(--taegeuk-blue-light);
 
   /* 현대화된 Secondary Colors */
   --secondary-green: #10b981;
@@ -115,10 +124,10 @@
   color: var(--gray-400);
 }
 
-/* 현대화된 제출 버튼 */
+/* 태극기 색상 그라데이션 제출 버튼 */
 .submit-button {
-  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
-  color: var(--white);
+  background: linear-gradient(135deg, var(--taegeuk-blue) 0%, var(--taegeuk-red) 100%);
+  color: var(--taegeuk-white);
   border: none;
   padding: 12px 24px;
   border-radius: var(--btn-radius);
@@ -127,13 +136,36 @@
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: var(--font-family);
-  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 2px 8px rgba(205, 46, 58, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--taegeuk-blue-hover) 0%, var(--taegeuk-red-hover) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.submit-button:hover::before {
+  opacity: 1;
 }
 
 .submit-button:hover {
-  background: linear-gradient(135deg, var(--primary-blue-dark) 0%, #1d4ed8 100%);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 16px rgba(205, 46, 58, 0.4);
+}
+
+.submit-button span,
+.submit-button {
+  position: relative;
+  z-index: 1;
 }
 
 .submit-button:focus {

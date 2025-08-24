@@ -1,454 +1,264 @@
-/* 현대화된 색상 체계 */
+/* Import Design System */
+@import './design-system.css';
+
+/* Taegeukgi Colors Reference */
 :root {
-  --primary-bg: #ffffff;
-  --secondary-bg: #111111;
-  --primary-text: #111111;
-  --secondary-text: #6b7280;
-
-  /* 현대화된 Primary Colors */
-  --primary-blue: #3b82f6;
-  --primary-blue-dark: #2563eb;
-  --primary-blue-light: #60a5fa;
-
-  /* 현대화된 Secondary Colors */
-  --secondary-green: #10b981;
-  --secondary-green-dark: #059669;
-  --secondary-green-light: #34d399;
-
-  /* 현대화된 Danger Colors */
-  --accent-red: #ef4444;
-  --accent-red-dark: #dc2626;
-
-  /* 세밀한 Gray Scale */
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-900: #111827;
-
-  /* Semantic Colors */
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --info: #3b82f6;
-
-  /* Legacy Support (기존 코드 호환성) */
-  --accent-blue: var(--primary-blue);
-  --accent-blue-dark: var(--primary-blue-dark);
-  --gray-light: var(--gray-100);
-  --gray-medium: var(--gray-500);
-  --gray-dark: var(--gray-700);
-  --border-color: var(--gray-200);
-  --text-primary: var(--primary-text);
-  --text-secondary: var(--secondary-text);
-  --white: var(--primary-bg);
-  --focus-outline: 2px solid var(--primary-blue);
-  --focus-outline-offset: 2px;
-  --btn-radius: 8px;
-  --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
-
-  /* 통일된 글자 크기 체계 */
-  --font-size-xs: 0.75rem; /* 12px - 매우 작은 텍스트 */
-  --font-size-sm: 0.875rem; /* 14px - 작은 텍스트 */
-  --font-size-base: 1rem; /* 16px - 기본 텍스트 */
-  --font-size-lg: 1.125rem; /* 18px - 큰 텍스트 */
-  --font-size-xl: 1.25rem; /* 20px - 매우 큰 텍스트 */
+  --taegeuk-red: #CD2E3A;
+  --taegeuk-red-light: #fef2f2;
+  --taegeuk-white: #FFFFFF;
 }
 
+/* GlobalNavigation.css - Modern Link-based Navigation */
 .global-navigation {
-  background: var(--white);
-  padding: 12px 0;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: var(--z-sticky);
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
 }
 
 .nav-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 var(--spacing-xl);
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
+  height: 56px;
 }
 
-.nav-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
+.nav-left,
 .nav-right {
   display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+/* Navigation Link Base - Modern Tab Style */
+.nav-link {
+  display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-sm);
+  padding: 0 var(--spacing-lg);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  position: relative;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  white-space: nowrap;
 }
 
-/* 통일된 네비게이션 버튼 */
-.nav-button {
-  padding: 10px 18px !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 8px !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  cursor: pointer !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  font-family: var(--font-family) !important;
-  min-height: 44px !important;
-  height: 44px !important;
-  line-height: 1.5 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-  box-sizing: border-box !important;
+/* Icon and Text Styling */
+.nav-icon {
+  font-size: var(--font-size-lg);
+  opacity: 0.8;
+  transition: all var(--transition-fast);
 }
 
-/* 더 강력한 선택자로 글자 크기 강제 적용 */
-.global-navigation .nav-button,
-.global-navigation .main-button,
-.global-navigation .write-button,
-.global-navigation .user-button,
-.global-navigation .logout-button,
-.global-navigation .login-button,
-.global-navigation .signup-button {
-  font-size: 14px !important;
+.nav-text {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
 }
 
-.nav-button:hover {
-  background: var(--gray-light);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+/* Hover State */
+.nav-link:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
 }
 
-.nav-button:focus {
-  outline: var(--focus-outline);
-  outline-offset: var(--focus-outline-offset);
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+.nav-link:hover .nav-icon {
+  opacity: 1;
+  transform: translateY(-1px);
 }
 
-/* 현대화된 메인 버튼 */
-.main-button {
-  background: linear-gradient(
-    135deg,
-    var(--primary-blue) 0%,
-    var(--primary-blue-dark) 100%
-  ) !important;
-  color: var(--white) !important;
-  font-size: 14px !important;
+/* Active State - Clean Underline */
+.nav-link.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
 }
 
-.main-button:hover {
-  background: linear-gradient(135deg, var(--primary-blue-dark) 0%, #1d4ed8 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3) !important;
+.nav-link.active .nav-icon {
+  opacity: 1;
 }
 
-/* 현대화된 글쓰기 버튼 - 그린 계열로 변경 */
-.write-button {
-  background: linear-gradient(
-    135deg,
-    var(--secondary-green) 0%,
-    var(--secondary-green-dark) 100%
-  ) !important;
-  color: var(--white) !important;
-  font-size: 14px !important;
+/* Special Links */
+.write-link {
+  margin-left: var(--spacing-xs);
 }
 
-.write-button:hover {
-  background: linear-gradient(135deg, var(--secondary-green-dark) 0%, #047857 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3) !important;
+.write-link:hover {
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
 }
 
-/* 봇 버튼 - 보라색 계열 */
-.bot-button {
-  background: linear-gradient(
-    135deg,
-    #8b5cf6 0%,
-    #7c3aed 100%
-  ) !important;
-  color: var(--white) !important;
-  font-size: 14px !important;
+.bot-link:hover {
+  color: var(--color-accent);
+  background-color: var(--color-accent-light);
 }
 
-.bot-button:hover {
-  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3) !important;
+.user-link {
+  font-weight: var(--font-weight-semibold);
 }
 
-/* 쪽지 버튼 - 민트색 계열 */
-.messages-button {
-  background: linear-gradient(
-    135deg,
-    #06b6d4 0%,
-    #0891b2 100%
-  ) !important;
-  color: var(--white) !important;
-  font-size: 14px !important;
-  position: relative !important;
+.logout-link:hover {
+  color: var(--taegeuk-red);
+  background-color: var(--taegeuk-red-light);
 }
 
-.messages-button:hover {
-  background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 16px rgba(6, 182, 212, 0.3) !important;
+.login-link:hover,
+.signup-link:hover {
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
 }
 
-/* 읽지 않은 메시지 배지 */
-.unread-badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: #ef4444;
-  color: white;
+/* Badge for Unread Messages */
+.nav-badge {
+  background-color: var(--taegeuk-red);
+  color: var(--taegeuk-white);
   font-size: 10px;
-  font-weight: 700;
   padding: 2px 5px;
   border-radius: 10px;
-  min-width: 16px;
+  min-width: 18px;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-}
-
-/* 사용자 버튼의 읽지 않은 메시지 배지 */
-.user-unread-badge {
+  font-weight: var(--font-weight-bold);
+  margin-left: var(--spacing-xs);
   display: inline-block;
-  margin-left: 4px;
-  background: #ef4444;
-  color: white;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 1px 5px;
-  border-radius: 10px;
-  min-width: 16px;
-  text-align: center;
-  vertical-align: middle;
-  line-height: 14px;
+  line-height: 1;
 }
 
-/* 모바일에서 사용자 버튼 배지 스타일 조정 */
-@media (max-width: 768px) {
-  .user-unread-badge {
-    font-size: 9px;
-    padding: 1px 4px;
-    min-width: 14px;
-    line-height: 12px;
+/* Alternative Style: Pill-style Navigation for Desktop */
+@media (min-width: 1024px) {
+  .nav-link {
+    border-radius: var(--radius-full);
+    border-bottom: none;
+    margin: var(--spacing-sm) var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-lg);
+  }
+  
+  .nav-link:hover {
+    background-color: var(--color-background);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .nav-link.active {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .nav-link.active .nav-icon {
+    color: var(--color-text-inverse);
+  }
+  
+  .nav-link.active:hover {
+    background-color: var(--color-primary-hover);
   }
 }
 
-.user-button {
-  background: var(--gray-100) !important;
-  color: var(--gray-700) !important;
-  border-color: var(--gray-300) !important;
-  font-weight: 600 !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  min-width: fit-content !important;
-  box-sizing: border-box !important;
-}
-
-.user-button:hover {
-  background: var(--gray-200) !important;
-  border-color: var(--gray-400) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-}
-
-
-/* 현대화된 로그아웃 버튼 */
-.logout-button {
-  background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-red-dark) 100%) !important;
-  color: var(--white) !important;
-  font-size: 14px !important;
-}
-
-.logout-button:hover {
-  background: linear-gradient(135deg, var(--accent-red-dark) 0%, #b91c1c 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3) !important;
-}
-
-/* 로그인/회원가입 버튼 공통 정렬 */
-.global-navigation .nav-button.login-button,
-.global-navigation .nav-button.signup-button {
-  /* 정확한 수직 정렬을 위한 공통 스타일 */
-  margin: 0 !important;
-  padding: 10px 18px !important;
-  height: 44px !important;
-  min-height: 44px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  vertical-align: middle !important;
-  line-height: 1.5 !important;
-  box-sizing: border-box !important;
-  border: 1px solid transparent !important;
-  border-radius: 8px !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  font-family: var(--font-family) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-  min-width: fit-content !important;
-  white-space: nowrap !important;
-}
-
-/* 현대화된 로그인 버튼 */
-.global-navigation .nav-button.login-button {
-  background: linear-gradient(
-    135deg,
-    var(--primary-blue) 0%,
-    var(--primary-blue-dark) 100%
-  ) !important;
-  color: var(--white) !important;
-}
-
-.global-navigation .nav-button.login-button:hover {
-  background: linear-gradient(135deg, var(--primary-blue-dark) 0%, #1d4ed8 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3) !important;
-}
-
-/* 현대화된 회원가입 버튼 */
-.global-navigation .nav-button.signup-button {
-  background: linear-gradient(
-    135deg,
-    var(--secondary-green) 0%,
-    var(--secondary-green-dark) 100%
-  ) !important;
-  color: var(--white) !important;
-}
-
-.global-navigation .nav-button.signup-button:hover {
-  background: linear-gradient(135deg, var(--secondary-green-dark) 0%, #047857 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3) !important;
-}
-
-/* 반응형 디자인 */
+/* Mobile Responsive - Compact Icons */
 @media (max-width: 768px) {
   .nav-container {
-    padding: 0 16px;
+    padding: 0 var(--spacing-md);
+    height: 48px;
   }
-
-  .nav-left {
-    gap: 8px;
+  
+  .nav-link {
+    padding: 0 var(--spacing-md);
+    font-size: var(--font-size-xs);
   }
-
-  .nav-right {
-    gap: 8px;
+  
+  .nav-icon {
+    font-size: var(--font-size-base);
   }
-
-  .nav-button {
-    padding: 8px 12px !important;
-    font-size: 13px !important;
-    min-height: 38px !important;
-    height: 38px !important;
-    white-space: nowrap !important;
-  }
-
-  /* 더 작은 화면에서 글자 크기 조정 */
-  .nav-button {
-    font-size: clamp(11px, 3vw, 13px) !important;
-  }
-
-  /* 사용자 버튼은 JavaScript에서 동적으로 크기 조정됨 */
-  .user-button {
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-  }
-
-  .write-button {
-    margin-left: 4px;
-  }
-}
-
-/* 작은 모바일 화면 (480px 이하) */
-@media (max-width: 480px) {
-  .nav-container {
-    padding: 0 12px;
-  }
-
-  .nav-left {
-    gap: 6px;
-  }
-
-  .nav-right {
-    gap: 6px;
-  }
-
-  .nav-button {
-    padding: 6px 10px !important;
-    font-size: clamp(10px, 2.8vw, 12px) !important;
-    min-height: 36px !important;
-    height: 36px !important;
-  }
-
-  /* 사용자 버튼은 JavaScript에서 동적으로 크기 조정됨 */
-  .user-button {
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-  }
-
-  .write-button {
-    margin-left: 2px;
-  }
-}
-
-/* 매우 작은 모바일 화면 (360px 이하) */
-@media (max-width: 360px) {
-  .nav-container {
-    padding: 0 10px;
-  }
-
-  .nav-button {
-    padding: 5px 8px !important;
-    font-size: clamp(9px, 2.5vw, 11px) !important;
-    min-height: 34px !important;
-    height: 34px !important;
-  }
-
-  /* 사용자 버튼은 JavaScript에서 동적으로 크기 조정됨 */
-  .user-button {
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
-  }
-
-  .write-button {
-    margin-left: 2px;
-  }
-}
-
-/* iPhone 안전 영역 지원 */
-@supports (padding: max(0px)) {
-  .nav-container {
-    padding-left: max(16px, env(safe-area-inset-left));
-    padding-right: max(16px, env(safe-area-inset-right));
-  }
-
+  
+  /* Hide text on very small screens, show only icons */
   @media (max-width: 480px) {
-    .nav-container {
-      padding-left: max(12px, env(safe-area-inset-left));
-      padding-right: max(12px, env(safe-area-inset-right));
+    .nav-text {
+      display: none;
+    }
+    
+    .nav-link {
+      padding: 0 var(--spacing-lg);
+      position: relative;
+    }
+    
+    /* Show tooltip on hover for mobile */
+    .nav-link::after {
+      content: attr(aria-label);
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--color-text-primary);
+      color: var(--color-text-inverse);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xs);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-fast);
+    }
+    
+    .nav-link:active::after {
+      opacity: 1;
+    }
+    
+    /* Badge position adjustment for icon-only mode */
+    .nav-badge {
+      position: absolute;
+      top: 0;
+      right: -4px;
+      font-size: 9px;
+      padding: 1px 4px;
+      min-width: 16px;
     }
   }
+}
 
-  @media (max-width: 360px) {
+/* Focus States for Accessibility */
+.nav-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Animation for Active State Change */
+@keyframes slideIn {
+  from {
+    transform: translateY(2px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.nav-link.active {
+  animation: slideIn 0.2s ease-out;
+}
+
+/* Safe Area Support */
+@supports (padding: max(0px)) {
+  .nav-container {
+    padding-left: max(var(--spacing-xl), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-xl), env(safe-area-inset-right));
+  }
+
+  @media (max-width: 768px) {
     .nav-container {
-      padding-left: max(10px, env(safe-area-inset-left));
-      padding-right: max(10px, env(safe-area-inset-right));
+      padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+      padding-right: max(var(--spacing-md), env(safe-area-inset-right));
     }
   }
 }

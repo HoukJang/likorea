@@ -1,0 +1,134 @@
+/* Import Design System */
+@import './design-system.css';
+
+/* Floating Write Button - Mobile Only */
+.floating-write-button {
+  display: none; /* Hidden by default, shown on mobile */
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--taegeuk-blue) 0%, var(--taegeuk-red) 100%);
+  color: var(--taegeuk-white);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: var(--z-sticky);
+  transition: all var(--transition-normal);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Gradient overlay for hover effect */
+.floating-write-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--taegeuk-blue-hover) 0%, var(--taegeuk-red-hover) 100%);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.floating-write-button:hover::before {
+  opacity: 1;
+}
+
+.floating-write-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.floating-write-button:active {
+  transform: scale(0.95);
+}
+
+/* Icon styling */
+.write-icon {
+  position: relative;
+  z-index: 1;
+  font-size: 24px;
+  line-height: 1;
+}
+
+/* Ripple effect on click */
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.floating-write-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+}
+
+.floating-write-button:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+/* Mobile Only Display */
+@media (max-width: 768px) {
+  .floating-write-button {
+    display: flex;
+  }
+}
+
+/* Smaller mobile screens */
+@media (max-width: 480px) {
+  .floating-write-button {
+    width: 48px;
+    height: 48px;
+    bottom: 20px;
+    right: 20px;
+    font-size: 20px;
+  }
+  
+  .write-icon {
+    font-size: 20px;
+  }
+}
+
+/* Safe area support for modern phones */
+@supports (padding: max(0px)) {
+  .floating-write-button {
+    bottom: max(24px, env(safe-area-inset-bottom) + 16px);
+    right: max(24px, env(safe-area-inset-right) + 16px);
+  }
+  
+  @media (max-width: 480px) {
+    .floating-write-button {
+      bottom: max(20px, env(safe-area-inset-bottom) + 12px);
+      right: max(20px, env(safe-area-inset-right) + 12px);
+    }
+  }
+}
+
+/* Focus state for accessibility */
+.floating-write-button:focus-visible {
+  outline: 3px solid var(--taegeuk-white);
+  outline-offset: 2px;
+}
+
+/* Hide when keyboard is visible to prevent overlap */
+@media (max-height: 500px) and (max-width: 768px) {
+  .floating-write-button {
+    display: none;
+  }
+}
