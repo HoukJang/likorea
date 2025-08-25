@@ -48,7 +48,7 @@ const AlternativeNavigation = () => {
       <div className="alt-nav-container">
         {/* Logo/Brand */}
         <div className="alt-nav-brand">
-          <button 
+          <button
             className="brand-button"
             onClick={() => navigate('/')}
             aria-label="홈으로 이동"
@@ -65,7 +65,7 @@ const AlternativeNavigation = () => {
           >
             게시판
           </button>
-          
+
           {user && (
             <button
               className={`text-nav-item accent ${location.pathname === '/boards/new' ? 'active' : ''}`}
@@ -96,7 +96,7 @@ const AlternativeNavigation = () => {
                 <div className="dropdown-header">
                   <span className="user-name">{user.id}</span>
                   {unreadCount > 0 && (
-                    <button 
+                    <button
                       className="message-count"
                       onClick={() => navigate('/dashboard/messages')}
                     >
@@ -143,7 +143,7 @@ const AlternativeNavigation = () => {
               </button>
             </div>
           )}
-          
+
         </div>
       </div>
 

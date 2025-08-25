@@ -34,7 +34,7 @@ const DynamicBanner = () => {
       const dismissedBanners = JSON.parse(localStorage.getItem('dismissedBanners') || '[]');
       dismissedBanners.push(banner.id);
       localStorage.setItem('dismissedBanners', JSON.stringify(dismissedBanners));
-      
+
       // 애니메이션 후 제거
       setIsDismissed(true);
       setTimeout(() => setBanner(null), 300);
@@ -68,8 +68,8 @@ const DynamicBanner = () => {
           </span>
           <span className="banner-message">{banner.message}</span>
           {banner.link && banner.link.url && (
-            <a 
-              href={banner.link.url} 
+            <a
+              href={banner.link.url}
               className="banner-link"
               target="_blank"
               rel="noopener noreferrer"
@@ -79,7 +79,7 @@ const DynamicBanner = () => {
           )}
         </div>
         {banner.dismissible && (
-          <button 
+          <button
             className="banner-close"
             onClick={handleDismiss}
             aria-label="배너 닫기"

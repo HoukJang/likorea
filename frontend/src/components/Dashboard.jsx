@@ -13,17 +13,17 @@ function Dashboard() {
   const [message, setMessage] = useState('');
   const tabsRef = useRef(null);
   const [isScrollable, setIsScrollable] = useState(false);
-  
+
   // 디버깅: 렌더링 추적
   useEffect(() => {
-    console.log('[Dashboard] 렌더링됨:', { 
+    console.log('[Dashboard] 렌더링됨:', {
       pathname: location.pathname,
       user: user?.id,
       authority: user?.authority,
       authLoading
     });
   });
-  
+
   // isAdmin을 직접 계산 (state로 관리하지 않음)
   const isAdmin = useMemo(() => {
     // 로딩 중이거나 user가 없으면 무조건 false
@@ -31,20 +31,20 @@ function Dashboard() {
       console.log('[Dashboard] isAdmin = false (로딩 중 또는 user 없음)');
       return false;
     }
-    
+
     const authority = user?.authority;
     // 숫자 또는 문자열 5만 관리자로 인정
     const result = authority === 5 || authority === '5';
-    console.log('[Dashboard] isAdmin 계산:', { 
-      user: user?.id, 
-      authority, 
+    console.log('[Dashboard] isAdmin 계산:', {
+      user: user?.id,
+      authority,
       authorityType: typeof authority,
       result,
-      authLoading 
+      authLoading
     });
     return result;
   }, [user, authLoading]);
-  
+
 
   // URL 경로에서 현재 탭 결정
   const activeTab = useMemo(() => {
@@ -86,7 +86,7 @@ function Dashboard() {
     if (!authLoading && user) {
       const adminPaths = ['users', 'stats', 'traffic', 'banners'];
       const currentPath = location.pathname.split('/')[2];
-      
+
       // 관리자가 아닌데 관리자 페이지에 접근하려고 하면 리다이렉트
       if (adminPaths.includes(currentPath) && !isAdmin) {
         console.log('[Dashboard] 권한 없음, 프로필로 리다이렉트');
@@ -99,7 +99,7 @@ function Dashboard() {
   useEffect(() => {
     checkScrollable();
     window.addEventListener('resize', checkScrollable);
-    
+
     // 디버깅: 탭 컨테이너의 실제 스타일 확인
     if (tabsRef.current) {
       const computedStyle = window.getComputedStyle(tabsRef.current);
@@ -119,7 +119,7 @@ function Dashboard() {
         user: user?.id
       });
     }
-    
+
     return () => window.removeEventListener('resize', checkScrollable);
   }, [checkScrollable, isAdmin]); // isAdmin 변경 시에도 체크
 
@@ -179,27 +179,27 @@ function Dashboard() {
         description: '공지 배너 관리'
       }
     ];
-    
+
     // 로딩 중이거나 관리자가 아니면 무조건 기본 탭만 표시
     if (authLoading || !isAdmin) {
-      console.log('[Dashboard] 일반 사용자 탭만 표시:', { 
-        isAdmin, 
+      console.log('[Dashboard] 일반 사용자 탭만 표시:', {
+        isAdmin,
         authLoading,
         user: user?.id,
         authority: user?.authority
       });
       return commonTabs;
     }
-    
+
     // 관리자인 경우에만 관리자 탭 추가
-    console.log('[Dashboard] 관리자 탭 포함:', { 
-      isAdmin, 
+    console.log('[Dashboard] 관리자 탭 포함:', {
+      isAdmin,
       user: user?.id,
-      authority: user?.authority 
+      authority: user?.authority
     });
     return [...commonTabs, ...adminTabs];
   }, [isAdmin, authLoading, user]); // user도 의존성에 추가
-  
+
   // 메시지 뱃지를 위해 별도로 처리
   const tabsWithBadge = useMemo(() => {
     return availableTabs.map(tab => {
@@ -220,8 +220,8 @@ function Dashboard() {
           </p>
           {/* 디버깅 정보 추가 */}
           <p style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
-            [디버그] User: {user?.id || 'none'}, Authority: {user?.authority || 'none'} (타입: {typeof user?.authority}), 
-            isAdmin: {String(isAdmin)}, 탭 수: {tabsWithBadge.length}, 
+            [디버그] User: {user?.id || 'none'}, Authority: {user?.authority || 'none'} (타입: {typeof user?.authority}),
+            isAdmin: {String(isAdmin)}, 탭 수: {tabsWithBadge.length},
             경로: {location.pathname}
           </p>
         </div>
@@ -234,12 +234,12 @@ function Dashboard() {
       </header>
 
       {/* 로딩 중이거나 user가 없을 때는 탭을 숨기지 않고 일반 탭만 표시 */}
-      <nav 
-        className={`dashboard-tabs ${isScrollable ? 'scrollable' : ''}`} 
-        role="tablist" 
+      <nav
+        className={`dashboard-tabs ${isScrollable ? 'scrollable' : ''}`}
+        role="tablist"
         aria-label="대시보드 기능 탭"
         ref={tabsRef}
-        style={{ 
+        style={{
           display: 'flex',
           flexWrap: 'nowrap',
           overflowX: 'auto',

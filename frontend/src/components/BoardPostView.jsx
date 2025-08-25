@@ -159,7 +159,7 @@ function BoardPostView() {
     try {
       setScrapLoading(true);
       const response = await toggleScrap(postId);
-      
+
       if (response.success) {
         setIsScraped(response.isScraped);
         const message = response.isScraped ? '스크랩되었습니다.' : '스크랩이 해제되었습니다.';
@@ -483,8 +483,8 @@ function BoardPostView() {
                 수정
               </button>
               <span className="action-divider">·</span>
-              <button 
-                onClick={handleDelete} 
+              <button
+                onClick={handleDelete}
                 className="minimal-action-button text-only danger"
                 aria-label="게시글 삭제"
               >
@@ -649,7 +649,7 @@ function BoardPostView() {
           <p className="login-message">💬 댓글을 작성하려면 로그인이 필요합니다.</p>
         )}
       </div>
-      
+
       {/* Desktop Action Bar */}
       <PostActionBar
         postId={postId}
@@ -663,7 +663,7 @@ function BoardPostView() {
         onDelete={handleDelete}
       />
     </div>
-    
+
     {/* Floating Action Buttons - Mobile Only */}
     <div className="mobile-only">
       <FloatingActionButtons

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/FloatingActionButtons.css';
 
-const FloatingActionButtons = ({ 
-  onScrapToggle, 
-  isScraped, 
+const FloatingActionButtons = ({
+  onScrapToggle,
+  isScraped,
   scrapLoading,
   showScrap = true,
   showShare = true,
@@ -23,7 +23,7 @@ const FloatingActionButtons = ({
 
     // 댓글 입력창 포커스 시 숨김 처리
     const handleFocusIn = (e) => {
-      if (e.target.classList.contains('comment-textarea') || 
+      if (e.target.classList.contains('comment-textarea') ||
           e.target.classList.contains('comment-edit-textarea')) {
         setIsVisible(false);
         setIsExpanded(false); // 확장된 상태도 닫기
@@ -31,7 +31,7 @@ const FloatingActionButtons = ({
     };
 
     const handleFocusOut = (e) => {
-      if (e.target.classList.contains('comment-textarea') || 
+      if (e.target.classList.contains('comment-textarea') ||
           e.target.classList.contains('comment-edit-textarea')) {
         // 포커스 아웃 후 스크롤 위치 확인하여 다시 표시
         setTimeout(() => {
@@ -45,7 +45,7 @@ const FloatingActionButtons = ({
     window.addEventListener('scroll', handleScroll);
     document.addEventListener('focusin', handleFocusIn);
     document.addEventListener('focusout', handleFocusOut);
-    
+
     // 초기 상태 체크
     handleScroll();
 
@@ -83,7 +83,7 @@ const FloatingActionButtons = ({
   return (
     <div className={`floating-action-container ${isVisible ? 'visible' : ''}`}>
       {/* 메인 FAB 버튼 */}
-      <button 
+      <button
         className="fab-main"
         onClick={() => setIsExpanded(!isExpanded)}
         aria-label="액션 메뉴"
@@ -105,7 +105,7 @@ const FloatingActionButtons = ({
             <span className="fab-icon">🗑️</span>
           </button>
         )}
-        
+
         {canModify && onEdit && (
           <button
             className="fab-action fab-edit"
@@ -116,7 +116,7 @@ const FloatingActionButtons = ({
             <span className="fab-icon">✏️</span>
           </button>
         )}
-        
+
         {showScrap && (
           <button
             className={`fab-action fab-scrap ${isScraped ? 'active' : ''}`}
@@ -128,7 +128,7 @@ const FloatingActionButtons = ({
             <span className="fab-icon">📌</span>
           </button>
         )}
-        
+
         {showShare && (
           <button
             className="fab-action fab-share"
@@ -139,7 +139,7 @@ const FloatingActionButtons = ({
             <span className="fab-icon">🔗</span>
           </button>
         )}
-        
+
         {showTop && (
           <button
             className="fab-action fab-top"

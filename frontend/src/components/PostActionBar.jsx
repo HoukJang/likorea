@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/PostActionBar.css';
 
-const PostActionBar = ({ 
+const PostActionBar = ({
   postId,
   onScrapToggle,
   isScraped,
@@ -43,7 +43,7 @@ const PostActionBar = ({
     <div className="post-action-bar">
       <div className="action-bar-container">
         <div className="action-bar-left">
-          <button 
+          <button
             className="action-bar-button"
             onClick={handleListClick}
             aria-label="목록으로"
@@ -52,7 +52,7 @@ const PostActionBar = ({
             <span className="action-label">목록</span>
           </button>
         </div>
-        
+
         <div className="action-bar-center">
           {showScrap && user && (
             <button
@@ -78,7 +78,7 @@ const PostActionBar = ({
             <span className="action-icon">🔗</span>
             <span className="action-label">공유</span>
           </button>
-          
+
           {canModify && (
             <>
               <button

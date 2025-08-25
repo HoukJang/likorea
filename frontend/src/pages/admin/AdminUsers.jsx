@@ -65,7 +65,7 @@ function AdminUsers() {
   useEffect(() => {
     fetchUsers();
   }, []);
-  
+
   // 권한 체크 - 관리자가 아니면 프로필로 리다이렉트
   if (!isAdmin) {
     console.log('[AdminUsers] 권한 없음, 프로필로 리다이렉트', { isAdmin, userAuthority });

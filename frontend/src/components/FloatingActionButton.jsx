@@ -19,7 +19,7 @@ const FloatingActionButton = () => {
   }, [navigate]);
 
   // 로그인/회원가입 페이지와 게시글 보기 페이지에서는 FAB 숨기기
-  if (location.pathname === '/login' || 
+  if (location.pathname === '/login' ||
       location.pathname === '/signup' ||
       location.pathname.match(/^\/boards\/\d+$/)) {  // 게시글 보기 페이지 패턴
     return null;
@@ -28,7 +28,7 @@ const FloatingActionButton = () => {
   return (
     <>
       {/* 좌측 상단 미니 로고 */}
-      <button 
+      <button
         className="mini-logo"
         onClick={() => navigate('/')}
         aria-label="홈으로 이동"
@@ -49,7 +49,7 @@ const FloatingActionButton = () => {
             <span className="fab-icon">📋</span>
             <span className="fab-label">게시판</span>
           </button>
-          
+
           {user && (
             <button
               className="fab-menu-item accent"

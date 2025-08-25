@@ -6,7 +6,7 @@ import '../styles/design-system.css';
 
 const DesignSystemPreview = () => {
   const [navStyle, setNavStyle] = useState('modern');
-  
+
   return (
     <>
       {/* Navigation Style Showcase */}
@@ -14,14 +14,14 @@ const DesignSystemPreview = () => {
         <div style={{ background: '#f5f5f5', padding: '20px', marginBottom: '20px' }}>
           <h3 style={{ marginBottom: '10px' }}>네비게이션 스타일 선택</h3>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <Button 
+            <Button
               variant={navStyle === 'modern' ? 'primary' : 'secondary'}
               size="sm"
               onClick={() => setNavStyle('modern')}
             >
               모던 링크 스타일
             </Button>
-            <Button 
+            <Button
               variant={navStyle === 'minimal' ? 'primary' : 'secondary'}
               size="sm"
               onClick={() => setNavStyle('minimal')}
@@ -30,10 +30,10 @@ const DesignSystemPreview = () => {
             </Button>
           </div>
         </div>
-        
+
         {navStyle === 'modern' ? <GlobalNavigation /> : <AlternativeNavigation />}
       </div>
-      
+
       <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
         <h1 style={{ fontSize: '32px', marginBottom: '40px', color: 'var(--color-text-primary)' }}>
           Long Island Korea Design System Preview
@@ -84,7 +84,7 @@ const DesignSystemPreview = () => {
       {/* Buttons */}
       <section style={{ marginBottom: '60px' }}>
         <h2 style={{ fontSize: '24px', marginBottom: '24px' }}>Buttons</h2>
-        
+
         <h3 style={{ fontSize: '18px', marginBottom: '16px' }}>Variants</h3>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '32px' }}>
           <Button variant="primary">Primary Button</Button>
@@ -157,14 +157,14 @@ const DesignSystemPreview = () => {
       <section style={{ marginBottom: '60px' }}>
         <h2 style={{ fontSize: '24px', marginBottom: '24px' }}>Form Elements</h2>
         <div style={{ maxWidth: '400px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <input 
-            type="text" 
-            className="input" 
-            placeholder="Text input" 
+          <input
+            type="text"
+            className="input"
+            placeholder="Text input"
           />
-          <textarea 
-            className="textarea" 
-            placeholder="Textarea for longer content" 
+          <textarea
+            className="textarea"
+            placeholder="Textarea for longer content"
             rows="4"
           />
           <Button variant="primary" fullWidth>Submit</Button>
@@ -180,13 +180,13 @@ const DesignSystemPreview = () => {
               <span style={{ width: '60px', fontSize: '12px', color: 'var(--color-text-secondary)' }}>
                 {size}
               </span>
-              <div 
-                style={{ 
-                  width: `var(--spacing-${size})`, 
-                  height: '24px', 
+              <div
+                style={{
+                  width: `var(--spacing-${size})`,
+                  height: '24px',
                   backgroundColor: 'var(--color-primary)',
                   borderRadius: '4px'
-                }} 
+                }}
               />
               <span style={{ fontSize: '12px', color: 'var(--color-text-tertiary)' }}>
                 var(--spacing-{size})
@@ -204,14 +204,14 @@ const DesignSystemPreview = () => {
 const ColorSwatch = ({ name, color }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <div 
-        style={{ 
-          width: '100%', 
-          height: '80px', 
+      <div
+        style={{
+          width: '100%',
+          height: '80px',
           backgroundColor: color,
           borderRadius: '8px',
           border: '1px solid var(--color-border)'
-        }} 
+        }}
       />
       <div>
         <div style={{ fontSize: '14px', fontWeight: '500' }}>{name}</div>

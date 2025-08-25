@@ -14,7 +14,7 @@ const BoardCards = React.memo(({ posts, tagList, pendingOnly = false, userScrapI
       e.preventDefault();
       return;
     }
-    
+
     navigate(pendingOnly ? `/boards/${postId}/edit?pending=true` : `/boards/${postId}`);
   };
 
@@ -68,7 +68,7 @@ const BoardCards = React.memo(({ posts, tagList, pendingOnly = false, userScrapI
                     <>🤖 {post.botId.name}</>
                   ) : post.author && typeof post.author === 'object' ? (
                     <div onClick={(e) => e.stopPropagation()}>
-                      <UserMenu 
+                      <UserMenu
                         username={getAuthorId(post.author)}
                         userId={post.author._id || post.author.id}
                       />

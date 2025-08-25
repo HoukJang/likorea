@@ -23,10 +23,10 @@ function Scraps() {
   const fetchScraps = async (page = 1) => {
     try {
       setLoading(true);
-      const response = isAdmin 
+      const response = isAdmin
         ? await getAllScrapsAdmin({ page, limit: 20, sortBy, sortOrder })
         : await getUserScraps({ page, limit: 20 });
-      
+
       if (response.success) {
         setScraps(response.scraps);
         setCurrentPage(response.currentPage);
@@ -96,7 +96,7 @@ function Scraps() {
       <div className="scraps-header">
         <h2>{isAdmin ? '스크랩 관리' : '내 스크랩'}</h2>
         <p className="scraps-stats">
-          {isAdmin 
+          {isAdmin
             ? `총 ${totalCount}개의 스크랩 | ${scraps.length > 0 && ` ${new Set(scraps.map(s => s.user?._id)).size}명의 사용자`}`
             : `총 ${totalCount}개의 글을 스크랩했습니다.`}
         </p>
@@ -107,14 +107,14 @@ function Scraps() {
         <div className="search-box">
           <input
             type="text"
-            placeholder={isAdmin ? "제목, 사용자 ID, 이메일로 검색..." : "제목, 작성자로 검색..."}
+            placeholder={isAdmin ? '제목, 사용자 ID, 이메일로 검색...' : '제목, 작성자로 검색...'}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
           <span className="search-icon">🔍</span>
         </div>
-        
+
         <div className="sort-controls">
           <button
             className={`sort-btn ${sortBy === 'createdAt' ? 'active' : ''}`}
@@ -200,7 +200,7 @@ function Scraps() {
               >
                 이전
               </button>
-              
+
               {[...Array(totalPages)].map((_, index) => {
                 const page = index + 1;
                 if (
@@ -223,7 +223,7 @@ function Scraps() {
                 }
                 return null;
               })}
-              
+
               <button
                 className="pagination-btn"
                 onClick={() => handlePageChange(currentPage + 1)}

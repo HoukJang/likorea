@@ -93,9 +93,9 @@ const BoardTable = React.memo(({ posts, tagList, pendingOnly = false, userScrapI
                         ? `Exit ${post.region}`
                         : '전체'}
                 </td>
-                <td 
-                  className="post-author" 
-                  style={{ textAlign: 'center' }} 
+                <td
+                  className="post-author"
+                  style={{ textAlign: 'center' }}
                   role="cell"
                   onMouseEnter={(e) => {
                     if (e.target.closest('.user-menu-container')) {

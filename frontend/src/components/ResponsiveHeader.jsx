@@ -57,14 +57,14 @@ const ResponsiveHeader = () => {
 
         {/* 네비게이션 */}
         <nav className="header-nav">
-          <button 
+          <button
             className={`nav-item ${location.pathname === '/boards' ? 'active' : ''}`}
             onClick={() => navigate('/boards')}
           >
             게시판
           </button>
           {user && (
-            <button 
+            <button
               className="nav-item primary"
               onClick={() => navigate('/boards/new')}
             >
@@ -77,13 +77,13 @@ const ResponsiveHeader = () => {
         <div className="header-user">
           {!user ? (
             <div className="auth-buttons">
-              <button 
+              <button
                 className="auth-btn login"
                 onClick={() => navigate('/login')}
               >
                 로그인
               </button>
-              <button 
+              <button
                 className="auth-btn signup"
                 onClick={() => navigate('/signup')}
               >
@@ -113,7 +113,7 @@ const ResponsiveHeader = () => {
                     <div className="dropdown-header">
                       <span className="dropdown-user-name">{user.id}</span>
                       {unreadCount > 0 && (
-                        <button 
+                        <button
                           className="message-link"
                           onClick={() => {
                             navigate('/dashboard/messages');
@@ -125,8 +125,8 @@ const ResponsiveHeader = () => {
                       )}
                     </div>
                     <div className="dropdown-divider" />
-                    <button 
-                      className="dropdown-item" 
+                    <button
+                      className="dropdown-item"
                       onClick={() => {
                         navigate('/dashboard');
                         setIsUserMenuOpen(false);
@@ -134,8 +134,8 @@ const ResponsiveHeader = () => {
                     >
                       {user.authority >= 5 ? '관리자 대시보드' : '내 정보'}
                     </button>
-                    <button 
-                      className="dropdown-item" 
+                    <button
+                      className="dropdown-item"
                       onClick={() => {
                         navigate('/dashboard/scraps');
                         setIsUserMenuOpen(false);
@@ -143,8 +143,8 @@ const ResponsiveHeader = () => {
                     >
                       내 스크랩
                     </button>
-                    <button 
-                      className="dropdown-item" 
+                    <button
+                      className="dropdown-item"
                       onClick={() => {
                         navigate('/dashboard/messages');
                         setIsUserMenuOpen(false);
@@ -153,8 +153,8 @@ const ResponsiveHeader = () => {
                       쪽지함
                     </button>
                     {user.authority >= 5 && (
-                      <button 
-                        className="dropdown-item" 
+                      <button
+                        className="dropdown-item"
                         onClick={() => {
                           navigate('/bot-board');
                           setIsUserMenuOpen(false);
@@ -164,8 +164,8 @@ const ResponsiveHeader = () => {
                       </button>
                     )}
                     <div className="dropdown-divider" />
-                    <button 
-                      className="dropdown-item danger" 
+                    <button
+                      className="dropdown-item danger"
                       onClick={handleLogout}
                     >
                       로그아웃

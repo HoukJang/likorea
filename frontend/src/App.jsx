@@ -56,7 +56,7 @@ const AdminBanners = lazy(() => import('./pages/admin/AdminBanners'));
 function AppContent() {
   // 전역 인증 상태 관리 - 앱 시작 시 토큰 검증 수행
   const { loading: authLoading } = useAuth();
-  
+
   // 반응형 디자인을 위한 미디어 쿼리
   const isDesktopOrTablet = useMediaQuery(BREAKPOINTS.desktopOrTablet);
 
@@ -202,7 +202,7 @@ function AppContent() {
                 <DesignPreview />
               </Suspense>
             } />
-            
+
             {/* Design System Preview */}
             <Route path="/design-system" element={
               <Suspense fallback={<Loading />}>
@@ -216,7 +216,7 @@ function AppContent() {
                 <ButtonDemo />
               </Suspense>
             } />
-            
+
             {/* 404 페이지 - 모든 매치되지 않는 경로 처리 */}
             <Route path="*" element={<NotFound />} />
           </Routes>

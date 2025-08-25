@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import '../../styles/Button.css';
 
-const Button = ({ 
-  children, 
+const Button = ({
+  children,
   variant = 'primary',
   size = 'medium',
   loading = false,
@@ -14,7 +14,7 @@ const Button = ({
   onClick,
   type = 'button',
   className = '',
-  ...props 
+  ...props
 }) => {
   const buttonClasses = [
     'btn',
@@ -49,15 +49,15 @@ const Button = ({
           </svg>
         </span>
       )}
-      
+
       {icon && iconPosition === 'left' && !loading && (
         <span className="btn-icon btn-icon-left" aria-hidden="true">
           {icon}
         </span>
       )}
-      
+
       {children && <span className="btn-text">{children}</span>}
-      
+
       {icon && iconPosition === 'right' && !loading && (
         <span className="btn-icon btn-icon-right" aria-hidden="true">
           {icon}

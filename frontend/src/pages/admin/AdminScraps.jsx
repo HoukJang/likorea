@@ -22,13 +22,13 @@ function AdminScraps() {
   const fetchScraps = async (page = 1) => {
     try {
       setLoading(true);
-      const response = await getAllScrapsAdmin({ 
-        page, 
+      const response = await getAllScrapsAdmin({
+        page,
         limit: 20,
         sortBy,
-        sortOrder 
+        sortOrder
       });
-      
+
       if (response.success) {
         setScraps(response.scraps);
         setCurrentPage(response.currentPage);
@@ -100,7 +100,7 @@ function AdminScraps() {
       <div className="admin-scraps-header">
         <h2>스크랩 관리</h2>
         <p className="admin-scraps-stats">
-          총 {totalCount}개의 스크랩 | 
+          총 {totalCount}개의 스크랩 |
           {scraps.length > 0 && ` ${new Set(scraps.map(s => s.user?._id)).size}명의 사용자`}
         </p>
       </div>
@@ -117,7 +117,7 @@ function AdminScraps() {
           />
           <span className="search-icon">🔍</span>
         </div>
-        
+
         <div className="sort-controls">
           <button
             className={`sort-btn ${sortBy === 'createdAt' ? 'active' : ''}`}
@@ -163,7 +163,7 @@ function AdminScraps() {
                 {filteredScraps.map((scrap) => {
                   const post = scrap.post;
                   const user = scrap.user;
-                  
+
                   if (!post || !user) return null; // 삭제된 데이터
 
                   return (
@@ -207,7 +207,7 @@ function AdminScraps() {
               >
                 이전
               </button>
-              
+
               {[...Array(totalPages)].map((_, index) => {
                 const page = index + 1;
                 if (
@@ -230,7 +230,7 @@ function AdminScraps() {
                 }
                 return null;
               })}
-              
+
               <button
                 className="pagination-btn"
                 onClick={() => handlePageChange(currentPage + 1)}

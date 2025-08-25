@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useOutletContext, Navigate } from 'react-router-dom';
-import { 
-  getAllBanners, 
-  createBanner, 
-  updateBanner, 
-  deleteBanner, 
-  toggleBannerStatus 
+import {
+  getAllBanners,
+  createBanner,
+  updateBanner,
+  deleteBanner,
+  toggleBannerStatus
 } from '../../api/banner';
 import '../../styles/AdminBanners.css';
 
@@ -132,7 +132,7 @@ function AdminBanners() {
     <div className="admin-banners">
       <div className="admin-header">
         <h2>배너 관리</h2>
-        <button 
+        <button
           className="btn-create"
           onClick={() => setShowForm(!showForm)}
         >
@@ -145,7 +145,7 @@ function AdminBanners() {
       {showForm && (
         <form className="banner-form" onSubmit={handleSubmit}>
           <h3>{editingBanner ? '배너 수정' : '새 배너 만들기'}</h3>
-          
+
           <div className="form-group">
             <label>메시지 *</label>
             <input
@@ -199,9 +199,9 @@ function AdminBanners() {
             <input
               type="url"
               value={formData.link.url}
-              onChange={(e) => setFormData({ 
-                ...formData, 
-                link: { ...formData.link, url: e.target.value } 
+              onChange={(e) => setFormData({
+                ...formData,
+                link: { ...formData.link, url: e.target.value }
               })}
               placeholder="https://example.com"
             />
@@ -213,9 +213,9 @@ function AdminBanners() {
               <input
                 type="text"
                 value={formData.link.text}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  link: { ...formData.link, text: e.target.value } 
+                onChange={(e) => setFormData({
+                  ...formData,
+                  link: { ...formData.link, text: e.target.value }
                 })}
                 placeholder="자세히 보기"
               />
@@ -272,7 +272,7 @@ function AdminBanners() {
                   </a>
                 )}
               </div>
-              
+
               <div className="banner-info">
                 <span className={`badge badge-${banner.type}`}>{banner.type}</span>
                 <span className={`badge ${banner.isActive ? 'badge-active' : 'badge-inactive'}`}>

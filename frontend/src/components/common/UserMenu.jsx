@@ -20,24 +20,24 @@ const UserMenu = ({ username, userId, onOpenChange }) => {
   const toggleMenu = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // 버튼 위치 확인하여 dropup 여부 및 위치 결정
     if (buttonRef.current && !isMobile) {
       const rect = buttonRef.current.getBoundingClientRect();
       const spaceBelow = window.innerHeight - rect.bottom;
       const spaceAbove = rect.top;
-      
+
       // 아래 공간이 200px 미만이고 위 공간이 더 크면 dropup
       const shouldDropUp = spaceBelow < 200 && spaceAbove > spaceBelow;
       setDropUp(shouldDropUp);
-      
+
       // 드롭다운 위치 계산
       setDropdownPosition({
         top: shouldDropUp ? rect.top - 8 : rect.bottom + 8,
         left: rect.left + rect.width / 2
       });
     }
-    
+
     const newState = !isOpen;
     setIsOpen(newState);
     if (onOpenChange) {
@@ -115,7 +115,7 @@ const UserMenu = ({ username, userId, onOpenChange }) => {
   }, [toggleMenu]);
 
   return (
-    <div 
+    <div
       className="user-menu-container"
       onMouseEnter={(e) => e.stopPropagation()}
       onMouseLeave={(e) => e.stopPropagation()}
@@ -137,7 +137,7 @@ const UserMenu = ({ username, userId, onOpenChange }) => {
       {isOpen && ReactDOM.createPortal(
         <>
           {/* 백드롭 - 모바일과 데스크톱 모두 */}
-          <div 
+          <div
             className={`user-menu-backdrop ${isMobile ? 'mobile' : 'desktop'}`}
             onClick={() => {
               setIsOpen(false);
@@ -146,7 +146,7 @@ const UserMenu = ({ username, userId, onOpenChange }) => {
               }
             }}
           />
-          
+
           <div
             ref={menuRef}
             className={`user-menu-dropdown ${dropUp ? 'dropup' : ''} ${isMobile ? 'mobile' : ''}`}
@@ -169,7 +169,7 @@ const UserMenu = ({ username, userId, onOpenChange }) => {
                 <h3>{username} 님</h3>
               </div>
             )}
-            
+
             <button
               className="user-menu-item"
               onClick={handleSendMessage}
@@ -189,7 +189,7 @@ const UserMenu = ({ username, userId, onOpenChange }) => {
               <span className="menu-text">차단하기</span>
             </button>
             */}
-            
+
             {isMobile && (
               <button
                 className="user-menu-item cancel-item"

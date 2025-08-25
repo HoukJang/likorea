@@ -93,7 +93,7 @@ const UserMenu = () => {
             <div className="dropdown-header">
               <span className="user-name">{user.id}</span>
               {unreadCount > 0 && (
-                <button 
+                <button
                   className="message-count"
                   onClick={() => handleNavigate('/dashboard/messages')}
                 >

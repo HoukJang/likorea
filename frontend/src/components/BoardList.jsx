@@ -62,7 +62,7 @@ const BoardList = ({ pendingOnly = false }) => {
   useEffect(() => {
     const fetchUserScraps = async () => {
       if (!user) return;
-      
+
       try {
         // 모든 스크랩을 가져오기 위해 limit을 크게 설정
         const response = await getUserScraps({ page: 1, limit: 1000 });
@@ -74,7 +74,7 @@ const BoardList = ({ pendingOnly = false }) => {
         console.error('스크랩 목록 조회 실패:', error);
       }
     };
-    
+
     fetchUserScraps();
   }, [user]);
 
@@ -191,7 +191,7 @@ const BoardList = ({ pendingOnly = false }) => {
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
-      
+
       {/* Floating Write Button for Mobile - FAB에 통합됨 */}
       {/* <FloatingWriteButton /> */}
     </div>

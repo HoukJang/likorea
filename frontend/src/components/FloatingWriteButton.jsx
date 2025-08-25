@@ -15,7 +15,7 @@ const FloatingWriteButton = () => {
   };
 
   return (
-    <button 
+    <button
       className="floating-write-button"
       onClick={handleWriteClick}
       aria-label="글쓰기"
