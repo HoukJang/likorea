@@ -121,7 +121,7 @@ function Dashboard() {
     }
     
     return () => window.removeEventListener('resize', checkScrollable);
-  }, [checkScrollable, isAdmin, tabsWithBadge.length, user]); // 탭 개수 변경 시에도 체크
+  }, [checkScrollable, isAdmin]); // isAdmin 변경 시에도 체크
 
   // 탭 변경 핸들러
   const handleTabChange = (tab) => {
