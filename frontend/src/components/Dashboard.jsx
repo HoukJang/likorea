@@ -211,8 +211,9 @@ function Dashboard() {
           </p>
           {/* 디버깅 정보 추가 */}
           <p style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
-            [디버그] User: {user?.id || 'none'}, Authority: {user?.authority || 'none'}, 
-            isAdmin: {String(isAdmin)}, 탭 수: {tabsWithBadge.length}
+            [디버그] User: {user?.id || 'none'}, Authority: {user?.authority || 'none'} (타입: {typeof user?.authority}), 
+            isAdmin: {String(isAdmin)}, 탭 수: {tabsWithBadge.length}, 
+            경로: {location.pathname}
           </p>
         </div>
         {isAdmin && (
@@ -229,6 +230,10 @@ function Dashboard() {
         role="tablist" 
         aria-label="대시보드 기능 탭"
         ref={tabsRef}
+        style={{ 
+          flexWrap: 'nowrap',  // 인라인 스타일로 강제
+          overflowX: 'auto'    // 가로 스크롤 강제
+        }}
       >
         {tabsWithBadge.map((tab) => {
           // 디버깅: 각 탭 렌더링 추적

@@ -1,10 +1,18 @@
 import { useState, useEffect } from 'react';
+import { useOutletContext, Navigate } from 'react-router-dom';
 import { getAdminStats } from '../../api/admin';
 import '../../styles/Admin.css';
 
 function AdminStats() {
+  const { isAdmin } = useOutletContext();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  // 권한 체크 - 관리자가 아니면 프로필로 리다이렉트
+  if (!isAdmin) {
+    console.log('[AdminStats] 권한 없음, 프로필로 리다이렉트');
+    return <Navigate to="/dashboard/profile" replace />;
+  }
 
   // 권한 레벨 표시
   const getAuthorityLabel = level => {

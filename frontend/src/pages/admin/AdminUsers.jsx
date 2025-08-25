@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, Navigate } from 'react-router-dom';
 import {
   getAllUsers,
   updateUserAuthority,
@@ -10,7 +10,13 @@ import {
 import '../../styles/Admin.css';
 
 function AdminUsers() {
-  const { setMessage } = useOutletContext();
+  const { setMessage, isAdmin, userAuthority } = useOutletContext();
+  
+  // 권한 체크 - 관리자가 아니면 프로필로 리다이렉트
+  if (!isAdmin) {
+    console.log('[AdminUsers] 권한 없음, 프로필로 리다이렉트', { isAdmin, userAuthority });
+    return <Navigate to="/dashboard/profile" replace />;
+  }
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
