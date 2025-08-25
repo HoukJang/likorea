@@ -47,14 +47,12 @@ function Dashboard() {
   
 
   // URL 경로에서 현재 탭 결정
-  const getActiveTab = () => {
+  const activeTab = useMemo(() => {
     const pathParts = location.pathname.split('/');
     // /dashboard/messages/compose 같은 경우 messages를 반환
     const tabName = pathParts[2] || 'profile';
     return tabName === 'dashboard' ? 'profile' : tabName;
-  };
-
-  const activeTab = getActiveTab();
+  }, [location.pathname]);
 
   // 스크롤 가능 여부 체크
   const checkScrollable = useCallback(() => {
@@ -124,66 +122,64 @@ function Dashboard() {
     navigate(`/dashboard/${tab}`);
   };
 
-  // 공통 탭 정의
-  const commonTabs = [
-    {
-      id: 'profile',
-      label: '프로필',
-      icon: '👤',
-      description: '내 정보 관리'
-    },
-    {
-      id: 'scraps',
-      label: '스크랩',
-      icon: '📌',
-      description: '저장한 게시글'
-    },
-    {
-      id: 'messages',
-      label: '쪽지함',
-      icon: '✉️',
-      description: '메시지 관리',
-      badge: unreadCount
-    }
-  ];
-
-  // 관리자 전용 탭
-  const adminTabs = [
-    {
-      id: 'users',
-      label: '사용자 관리',
-      icon: '👥',
-      description: '사용자 정보 관리'
-    },
-    {
-      id: 'stats',
-      label: '통계',
-      icon: '📊',
-      description: '사이트 통계'
-    },
-    {
-      id: 'traffic',
-      label: '트래픽',
-      icon: '📈',
-      description: '실시간 트래픽 모니터링'
-    },
-    {
-      id: 'banners',
-      label: '배너 관리',
-      icon: '📢',
-      description: '공지 배너 관리'
-    }
-  ];
-
   // 권한에 따른 탭 목록 - useMemo로 메모이제이션
   const availableTabs = useMemo(() => {
     console.log('[Dashboard] availableTabs 계산:', { 
       isAdmin, 
       user: user?.id, 
       location: location.pathname,
-      activeTab,
-      unreadCount 
+      authLoading 
     });
+    
+    // 공통 탭 정의 (useMemo 내부에서)
+    const commonTabs = [
+      {
+        id: 'profile',
+        label: '프로필',
+        icon: '👤',
+        description: '내 정보 관리'
+      },
+      {
+        id: 'scraps',
+        label: '스크랩',
+        icon: '📌',
+        description: '저장한 게시글'
+      },
+      {
+        id: 'messages',
+        label: '쪽지함',
+        icon: '✉️',
+        description: '메시지 관리'
+      }
+    ];
+
+    // 관리자 전용 탭
+    const adminTabs = [
+      {
+        id: 'users',
+        label: '사용자 관리',
+        icon: '👥',
+        description: '사용자 정보 관리'
+      },
+      {
+        id: 'stats',
+        label: '통계',
+        icon: '📊',
+        description: '사이트 통계'
+      },
+      {
+        id: 'traffic',
+        label: '트래픽',
+        icon: '📈',
+        description: '실시간 트래픽 모니터링'
+      },
+      {
+        id: 'banners',
+        label: '배너 관리',
+        icon: '📢',
+        description: '공지 배너 관리'
+      }
+    ];
     
     // 로딩 중이면 기본 탭만 표시
     if (authLoading) {
