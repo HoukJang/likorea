@@ -1,6 +1,6 @@
 {
   "name": "longisland-korea-backend",
-  "version": "1.8.1",
+  "version": "1.1.0",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
