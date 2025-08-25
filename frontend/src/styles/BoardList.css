@@ -222,42 +222,95 @@
   min-width: 60px;
 }
 
-/* 원래 글종류별 테이블 태그 색상 복원 */
-.board-table tr[data-post-type='생활정보'] .post-number {
-  color: #3b82f6;
-}
-
-.board-table tr[data-post-type='부동산'] .post-number {
-  color: #10b981;
-}
-
-.board-table tr[data-post-type='취업'] .post-number {
-  color: #f59e0b;
-}
-
-.board-table tr[data-post-type='커뮤니티'] .post-number {
-  color: #8b5cf6;
-}
-
-.board-table tr[data-post-type='중고거래'] .post-number {
-  color: #ef4444;
+/* 데스크탑 테이블 뷰 - 카테고리별 부드러운 색상 */
+.board-table tr[data-post-type='공지'] .post-number {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: inline-block;
+  border: 1px solid #fecaca;
 }
 
 .board-table tr[data-post-type='사고팔고'] .post-number {
-  color: #f97316;
+  background-color: #fff7ed;
+  color: #ea580c;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+  border: 1px solid #fed7aa;
+}
+
+.board-table tr[data-post-type='중고거래'] .post-number {
+  background-color: #fff7ed;
+  color: #ea580c;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+  border: 1px solid #fed7aa;
+}
+
+.board-table tr[data-post-type='부동산'] .post-number {
+  background-color: #f0fdf4;
+  color: #16a34a;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+  border: 1px solid #bbf7d0;
+}
+
+.board-table tr[data-post-type='생활정보'] .post-number {
+  background-color: #eff6ff;
+  color: #2563eb;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+  border: 1px solid #bfdbfe;
 }
 
 .board-table tr[data-post-type='모임'] .post-number {
-  color: #06b6d4;
+  background-color: #f5f3ff;
+  color: #7c3aed;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+  border: 1px solid #ddd6fe;
 }
 
-.board-table tr[data-post-type='공지'] .post-number {
-  color: #dc2626;
-  font-weight: 700;
+.board-table tr[data-post-type='취업'] .post-number {
+  background-color: #eef2ff;
+  color: #4f46e5;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+  border: 1px solid #c7d2fe;
 }
 
-.board-table tr[data-post-type='기타'] .post-number {
+.board-table tr[data-post-type='커뮤니티'] .post-number {
+  background-color: #f5f3ff;
+  color: #7c3aed;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+  border: 1px solid #ddd6fe;
+}
+
+.board-table tr[data-post-type='기타'] .post-number,
+.board-table tr[data-post-type='일반'] .post-number {
+  background-color: #f9fafb;
   color: #6b7280;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+  border: 1px solid #e5e7eb;
+}
+
+/* 호버 효과 추가 */
+.board-table tr:hover .post-number {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
 /* 원래 포스트 제목 스타일 복원 */
@@ -659,29 +712,68 @@
   opacity: 0.6;
 }
 
-/* 주요 카테고리들 - 태극기 2색 활용 */
-.mobile-card[data-post-type='생활정보'] .mobile-card-category,
-.mobile-card[data-post-type='부동산'] .mobile-card-category,
-.mobile-card[data-post-type='모임'] .mobile-card-category {
-  background-color: var(--taegeuk-blue-light);
-  color: var(--taegeuk-blue);
-  border-color: var(--taegeuk-blue);
-  border-color: rgba(0, 71, 160, 0.2);
+/* 카테고리별 고유 색상 - 부드럽고 구분 가능한 팔레트 */
+/* 공지 - 부드러운 빨간색 */
+.mobile-card[data-post-type='공지'] .mobile-card-category {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
 }
 
-.mobile-card[data-post-type='사고팔고'] .mobile-card-category,
-.mobile-card[data-post-type='취업'] .mobile-card-category,
-.mobile-card[data-post-type='공지'] .mobile-card-category {
-  background-color: var(--taegeuk-red-light);
-  color: var(--taegeuk-red);
-  border-color: var(--taegeuk-red);
-  border-color: rgba(205, 46, 58, 0.2);
+/* 사고팔고 - 따뜻한 오렌지 */
+.mobile-card[data-post-type='사고팔고'] .mobile-card-category {
+  background-color: #fff7ed;
+  color: #ea580c;
+  border: 1px solid #fed7aa;
+}
+
+/* 부동산 - 차분한 초록색 */
+.mobile-card[data-post-type='부동산'] .mobile-card-category {
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+/* 생활정보 - 신뢰감 있는 파란색 */
+.mobile-card[data-post-type='생활정보'] .mobile-card-category {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+/* 모임 - 우아한 보라색 */
+.mobile-card[data-post-type='모임'] .mobile-card-category {
+  background-color: #f5f3ff;
+  color: #7c3aed;
+  border: 1px solid #ddd6fe;
+}
+
+/* 취업 - 전문적인 남색 */
+.mobile-card[data-post-type='취업'] .mobile-card-category {
+  background-color: #eef2ff;
+  color: #4f46e5;
+  border: 1px solid #c7d2fe;
+}
+
+/* 기타 - 중립적인 회색 */
+.mobile-card[data-post-type='기타'] .mobile-card-category,
+.mobile-card[data-post-type='일반'] .mobile-card-category {
+  background-color: #f9fafb;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
 }
 
 /* 공지는 더 강조 */
 .mobile-card[data-post-type='공지'] .mobile-card-category {
   font-weight: 600;
   animation: pulse 2s ease-in-out infinite;
+}
+
+/* 호버 효과 추가 - 부드러운 전환 */
+.mobile-card:hover .mobile-card-category {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
 @keyframes pulse {
