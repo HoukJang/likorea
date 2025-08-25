@@ -109,13 +109,12 @@ function Dashboard() {
         overflow: computedStyle.overflow,
         overflowX: computedStyle.overflowX,
         width: tabsRef.current.offsetWidth,
-        scrollWidth: tabsRef.current.scrollWidth,
-        탭개수: availableTabs.length
+        scrollWidth: tabsRef.current.scrollWidth
       });
     }
     
     return () => window.removeEventListener('resize', checkScrollable);
-  }, [checkScrollable, isAdmin, availableTabs.length]); // availableTabs 변경 시에도 체크
+  }, [checkScrollable, isAdmin]); // isAdmin 변경 시에도 체크
 
   // 탭 변경 핸들러
   const handleTabChange = (tab) => {
