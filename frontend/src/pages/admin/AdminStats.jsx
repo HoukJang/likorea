@@ -7,12 +7,6 @@ function AdminStats() {
   const { isAdmin } = useOutletContext();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
-  
-  // 권한 체크 - 관리자가 아니면 프로필로 리다이렉트
-  if (!isAdmin) {
-    console.log('[AdminStats] 권한 없음, 프로필로 리다이렉트');
-    return <Navigate to="/dashboard/profile" replace />;
-  }
 
   // 권한 레벨 표시
   const getAuthorityLabel = level => {
@@ -49,6 +43,12 @@ function AdminStats() {
   useEffect(() => {
     fetchStats();
   }, []);
+
+  // 권한 체크 - 관리자가 아니면 프로필로 리다이렉트
+  if (!isAdmin) {
+    console.log('[AdminStats] 권한 없음, 프로필로 리다이렉트');
+    return <Navigate to="/dashboard/profile" replace />;
+  }
 
   if (loading) {
     return (

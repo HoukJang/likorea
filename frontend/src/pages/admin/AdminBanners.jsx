@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useOutletContext, Navigate } from 'react-router-dom';
 import { 
   getAllBanners, 
   createBanner, 
@@ -9,6 +10,7 @@ import {
 import '../../styles/AdminBanners.css';
 
 function AdminBanners() {
+  const { isAdmin } = useOutletContext();
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -27,6 +29,12 @@ function AdminBanners() {
   useEffect(() => {
     fetchBanners();
   }, []);
+
+  // 권한 체크 - 관리자가 아니면 프로필로 리다이렉트
+  if (!isAdmin) {
+    console.log('[AdminBanners] 권한 없음, 프로필로 리다이렉트');
+    return <Navigate to="/dashboard/profile" replace />;
+  }
 
   const fetchBanners = async () => {
     try {

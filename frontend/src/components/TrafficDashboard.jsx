@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useOutletContext, Navigate } from 'react-router-dom';
 import { getTrafficDashboard, getRealtimeTraffic } from '../api/traffic';
 // Chart.js v3 imports with tree-shaking
 import {
@@ -32,6 +33,7 @@ ChartJS.register(
 import '../styles/TrafficDashboard.css';
 
 function TrafficDashboard() {
+  const { isAdmin } = useOutletContext();
   const [dashboardData, setDashboardData] = useState(null);
   const [realtimeData, setRealtimeData] = useState([]);
   const [period, setPeriod] = useState('24h');
@@ -73,6 +75,12 @@ function TrafficDashboard() {
     const interval = setInterval(fetchRealtimeData, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  // 권한 체크 - 관리자가 아니면 프로필로 리다이렉트
+  if (!isAdmin) {
+    console.log('[TrafficDashboard] 권한 없음, 프로필로 리다이렉트');
+    return <Navigate to="/dashboard/profile" replace />;
+  }
 
   // 권한 레벨 표시
   const getAuthorityLabel = level => {
