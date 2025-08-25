@@ -103,18 +103,25 @@ function Dashboard() {
     // 디버깅: 탭 컨테이너의 실제 스타일 확인
     if (tabsRef.current) {
       const computedStyle = window.getComputedStyle(tabsRef.current);
-      console.log('[Dashboard] 탭 컨테이너 스타일:', {
+      const tabButtons = tabsRef.current.querySelectorAll('.tab-button');
+      console.log('[Dashboard] 탭 컨테이너 디버깅:', {
         display: computedStyle.display,
         flexWrap: computedStyle.flexWrap,
         overflow: computedStyle.overflow,
         overflowX: computedStyle.overflowX,
         width: tabsRef.current.offsetWidth,
-        scrollWidth: tabsRef.current.scrollWidth
+        scrollWidth: tabsRef.current.scrollWidth,
+        clientWidth: tabsRef.current.clientWidth,
+        탭개수: tabButtons.length,
+        탭목록: Array.from(tabButtons).map(btn => btn.textContent),
+        화면너비: window.innerWidth,
+        isAdmin,
+        user: user?.id
       });
     }
     
     return () => window.removeEventListener('resize', checkScrollable);
-  }, [checkScrollable, isAdmin]); // isAdmin 변경 시에도 체크
+  }, [checkScrollable, isAdmin, tabsWithBadge.length, user]); // 탭 개수 변경 시에도 체크
 
   // 탭 변경 핸들러
   const handleTabChange = (tab) => {
@@ -123,13 +130,6 @@ function Dashboard() {
 
   // 권한에 따른 탭 목록 - useMemo로 메모이제이션
   const availableTabs = useMemo(() => {
-    console.log('[Dashboard] availableTabs 계산:', { 
-      isAdmin, 
-      user: user?.id, 
-      location: location.pathname,
-      authLoading 
-    });
-    
     // 공통 탭 정의 (useMemo 내부에서)
     const commonTabs = [
       {
@@ -180,16 +180,25 @@ function Dashboard() {
       }
     ];
     
-    // 로딩 중이면 기본 탭만 표시
-    if (authLoading) {
+    // 로딩 중이거나 관리자가 아니면 무조건 기본 탭만 표시
+    if (authLoading || !isAdmin) {
+      console.log('[Dashboard] 일반 사용자 탭만 표시:', { 
+        isAdmin, 
+        authLoading,
+        user: user?.id,
+        authority: user?.authority
+      });
       return commonTabs;
     }
     
-    // isAdmin 값에 따라 탭 결정
-    const tabs = isAdmin ? [...commonTabs, ...adminTabs] : commonTabs;
-    console.log('[Dashboard] 최종 탭 목록:', tabs.map(t => t.id));
-    return tabs;
-  }, [isAdmin, authLoading]); // authLoading도 의존성에 추가
+    // 관리자인 경우에만 관리자 탭 추가
+    console.log('[Dashboard] 관리자 탭 포함:', { 
+      isAdmin, 
+      user: user?.id,
+      authority: user?.authority 
+    });
+    return [...commonTabs, ...adminTabs];
+  }, [isAdmin, authLoading, user]); // user도 의존성에 추가
   
   // 메시지 뱃지를 위해 별도로 처리
   const tabsWithBadge = useMemo(() => {
@@ -231,8 +240,14 @@ function Dashboard() {
         aria-label="대시보드 기능 탭"
         ref={tabsRef}
         style={{ 
-          flexWrap: 'nowrap',  // 인라인 스타일로 강제
-          overflowX: 'auto'    // 가로 스크롤 강제
+          display: 'flex',
+          flexWrap: 'nowrap',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          whiteSpace: 'nowrap',
+          width: '100%',
+          maxWidth: '100vw',
+          WebkitOverflowScrolling: 'touch'  // iOS 스크롤 개선
         }}
       >
         {tabsWithBadge.map((tab) => {
