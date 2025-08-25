@@ -159,61 +159,63 @@ function MessageList({ type = 'inbox', onMessageClick }) {
         </div>
       ) : (
         <>
-          <table className="message-table">
-            <thead>
-              <tr>
-                <th style={{ width: '40px' }}></th>
-                <th style={{ width: '120px' }}>
-                  {type === 'inbox' ? '보낸 사람' : '받는 사람'}
-                </th>
-                <th>내용</th>
-                <th style={{ width: '80px' }}>상태</th>
-                <th style={{ width: '100px' }}>날짜</th>
-                <th style={{ width: '80px' }}>작업</th>
-              </tr>
-            </thead>
-            <tbody>
-              {messages.map(message => (
-                <tr
-                  key={message._id}
-                  className={`${!message.isRead ? 'unread' : ''}`}
-                >
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={selectedMessages.includes(message._id)}
-                      onChange={() => handleSelectMessage(message._id)}
-                    />
-                  </td>
-                  <td>
-                    {type === 'inbox' ? message.sender?.id : message.receiver?.id}
-                  </td>
-                  <td
-                    className="message-content-preview"
-                    onClick={() => handleViewMessage(message)}
-                  >
-                    {message.content ? message.content.substring(0, 50) + (message.content.length > 50 ? '...' : '') : '내용 없음'}
-                  </td>
-                  <td>
-                    {message.isRead ? (
-                      <span className="read-status">읽음</span>
-                    ) : (
-                      <span className="unread-status">{type === 'inbox' ? '안 읽음' : '안 읽음'}</span>
-                    )}
-                  </td>
-                  <td>{formatDate(message.createdAt)}</td>
-                  <td>
-                    <button
-                      onClick={() => handleDelete(message._id)}
-                      className="delete-link"
-                    >
-                      삭제
-                    </button>
-                  </td>
+          <div className="message-table-wrapper">
+            <table className="message-table">
+              <thead>
+                <tr>
+                  <th style={{ width: '40px' }}></th>
+                  <th style={{ width: '120px' }}>
+                    {type === 'inbox' ? '보낸 사람' : '받는 사람'}
+                  </th>
+                  <th>내용</th>
+                  <th style={{ width: '80px' }}>상태</th>
+                  <th style={{ width: '100px' }}>날짜</th>
+                  <th style={{ width: '80px' }}>작업</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {messages.map(message => (
+                  <tr
+                    key={message._id}
+                    className={`${!message.isRead ? 'unread' : ''}`}
+                  >
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selectedMessages.includes(message._id)}
+                        onChange={() => handleSelectMessage(message._id)}
+                      />
+                    </td>
+                    <td>
+                      {type === 'inbox' ? message.sender?.id : message.receiver?.id}
+                    </td>
+                    <td
+                      className="message-content-preview"
+                      onClick={() => handleViewMessage(message)}
+                    >
+                      {message.content ? message.content.substring(0, 50) + (message.content.length > 50 ? '...' : '') : '내용 없음'}
+                    </td>
+                    <td>
+                      {message.isRead ? (
+                        <span className="read-status">읽음</span>
+                      ) : (
+                        <span className="unread-status">{type === 'inbox' ? '안 읽음' : '안 읽음'}</span>
+                      )}
+                    </td>
+                    <td>{formatDate(message.createdAt)}</td>
+                    <td>
+                      <button
+                        onClick={() => handleDelete(message._id)}
+                        className="delete-link"
+                      >
+                        삭제
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           {totalPages > 1 && (
             <Pagination
