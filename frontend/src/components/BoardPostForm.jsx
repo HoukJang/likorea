@@ -30,7 +30,7 @@ function BoardPostForm() {
   const [tags, setTags] = useState({ type: '', region: '0' });
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   // useAuth 훅 사용
   const { user, loading: authLoading, authenticated } = useAuth();
 
@@ -133,8 +133,7 @@ function BoardPostForm() {
     e.preventDefault();
 
     // 로그인 상태 재확인
-    const authenticated = await isAuthenticated();
-    if (!authenticated || !currentUser) {
+    if (!authenticated() || !user) {
       setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
       setTimeout(() => {
         navigate('/login');
@@ -216,7 +215,7 @@ function BoardPostForm() {
   };
 
   // 로그인되지 않은 경우 로딩 표시
-  if (!currentUser) {
+  if (authLoading || !user) {
     return (
       <div className="form-container">
         <div className="loading">로그인 상태를 확인하는 중...</div>
