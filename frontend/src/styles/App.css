@@ -1,3 +1,8 @@
+/* App Container - 반응형 헤더 지원 */
+.App.with-header {
+  padding-top: 64px;
+}
+
 /* 미니멀한 색상 체계 */
 :root {
   --primary-bg: #ffffff;

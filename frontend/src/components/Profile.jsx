@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCurrentUser, isAuthenticated } from '../api/auth';
+import { useAuth } from '../hooks/useAuth';
 import { getUser, updateUser } from '../api/auth';
 import Button from './common/Button';
 import Input from './common/Input';
@@ -8,7 +8,7 @@ import '../styles/Profile.css';
 
 function Profile() {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState(null);
+  const { user, loading: authLoading, authenticated } = useAuth();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,31 +23,17 @@ function Profile() {
 
   // 현재 사용자 정보 확인
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const [user, authenticated] = await Promise.all([
-          getCurrentUser(),
-          isAuthenticated()
-        ]);
-
-        if (!authenticated || !user) {
-          setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-          setTimeout(() => {
-            navigate('/login');
-          }, 2000);
-          return;
-        }
-
-        setCurrentUser(user);
+    if (!authLoading) {
+      if (!authenticated() || !user) {
+        setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      } else {
         fetchUserData(user.id);
-      } catch (error) {
-        setError('인증 정보를 확인하는데 실패했습니다.');
-        setLoading(false);
       }
-    };
-
-    checkAuth();
-  }, [navigate]);
+    }
+  }, [authLoading, authenticated, user, navigate]);
 
   // 사용자 상세 정보 가져오기
   const fetchUserData = async userId => {
@@ -111,12 +97,12 @@ function Profile() {
         updateData.newPassword = editForm.newPassword;
       }
 
-      await updateUser(currentUser.id, updateData);
+      await updateUser(user.id, updateData);
       setMessage('프로필이 성공적으로 업데이트되었습니다.');
       setIsEditing(false);
 
       // 업데이트된 정보 다시 불러오기
-      fetchUserData(currentUser.id);
+      fetchUserData(user.id);
     } catch (error) {
       setMessage(error.message || '프로필 업데이트에 실패했습니다.');
     } finally {

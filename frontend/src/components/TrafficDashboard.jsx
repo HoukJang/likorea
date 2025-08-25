@@ -269,7 +269,10 @@ function TrafficDashboard() {
                       y: {
                         beginAtZero: true,
                         ticks: {
-                          stepSize: 1
+                          precision: 0, // 정수로만 표시
+                          callback: function(value) {
+                            return value.toLocaleString(); // 천 단위 구분
+                          }
                         }
                       }
                     }
@@ -337,7 +340,10 @@ function TrafficDashboard() {
                       y: {
                         beginAtZero: true,
                         ticks: {
-                          stepSize: 1
+                          precision: 0, // 정수로만 표시
+                          callback: function(value) {
+                            return value.toLocaleString(); // 천 단위 구분
+                          }
                         }
                       }
                     }

@@ -1,8 +1,9 @@
-import React, { useEffect, lazy, Suspense } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import ErrorBoundary from './components/ErrorBoundary';
 import Loading from './components/common/Loading';
+import { AuthProvider } from './contexts/AuthContext';
 import { useAuth } from './hooks/useAuth';
 import { initViewportHandlers } from './utils/viewportUtils';
 import './styles/design-system.css';
@@ -14,6 +15,8 @@ import './styles/theme-minimal.css';
 import DynamicBanner from './components/DynamicBanner';
 import FloatingActionButton from './components/FloatingActionButton';
 import UserMenu from './components/UserMenu';
+import ResponsiveHeader from './components/ResponsiveHeader';
+import { useMediaQuery, BREAKPOINTS } from './hooks/useMediaQuery';
 
 // 자주 사용되는 페이지는 직접 import
 import Landing from './pages/Landing';
@@ -49,9 +52,13 @@ const AdminStats = lazy(() => import('./pages/admin/AdminStats'));
 const AdminTraffic = lazy(() => import('./pages/admin/AdminTraffic'));
 const AdminBanners = lazy(() => import('./pages/admin/AdminBanners'));
 
-function App() {
+// App 내부 컴포넌트 - 인증 상태를 사용
+function AppContent() {
   // 전역 인증 상태 관리 - 앱 시작 시 토큰 검증 수행
   const { loading: authLoading } = useAuth();
+  
+  // 반응형 디자인을 위한 미디어 쿼리
+  const isDesktopOrTablet = useMediaQuery(BREAKPOINTS.desktopOrTablet);
 
   useEffect(() => {
     // Viewport 설정 초기화 및 이벤트 핸들러 등록
@@ -62,30 +69,30 @@ function App() {
   // 인증 상태 로딩 중이면 로딩 화면 표시
   if (authLoading) {
     return (
-      <ErrorBoundary>
-        <div className="App">
-          <DynamicBanner />
-          <Loading />
-        </div>
-      </ErrorBoundary>
+      <div className="App">
+        <DynamicBanner />
+        <Loading />
+      </div>
     );
   }
 
   return (
-    <ErrorBoundary>
-      <HelmetProvider>
-        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <div className="App">
-            <DynamicBanner />
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <div className={`App ${isDesktopOrTablet ? 'with-header' : ''}`}>
+        <DynamicBanner />
+        {isDesktopOrTablet ? (
+          <ResponsiveHeader />
+        ) : (
+          <>
             <FloatingActionButton />
             <UserMenu />
-            <Routes>
+          </>
+        )}
+        <Routes>
             {/* 루트 경로를 랜딩 페이지로 설정 */}
             <Route path="/" element={<Landing />} />
 
             {/* 게시판 리스트 페이지 */}
-            <Route path="/boards" element={<BoardList />} />
-
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
 
@@ -215,6 +222,17 @@ function App() {
           </Routes>
         </div>
       </Router>
+    );
+}
+
+// 메인 App 컴포넌트 - AuthProvider로 감싸기
+function App() {
+  return (
+    <ErrorBoundary>
+      <HelmetProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
       </HelmetProvider>
     </ErrorBoundary>
   );

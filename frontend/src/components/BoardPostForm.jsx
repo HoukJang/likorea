@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { getBoardPost, createBoard, updateBoard } from '../api/boards';
-import { getCurrentUser, isAuthenticated } from '../api/auth';
+import { useAuth } from '../hooks/useAuth';
 import { approvePost, rejectPost, updatePendingPost } from '../api/approval';
 import TagSelector from './TagSelector';
 import QuillEditor from './QuillEditor';
@@ -29,32 +29,24 @@ function BoardPostForm() {
   const [content, setContent] = useState('');
   const [tags, setTags] = useState({ type: '', region: '0' });
   const [message, setMessage] = useState('');
-  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  
+  // useAuth 훅 사용
+  const { user, loading: authLoading, authenticated } = useAuth();
 
   // 현재 사용자 정보 확인
   useEffect(() => {
-    const checkAuth = async () => {
-      const user = await getCurrentUser();
-      const authenticated = await isAuthenticated();
-
-      if (!authenticated || !user) {
-        setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-        setTimeout(() => {
-          navigate('/login');
-        }, 2000);
-        return;
-      }
-
-      setCurrentUser(user);
-    };
-
-    checkAuth();
-  }, [navigate]);
+    if (!authLoading && !authenticated()) {
+      setMessage('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    }
+  }, [authLoading, authenticated, navigate]);
 
   // If editing, fetch post data and update state
   useEffect(() => {
-    if (isEditMode && currentUser) {
+    if (isEditMode && user) {
       const fetchPost = async () => {
         try {
           const data = await getBoardPost(postId);
@@ -69,7 +61,7 @@ function BoardPostForm() {
       };
       fetchPost();
     }
-  }, [postId, isEditMode, currentUser]);
+  }, [postId, isEditMode, user]);
 
 
   // 승인 처리

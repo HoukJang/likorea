@@ -17,8 +17,8 @@ const FloatingActionButtons = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      // 페이지를 100px 이상 스크롤했을 때 표시
-      setIsVisible(window.scrollY > 100);
+      // 페이지를 조금만 스크롤해도 표시 (모바일에서 바로 보이도록)
+      setIsVisible(window.scrollY > 20);
     };
 
     // 댓글 입력창 포커스 시 숨김 처리

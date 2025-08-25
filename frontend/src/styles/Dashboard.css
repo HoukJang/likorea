@@ -9,6 +9,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  position: relative; /* 스크롤 표시기를 위한 컨텍스트 */
 }
 
 /* 대시보드 헤더 */
@@ -74,25 +75,67 @@
 /* 탭 네비게이션 */
 .dashboard-tabs {
   display: flex;
+  flex-wrap: nowrap; /* 명시적으로 줄바꿈 방지 */
   gap: 8px;
   margin-bottom: 24px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  overflow-y: hidden; /* 세로 스크롤 방지 */
+  padding-bottom: 8px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+  /* 스크롤 영역 확보 */
+  margin-left: -8px;
+  margin-right: -8px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
+/* 스크롤바 스타일 개선 */
 .dashboard-tabs::-webkit-scrollbar {
-  height: 4px;
+  height: 6px;
 }
 
 .dashboard-tabs::-webkit-scrollbar-track {
   background: var(--color-background);
+  border-radius: 3px;
 }
 
 .dashboard-tabs::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 2px;
+  background: var(--color-border-strong);
+  border-radius: 3px;
+}
+
+.dashboard-tabs::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}
+
+/* 탭 스크롤 표시기 */
+.dashboard-tabs::before,
+.dashboard-tabs::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  pointer-events: none;
+  z-index: 1;
+  display: none;
+}
+
+.dashboard-tabs::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-surface) 0%, transparent 100%);
+}
+
+.dashboard-tabs::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-surface) 0%, transparent 100%);
+}
+
+/* 스크롤 가능할 때 그라데이션 표시 */
+.dashboard-tabs.scrollable::before,
+.dashboard-tabs.scrollable::after {
+  display: block;
 }
 
 /* 탭 버튼 */
@@ -112,6 +155,7 @@
   transition: all var(--transition-base);
   white-space: nowrap;
   min-height: 48px;
+  flex-shrink: 0; /* 탭이 줄어들지 않도록 */
 }
 
 .tab-button:hover {
@@ -261,7 +305,38 @@
   color: var(--taegeuk-blue);
 }
 
-/* 반응형 디자인 */
+/* 태블릿 화면 */
+@media (max-width: 1024px) {
+  .dashboard-tabs {
+    gap: 6px;
+  }
+  
+  .tab-button {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  
+  .tab-icon {
+    font-size: 16px;
+  }
+  
+  /* 태블릿에서 텍스트 숨기기 옵션 */
+  @media (max-width: 900px) {
+    .tab-text {
+      display: none;
+    }
+    
+    .tab-button {
+      padding: 10px 12px;
+    }
+    
+    .tab-button.active .tab-text {
+      display: inline; /* 활성 탭에서는 텍스트 표시 */
+    }
+  }
+}
+
+/* 반응형 디자인 - 모바일 */
 @media (max-width: 768px) {
   .dashboard-container {
     padding: 16px;
@@ -288,18 +363,29 @@
   }
 
   .dashboard-tabs {
-    gap: 6px;
-    padding-bottom: 8px;
+    gap: 4px;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    /* 모바일에서 스크롤 여백 추가 */
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   .tab-button {
-    padding: 10px 16px;
-    font-size: 13px;
-    min-height: 44px;
+    padding: 8px 12px;
+    font-size: 12px;
+    min-height: 40px;
+    gap: 6px;
   }
 
   .tab-icon {
-    font-size: 16px;
+    font-size: 14px;
+  }
+  
+  .tab-text {
+    font-size: 12px;
   }
 
   .dashboard-content {

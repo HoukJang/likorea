@@ -18,8 +18,10 @@ const FloatingActionButton = () => {
     setIsOpen(false);
   }, [navigate]);
 
-  // 로그인/회원가입 페이지에서는 FAB 숨기기
-  if (location.pathname === '/login' || location.pathname === '/signup') {
+  // 로그인/회원가입 페이지와 게시글 보기 페이지에서는 FAB 숨기기
+  if (location.pathname === '/login' || 
+      location.pathname === '/signup' ||
+      location.pathname.match(/^\/boards\/\d+$/)) {  // 게시글 보기 페이지 패턴
     return null;
   }
 
