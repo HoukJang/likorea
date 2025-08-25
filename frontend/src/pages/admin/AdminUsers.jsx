@@ -19,12 +19,6 @@ function AdminUsers() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  
-  // 권한 체크 - 관리자가 아니면 프로필로 리다이렉트
-  if (!isAdmin) {
-    console.log('[AdminUsers] 권한 없음, 프로필로 리다이렉트', { isAdmin, userAuthority });
-    return <Navigate to="/dashboard/profile" replace />;
-  }
 
   // 권한 레벨 표시
   const getAuthorityLabel = level => {
@@ -71,6 +65,12 @@ function AdminUsers() {
   useEffect(() => {
     fetchUsers();
   }, []);
+  
+  // 권한 체크 - 관리자가 아니면 프로필로 리다이렉트
+  if (!isAdmin) {
+    console.log('[AdminUsers] 권한 없음, 프로필로 리다이렉트', { isAdmin, userAuthority });
+    return <Navigate to="/dashboard/profile" replace />;
+  }
 
   // 검색 처리
   const handleSearch = () => {
