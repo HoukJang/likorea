@@ -1,0 +1,217 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-02-04",
+  "categories": {
+    "korea_news": {
+      "name": "한국 뉴스",
+      "sources": [
+        {
+          "id": "yonhap",
+          "name": "연합뉴스",
+          "url": "https://www.yonhapnews.co.kr",
+          "rss": "https://www.yonhapnews.co.kr/RSS/headline.xml",
+          "reliability": "A",
+          "keywords": ["한인", "교민", "미주", "뉴욕", "재외동포"],
+          "active": true
+        },
+        {
+          "id": "hankook",
+          "name": "한국일보",
+          "url": "https://www.hankookilbo.com",
+          "rss": "https://rss.hankookilbo.com/rss/all.xml",
+          "reliability": "A",
+          "keywords": ["한인", "교민", "미주"],
+          "active": true
+        },
+        {
+          "id": "chosun",
+          "name": "조선일보",
+          "url": "https://www.chosun.com",
+          "rss": null,
+          "reliability": "A",
+          "keywords": ["한인", "미주"],
+          "active": true
+        },
+        {
+          "id": "joongang",
+          "name": "중앙일보",
+          "url": "https://www.joongang.co.kr",
+          "rss": null,
+          "reliability": "A",
+          "keywords": ["한인", "미주"],
+          "active": true
+        }
+      ]
+    },
+    "korean_american": {
+      "name": "미국 한인 미디어",
+      "sources": [
+        {
+          "id": "koreatimes",
+          "name": "코리아타임스",
+          "url": "https://www.koreatimes.com",
+          "rss": null,
+          "reliability": "A",
+          "sections": ["ny", "community"],
+          "active": true
+        },
+        {
+          "id": "koreadaily",
+          "name": "중앙일보 미주판",
+          "url": "https://www.koreadaily.com",
+          "rss": null,
+          "reliability": "A",
+          "sections": ["news", "ny"],
+          "active": true
+        },
+        {
+          "id": "koreatimesus",
+          "name": "한국일보 미주판",
+          "url": "https://www.koreatimes.co.kr",
+          "rss": null,
+          "reliability": "A",
+          "sections": ["ny"],
+          "active": true
+        }
+      ]
+    },
+    "long_island": {
+      "name": "롱아일랜드 로컬",
+      "sources": [
+        {
+          "id": "newsday",
+          "name": "Newsday",
+          "url": "https://www.newsday.com",
+          "rss": null,
+          "reliability": "A",
+          "keywords": ["Long Island", "Nassau", "Suffolk", "Korean"],
+          "active": true
+        },
+        {
+          "id": "lipress",
+          "name": "Long Island Press",
+          "url": "https://www.longislandpress.com",
+          "rss": null,
+          "reliability": "A",
+          "keywords": ["Long Island", "community"],
+          "active": true
+        },
+        {
+          "id": "nassau_gov",
+          "name": "Nassau County Government",
+          "url": "https://www.nassaucountyny.gov",
+          "rss": null,
+          "reliability": "A",
+          "type": "government",
+          "active": true
+        },
+        {
+          "id": "suffolk_gov",
+          "name": "Suffolk County Government",
+          "url": "https://www.suffolkcountyny.gov",
+          "rss": null,
+          "reliability": "A",
+          "type": "government",
+          "active": true
+        },
+        {
+          "id": "patch_nassau",
+          "name": "Patch Nassau",
+          "url": "https://patch.com/new-york/nassau",
+          "rss": null,
+          "reliability": "B",
+          "type": "community",
+          "active": true
+        },
+        {
+          "id": "patch_suffolk",
+          "name": "Patch Suffolk",
+          "url": "https://patch.com/new-york/suffolk",
+          "rss": null,
+          "reliability": "B",
+          "type": "community",
+          "active": true
+        }
+      ]
+    },
+    "specialized": {
+      "name": "주제별 소스",
+      "sources": [
+        {
+          "id": "uscis",
+          "name": "USCIS",
+          "url": "https://www.uscis.gov",
+          "reliability": "A",
+          "topic": "immigration",
+          "active": true
+        },
+        {
+          "id": "state_dept",
+          "name": "U.S. Department of State",
+          "url": "https://www.state.gov",
+          "reliability": "A",
+          "topic": "immigration",
+          "active": true
+        },
+        {
+          "id": "zillow",
+          "name": "Zillow",
+          "url": "https://www.zillow.com",
+          "reliability": "A",
+          "topic": "realestate",
+          "active": true
+        },
+        {
+          "id": "cdc",
+          "name": "CDC",
+          "url": "https://www.cdc.gov",
+          "reliability": "A",
+          "topic": "health",
+          "active": true
+        },
+        {
+          "id": "nysed",
+          "name": "NY State Education",
+          "url": "https://www.nysed.gov",
+          "reliability": "A",
+          "topic": "education",
+          "active": true
+        }
+      ]
+    }
+  },
+  "collection_config": {
+    "daily_schedule": "09:00",
+    "timezone": "America/New_York",
+    "max_items_per_category": 5,
+    "lookback_hours": 24,
+    "priority": [
+      "long_island",
+      "korean_american",
+      "korea_news"
+    ]
+  },
+  "keywords": {
+    "high_priority": [
+      "롱아일랜드",
+      "Long Island",
+      "나소",
+      "Nassau",
+      "서폭",
+      "Suffolk",
+      "롱아일랜드 한인",
+      "LI Korean"
+    ],
+    "medium_priority": [
+      "뉴욕 한인",
+      "NY Korean",
+      "Korean American",
+      "한인 커뮤니티"
+    ],
+    "exclude": [
+      "광고",
+      "스폰서",
+      "협찬"
+    ]
+  }
+}
