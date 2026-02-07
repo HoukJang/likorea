@@ -1,36 +1,15 @@
 import React from 'react';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { getUnreadCount } from '../api/message';
+import { useMessage } from '../contexts/MessageContext';
 import '../styles/GlobalNavigation.css';
 
 const GlobalNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
-  const [unreadCount, setUnreadCount] = useState(0);
-
-
-  // 읽지 않은 메시지 수 조회
-  useEffect(() => {
-    const fetchUnreadCount = async () => {
-      if (user) {
-        try {
-          const response = await getUnreadCount();
-          setUnreadCount(response.data.count || 0);
-        } catch (error) {
-          console.error('읽지 않은 메시지 수 조회 실패:', error);
-        }
-      }
-    };
-
-    fetchUnreadCount();
-    // 30초마다 읽지 않은 메시지 수 업데이트
-    const interval = setInterval(fetchUnreadCount, 30000);
-
-    return () => clearInterval(interval);
-  }, [user]);
+  const { unreadCount } = useMessage();
 
   const handleLogout = useCallback(async () => {
     await logout();

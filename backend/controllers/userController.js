@@ -128,58 +128,47 @@ exports.login = asyncHandler(async (req, res) => {
 });
 
 // 사용자 목록 조회 (pagination 및 필요한 필드 반환)
-exports.getUsers = async (req, res) => {
+exports.getUsers = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10, search } = req.query;
-  try {
-    // 검색 조건 설정
-    const query = {};
-    if (search) {
-      query.$or = [
-        { id: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } }
-      ];
-    }
 
-    const users = await User.find(query, 'id email authority createdAt updatedAt')
-      .skip((page - 1) * Number(limit))
-      .limit(Number(limit))
-      .sort({ createdAt: -1 });
-    const total = await User.countDocuments(query);
-    res.json({ total, page: Number(page), limit: Number(limit), data: users });
-  } catch (error) {
-    res.status(400).json({ message: '사용자 목록 조회 실패', error: error.message });
+  // 검색 조건 설정
+  const query = {};
+  if (search) {
+    query.$or = [
+      { id: { $regex: search, $options: 'i' } },
+      { email: { $regex: search, $options: 'i' } }
+    ];
   }
-};
+
+  const users = await User.find(query, 'id email authority createdAt updatedAt')
+    .skip((page - 1) * Number(limit))
+    .limit(Number(limit))
+    .sort({ createdAt: -1 });
+  const total = await User.countDocuments(query);
+  res.json({ total, page: Number(page), limit: Number(limit), data: users });
+});
 
 // 사용자 상세 정보 조회 (id, email, authority, createdAt, updatedAt 반환)
-exports.getUser = async (req, res) => {
-  try {
-    const user = await User.findOne(
-      { id: req.params.id },
-      'id email authority createdAt updatedAt'
-    );
-    if (!user) {
-      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
-    }
-    res.json(user);
-  } catch (error) {
-    res.status(400).json({ message: '사용자 상세 정보 조회 실패', error: error.message });
+exports.getUser = asyncHandler(async (req, res) => {
+  const user = await User.findOne(
+    { id: req.params.id },
+    'id email authority createdAt updatedAt'
+  );
+  if (!user) {
+    return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
   }
-};
+  res.json(user);
+});
 
 // 이메일 중복 여부 확인
-exports.checkEmailExists = async (req, res) => {
-  try {
-    const { email } = req.query;
-    if (!email) {
-      return res.status(400).json({ message: 'Email parameter required' });
-    }
-    const exists = await User.findOne({ email });
-    res.json({ exists: !!exists });
-  } catch (error) {
-    res.status(400).json({ message: '이메일 중복 여부 확인 실패', error: error.message });
+exports.checkEmailExists = asyncHandler(async (req, res) => {
+  const { email } = req.query;
+  if (!email) {
+    return res.status(400).json({ message: 'Email parameter required' });
   }
-};
+  const exists = await User.findOne({ email });
+  res.json({ exists: !!exists });
+});
 
 // 로그아웃
 exports.logout = (req, res) => {
@@ -203,18 +192,14 @@ exports.logout = (req, res) => {
 };
 
 // 아이디 중복 여부 확인
-exports.checkIdExists = async (req, res) => {
-  try {
-    const { id } = req.query;
-    if (!id) {
-      return res.status(400).json({ message: 'ID parameter required' });
-    }
-    const exists = await User.findOne({ id });
-    res.json({ exists: !!exists });
-  } catch (error) {
-    res.status(400).json({ message: '아이디 중복 여부 확인 실패', error: error.message });
+exports.checkIdExists = asyncHandler(async (req, res) => {
+  const { id } = req.query;
+  if (!id) {
+    return res.status(400).json({ message: 'ID parameter required' });
   }
-};
+  const exists = await User.findOne({ id });
+  res.json({ exists: !!exists });
+});
 
 // 토큰 검증
 exports.verifyToken = asyncHandler((req, res) => {
@@ -237,88 +222,80 @@ exports.verifyToken = asyncHandler((req, res) => {
 });
 
 // 사용자 정보 수정
-exports.updateUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { email, authority, password, newPassword } = req.body;
+exports.updateUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { email, authority, password, newPassword } = req.body;
 
-    const user = await User.findOne({ id });
-    if (!user) {
-      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
-    }
-
-    // 일반 사용자가 자신의 프로필을 수정하는 경우 현재 비밀번호 확인
-    if (password && req.user && req.user.id === id) {
-      const isMatch = await user.comparePassword(password);
-      if (!isMatch) {
-        return res.status(400).json({ message: '현재 비밀번호가 일치하지 않습니다.' });
-      }
-    }
-
-    // 수정할 필드들 업데이트
-    if (email) {
-      // 이메일 형식 검증
-      const { validateEmail } = require('../middleware/validation');
-      if (!validateEmail(email)) {
-        return res.status(400).json({ message: '유효한 이메일 주소를 입력해주세요.' });
-      }
-
-      // 이메일 변경 시 중복 체크
-      if (email !== user.email) {
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-          return res.status(400).json({ message: '이미 사용 중인 이메일입니다.' });
-        }
-      }
-      user.email = email;
-    }
-
-    if (authority !== undefined && req.user && req.user.authority >= 5) {
-      user.authority = authority;
-    }
-
-    // 새 비밀번호가 제공된 경우에만 비밀번호 변경
-    if (newPassword) {
-      // 비밀번호 정책 검증
-      const passwordValidation = validatePassword(newPassword);
-      if (!passwordValidation.isValid) {
-        return res.status(400).json({
-          message: '비밀번호가 요구사항을 충족하지 않습니다.',
-          errors: passwordValidation.errors
-        });
-      }
-      user.password = newPassword;
-      user.passwordChangedAt = new Date();
-    }
-
-    await user.save();
-
-    const userObj = user.toObject();
-    delete userObj.password;
-
-    res.json({
-      message: '사용자 정보 수정 성공',
-      user: userObj
-    });
-  } catch (error) {
-    res.status(400).json({ message: '사용자 정보 수정 실패', error: error.message });
+  const user = await User.findOne({ id });
+  if (!user) {
+    return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
   }
-};
+
+  // 일반 사용자가 자신의 프로필을 수정하는 경우 현재 비밀번호 확인
+  if (password && req.user && req.user.id === id) {
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: '현재 비밀번호가 일치하지 않습니다.' });
+    }
+  }
+
+  // 수정할 필드들 업데이트
+  if (email) {
+    // 이메일 형식 검증
+    const { validateEmail } = require('../middleware/validation');
+    if (!validateEmail(email)) {
+      return res.status(400).json({ message: '유효한 이메일 주소를 입력해주세요.' });
+    }
+
+    // 이메일 변경 시 중복 체크
+    if (email !== user.email) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: '이미 사용 중인 이메일입니다.' });
+      }
+    }
+    user.email = email;
+  }
+
+  if (authority !== undefined && req.user && req.user.authority >= 5) {
+    user.authority = authority;
+  }
+
+  // 새 비밀번호가 제공된 경우에만 비밀번호 변경
+  if (newPassword) {
+    // 비밀번호 정책 검증
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.isValid) {
+      return res.status(400).json({
+        message: '비밀번호가 요구사항을 충족하지 않습니다.',
+        errors: passwordValidation.errors
+      });
+    }
+    user.password = newPassword;
+    user.passwordChangedAt = new Date();
+  }
+
+  await user.save();
+
+  const userObj = user.toObject();
+  delete userObj.password;
+
+  res.json({
+    message: '사용자 정보 수정 성공',
+    user: userObj
+  });
+});
 
 // 사용자 삭제
-exports.deleteUser = async (req, res) => {
-  try {
-    const { id } = req.params;
+exports.deleteUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
 
-    const user = await User.findOne({ id });
-    if (!user) {
-      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
-    }
-
-    await User.findByIdAndDelete(user._id);
-    res.json({ message: '사용자 삭제 성공' });
-  } catch (error) {
-    res.status(400).json({ message: '사용자 삭제 실패', error: error.message });
+  const user = await User.findOne({ id });
+  if (!user) {
+    return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
   }
-};
+
+  await User.findByIdAndDelete(user._id);
+  res.json({ message: '사용자 삭제 성공' });
+});
 

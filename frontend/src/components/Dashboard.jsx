@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { getUnreadCount } from '../api/message';
 import { useAuth } from '../hooks/useAuth';
+import { useMessage } from '../contexts/MessageContext';
 import packageJson from '../../package.json';
 import '../styles/Dashboard.css';
 
@@ -9,7 +9,7 @@ function Dashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, loading: authLoading } = useAuth();
-  const [unreadCount, setUnreadCount] = useState(0);
+  const { unreadCount } = useMessage();
   const [message, setMessage] = useState('');
   const tabsRef = useRef(null);
   const [isScrollable, setIsScrollable] = useState(false);
@@ -36,38 +36,6 @@ function Dashboard() {
       setIsScrollable(scrollWidth > clientWidth);
     }
   }, []);
-
-  // 읽지 않은 메시지 수 조회
-  useEffect(() => {
-    const fetchUnreadCount = async () => {
-      try {
-        const response = await getUnreadCount();
-        setUnreadCount(response.data?.count || 0);
-      } catch (error) {
-        console.error('읽지 않은 메시지 수 조회 실패:', error);
-      }
-    };
-
-    fetchUnreadCount();
-    // 30초마다 읽지 않은 메시지 수 업데이트
-    const interval = setInterval(fetchUnreadCount, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // 권한 체크 및 리다이렉트
-  useEffect(() => {
-    // 로딩이 완료되고 사용자 정보가 있을 때만 체크
-    if (!authLoading && user) {
-      const adminPaths = ['users', 'stats', 'traffic', 'banners'];
-      const currentPath = location.pathname.split('/')[2];
-
-      // 관리자가 아닌데 관리자 페이지에 접근하려고 하면 리다이렉트
-      if (adminPaths.includes(currentPath) && !isAdmin) {
-        navigate('/dashboard/profile', { replace: true });
-      }
-    }
-  }, [authLoading, user, isAdmin, location.pathname, navigate]);
 
   // 탭 스크롤 가능 여부 체크
   useEffect(() => {

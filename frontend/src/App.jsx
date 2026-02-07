@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import ErrorBoundary from './components/ErrorBoundary';
 import Loading from './components/common/Loading';
 import { AuthProvider } from './contexts/AuthContext';
+import { MessageProvider } from './contexts/MessageContext';
 import { useAuth } from './hooks/useAuth';
 import { initViewportHandlers } from './utils/viewportUtils';
 import './styles/design-system.css';
@@ -27,6 +28,7 @@ import Profile from './components/Profile';
 import Scraps from './components/profile/Scraps';
 import Messages from './components/message/Messages';
 import NotFound from './pages/NotFound';
+import ProtectedRoute from './components/common/ProtectedRoute';
 
 // 무거운 컴포넌트들은 lazy loading
 const BoardPostForm = lazy(() => import('./components/BoardPostForm')); // Quill 포함
@@ -159,9 +161,11 @@ function AppContent() {
 
             {/* 통합 대시보드 - Nested Routing */}
             <Route path="/dashboard" element={
-              <Suspense fallback={<Loading />}>
-                <Dashboard />
-              </Suspense>
+              <ProtectedRoute requiredAuth>
+                <Suspense fallback={<Loading />}>
+                  <Dashboard />
+                </Suspense>
+              </ProtectedRoute>
             }>
               {/* 기본 경로는 profile로 리다이렉트 */}
               <Route index element={<Navigate to="profile" replace />} />
@@ -169,26 +173,34 @@ function AppContent() {
               <Route path="scraps" element={<Scraps />} />
               <Route path="messages" element={<Messages />} />
               <Route path="messages/compose" element={<Messages />} />
-              {/* 관리자 전용 라우트 - Dashboard 내부에서 권한 체크 */}
+              {/* 관리자 전용 라우트 - ProtectedRoute로 권한 체크 */}
               <Route path="users" element={
-                <Suspense fallback={<Loading />}>
-                  <AdminUsers />
-                </Suspense>
+                <ProtectedRoute requiredAuthority={5}>
+                  <Suspense fallback={<Loading />}>
+                    <AdminUsers />
+                  </Suspense>
+                </ProtectedRoute>
               } />
               <Route path="stats" element={
-                <Suspense fallback={<Loading />}>
-                  <AdminStats />
-                </Suspense>
+                <ProtectedRoute requiredAuthority={5}>
+                  <Suspense fallback={<Loading />}>
+                    <AdminStats />
+                  </Suspense>
+                </ProtectedRoute>
               } />
               <Route path="traffic" element={
-                <Suspense fallback={<Loading />}>
-                  <AdminTraffic />
-                </Suspense>
+                <ProtectedRoute requiredAuthority={5}>
+                  <Suspense fallback={<Loading />}>
+                    <AdminTraffic />
+                  </Suspense>
+                </ProtectedRoute>
               } />
               <Route path="banners" element={
-                <Suspense fallback={<Loading />}>
-                  <AdminBanners />
-                </Suspense>
+                <ProtectedRoute requiredAuthority={5}>
+                  <Suspense fallback={<Loading />}>
+                    <AdminBanners />
+                  </Suspense>
+                </ProtectedRoute>
               } />
             </Route>
 
@@ -229,7 +241,9 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <AppContent />
+        <MessageProvider>
+          <AppContent />
+        </MessageProvider>
       </AuthProvider>
     </ErrorBoundary>
   );
