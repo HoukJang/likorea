@@ -12,6 +12,7 @@ import {
 import { getAllTags } from '../api/tags';
 import { getPendingPost, approvePost, rejectPost } from '../api/approval';
 import { toggleScrap, checkScrapStatus } from '../api/scrap';
+import DOMPurify from 'dompurify';
 import { processPostData, processCommentsList } from '../utils/dataUtils';
 import { createTagDisplayData } from '../utils/tagUtils';
 import { linkifyContentSafe } from '../utils/linkifyContentSafe';
@@ -600,7 +601,7 @@ function BoardPostView() {
                       </div>
                       <div className="comment-divider-vertical"></div>
                       <div className="comment-main">
-                        <div className="comment-text" dangerouslySetInnerHTML={{ __html: comment.content }} />
+                        <div className="comment-text" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comment.content) }} />
                         {hasPermission && (
                           <div className="comment-actions-minimal">
                             <button

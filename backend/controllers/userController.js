@@ -14,12 +14,7 @@ const {
 
 // 회원가입
 exports.signup = asyncHandler(async (req, res) => {
-  const { id, email, password, authority } = req.body;
-
-  // 개발 환경에서만 로깅
-  if (process.env.NODE_ENV === 'development') {
-    console.log('회원가입 요청 데이터:', { id, email, authority });
-  }
+  const { id, email, password } = req.body;
 
   // 필수 필드 검증
   if (!id || !email || !password) {
@@ -44,8 +39,7 @@ exports.signup = asyncHandler(async (req, res) => {
     throw new ConflictError('이미 존재하는 이메일입니다.');
   }
 
-  // 회원가입: id, email, password, authority (미제공시 authority는 기본 3)
-  const user = await User.create({ id, email, password, authority });
+  const user = await User.create({ id, email, password, authority: 3 });
   res.status(201).json({
     success: true,
     message: '회원가입 성공',
@@ -72,27 +66,25 @@ exports.login = asyncHandler(async (req, res) => {
     throw new AuthenticationError('잘못된 아이디입니다.');
   }
 
+  // 계정 잠금 확인 (비밀번호 비교 전에 체크)
+  if (user.lockedUntil && user.lockedUntil > new Date()) {
+    const remainingMinutes = Math.ceil((user.lockedUntil - new Date()) / 60000);
+    throw new AuthenticationError(`계정이 잠겼습니다. ${remainingMinutes}분 후에 다시 시도해주세요.`);
+  }
+
   const isMatch = await user.comparePassword(password);
   if (!isMatch) {
-    // 로그인 실패 횟수 증가
     user.loginAttempts = (user.loginAttempts || 0) + 1;
     user.lastFailedLogin = new Date();
 
-    // 계정 잠금 확인
     if (user.loginAttempts >= 5) {
-      user.lockedUntil = new Date(Date.now() + 30 * 60 * 1000); // 30분 잠금
+      user.lockedUntil = new Date(Date.now() + 30 * 60 * 1000);
       await user.save();
       throw new AuthenticationError('계정이 잠겼습니다. 30분 후에 다시 시도해주세요.');
     }
 
     await user.save();
     throw new AuthenticationError(`잘못된 비밀번호입니다. (${user.loginAttempts}/5 시도)`);
-  }
-
-  // 계정 잠금 확인
-  if (user.lockedUntil && user.lockedUntil > new Date()) {
-    const remainingMinutes = Math.ceil((user.lockedUntil - new Date()) / 60000);
-    throw new AuthenticationError(`계정이 잠겼습니다. ${remainingMinutes}분 후에 다시 시도해주세요.`);
   }
 
   // 로그인 성공시 실패 횟수 초기화
@@ -281,7 +273,7 @@ exports.updateUser = async (req, res) => {
       user.email = email;
     }
 
-    if (authority !== undefined) {
+    if (authority !== undefined && req.user && req.user.authority >= 5) {
       user.authority = authority;
     }
 

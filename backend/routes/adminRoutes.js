@@ -10,7 +10,10 @@ const {
   getUserDetails
 } = require('../controllers/adminController');
 const { getCacheStats, clearCache, invalidateCache } = require('../middleware/cache');
+const { authenticateToken, requireAdmin } = require('../middleware/auth');
 const router = express.Router();
+
+router.use(authenticateToken, requireAdmin);
 
 // 관리자 전용 API 엔드포인트
 router.get('/users', getAllUsers);

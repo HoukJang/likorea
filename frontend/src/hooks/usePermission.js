@@ -1,35 +1,21 @@
 import { useCallback } from 'react';
+import { useAuth } from './useAuth';
 import { getAuthority } from '../utils/dataUtils';
 
-/**
- * 권한 확인을 위한 커스텀 훅
- */
 export const usePermission = () => {
-  /**
-   * 현재 사용자의 권한 레벨 가져오기
-   * @returns {number} 권한 레벨 (기본값: 0)
-   */
+  const { user } = useAuth();
+
   const getCurrentAuthority = useCallback(() => {
-    const authority = localStorage.getItem('userAuthority');
-    return parseInt(authority || '0', 10);
-  }, []);
+    return user?.authority ? parseInt(user.authority, 10) : 0;
+  }, [user]);
 
-  /**
-   * 현재 사용자 ID 가져오기
-   * @returns {string|null} 사용자 ID 또는 null
-   */
   const getCurrentUserId = useCallback(() => {
-    return localStorage.getItem('userId');
-  }, []);
+    return user?.id || null;
+  }, [user]);
 
-  /**
-   * 로그인 상태 확인
-   * @returns {boolean} 로그인 여부
-   */
   const isAuthenticated = useCallback(() => {
-    // authToken 또는 userId가 있으면 인증된 것으로 판단
-    return !!(localStorage.getItem('authToken') || localStorage.getItem('userId'));
-  }, []);
+    return !!user;
+  }, [user]);
 
   /**
    * 관리자 권한 확인
@@ -47,14 +33,6 @@ export const usePermission = () => {
    */
   const canModify = useCallback(
     target => {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('canModify 호출됨:', {
-          isAuth: isAuthenticated(),
-          hasTarget: !!target,
-          token: localStorage.getItem('authToken')
-        });
-      }
-
       if (!isAuthenticated() || !target) return false;
 
       const currentUserId = getCurrentUserId();
@@ -77,17 +55,6 @@ export const usePermission = () => {
         }
       } else {
         return false;
-      }
-
-      if (process.env.NODE_ENV === 'development') {
-        console.log('권한 체크:', {
-          현재사용자: currentUserId,
-          현재권한: currentAuthority,
-          작성자: targetAuthorId,
-          작성자권한: targetAuthority,
-          본인여부: targetAuthorId === currentUserId,
-          권한비교: currentAuthority > targetAuthority
-        });
       }
 
       // 1. 본인 작성물인 경우 항상 수정/삭제 가능

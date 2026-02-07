@@ -136,11 +136,6 @@ exports.getScrapCount = async (req, res) => {
 // 전체 스크랩 목록 조회 (관리자용)
 exports.getAllScrapsAdmin = async (req, res) => {
   try {
-    // 디버깅을 위한 로그
-    console.log('getAllScrapsAdmin - req.user:', req.user);
-    console.log('getAllScrapsAdmin - req.user._id:', req.user?._id);
-    console.log('getAllScrapsAdmin - req.user.authority:', req.user?.authority);
-    
     // 관리자 권한 확인
     if (!req.user || req.user.authority !== 5) {
       return res.status(403).json({ message: '관리자 권한이 필요합니다.' });

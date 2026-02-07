@@ -1,6 +1,5 @@
 import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
 import ErrorBoundary from './components/ErrorBoundary';
 import Loading from './components/common/Loading';
 import { AuthProvider } from './contexts/AuthContext';
@@ -197,25 +196,25 @@ function AppContent() {
             <Route path="/profile/*" element={<Navigate to="/dashboard/profile" replace />} />
             <Route path="/admin/*" element={<Navigate to="/dashboard/users" replace />} />
 
-            <Route path="/design-preview" element={
-              <Suspense fallback={<Loading />}>
-                <DesignPreview />
-              </Suspense>
-            } />
-
-            {/* Design System Preview */}
-            <Route path="/design-system" element={
-              <Suspense fallback={<Loading />}>
-                <DesignSystemPreview />
-              </Suspense>
-            } />
-
-            {/* Button Demo Page - Development Only */}
-            <Route path="/button-demo" element={
-              <Suspense fallback={<Loading />}>
-                <ButtonDemo />
-              </Suspense>
-            } />
+            {process.env.NODE_ENV === 'development' && (
+              <>
+                <Route path="/design-preview" element={
+                  <Suspense fallback={<Loading />}>
+                    <DesignPreview />
+                  </Suspense>
+                } />
+                <Route path="/design-system" element={
+                  <Suspense fallback={<Loading />}>
+                    <DesignSystemPreview />
+                  </Suspense>
+                } />
+                <Route path="/button-demo" element={
+                  <Suspense fallback={<Loading />}>
+                    <ButtonDemo />
+                  </Suspense>
+                } />
+              </>
+            )}
 
             {/* 404 페이지 - 모든 매치되지 않는 경로 처리 */}
             <Route path="*" element={<NotFound />} />
@@ -229,11 +228,9 @@ function AppContent() {
 function App() {
   return (
     <ErrorBoundary>
-      <HelmetProvider>
-        <AuthProvider>
-          <AppContent />
-        </AuthProvider>
-      </HelmetProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </ErrorBoundary>
   );
 }

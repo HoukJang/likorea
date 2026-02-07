@@ -14,35 +14,10 @@ function Dashboard() {
   const tabsRef = useRef(null);
   const [isScrollable, setIsScrollable] = useState(false);
 
-  // 디버깅: 렌더링 추적
-  useEffect(() => {
-    console.log('[Dashboard] 렌더링됨:', {
-      pathname: location.pathname,
-      user: user?.id,
-      authority: user?.authority,
-      authLoading
-    });
-  });
-
-  // isAdmin을 직접 계산 (state로 관리하지 않음)
   const isAdmin = useMemo(() => {
-    // 로딩 중이거나 user가 없으면 무조건 false
-    if (authLoading || !user) {
-      console.log('[Dashboard] isAdmin = false (로딩 중 또는 user 없음)');
-      return false;
-    }
-
+    if (authLoading || !user) return false;
     const authority = user?.authority;
-    // 숫자 또는 문자열 5만 관리자로 인정
-    const result = authority === 5 || authority === '5';
-    console.log('[Dashboard] isAdmin 계산:', {
-      user: user?.id,
-      authority,
-      authorityType: typeof authority,
-      result,
-      authLoading
-    });
-    return result;
+    return authority === 5 || authority === '5';
   }, [user, authLoading]);
 
 
@@ -67,7 +42,7 @@ function Dashboard() {
     const fetchUnreadCount = async () => {
       try {
         const response = await getUnreadCount();
-        setUnreadCount(response.count || 0);
+        setUnreadCount(response.data?.count || 0);
       } catch (error) {
         console.error('읽지 않은 메시지 수 조회 실패:', error);
       }
@@ -89,7 +64,6 @@ function Dashboard() {
 
       // 관리자가 아닌데 관리자 페이지에 접근하려고 하면 리다이렉트
       if (adminPaths.includes(currentPath) && !isAdmin) {
-        console.log('[Dashboard] 권한 없음, 프로필로 리다이렉트');
         navigate('/dashboard/profile', { replace: true });
       }
     }
@@ -99,26 +73,6 @@ function Dashboard() {
   useEffect(() => {
     checkScrollable();
     window.addEventListener('resize', checkScrollable);
-
-    // 디버깅: 탭 컨테이너의 실제 스타일 확인
-    if (tabsRef.current) {
-      const computedStyle = window.getComputedStyle(tabsRef.current);
-      const tabButtons = tabsRef.current.querySelectorAll('.tab-button');
-      console.log('[Dashboard] 탭 컨테이너 디버깅:', {
-        display: computedStyle.display,
-        flexWrap: computedStyle.flexWrap,
-        overflow: computedStyle.overflow,
-        overflowX: computedStyle.overflowX,
-        width: tabsRef.current.offsetWidth,
-        scrollWidth: tabsRef.current.scrollWidth,
-        clientWidth: tabsRef.current.clientWidth,
-        탭개수: tabButtons.length,
-        탭목록: Array.from(tabButtons).map(btn => btn.textContent),
-        화면너비: window.innerWidth,
-        isAdmin,
-        user: user?.id
-      });
-    }
 
     return () => window.removeEventListener('resize', checkScrollable);
   }, [checkScrollable, isAdmin]); // isAdmin 변경 시에도 체크
@@ -180,23 +134,10 @@ function Dashboard() {
       }
     ];
 
-    // 로딩 중이거나 관리자가 아니면 무조건 기본 탭만 표시
     if (authLoading || !isAdmin) {
-      console.log('[Dashboard] 일반 사용자 탭만 표시:', {
-        isAdmin,
-        authLoading,
-        user: user?.id,
-        authority: user?.authority
-      });
       return commonTabs;
     }
 
-    // 관리자인 경우에만 관리자 탭 추가
-    console.log('[Dashboard] 관리자 탭 포함:', {
-      isAdmin,
-      user: user?.id,
-      authority: user?.authority
-    });
     return [...commonTabs, ...adminTabs];
   }, [isAdmin, authLoading, user]); // user도 의존성에 추가
 
@@ -217,12 +158,6 @@ function Dashboard() {
           <h1>{isAdmin ? '관리자 대시보드' : '사용자 대시보드'}</h1>
           <p className="dashboard-subtitle">
             {isAdmin ? '시스템 관리 및 모니터링' : '프로필 및 메시지 관리'}
-          </p>
-          {/* 디버깅 정보 추가 */}
-          <p style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
-            [디버그] User: {user?.id || 'none'}, Authority: {user?.authority || 'none'} (타입: {typeof user?.authority}),
-            isAdmin: {String(isAdmin)}, 탭 수: {tabsWithBadge.length},
-            경로: {location.pathname}
           </p>
         </div>
         {isAdmin && (
@@ -250,19 +185,11 @@ function Dashboard() {
           WebkitOverflowScrolling: 'touch'  // iOS 스크롤 개선
         }}
       >
-        {tabsWithBadge.map((tab) => {
-          // 디버깅: 각 탭 렌더링 추적
-          if (tab.id === 'users' || tab.id === 'stats' || tab.id === 'traffic') {
-            console.log('[Dashboard] 관리자 탭 렌더링:', tab.id, { isAdmin, user: user?.id });
-          }
-          return (
+        {tabsWithBadge.map((tab) => (
             <button
               key={tab.id}
               className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => {
-                console.log('[Dashboard] 탭 클릭:', tab.id);
-                handleTabChange(tab.id);
-              }}
+              onClick={() => handleTabChange(tab.id)}
               role="tab"
               aria-selected={activeTab === tab.id}
               aria-controls={`${tab.id}-panel`}
@@ -274,8 +201,7 @@ function Dashboard() {
                 <span className="tab-badge">{tab.badge}</span>
               )}
             </button>
-          );
-        })}
+        ))}
       </nav>
 
       {message && (

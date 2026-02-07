@@ -281,7 +281,7 @@ router.post('/', signupLimiter, validateUserInput, signup);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.put('/:id', updateUser);
+router.put('/:id', authenticateToken, requireAuth, updateUser);
 
 /**
  * @swagger
@@ -313,7 +313,7 @@ router.put('/:id', updateUser);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.delete('/:id', deleteUser);
+router.delete('/:id', authenticateToken, requireAuth, deleteUser);
 
 /**
  * @swagger
