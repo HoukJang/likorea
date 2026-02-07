@@ -220,6 +220,34 @@ The `deploy.sh` script handles:
 9. Nginx configuration (production)
 10. SSL certificate management (production)
 
+## Content Pipeline
+
+식당 리뷰, 뉴스, 생활정보 등 콘텐츠 생성 요청 시 반드시 팀 파이프라인을 사용합니다.
+
+### 워크플로우
+1. `TeamCreate`로 content 팀 생성
+2. `content-lead` 에이전트를 오케스트레이터로 spawn
+3. content-lead가 순차적으로 진행:
+   - `researcher` → 데이터 수집 (WebSearch, Google Places 등) → `research.json`
+   - `fact-checker` → 소스 URL 대조 검증 → `fact-check.json`
+   - `writer` → 한국어 포스트 작성 → `draft.json`
+   - `reviewer` → 품질 검증 → `review.json`
+4. 최종 출력: Word(.docx) 파일로 저장 (DB 저장 금지)
+
+### 에이전트 정의
+- 커스텀 에이전트: `.claude/agents/` 디렉토리 참조
+- 작업 공간: `.content-workspace/{task-id}/`
+
+### 스타일 가이드
+- 맛집 리뷰: 블로그 스타일, 해당 식당의 실제 사진만 첨부 (스톡/다른 식당 사진 금지, 없으면 미첨부)
+- 출력 형식: 항상 Word(.docx) 파일 — DB 직접 저장 금지
+
+### 금지 사항
+- 콘텐츠 생성을 위한 독립 스크립트 작성 금지
+- 메인 에이전트가 직접 데이터 수집/포스트 작성 금지
+- 반드시 팀 에이전트를 통해 처리할 것
+- `createContentPost.js`로 DB 직접 저장 금지
+
 ## Important Notes
 
 - The project uses a custom validation middleware instead of external libraries

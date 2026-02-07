@@ -1,30 +1,23 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
-const app = require('../../server');
+const { connectDB } = require('../../config/db');
 const User = require('../../models/User');
 
 describe('Auth Integration Tests', () => {
   let server;
+  let app;
   let testUser;
 
   beforeAll(async () => {
-    // Connect to test database
-    if (mongoose.connection.readyState === 0) {
-      await mongoose.connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-      });
-    }
-
-    // Start server
-    server = app.listen(0); // Random port
+    await connectDB();
+    app = require('../../server');
+    server = app.listen(0);
   });
 
   afterAll(async () => {
-    // Clean up
     await User.deleteMany({ email: /test_.*@test\.com/ });
+    if (server) server.close();
     await mongoose.connection.close();
-    server.close();
   });
 
   beforeEach(async () => {

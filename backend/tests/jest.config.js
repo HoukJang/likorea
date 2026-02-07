@@ -25,14 +25,12 @@ module.exports = {
     '/node_modules/',
     '/tests/legacy/'
   ],
+  globalSetup: '<rootDir>/tests/setup/globalSetup.js',
+  globalTeardown: '<rootDir>/tests/setup/globalTeardown.js',
   setupFilesAfterEnv: ['<rootDir>/tests/setup/jest.setup.js'],
   verbose: true,
-  // 테스트 완료 후 강제 종료
   forceExit: true,
-  // 열린 핸들 감지
   detectOpenHandles: true,
-  // 테스트 타임아웃 (30초)
   testTimeout: 30000,
-  // 최대 동시 실행 워커 수
-  maxWorkers: '50%'
+  maxWorkers: 1
 };

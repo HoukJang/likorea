@@ -153,6 +153,8 @@ frontend/**/*.tmp
 # Jest cache
 **/.jest/
 **/jest_*
+# MongoDB memory server temp URI
+.test-mongo-uri
 
 # NPM/Yarn cache
 **/.npm/
@@ -431,3 +433,6 @@ webpack-stats.json
 # Bundle analysis reports
 bundle-report.html
 bundle-stats.htmlSuperClaude_Framework/
+
+# Content team workspace (AI-generated intermediate files)
+.content-workspace/

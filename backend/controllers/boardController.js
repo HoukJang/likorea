@@ -204,8 +204,10 @@ exports.createPost = asyncHandler(async (req, res) => {
     }
   });
 
+  const sanitizedTitle = sanitizeHtml(title, { allowedTags: [], allowedAttributes: {} });
+
   const post = await BoardPost.create({
-    title,
+    title: sanitizedTitle,
     content: sanitizedContent,
     tags,
     author: user._id,
@@ -428,7 +430,7 @@ exports.updatePost = asyncHandler(async (req, res) => {
   // 업데이트할 데이터 구성
   const updateData = {};
   if (title) {
-    updateData.title = title;
+    updateData.title = sanitizeHtml(title, { allowedTags: [], allowedAttributes: {} });
   }
   if (content) {
     // HTML sanitization with whitespace preservation

@@ -92,28 +92,32 @@ const connectDB = async () => {
       return;
     }
 
-    // 이벤트 리스너 설정
-    setupConnectionListeners();
+    const isTest = process.env.NODE_ENV === 'test';
+    const opts = isTest
+      ? { serverSelectionTimeoutMS: 5000, connectTimeoutMS: 5000 }
+      : connectionOptions;
 
-    // MongoDB 연결
-    await mongoose.connect(process.env.MONGO_URI, connectionOptions);
+    if (!isTest) {
+      setupConnectionListeners();
+    }
 
-    // 연결 모니터링 시작
-    monitorConnection();
+    await mongoose.connect(process.env.MONGO_URI, opts);
 
-    // 인덱스 자동 생성 설정 (프로덕션에서는 false 권장)
+    if (!isTest) {
+      monitorConnection();
+    }
+
     mongoose.set('autoIndex', process.env.NODE_ENV !== 'production');
 
     logger.info('MongoDB 연결 풀 초기화 완료', {
-      maxPoolSize: connectionOptions.maxPoolSize,
-      minPoolSize: connectionOptions.minPoolSize,
-      readPreference: connectionOptions.readPreference
+      maxPoolSize: opts.maxPoolSize || 'default',
+      minPoolSize: opts.minPoolSize || 'default',
+      readPreference: opts.readPreference || 'default'
     });
 
   } catch (error) {
     logger.error('MongoDB 연결 실패', error);
 
-    // 프로덕션에서는 연결 실패 시 서버 종료
     if (process.env.NODE_ENV === 'production') {
       logger.error('프로덕션 환경에서 MongoDB 연결 실패. 서버를 종료합니다.');
       process.exit(1);

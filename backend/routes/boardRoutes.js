@@ -349,6 +349,7 @@ router.post(
   '/:postId/comments',
   validateParams,
   authenticateToken,
+  requireAuthority(1),
   commentController.createComment
 );
 router.put(

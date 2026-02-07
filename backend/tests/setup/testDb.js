@@ -79,30 +79,30 @@ const initializeEssentialData = async () => {
 const initializeTags = async () => {
   // Type 태그
   const typeTags = [
-    { category: 'type', value: '공지', displayName: '공지', order: 0 },
-    { category: 'type', value: '사고팔고', displayName: '사고팔고', order: 1 },
-    { category: 'type', value: '부동산', displayName: '부동산', order: 2 },
-    { category: 'type', value: '생활정보', displayName: '생활정보', order: 3 },
-    { category: 'type', value: '모임', displayName: '모임', order: 4 },
-    { category: 'type', value: '기타', displayName: '기타', order: 5 }
+    { category: 'type', value: '공지', displayName: '공지', order: 0, isActive: true },
+    { category: 'type', value: '사고팔고', displayName: '사고팔고', order: 1, isActive: true },
+    { category: 'type', value: '부동산', displayName: '부동산', order: 2, isActive: true },
+    { category: 'type', value: '생활정보', displayName: '생활정보', order: 3, isActive: true },
+    { category: 'type', value: '모임', displayName: '모임', order: 4, isActive: true },
+    { category: 'type', value: '기타', displayName: '기타', order: 5, isActive: true }
   ];
 
   // Region 태그 (테스트용 일부만)
   const regionTags = [
-    { category: 'region', value: '0', displayName: '지역 선택 안함', order: 0 },
-    { category: 'region', value: '24', displayName: 'Exit 24 - Flushing', order: 24 },
-    { category: 'region', value: '30', displayName: 'Exit 30 - Douglaston', order: 30 },
-    { category: 'region', value: '40', displayName: 'Exit 40 - Syosset', order: 40 },
-    { category: 'region', value: '50', displayName: 'Exit 50 - Dix Hills', order: 50 }
+    { category: 'region', value: '0', displayName: '지역 선택 안함', order: 0, isActive: true },
+    { category: 'region', value: '24', displayName: 'Exit 24 - Flushing', order: 24, isActive: true },
+    { category: 'region', value: '30', displayName: 'Exit 30 - Douglaston', order: 30, isActive: true },
+    { category: 'region', value: '40', displayName: 'Exit 40 - Syosset', order: 40, isActive: true },
+    { category: 'region', value: '50', displayName: 'Exit 50 - Dix Hills', order: 50, isActive: true }
   ];
 
   // Category 태그 (소주제)
   const categoryTags = [
-    { category: 'category', value: '생활용품', displayName: '생활용품', parentCategory: '사고팔고', order: 0 },
-    { category: 'category', value: '가전제품', displayName: '가전제품', parentCategory: '사고팔고', order: 1 },
-    { category: 'category', value: '의류', displayName: '의류', parentCategory: '사고팔고', order: 2 },
-    { category: 'category', value: '가구', displayName: '가구', parentCategory: '사고팔고', order: 3 },
-    { category: 'category', value: '기타', displayName: '기타', parentCategory: '사고팔고', order: 4 }
+    { category: 'category', value: '생활용품', displayName: '생활용품', parentCategory: '사고팔고', order: 0, isActive: true },
+    { category: 'category', value: '가전제품', displayName: '가전제품', parentCategory: '사고팔고', order: 1, isActive: true },
+    { category: 'category', value: '의류', displayName: '의류', parentCategory: '사고팔고', order: 2, isActive: true },
+    { category: 'category', value: '가구', displayName: '가구', parentCategory: '사고팔고', order: 3, isActive: true },
+    { category: 'category', value: '기타', displayName: '기타', parentCategory: '사고팔고', order: 4, isActive: true }
   ];
 
   // 모든 태그 upsert
