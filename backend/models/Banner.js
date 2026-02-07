@@ -66,4 +66,6 @@ bannerSchema.statics.findActiveBanner = async function() {
   }).sort({ priority: -1, createdAt: -1 });
 };
 
+bannerSchema.index({ isActive: 1, startDate: 1, endDate: 1 });
+
 module.exports = mongoose.model('Banner', bannerSchema);

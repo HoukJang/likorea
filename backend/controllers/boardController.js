@@ -459,8 +459,12 @@ exports.updatePost = asyncHandler(async (req, res) => {
   if (tags) {
     if (tags.type || tags.region || tags.subcategory) {
       // 태그 유효성 검증
+      const [typeTag, regionTag] = await Promise.all([
+        tags.type ? Tag.findOne({ category: 'type', value: tags.type, isActive: true }) : null,
+        tags.region ? Tag.findOne({ category: 'region', value: tags.region, isActive: true }) : null,
+      ]);
+
       if (tags.type) {
-        const typeTag = await Tag.findOne({ category: 'type', value: tags.type, isActive: true });
         if (!typeTag) {
           throw new ValidationError('유효하지 않은 Type 태그입니다.');
         }
@@ -468,11 +472,6 @@ exports.updatePost = asyncHandler(async (req, res) => {
       }
 
       if (tags.region) {
-        const regionTag = await Tag.findOne({
-          category: 'region',
-          value: tags.region,
-          isActive: true
-        });
         if (!regionTag) {
           throw new ValidationError('유효하지 않은 Region 태그입니다.');
         }

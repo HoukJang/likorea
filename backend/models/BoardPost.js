@@ -74,17 +74,21 @@ boardPostSchema.pre('save', async function (next) {
   }
 
   try {
-    let counter = await Counter.findById('board');
-    if (!counter) {
-      counter = await Counter.create({ _id: 'board', seq: 0 });
-    }
-    counter.seq += 1;
-    await counter.save();
+    const counter = await Counter.findOneAndUpdate(
+      { _id: 'board' },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
     this.postNumber = counter.seq;
     next();
   } catch (err) {
     next(err);
   }
 });
+
+boardPostSchema.index({ 'tags.type': 1, lastActivityAt: -1 });
+boardPostSchema.index({ 'tags.region': 1 });
+boardPostSchema.index({ author: 1 });
+boardPostSchema.index({ isApproved: 1, createdAt: -1 });
 
 module.exports = mongoose.model('BoardPost', boardPostSchema);
