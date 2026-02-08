@@ -289,39 +289,28 @@ else
     install_dependencies "frontend" "프론트엔드"
 fi
 
-# 3. 환경변수 확인
-log_step "3. 환경변수 확인"
+# 3. 환경변수 설정 (.env.{ENVIRONMENT} → .env 복사)
+log_step "3. 환경변수 설정"
 MISSING_ENV=false
 
-if [ "$ENVIRONMENT" = "production" ]; then
-    if [ ! -f "backend/.env" ]; then
-        log_error "백엔드 .env 파일이 없습니다."
-        log_info "백엔드 .env 파일을 생성해주세요."
-        MISSING_ENV=true
-    else
-        log_info "백엔드 .env 파일 확인 ✅"
-    fi
-    
-    if [ ! -f "frontend/.env" ]; then
-        log_error "프론트엔드 .env 파일이 없습니다."
-        log_info "프론트엔드 .env 파일을 생성해주세요."
-        MISSING_ENV=true
-    else
-        log_info "프론트엔드 .env 파일 확인 ✅"
-    fi
+ENV_SUFFIX="$ENVIRONMENT"
+
+# 백엔드 환경 파일 확인 및 복사
+if [ ! -f "backend/.env.${ENV_SUFFIX}" ]; then
+    log_error "backend/.env.${ENV_SUFFIX} 파일이 없습니다."
+    MISSING_ENV=true
 else
-    # 개발 환경에서는 .env.development 파일 확인
-    if [ ! -f "backend/.env.development" ] && [ ! -f "backend/.env" ]; then
-        log_warn "백엔드 환경 파일이 없습니다. 기본값을 사용합니다"
-    else
-        log_info "백엔드 환경 파일 확인 ✅"
-    fi
-    
-    if [ ! -f "frontend/.env.development" ] && [ ! -f "frontend/.env" ]; then
-        log_warn "프론트엔드 환경 파일이 없습니다. 기본값을 사용합니다"
-    else
-        log_info "프론트엔드 환경 파일 확인 ✅"
-    fi
+    cp "backend/.env.${ENV_SUFFIX}" "backend/.env"
+    log_info "backend/.env.${ENV_SUFFIX} → backend/.env 복사 완료 ✅"
+fi
+
+# 프론트엔드 환경 파일 확인 및 복사
+if [ ! -f "frontend/.env.${ENV_SUFFIX}" ]; then
+    log_error "frontend/.env.${ENV_SUFFIX} 파일이 없습니다."
+    MISSING_ENV=true
+else
+    cp "frontend/.env.${ENV_SUFFIX}" "frontend/.env"
+    log_info "frontend/.env.${ENV_SUFFIX} → frontend/.env 복사 완료 ✅"
 fi
 
 if [ "$MISSING_ENV" = true ]; then

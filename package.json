@@ -4,9 +4,10 @@
   "description": "Long Island Korea Community Website",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev": "npm run env:dev && concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm start",
+    "env:dev": "cp backend/.env.development backend/.env && cp frontend/.env.development frontend/.env",
     "start": "npm run start:backend",
     "start:backend": "cd backend && npm start",
     "start:frontend": "cd frontend && npm start",
