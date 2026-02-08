@@ -132,27 +132,12 @@
 
 .board-table tbody tr {
   transition: all 0.15s ease !important;
-  border-left: 3px solid transparent !important;
 }
 
 .board-table tbody tr:hover {
   background-color: var(--gray-50) !important;
   transform: none !important;
   box-shadow: none !important;
-  border-left: 3px solid transparent !important;
-}
-
-/* 글 종류 색상 제거 - 모두 그레이로 통일 */
-.board-table .post-number {
-  color: var(--gray-600) !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-}
-
-/* 공지만 강조 */
-.board-table tr[data-post-type='공지'] .post-number {
-  color: var(--error) !important;
-  font-weight: 600 !important;
 }
 
 /* ===== 모바일 카드 스타일 오버라이드 ===== */
@@ -169,12 +154,6 @@
   border-color: var(--gray-300) !important;
   transform: none !important;
   box-shadow: none !important;
-}
-
-/* 모바일 카드 색상 제거 */
-.mobile-card[data-post-type] {
-  border-color: var(--gray-200) !important;
-  border-left: 1px solid var(--gray-200) !important;
 }
 
 /* 공지 카드만 강조 */
@@ -239,12 +218,7 @@
   border-top: 3px solid var(--primary) !important;
 }
 
-/* ===== 댓글 수 스타일 ===== */
-.comment-count,
-.mobile-comment-count {
-  color: var(--gray-500) !important;
-  font-weight: 400 !important;
-}
+/* ===== 댓글 수 스타일 - BoardList.css에서 배지로 관리 ===== */
 
 /* ===== 전체적인 여백 개선 ===== */
 .board-list-container {
@@ -318,17 +292,71 @@ select:focus {
   }
 }
 
-/* ===== 다크 모드 대응 (선택적) ===== */
+/* ===== 다크 모드 대응 ===== */
 @media (prefers-color-scheme: dark) {
   :root {
     --primary-bg: #111111;
     --gray-50: #18181b;
     --gray-100: #27272a;
+    --gray-200: #3f3f46;
+    --gray-300: #52525b;
+    --gray-400: #71717a;
+    --gray-500: #a1a1aa;
+    --gray-600: #d4d4d8;
+    --gray-700: #e4e4e7;
+    --gray-800: #f4f4f5;
     --gray-900: #fafafa;
   }
-  
+
   body {
     background-color: var(--primary-bg) !important;
-    color: var(--gray-100) !important;
+    color: var(--gray-700) !important;
+  }
+
+  .board-table {
+    background-color: #1a1a1a;
+  }
+
+  .mobile-card {
+    background-color: #1a1a1a !important;
+    border-color: var(--gray-200) !important;
+  }
+
+  .mobile-card:hover {
+    background-color: var(--gray-50) !important;
+  }
+
+  .comment-count,
+  .mobile-comment-count {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+  }
+
+  .type-badge {
+    background: var(--gray-50);
+    border-color: var(--gray-200);
+  }
+
+  .skeleton-cell {
+    background: linear-gradient(90deg, #27272a 25%, #3f3f46 50%, #27272a 75%);
+    background-size: 200% 100%;
+  }
+
+  .skeleton-card {
+    border-color: var(--gray-200);
+  }
+
+  .pagination-btn {
+    background-color: #1a1a1a !important;
+    border-color: var(--gray-200) !important;
+    color: var(--gray-600) !important;
+  }
+
+  .empty-state {
+    color: var(--gray-500);
+  }
+
+  .board-table tr[data-post-type='공지'] {
+    background-color: rgba(220, 38, 38, 0.1);
   }
 }

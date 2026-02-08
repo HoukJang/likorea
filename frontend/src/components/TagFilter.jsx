@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { getAllTags, getSubCategoriesByParent } from '../api/tags';
 import '../styles/TagFilter.css';
 
@@ -66,20 +66,35 @@ const TagFilter = ({ onFilterChange, currentFilters = {} }) => {
     fetchSubCategories();
   }, [filters.type]);
 
+  const debounceTimer = useRef(null);
+
   const handleFilterChange = useCallback((key, value) => {
     const newFilters = {
       ...filters,
       [key]: value
     };
 
-    // 글종류가 변경되면 소주제 초기화
     if (key === 'type') {
       newFilters.subcategory = '';
     }
 
     setFilters(newFilters);
-    onFilterChange(newFilters);
+
+    if (key === 'search' || key === 'region') {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+      debounceTimer.current = setTimeout(() => {
+        onFilterChange(newFilters);
+      }, 300);
+    } else {
+      onFilterChange(newFilters);
+    }
   }, [filters, onFilterChange]);
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    };
+  }, []);
 
   const clearFilters = useCallback(() => {
     const clearedFilters = {
