@@ -1,6 +1,8 @@
 /* 관리자 스크랩 페이지 스타일 */
 .admin-scraps-container {
   max-width: var(--max-width);
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 20px;
 }

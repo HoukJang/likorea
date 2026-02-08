@@ -39,6 +39,8 @@
 /* 미리보기 컨테이너 */
 .design-preview {
   max-width: var(--max-width);
+  width: 100%;
+  box-sizing: border-box;
   margin: 40px auto;
   padding: 20px;
   font-family: 'Pretendard', 'Noto Sans KR', Arial, sans-serif;

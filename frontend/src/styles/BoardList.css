@@ -1,8 +1,10 @@
 /* 현대화된 글 리스트 컨테이너 */
 .board-list-container {
+  width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
   padding: var(--content-padding) var(--content-padding) 0;
+  box-sizing: border-box;
   font-family: var(--font-family);
 }
 

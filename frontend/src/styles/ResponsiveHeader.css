@@ -14,6 +14,8 @@
 
 .header-container {
   max-width: var(--max-width);
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 0 var(--content-padding);
   height: 100%;
