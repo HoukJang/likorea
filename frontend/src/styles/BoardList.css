@@ -841,12 +841,6 @@
 
 /* 반응형 디자인을 위한 미디어 쿼리 */
 @media (max-width: 768px) {
-  .board-list-container {
-    padding: 0 8px;
-    width: 100%;
-    max-width: 100%;
-  }
-
   /* 모바일에서 테이블 숨기고 카드 뷰 표시 */
   .table-responsive {
     display: none;
@@ -879,9 +873,7 @@
   .mobile-card {
     padding: 14px;
     margin-bottom: 10px;
-    width: calc(100% - 28px);
-    margin-left: 14px;
-    margin-right: 14px;
+    width: 100%;
   }
 
   .mobile-card-title {
@@ -902,17 +894,10 @@
 
 /* 작은 모바일 화면 */
 @media (max-width: 480px) {
-  .board-list-container {
-    padding: 0 4px;
-    width: 100%;
-  }
-
   .mobile-card {
     padding: 12px;
     margin-bottom: 8px;
-    width: calc(100% - 24px);
-    margin-left: 12px;
-    margin-right: 12px;
+    width: 100%;
   }
 
   .mobile-card-title {

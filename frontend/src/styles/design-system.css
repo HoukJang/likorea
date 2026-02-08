@@ -490,6 +490,14 @@ h6 { font-size: 0.875rem; font-weight: 600; color: var(--color-text-secondary); 
 .shadow-md { box-shadow: var(--shadow-md); }
 .shadow-lg { box-shadow: var(--shadow-lg); }
 
+/* ===== Mobile Layout Override ===== */
+@media (max-width: 768px) {
+  :root {
+    --max-width: min(96vw, 1600px);
+    --content-padding: clamp(8px, 2vw, 16px);
+  }
+}
+
 /* ===== Dark Mode ===== */
 @media (prefers-color-scheme: dark) {
   :root {
