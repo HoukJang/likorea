@@ -91,20 +91,6 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.btn-cta {
-  background: var(--color-primary);
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 12px 28px;
-  box-shadow: 0 2px 8px rgba(0, 71, 160, 0.25);
-}
-
-.btn-cta:hover {
-  background: var(--color-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(0, 71, 160, 0.35);
-}
 
 /* ===== Container ===== */
 .container {
@@ -206,13 +192,6 @@
   background: var(--gray-50);
 }
 
-.activity-grid {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 32px;
-  align-items: start;
-}
-
 /* Recent Posts */
 .recent-posts-header {
   display: flex;
@@ -268,21 +247,26 @@
 
 .post-badge {
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 500;
   padding: 2px 8px;
-  border-radius: 4px;
+  border-radius: 10px;
   white-space: nowrap;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
 }
 
-.badge-사고팔고 { background: #fff7ed; color: #c2410c; }
-.badge-부동산 { background: #ecfdf5; color: #047857; }
-.badge-모임 { background: #ecfeff; color: #0e7490; }
-.badge-문의 { background: #fefce8; color: #a16207; }
-.badge-잡담 { background: #f5f3ff; color: #6d28d9; }
-.badge-생활정보 { background: #eff6ff; color: #1d4ed8; }
-.badge-공지 { background: #fef2f2; color: #b91c1c; }
-.badge-기타 { background: #f3f4f6; color: #4b5563; }
+.post-badge::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: currentColor;
+  opacity: 0.6;
+}
 
 .post-title {
   flex: 1;
@@ -341,27 +325,6 @@
   100% { transform: translateX(100%); }
 }
 
-/* Community Info */
-.community-info {
-  background: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-  padding: 28px 24px;
-}
-
-.community-info-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin: 0 0 12px;
-}
-
-.community-info-text {
-  font-size: 0.9375rem;
-  color: var(--color-text-secondary);
-  line-height: 1.65;
-  margin: 0 0 20px;
-}
 
 /* ===== Animation ===== */
 @keyframes fadeInUp {
@@ -396,10 +359,6 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .activity-grid {
-    grid-template-columns: 1fr 280px;
-    gap: 24px;
-  }
 }
 
 /* ===== Responsive: Mobile ===== */
@@ -468,11 +427,6 @@
     padding: 32px 0 48px;
   }
 
-  .activity-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
   .post-item-link {
     padding: 12px 14px;
   }
@@ -490,9 +444,6 @@
     font-size: 0.75rem;
   }
 
-  .community-info {
-    padding: 24px 20px;
-  }
 }
 
 /* ===== Small Mobile ===== */
@@ -570,19 +521,6 @@
 
   .post-title {
     color: var(--gray-100);
-  }
-
-  .community-info {
-    background: var(--gray-900);
-    border-color: var(--gray-700);
-  }
-
-  .community-info-title {
-    color: var(--gray-100);
-  }
-
-  .community-info-text {
-    color: var(--gray-400);
   }
 
   .no-posts {

@@ -125,18 +125,18 @@ const Landing = () => {
     }
   ];
 
-  const getTypeBadgeClass = (type) => {
-    const typeMap = {
-      '사고팔고': 'badge-사고팔고',
-      '부동산': 'badge-부동산',
-      '모임': 'badge-모임',
-      '문의': 'badge-문의',
-      '잡담': 'badge-잡담',
-      '생활정보': 'badge-생활정보',
-      '공지': 'badge-공지',
-      '기타': 'badge-기타'
+  const getCatColor = (type) => {
+    const map = {
+      '사고팔고': 'var(--cat-사고팔고)',
+      '부동산': 'var(--cat-부동산)',
+      '모임': 'var(--cat-모임)',
+      '문의': 'var(--cat-기타)',
+      '잡담': 'var(--cat-커뮤니티)',
+      '생활정보': 'var(--cat-생활정보)',
+      '공지': 'var(--cat-공지)',
+      '기타': 'var(--cat-기타)'
     };
-    return typeMap[type] || 'badge-기타';
+    return map[type] || 'var(--cat-기타)';
   };
 
   return (
@@ -208,50 +208,35 @@ const Landing = () => {
         {/* Recent Activity */}
         <section className="activity-section">
           <div className="container">
-            <div className="activity-grid">
-              <div className="recent-posts">
-                <div className="recent-posts-header">
-                  <h2 className="section-title">최근 게시글</h2>
-                  <Link to="/boards" className="view-all-link">전체보기</Link>
-                </div>
-                {postsLoaded && recentPosts.length > 0 ? (
-                  <ul className="post-list">
-                    {recentPosts.map((post) => (
-                      <li key={post._id || post.id} className="post-item">
-                        <Link to={`/boards/${post._id || post.id}`} className="post-item-link">
-                          {post.tags?.type && (
-                            <span className={`post-badge ${getTypeBadgeClass(post.tags.type)}`}>
-                              {post.tags.type}
-                            </span>
-                          )}
-                          <span className="post-title">{post.title}</span>
-                          <span className="post-time">{timeAgo(post.createdAt)}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : postsLoaded ? (
-                  <p className="no-posts">아직 게시글이 없습니다.</p>
-                ) : (
-                  <div className="posts-loading">
-                    {[...Array(5)].map((_, i) => (
-                      <div key={i} className="post-skeleton" />
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="community-info">
-                <h3 className="community-info-title">함께하는 커뮤니티</h3>
-                <p className="community-info-text">
-                  롱아일랜드에 거주하는 한인들을 위한 정보 공유와 소통의 공간입니다.
-                  지역 소식, 생활 정보, 부동산, 중고거래 등 다양한 정보를 나눠보세요.
-                </p>
-                <Link to="/boards" className="btn btn-cta">
-                  게시판 바로가기
-                </Link>
-              </div>
+            <div className="recent-posts-header">
+              <h2 className="section-title">최근 게시글</h2>
+              <Link to="/boards" className="view-all-link">전체보기 →</Link>
             </div>
+            {postsLoaded && recentPosts.length > 0 ? (
+              <ul className="post-list">
+                {recentPosts.map((post) => (
+                  <li key={post._id || post.id} className="post-item">
+                    <Link to={`/boards/${post._id || post.id}`} className="post-item-link">
+                      {post.tags?.type && (
+                        <span className="post-badge" style={{ color: getCatColor(post.tags.type) }}>
+                          {post.tags.type}
+                        </span>
+                      )}
+                      <span className="post-title">{post.title}</span>
+                      <span className="post-time">{timeAgo(post.createdAt)}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : postsLoaded ? (
+              <p className="no-posts">아직 게시글이 없습니다.</p>
+            ) : (
+              <div className="posts-loading">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="post-skeleton" />
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </main>
