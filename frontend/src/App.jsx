@@ -9,7 +9,6 @@ import { initViewportHandlers } from './utils/viewportUtils';
 import './styles/design-system.css';
 import './styles/App.css';
 import './styles/accessibility-improvements.css';
-import './styles/theme-minimal.css';
 
 // 핵심 컴포넌트는 직접 import
 import DynamicBanner from './components/DynamicBanner';
@@ -29,6 +28,7 @@ import Scraps from './components/profile/Scraps';
 import Messages from './components/message/Messages';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import Footer from './components/common/Footer';
 
 // 무거운 컴포넌트들은 lazy loading
 const BoardPostForm = lazy(() => import('./components/BoardPostForm')); // Quill 포함
@@ -178,6 +178,7 @@ function AppContent() {
             {/* 404 페이지 - 모든 매치되지 않는 경로 처리 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Footer />
         </div>
       </Router>
     );

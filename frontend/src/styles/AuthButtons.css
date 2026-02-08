@@ -2,13 +2,13 @@
 
 /* 회원가입 버튼 - 텍스트이지만 더 강조 */
 .signup-text-button {
-  font-weight: 600 !important;
-  color: #111827 !important;
+  font-weight: 600;
+  color: #111827;
   position: relative;
 }
 
 .signup-text-button:hover {
-  color: #000000 !important;
+  color: #000000;
 }
 
 /* 언더라인 효과 추가 (선택사항) */
@@ -31,11 +31,11 @@
 /* 다크모드에서 회원가입 버튼 */
 @media (prefers-color-scheme: dark) {
   .signup-text-button {
-    color: #e5e7eb !important;
+    color: #e5e7eb;
   }
-  
+
   .signup-text-button:hover {
-    color: #ffffff !important;
+    color: #ffffff;
   }
 }
 

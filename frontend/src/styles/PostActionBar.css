@@ -1,5 +1,4 @@
 /* Post Action Bar - Desktop Bottom Bar */
-@import './design-system.css';
 
 /* Desktop Only - Hidden on Mobile */
 @media (max-width: 768px) {
@@ -16,7 +15,7 @@
 }
 
 .action-bar-container {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 var(--spacing-xl);
   display: flex;

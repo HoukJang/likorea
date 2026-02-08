@@ -1,12 +1,4 @@
 /* Floating Action Button Styles */
-@import './design-system.css';
-
-/* Taegeukgi Colors Reference */
-:root {
-  --taegeuk-red: #CD2E3A;
-  --taegeuk-red-hover: #ba1b1f;
-  --taegeuk-white: #FFFFFF;
-}
 
 .floating-action-container {
   position: fixed;

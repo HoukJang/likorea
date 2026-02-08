@@ -1,0 +1,79 @@
+.site-footer {
+  margin-top: auto;
+  background-color: var(--gray-900);
+  color: var(--gray-400);
+  padding: var(--space-10) 0 var(--space-6);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+}
+
+.footer-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  text-align: center;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.footer-logo {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.footer-logo .logo-li {
+  color: var(--taegeuk-red);
+}
+
+.footer-logo .logo-korea {
+  color: var(--taegeuk-blue-light);
+  margin-left: 6px;
+}
+
+.footer-tagline {
+  margin: 0;
+  color: var(--gray-500);
+  font-size: var(--font-size-xs);
+}
+
+.footer-nav {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.footer-nav a {
+  color: var(--gray-400);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.footer-nav a:hover {
+  color: var(--taegeuk-blue-light);
+}
+
+.footer-copyright {
+  margin: 0;
+  color: var(--gray-600);
+  font-size: var(--font-size-xs);
+}
+
+@media (max-width: 768px) {
+  .site-footer {
+    padding: var(--space-8) 0 var(--space-4);
+  }
+
+  .footer-nav {
+    gap: var(--space-4);
+  }
+}

@@ -1,5 +1,4 @@
 /* Dynamic Banner Styles - Ultra Minimal Design */
-@import './design-system.css';
 
 .dynamic-banner {
   position: relative;
@@ -13,7 +12,7 @@
 }
 
 .banner-inner {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 20px;
   height: 40px;

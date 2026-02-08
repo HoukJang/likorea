@@ -1,9 +1,8 @@
 /* Admin Banners Styles */
-@import './design-system.css';
 
 .admin-banners {
   padding: var(--spacing-xl);
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
 }
 

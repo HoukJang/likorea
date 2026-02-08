@@ -1,5 +1,4 @@
 /* Alternative Navigation - Ultra Minimal Design */
-@import './design-system.css';
 
 .alt-navigation {
   background: rgba(255, 255, 255, 0.98);
@@ -12,7 +11,7 @@
 }
 
 .alt-nav-container {
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 32px;
   display: flex;
@@ -565,23 +564,23 @@
   }
   
   .auth-button.login-button {
-    background: transparent !important;
-    color: rgba(255, 255, 255, 0.7) !important;
-    border: none !important;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
   }
-  
+
   .auth-button.login-button:hover {
-    color: rgba(255, 255, 255, 0.9) !important;
-    background: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.05);
   }
-  
+
   .auth-button.signup-button {
-    background: rgba(255, 255, 255, 0.9) !important;
-    color: #000 !important;
-    border: none !important;
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+    border: none;
   }
-  
+
   .auth-button.signup-button:hover {
-    background: rgba(255, 255, 255, 0.8) !important;
+    background: rgba(255, 255, 255, 0.8);
   }
 }

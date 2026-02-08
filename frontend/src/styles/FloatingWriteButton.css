@@ -1,6 +1,3 @@
-/* Import Design System */
-@import './design-system.css';
-
 /* Floating Write Button - Mobile Only */
 .floating-write-button {
   display: none; /* Hidden by default, shown on mobile */

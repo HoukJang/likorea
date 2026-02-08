@@ -5,7 +5,7 @@
   box-shadow: none;
   border-radius: 0;
   padding: 0;
-  font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+  font-family: var(--font-family);
 }
 
 .filter-header {
@@ -17,23 +17,23 @@
 
 .filter-header h3 {
   margin: 0;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   font-size: 1.1rem;
 }
 
 .clear-filters-btn {
-  padding: 8px 16px;
-  background-color: #dc2626;
+  padding: 6px 14px;
+  background-color: var(--taegeuk-red);
   color: #ffffff;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 6px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.15s ease;
   white-space: nowrap;
-  font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
-  height: 40px;
+  font-family: var(--font-family);
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,74 +42,76 @@
 }
 
 .clear-filters-btn:hover {
-  background-color: #b91c1c;
+  background-color: var(--taegeuk-red-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  box-shadow: 0 4px 12px rgba(205, 46, 58, 0.3);
 }
 
 .filter-controls {
   display: flex;
   align-items: flex-end;
-  gap: 15px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   min-width: 120px;
 }
 
 .filter-label {
-  font-size: 1rem;
+  font-size: var(--font-size-xs);
   font-weight: 600;
-  color: #111111;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
   margin-bottom: 2px;
-  font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+  font-family: var(--font-family);
 }
 
 .filter-select,
 .filter-input {
-  padding: 8px 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 1rem;
-  background-color: #ffffff;
-  color: #111111;
-  transition: all 0.3s ease;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 13px;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition: all 0.15s ease;
   min-width: 120px;
-  height: 40px;
+  height: 36px;
   box-sizing: border-box;
-  font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+  font-family: var(--font-family);
 }
 
 .filter-select:focus,
 .filter-input:focus {
-  outline: 2px solid #2563eb;
+  outline: 2px solid var(--taegeuk-blue);
   outline-offset: 2px;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  border-color: var(--taegeuk-blue);
+  box-shadow: 0 0 0 2px var(--taegeuk-blue-10);
 }
 
 .filter-select:hover,
 .filter-input:hover {
-  border-color: #2563eb;
+  border-color: var(--color-border-strong);
 }
 
 .active-filters {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin-top: 10px;
   flex-wrap: wrap;
 }
 
 .active-filters-label {
-  font-size: 1rem;
+  font-size: var(--font-size-xs);
   font-weight: 600;
-  color: #6b7280;
-  font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-family);
 }
 
 .filter-tag {
@@ -117,16 +119,16 @@
   align-items: center;
   gap: 5px;
   padding: 4px 8px;
-  background-color: #2563eb;
+  background-color: var(--taegeuk-blue);
   color: #ffffff;
   border-radius: 4px;
   font-size: 0.875rem;
   font-weight: 600;
-  font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
+  font-family: var(--font-family);
 }
 
 .filter-tag:hover {
-  background-color: var(--primary-hover);
+  background-color: var(--taegeuk-blue-hover);
   transform: translateY(-1px);
 }
 
@@ -148,7 +150,7 @@
 }
 
 .remove-filter-btn:focus {
-  outline: 2px solid #ffffff;
+  outline: 2px solid var(--color-text-inverse);
   outline-offset: 1px;
 }
 
@@ -210,7 +212,7 @@
   .filter-label {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #374151;
+    color: var(--color-text-secondary);
     margin-bottom: 4px;
   }
 
@@ -245,7 +247,7 @@
   .active-filters-label {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #6b7280;
+    color: var(--color-text-tertiary);
   }
 
   .filter-tag {

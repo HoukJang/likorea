@@ -1,68 +1,12 @@
-/* App Container - 반응형 헤더 지원 */
-.App.with-header {
-  padding-top: 64px;
+/* App Container */
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* 미니멀한 색상 체계 */
-:root {
-  --primary-bg: #ffffff;
-  --secondary-bg: #111111;
-  --primary-text: #111111;
-  --secondary-text: #71717a;
-
-  /* 단일 브랜드 색상 */
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-light: #dbeafe;
-  --primary-dark: #1e40af;
-
-  /* 그레이스케일 - 주요 색상 */
-  --gray-50: #fafafa;
-  --gray-100: #f4f4f5;
-  --gray-200: #e4e4e7;
-  --gray-300: #d4d4d8;
-  --gray-400: #a1a1aa;
-  --gray-500: #71717a;
-  --gray-600: #52525b;
-  --gray-700: #3f3f46;
-  --gray-800: #27272a;
-  --gray-900: #18181b;
-
-  /* 시맨틱 색상 - 최소한만 사용 */
-  --success: #16a34a;
-  --warning: #ea580c;
-  --error: #dc2626;
-  --info: var(--primary);
-
-  /* Legacy Support (기존 코드 호환성) */
-  --primary-blue: var(--primary);
-  --primary-blue-dark: var(--primary-dark);
-  --primary-blue-light: var(--primary-light);
-  --secondary-green: var(--success);
-  --secondary-green-dark: #15803d;
-  --secondary-green-light: #86efac;
-  --accent-red: var(--error);
-  --accent-red-dark: #b91c1c;
-  --accent-blue: var(--primary);
-  --accent-blue-dark: var(--primary-dark);
-  --gray-light: var(--gray-100);
-  --gray-medium: var(--gray-500);
-  --gray-dark: var(--gray-700);
-  --border-color: var(--gray-200);
-  --text-primary: var(--primary-text);
-  --text-secondary: var(--secondary-text);
-  --white: var(--primary-bg);
-  --focus-outline: 2px solid var(--primary);
-  --focus-outline-offset: 2px;
-  --btn-radius: 6px;
-  --font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
-
-  /* 통일된 글자 크기 체계 */
-  --font-size-xs: 0.75rem; /* 12px - 매우 작은 텍스트 */
-  --font-size-sm: 0.875rem; /* 14px - 작은 텍스트 */
-  --font-size-base: 1rem; /* 16px - 기본 텍스트 */
-  --font-size-lg: 1.125rem; /* 18px - 큰 텍스트 */
-  --font-size-xl: 1.25rem; /* 20px - 매우 큰 텍스트 */
+.App.with-header {
+  padding-top: 64px;
 }
 
 .banner {

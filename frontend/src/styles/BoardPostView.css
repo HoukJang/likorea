@@ -1,10 +1,7 @@
-/* Import Design System */
-@import './design-system.css';
-
 /* Post Container */
 .post-container {
   margin: 0 auto;
-  max-width: 1200px;
+  max-width: var(--max-width);
   padding: calc(var(--spacing-xl) + 20px) var(--spacing-xl) var(--spacing-3xl); /* 상단 패딩 조정 (헤더 제거, 배너 고려) */
   background: var(--color-background);
   font-family: var(--font-family);
