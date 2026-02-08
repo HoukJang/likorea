@@ -95,13 +95,29 @@ class VersionManager {
     if (codename) this.versionData.codename = codename;
     if (description) this.versionData.description = description;
     this.versionData.releaseDate = new Date().toISOString().split('T')[0];
-    
+
     this.saveVersion();
     this.syncPackageVersions();
-    
+
     console.log(`\n✅ Version updated to ${newVersion}`);
     console.log(`   Codename: ${this.versionData.codename}`);
     console.log(`   Date: ${this.versionData.releaseDate}`);
+  }
+
+  // 버전 증가
+  bumpVersion(type = 'patch') {
+    const [major, minor, patch] = this.versionData.version.split('.').map(Number);
+    let newVersion;
+    switch (type) {
+      case 'major': newVersion = `${major + 1}.0.0`; break;
+      case 'minor': newVersion = `${major}.${minor + 1}.0`; break;
+      case 'patch': newVersion = `${major}.${minor}.${patch + 1}`; break;
+      default:
+        console.error(`❌ Invalid bump type: ${type}. Use major, minor, or patch`);
+        process.exit(1);
+    }
+    this.updateVersion(newVersion);
+    return newVersion;
   }
 
   // 빌드 시 버전 정보 주입
@@ -170,6 +186,10 @@ switch (args[0]) {
     manager.listVersions();
     break;
     
+  case 'bump':
+    manager.bumpVersion(args[1] || 'patch');
+    break;
+
   case 'update':
     if (!args[1]) {
       console.error('❌ Please specify a new version');
@@ -196,6 +216,7 @@ Usage: node version-manager.js [command] [options]
 Commands:
   current, show     Show current version info
   sync             Sync version across all package.json files
+  bump [type]      Bump version (major|minor|patch, default: patch)
   tag [message]    Create Git tag for current version
   checkout <ver>   Checkout to specific version (e.g., 1.0.0 or v1.0.0)
   list             List all available versions
@@ -204,6 +225,7 @@ Commands:
 
 Examples:
   node version-manager.js current
+  node version-manager.js bump patch
   node version-manager.js update 1.0.1 "Hotfix" "Performance improvements"
   node version-manager.js tag "Initial release"
   node version-manager.js checkout 1.0.0

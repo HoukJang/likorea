@@ -464,69 +464,17 @@ fi
 # 5. 버전 관리
 log_step "5. 버전 관리"
 
-# 버전 증가 처리
 if [ -n "$BUMP_VERSION" ]; then
     log_progress "버전을 $BUMP_VERSION 레벨로 증가시킵니다..."
-    
-    # 현재 버전 확인
-    if [ -f "scripts/version-manager.js" ]; then
-        OLD_VERSION=$(node scripts/version-manager.js current 2>/dev/null || echo "1.0.0")
-        log_info "현재 버전: $OLD_VERSION"
-        
-        # npm version 명령 실행으로 새 버전 생성
-        case "$BUMP_VERSION" in
-            patch)
-                NEW_VERSION=$(npm version patch --no-git-tag-version --no-commit-hooks | sed 's/^v//')
-                ;;
-            minor)
-                NEW_VERSION=$(npm version minor --no-git-tag-version --no-commit-hooks | sed 's/^v//')
-                ;;
-            major)
-                NEW_VERSION=$(npm version major --no-git-tag-version --no-commit-hooks | sed 's/^v//')
-                ;;
-        esac
-        
-        # version.json 파일 업데이트
-        if [ -f "version.json" ]; then
-            # jq가 있으면 사용, 없으면 sed 사용
-            if command -v jq &> /dev/null; then
-                jq --arg ver "$NEW_VERSION" '.version = $ver' version.json > version.json.tmp && mv version.json.tmp version.json
-            else
-                sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$NEW_VERSION\"/" version.json
-            fi
-            log_info "version.json 업데이트 완료"
-        fi
-        
-        # 버전 동기화 (이제 version.json이 업데이트되었으므로 올바르게 동기화됨)
-        node scripts/version-manager.js sync
-        log_info "새 버전: $NEW_VERSION ✅"
-    else
-        # version-manager.js가 없으면 npm version만 실행
-        case "$BUMP_VERSION" in
-            patch)
-                NEW_VERSION=$(npm version patch --no-git-tag-version --no-commit-hooks | sed 's/^v//')
-                ;;
-            minor)
-                NEW_VERSION=$(npm version minor --no-git-tag-version --no-commit-hooks | sed 's/^v//')
-                ;;
-            major)
-                NEW_VERSION=$(npm version major --no-git-tag-version --no-commit-hooks | sed 's/^v//')
-                ;;
-        esac
-        log_info "새 버전: $NEW_VERSION"
-    fi
+    node scripts/version-manager.js bump "$BUMP_VERSION"
+    node scripts/version-manager.js tag
+    NEW_VERSION=$(node -e "console.log(require('./version.json').version)")
+    log_info "새 버전: $NEW_VERSION ✅"
 else
-    log_progress "버전 정보 동기화 및 주입 중..."
-    
-    # 버전 관리자 실행
-    if [ -f "scripts/version-manager.js" ]; then
-        node scripts/version-manager.js sync
-        node scripts/version-manager.js inject
-        CURRENT_VERSION=$(node scripts/version-manager.js current 2>/dev/null || echo "N/A")
-        log_info "현재 버전: $CURRENT_VERSION ✅"
-    else
-        log_warn "버전 관리자가 없습니다. 버전 관리를 건너뜁니다."
-    fi
+    node scripts/version-manager.js sync
+    node scripts/version-manager.js inject
+    CURRENT_VERSION=$(node -e "console.log(require('./version.json').version)")
+    log_info "현재 버전: $CURRENT_VERSION ✅"
 fi
 
 # 6. 프론트엔드 빌드

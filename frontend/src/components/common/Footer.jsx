@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import packageJson from '../../../package.json';
 import '../../styles/Footer.css';
 
 function Footer() {
@@ -21,6 +22,7 @@ function Footer() {
 
         <p className="footer-copyright">
           &copy; {new Date().getFullYear()} Long Island Korea. All rights reserved.
+          <span className="footer-version">v{packageJson.version}</span>
         </p>
       </div>
     </footer>

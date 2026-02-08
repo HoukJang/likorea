@@ -1,6 +1,6 @@
 {
   "name": "longisland-korea",
-  "version": "1.8.2",
+  "version": "2.0.0",
   "description": "Long Island Korea Community Website",
   "private": true,
   "scripts": {
@@ -35,11 +35,13 @@
     "deploy:dev": "./deploy.sh development",
     "deploy:prod": "./deploy.sh production",
     "setup:dev": "cd backend && node utils/setupDevDB.js",
-    "version:sync": "node scripts/sync-version.js",
-    "version:bump": "node scripts/bump-version.js",
-    "version:bump:major": "node scripts/bump-version.js major",
-    "version:bump:minor": "node scripts/bump-version.js minor",
-    "version:bump:patch": "node scripts/bump-version.js patch"
+    "version:current": "node scripts/version-manager.js current",
+    "version:sync": "node scripts/version-manager.js sync",
+    "version:bump": "node scripts/version-manager.js bump",
+    "version:bump:major": "node scripts/version-manager.js bump major",
+    "version:bump:minor": "node scripts/version-manager.js bump minor",
+    "version:bump:patch": "node scripts/version-manager.js bump patch",
+    "version:tag": "node scripts/version-manager.js tag"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

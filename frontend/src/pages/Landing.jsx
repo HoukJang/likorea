@@ -4,7 +4,6 @@ import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../hooks/useAuth';
 import { getBoards } from '../api/boards';
 import { timeAgo } from '../utils/dataUtils';
-import VersionDisplay from '../components/VersionDisplay';
 import '../styles/Landing.css';
 
 const Landing = () => {
@@ -240,7 +239,6 @@ const Landing = () => {
           </div>
         </section>
       </main>
-      <VersionDisplay position="bottom-right" showCodename={true} />
     </>
   );
 };
