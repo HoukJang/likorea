@@ -32,20 +32,11 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 
 // 무거운 컴포넌트들은 lazy loading
 const BoardPostForm = lazy(() => import('./components/BoardPostForm')); // Quill 포함
-const BotManagement = lazy(() => import('./pages/BotManagement'));
 const ButtonDemo = lazy(() => import('./pages/ButtonDemo'));
 const DesignPreview = lazy(() => import('./components/DesignPreview'));
 const DesignSystemPreview = lazy(() => import('./pages/DesignSystemPreview'));
-const BotForm = lazy(() => import('./pages/BotForm'));
-
 // 통합 대시보드 컴포넌트
 const Dashboard = lazy(() => import('./components/Dashboard'));
-
-// Bot Board 시스템 컴포넌트들을 lazy loading
-const BotBoard = lazy(() => import('./pages/bot/BotBoard'));
-const BotPostCreate = lazy(() => import('./pages/bot/BotPostCreate'));
-const BotManagementPage = lazy(() => import('./pages/bot/BotManagementPage'));
-const BotConfigForm = lazy(() => import('./pages/bot/BotConfigForm'));
 
 // Admin 관련 컴포넌트들을 lazy loading
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
@@ -96,50 +87,6 @@ function AppContent() {
             {/* 게시판 리스트 페이지 */}
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
-
-            {/* 봇 관리 페이지 - 구체적인 경로를 먼저 배치 */}
-            <Route path="/bots/new" element={
-              <Suspense fallback={<Loading />}>
-                <BotForm />
-              </Suspense>
-            } />
-            <Route path="/bots/edit/:botId" element={
-              <Suspense fallback={<Loading />}>
-                <BotForm />
-              </Suspense>
-            } />
-            <Route path="/bot-management" element={
-              <Suspense fallback={<Loading />}>
-                <BotManagement />
-              </Suspense>
-            } />
-
-            {/* Bot Board 시스템 라우트 */}
-            <Route path="/bot-board" element={
-              <Suspense fallback={<Loading />}>
-                <BotBoard />
-              </Suspense>
-            } />
-            <Route path="/bot-board/new" element={
-              <Suspense fallback={<Loading />}>
-                <BotPostCreate />
-              </Suspense>
-            } />
-            <Route path="/bot-board/manage" element={
-              <Suspense fallback={<Loading />}>
-                <BotManagementPage />
-              </Suspense>
-            } />
-            <Route path="/bot-board/manage/new" element={
-              <Suspense fallback={<Loading />}>
-                <BotConfigForm />
-              </Suspense>
-            } />
-            <Route path="/bot-board/manage/edit/:botId" element={
-              <Suspense fallback={<Loading />}>
-                <BotConfigForm />
-              </Suspense>
-            } />
 
             {/* 게시판 관련 라우트 */}
             <Route path="/boards" element={<BoardList />} />

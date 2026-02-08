@@ -518,7 +518,7 @@ function BoardPostView() {
 
       <div className="post-meta">
         <span className="post-author">
-          <strong>작성자:</strong> {post.botId?.name ? `🤖 ${post.botId.name}` : (post.author?.id || '알 수 없음')}
+          <strong>작성자:</strong> {post.author?.id || '알 수 없음'}
         </span>
         <span className="post-date">
           <strong>작성일:</strong> {new Date(post.createdAt).toLocaleString()}

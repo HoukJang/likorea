@@ -67,20 +67,6 @@ const GlobalNavigation = () => {
                 <span className="nav-icon">✍️</span>
                 <span className="nav-text">글쓰기</span>
               </a>
-              {user.authority >= 5 && (
-                <a
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate('/bot-board');
-                  }}
-                  className={`nav-link bot-link ${isActive('/bot-board') ? 'active' : ''}`}
-                  aria-label="봇 게시판으로 이동"
-                  href="/bot-board"
-                >
-                  <span className="nav-icon">🤖</span>
-                  <span className="nav-text">글쓰기봇</span>
-                </a>
-              )}
             </>
           )}
         </div>

@@ -114,11 +114,6 @@ const AlternativeNavigation = () => {
                 <button className="dropdown-item" onClick={() => navigate('/dashboard/messages')}>
                   쪽지함
                 </button>
-                {user.authority >= 5 && (
-                  <button className="dropdown-item" onClick={() => navigate('/bot-board')}>
-                    봇 관리
-                  </button>
-                )}
                 <div className="dropdown-divider" />
                 <button className="dropdown-item danger" onClick={handleLogout}>
                   로그아웃

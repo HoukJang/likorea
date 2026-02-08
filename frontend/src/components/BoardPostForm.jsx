@@ -88,7 +88,7 @@ function BoardPostForm() {
       await approvePost(postId);
       setMessage('게시글이 승인되었습니다.');
       setTimeout(() => {
-        navigate('/bot-board');
+        navigate('/boards');
       }, 1000);
     } catch (error) {
       let errorMessage = '게시글 승인에 실패했습니다.';
@@ -114,7 +114,7 @@ function BoardPostForm() {
       await rejectPost(postId, reason);
       setMessage('게시글이 거절되었습니다.');
       setTimeout(() => {
-        navigate('/bot-board');
+        navigate('/boards');
       }, 1000);
     } catch (error) {
       let errorMessage = '게시글 거절에 실패했습니다.';

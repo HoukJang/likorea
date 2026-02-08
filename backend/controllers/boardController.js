@@ -244,15 +244,6 @@ exports.getPosts = asyncHandler(async (req, res) => {
   // AND 조건들을 수집할 배열
   const andConditions = [];
 
-  // 봇 게시글 필터 조건
-  andConditions.push({
-    $or: [
-      { isBot: false },
-      { isBot: true, isApproved: true },
-      { isBot: { $exists: false } } // 이전 게시글 호환성
-    ]
-  });
-
   if (type) {
     filter['tags.type'] = type;
   }
@@ -304,7 +295,7 @@ exports.getPosts = asyncHandler(async (req, res) => {
   });
 
   // 최종 필터 구성
-  const finalFilter = { $and: andConditions };
+  const finalFilter = andConditions.length > 0 ? { $and: andConditions } : {};
 
   // Aggregation Pipeline으로 최적화
   const pipeline = [

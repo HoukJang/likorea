@@ -54,6 +54,36 @@ export const isValidObject = obj => {
 };
 
 /**
+ * 상대적 시간 표시 ("방금", "3분 전", "2시간 전" 등)
+ * 24시간 이후에는 formatDate fallback
+ */
+export const timeAgo = (date) => {
+  if (!date) return '날짜 없음';
+
+  try {
+    const dateObj = new Date(date);
+    if (isNaN(dateObj.getTime())) return '잘못된 날짜';
+
+    const now = Date.now();
+    const diff = now - dateObj.getTime();
+    if (diff < 0) return '방금';
+
+    const seconds = Math.floor(diff / 1000);
+    if (seconds < 60) return '방금';
+
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}분 전`;
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}시간 전`;
+
+    return formatDate(date);
+  } catch {
+    return '날짜 오류';
+  }
+};
+
+/**
  * 날짜를 안전하게 포맷팅하는 함수
  * @param {string|Date} date - 날짜
  * @param {string} locale - 로케일 (기본값: 'ko-KR')
@@ -142,9 +172,7 @@ export const processPostData = post => {
     postNumber: isValidNumber(post.postNumber) ? post.postNumber : 0,
     commentCount: isValidNumber(post.commentCount) ? post.commentCount : 0,
     tags: post.tags || {},
-    isApproved: post.isApproved !== undefined ? post.isApproved : true,
-    botId: post.botId || null,
-    isBot: post.isBot || false
+    isApproved: post.isApproved !== undefined ? post.isApproved : true
   };
 };
 

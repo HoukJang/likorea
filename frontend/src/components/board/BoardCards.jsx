@@ -1,27 +1,19 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { getTagDisplayName, getTagDisplayText } from '../../utils/tagUtils';
-import { formatDate, getAuthorId } from '../../utils/dataUtils';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getTagDisplayName } from '../../utils/tagUtils';
+import { timeAgo, getAuthorId } from '../../utils/dataUtils';
 import UserMenu from '../common/UserMenu';
 
 const BoardCards = React.memo(({ posts, tagList, pendingOnly = false, userScrapIds = new Set() }) => {
   const navigate = useNavigate();
-  const [openMenuPostId, setOpenMenuPostId] = useState(null);
 
   const handleCardClick = (e, postId) => {
-    // 메뉴 버튼이나 UserMenu를 클릭한 경우는 제외
-    if (e.target.closest('.more-button') || e.target.closest('.user-menu-container')) {
+    if (e.target.closest('.user-menu-container')) {
       e.preventDefault();
       return;
     }
 
     navigate(pendingOnly ? `/boards/${postId}/edit?pending=true` : `/boards/${postId}`);
-  };
-
-  const handleMoreClick = (e, postId) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setOpenMenuPostId(openMenuPostId === postId ? null : postId);
   };
 
   return (
@@ -59,14 +51,12 @@ const BoardCards = React.memo(({ posts, tagList, pendingOnly = false, userScrapI
               )}
               {post.title}
               {pendingOnly && <span style={{ marginLeft: '8px', padding: '2px 6px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.75em' }}>승인 대기</span>}
-              <span className="mobile-comment-count">[{post.commentCount || 0}]</span>
+              {(post.commentCount > 0) && <span className="mobile-comment-count">{post.commentCount}</span>}
             </div>
             <div className="mobile-card-footer">
               <div className="mobile-card-info">
                 <span className="mobile-card-author">
-                  {pendingOnly && post.botId?.name ? (
-                    <>🤖 {post.botId.name}</>
-                  ) : post.author && typeof post.author === 'object' ? (
+                  {post.author && typeof post.author === 'object' ? (
                     <div onClick={(e) => e.stopPropagation()}>
                       <UserMenu
                         username={getAuthorId(post.author)}
@@ -88,15 +78,8 @@ const BoardCards = React.memo(({ posts, tagList, pendingOnly = false, userScrapI
                         ? `Exit ${post.region}`
                         : '전체'}
                 </span>
-                <span className="mobile-card-date">{formatDate(post.createdAt)}</span>
+                <span className="mobile-card-date">{timeAgo(post.createdAt)}</span>
               </div>
-              <button
-                className="more-button"
-                onClick={(e) => handleMoreClick(e, postId)}
-                aria-label="더보기 메뉴"
-              >
-                ⋮
-              </button>
             </div>
           </div>
         );

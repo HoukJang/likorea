@@ -15,7 +15,6 @@ const { connectDB } = require('./config/db');
 const logger = require('./utils/logger');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 const { initializeTags } = require('./utils/initTags');
-const { initializeBots } = require('./utils/initBots');
 const {
   createRateLimiters,
   configureHelmet,
@@ -30,7 +29,6 @@ const boardRoutes = require('./routes/boardRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const tagRoutes = require('./routes/tagRoutes');
 const trafficRoutes = require('./routes/trafficRoutes');
-const botRoutes = require('./routes/botRoutes');
 const approvalRoutes = require('./routes/approvalRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const scrapRoutes = require('./routes/scrapRoutes');
@@ -138,8 +136,6 @@ if (process.env.NODE_ENV !== 'test') {
         logger.info('개발 환경 DB 설정 완료');
         await initializeTags();
         logger.info('태그 시스템 초기화 완료 (개발 환경)');
-        await initializeBots();
-        logger.info('봇 시스템 초기화 완료 (개발 환경)');
       } else {
         await initializeTags();
         logger.info('태그 시스템 초기화 완료 (프로덕션 환경)');
@@ -159,7 +155,6 @@ app.use('/api/boards', generalLimiter, boardRoutes);
 app.use('/api/admin', adminLimiter, adminRoutes);  // 관리자 전용 limiter 사용
 app.use('/api/tags', generalLimiter, tagRoutes);
 app.use('/api/traffic', adminLimiter, trafficRoutes);  // 트래픽도 관리자 전용
-app.use('/api/bots', adminLimiter, botRoutes);  // 봇 관리도 관리자 전용
 app.use('/api/approval', adminLimiter, approvalRoutes);  // 승인도 관리자 전용
 app.use('/api/messages', generalLimiter, messageRoutes);  // 메시지(쪽지) 기능
 app.use('/api/scraps', generalLimiter, scrapRoutes);  // 스크랩 기능

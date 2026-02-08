@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getTagDisplayName, getTagDisplayText } from '../../utils/tagUtils';
-import { formatDate, getAuthorId } from '../../utils/dataUtils';
+import { timeAgo, getAuthorId } from '../../utils/dataUtils';
 import UserMenu from '../common/UserMenu';
 
 const BoardTable = React.memo(({ posts, tagList, pendingOnly = false, userScrapIds = new Set() }) => {
@@ -60,9 +60,11 @@ const BoardTable = React.memo(({ posts, tagList, pendingOnly = false, userScrapI
                 onKeyDown={e => handleKeyDown(e, () => navigate(pendingOnly ? `/boards/${post.id || post._id}/edit?pending=true` : `/boards/${post.id}`))}
               >
                 <td className="post-number" style={{ textAlign: 'center' }} role="cell">
-                  {tagList && post.tags && post.tags.type
-                    ? getTagDisplayText(post.tags)
-                    : post.type || '일반'}
+                  <span className="type-badge">
+                    {tagList && post.tags && post.tags.type
+                      ? getTagDisplayText(post.tags)
+                      : post.type || '일반'}
+                  </span>
                 </td>
                 <td style={{ textAlign: 'left' }} role="cell">
                   <Link
@@ -79,7 +81,7 @@ const BoardTable = React.memo(({ posts, tagList, pendingOnly = false, userScrapI
                     )}
                     {post.title}
                     {pendingOnly && <span style={{ marginLeft: '8px', padding: '2px 6px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.75em' }}>승인 대기</span>}
-                    <span className="comment-count">[{post.commentCount || 0}]</span>
+                    {(post.commentCount > 0) && <span className="comment-count">{post.commentCount}</span>}
                   </Link>
                 </td>
                 <td className="post-region" style={{ textAlign: 'center' }} role="cell">
@@ -108,9 +110,7 @@ const BoardTable = React.memo(({ posts, tagList, pendingOnly = false, userScrapI
                     }
                   }}
                 >
-                  {pendingOnly && post.botId?.name ? (
-                    <span style={{ fontStyle: 'italic' }}>🤖 {post.botId.name}</span>
-                  ) : post.author && typeof post.author === 'object' ? (
+                  {post.author && typeof post.author === 'object' ? (
                     <UserMenu
                       username={getAuthorId(post.author)}
                       userId={post.author._id || post.author.id}
@@ -121,7 +121,7 @@ const BoardTable = React.memo(({ posts, tagList, pendingOnly = false, userScrapI
                   )}
                 </td>
                 <td className="post-date" style={{ textAlign: 'center' }} role="cell">
-                  {formatDate(post.createdAt)}
+                  {timeAgo(post.createdAt)}
                 </td>
                 <td className="post-views" style={{ textAlign: 'center' }} role="cell">
                   {post.viewCount ?? 0}

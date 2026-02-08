@@ -40,23 +40,6 @@ const boardPostSchema = new mongoose.Schema(
     isApproved: { type: Boolean, default: true }, // 일반 사용자는 자동 승인
     approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     approvedAt: { type: Date },
-    // 봇이 작성한 글인지 여부
-    isBot: { type: Boolean, default: false },
-    botId: { type: mongoose.Schema.Types.ObjectId, ref: 'Bot' },
-    // 맛집봇 메뉴 이미지 데이터 (프론트엔드에서 선택 가능)
-    menuImages: [{
-      dishName: String,
-      selectedImage: String,
-      allAvailableImages: [{
-        url: String,
-        title: String,
-        snippet: String,
-        displayLink: String,
-        score: Number,
-        warnings: [String],
-        source: String
-      }]
-    }]
   },
   { timestamps: true }
 );
