@@ -160,6 +160,16 @@ const BoardList = ({ pendingOnly = false }) => {
         <meta property="og:title" content={getPageTitle()} />
         <meta property="og:url" content={getCanonicalUrl()} />
         <meta property="og:type" content="website" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: '홈', item: 'https://likorea.com/' },
+              { '@type': 'ListItem', position: 2, name: '게시판', item: 'https://likorea.com/boards' }
+            ]
+          })}
+        </script>
       </Helmet>
 
       <div className="board-list-container" role="main" aria-label="게시판 목록">

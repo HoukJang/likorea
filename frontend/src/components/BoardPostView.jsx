@@ -452,6 +452,34 @@ function BoardPostView() {
         {post.createdAt && <meta property="article:published_time" content={new Date(post.createdAt).toISOString()} />}
         {post.updatedAt && <meta property="article:modified_time" content={new Date(post.updatedAt).toISOString()} />}
         {post.author?.id && <meta property="article:author" content={post.author.id} />}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: post.title,
+            datePublished: post.createdAt ? new Date(post.createdAt).toISOString() : undefined,
+            dateModified: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
+            author: { '@type': 'Person', name: post.author?.id || '익명' },
+            publisher: {
+              '@type': 'Organization',
+              name: '롱아일랜드 한인 커뮤니티',
+              url: 'https://likorea.com'
+            },
+            mainEntityOfPage: `https://likorea.com/boards/${postId}`,
+            articleSection: post.tags?.type || '게시판'
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: '홈', item: 'https://likorea.com/' },
+              { '@type': 'ListItem', position: 2, name: '게시판', item: 'https://likorea.com/boards' },
+              { '@type': 'ListItem', position: 3, name: post.title, item: `https://likorea.com/boards/${postId}` }
+            ]
+          })}
+        </script>
       </Helmet>
 
       <div className="post-container">
