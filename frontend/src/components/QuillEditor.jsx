@@ -117,6 +117,7 @@ function QuillEditor({ value, onChange, placeholder = '내용을 입력하세요
         image: imageHandler
       }
     },
+    table: true,
     clipboard: {
       matchVisual: false
     }
@@ -130,7 +131,8 @@ function QuillEditor({ value, onChange, placeholder = '내용을 입력하세요
     'list', 'bullet', 'indent',
     'link', 'image',
     'color', 'background',
-    'align'
+    'align',
+    'table', 'table-row', 'table-body', 'table-container'
   ];
 
   // 붙여넣기 이미지 처리 및 한국어 툴팁 추가

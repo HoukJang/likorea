@@ -1,7 +1,7 @@
 // DOMPurify 공통 설정
 export const domPurifyConfig = {
-  ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div', 'pre', 'code', 'span'],
-  ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target', 'class'],
+  ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'img', 'a', 'blockquote', 'ul', 'ol', 'li', 'div', 'pre', 'code', 'span', 'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td'],
+  ALLOWED_ATTR: ['href', 'src', 'alt', 'style', 'target', 'class', 'data-row'],
   ALLOW_DATA_ATTR: false,
   // data: URL을 명시적으로 허용
   ADD_DATA_URI_TAGS: ['img'],

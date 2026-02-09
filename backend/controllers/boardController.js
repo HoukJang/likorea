@@ -188,7 +188,10 @@ exports.createPost = asyncHandler(async (req, res) => {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'div']),
     allowedAttributes: {
       ...sanitizeHtml.defaults.allowedAttributes,
-      img: ['src', 'alt', 'width', 'height', 'style']
+      img: ['src', 'alt', 'width', 'height', 'style'],
+      td: ['data-row', 'style'],
+      th: ['data-row', 'style'],
+      table: ['style']
     },
     // data: URL을 허용하도록 설정
     allowedSchemes: ['http', 'https', 'ftp', 'mailto', 'data'],
@@ -429,7 +432,10 @@ exports.updatePost = asyncHandler(async (req, res) => {
       allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'div']),
       allowedAttributes: {
         ...sanitizeHtml.defaults.allowedAttributes,
-        img: ['src', 'alt', 'width', 'height', 'style']
+        img: ['src', 'alt', 'width', 'height', 'style'],
+        td: ['data-row', 'style'],
+        th: ['data-row', 'style'],
+        table: ['style']
       },
       // data: URL을 허용하도록 설정
       allowedSchemes: ['http', 'https', 'ftp', 'mailto', 'data'],

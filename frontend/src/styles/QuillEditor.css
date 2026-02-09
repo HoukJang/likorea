@@ -138,6 +138,20 @@
   font-size: 0.9em;
 }
 
+/* 표 스타일 */
+.quill-editor-container .ql-editor table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.quill-editor-container .ql-editor td,
+.quill-editor-container .ql-editor th {
+  border: 1px solid #d0d0d0;
+  padding: 8px 12px;
+  vertical-align: top;
+}
+
 /* 링크 스타일 */
 .quill-editor-container .ql-editor a {
   color: #1a5490;
@@ -257,5 +271,10 @@
   .quill-editor-container .ql-editor pre,
   .quill-editor-container .ql-editor code {
     background-color: #2d2d2d;
+  }
+
+  .quill-editor-container .ql-editor td,
+  .quill-editor-container .ql-editor th {
+    border-color: #555;
   }
 }
