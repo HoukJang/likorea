@@ -11,12 +11,11 @@ Allow: /landing
 # Disallow admin and private pages
 Disallow: /admin
 Disallow: /profile
+Disallow: /dashboard
 Disallow: /login
 Disallow: /signup
 Disallow: /boards/new
 Disallow: /boards/*/edit
-Disallow: /bots/
-Disallow: /bot-management
 Disallow: /design-preview
 
 # Sitemap location
@@ -29,6 +28,6 @@ Crawl-delay: 1
 User-agent: Googlebot
 Allow: /
 
-# Bing specific  
+# Bing specific
 User-agent: Bingbot
 Allow: /

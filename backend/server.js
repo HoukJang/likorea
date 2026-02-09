@@ -32,6 +32,7 @@ const trafficRoutes = require('./routes/trafficRoutes');
 const approvalRoutes = require('./routes/approvalRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const scrapRoutes = require('./routes/scrapRoutes');
+const sitemapRoutes = require('./routes/sitemapRoutes');
 
 // Swagger 설정
 const swaggerUi = require('swagger-ui-express');
@@ -148,6 +149,9 @@ if (process.env.NODE_ENV !== 'test') {
 
 // Swagger UI 설정
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+
+// Sitemap route (root path, not /api/)
+app.use('/', sitemapRoutes);
 
 // API 라우트 설정 (Rate Limiting 적용)
 app.use('/api/users', generalLimiter, userRoutes);
