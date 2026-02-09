@@ -3,6 +3,25 @@ import ReactQuill from 'react-quill';
 import { useToast } from '../contexts/ToastContext';
 import 'react-quill/dist/quill.snow.css';
 
+// Table embed blot for paste support (Quill v1 has no built-in table)
+const Quill = ReactQuill.Quill;
+const BlockEmbed = Quill.import('blots/block/embed');
+
+class TableBlot extends BlockEmbed {
+  static create(value) {
+    const node = super.create();
+    if (typeof value === 'string') node.innerHTML = value;
+    node.setAttribute('contenteditable', 'false');
+    return node;
+  }
+  static value(domNode) {
+    return domNode.innerHTML;
+  }
+}
+TableBlot.blotName = 'table-view';
+TableBlot.tagName = 'TABLE';
+Quill.register(TableBlot, true);
+
 // Lazy load image compression library
 let imageCompression;
 const loadImageCompression = async () => {
@@ -131,7 +150,7 @@ function QuillEditor({ value, onChange, placeholder = '내용을 입력하세요
     'link', 'image',
     'color', 'background',
     'align',
-    'table', 'table-row', 'table-body', 'table-container'
+    'table-view'
   ];
 
   // 붙여넣기 이미지 처리 및 한국어 툴팁 추가
