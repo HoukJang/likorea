@@ -1,6 +1,4 @@
 const request = require('supertest');
-const mongoose = require('mongoose');
-const { connectDB } = require('../../config/db');
 const User = require('../../models/User');
 
 describe('Auth Integration Tests', () => {
@@ -9,7 +7,6 @@ describe('Auth Integration Tests', () => {
   let testUser;
 
   beforeAll(async () => {
-    await connectDB();
     app = require('../../server');
     server = app.listen(0);
   });
@@ -17,7 +14,6 @@ describe('Auth Integration Tests', () => {
   afterAll(async () => {
     await User.deleteMany({ email: /test_.*@test\.com/ });
     if (server) server.close();
-    await mongoose.connection.close();
   });
 
   beforeEach(async () => {

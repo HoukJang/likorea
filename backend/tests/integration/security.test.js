@@ -1,6 +1,5 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
-const { connectDB } = require('../../config/db');
 const User = require('../../models/User');
 const BoardPost = require('../../models/BoardPost');
 const Counter = require('../../models/Counter');
@@ -13,7 +12,6 @@ describe('Security Tests', () => {
   let testUser;
 
   beforeAll(async () => {
-    await connectDB();
     await initializeEssentialData();
     app = require('../../server');
     server = app.listen(0);
@@ -23,7 +21,6 @@ describe('Security Tests', () => {
     await BoardPost.deleteMany({});
     await User.deleteMany({});
     if (server) server.close();
-    await mongoose.connection.close();
   });
 
   beforeEach(async () => {

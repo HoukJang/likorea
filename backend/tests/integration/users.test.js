@@ -1,6 +1,4 @@
 const request = require('supertest');
-const mongoose = require('mongoose');
-const { connectDB } = require('../../config/db');
 const User = require('../../models/User');
 const { initializeEssentialData } = require('../setup/testDb');
 
@@ -9,7 +7,6 @@ describe('User API Tests', () => {
   let server;
 
   beforeAll(async () => {
-    await connectDB();
     await initializeEssentialData();
     app = require('../../server');
     server = app.listen(0);
@@ -18,7 +15,6 @@ describe('User API Tests', () => {
   afterAll(async () => {
     await User.deleteMany({});
     if (server) server.close();
-    await mongoose.connection.close();
   });
 
   beforeEach(async () => {

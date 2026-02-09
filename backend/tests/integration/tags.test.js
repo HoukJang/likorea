@@ -1,6 +1,4 @@
 const request = require('supertest');
-const mongoose = require('mongoose');
-const { connectDB } = require('../../config/db');
 const Tag = require('../../models/Tag');
 const { initializeEssentialData } = require('../setup/testDb');
 
@@ -9,7 +7,6 @@ describe('Tag API Tests', () => {
   let server;
 
   beforeAll(async () => {
-    await connectDB();
     await initializeEssentialData();
     app = require('../../server');
     server = app.listen(0);
@@ -17,7 +14,6 @@ describe('Tag API Tests', () => {
 
   afterAll(async () => {
     if (server) server.close();
-    await mongoose.connection.close();
   });
 
   describe('GET /api/tags', () => {

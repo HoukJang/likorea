@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const { connectDB } = require('../../config/db');
 
 // Read MONGO_URI from globalSetup's temp file
 const uriPath = path.join(__dirname, '.test-mongo-uri');
@@ -10,7 +11,9 @@ if (fs.existsSync(uriPath)) {
 process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET = 'test-jwt-secret';
 
-jest.setTimeout(60000);
+beforeAll(async () => {
+  await connectDB();
+});
 
 // Mock console methods to reduce noise during tests
 global.console = {
