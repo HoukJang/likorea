@@ -436,3 +436,6 @@ bundle-stats.htmlSuperClaude_Framework/
 
 # Content team workspace (AI-generated intermediate files)
 .content-workspace/
+
+# Content output (Word files)
+contents/
