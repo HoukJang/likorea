@@ -117,7 +117,6 @@ function QuillEditor({ value, onChange, placeholder = '내용을 입력하세요
         image: imageHandler
       }
     },
-    table: true,
     clipboard: {
       matchVisual: false
     }
