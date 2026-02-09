@@ -23,11 +23,6 @@ class ApiClient {
    * 토큰 만료 감지 및 자동 로그아웃
    */
   handleTokenExpiration() {
-    // 사용자에게 알림
-    if (typeof window !== 'undefined' && window.alert) {
-      alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
-    }
-
     // 로컬스토리지에서 사용자 정보 제거
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');

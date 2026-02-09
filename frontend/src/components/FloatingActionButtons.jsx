@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useToast } from '../contexts/ToastContext';
 import '../styles/FloatingActionButtons.css';
 
 const FloatingActionButtons = ({
@@ -12,6 +13,7 @@ const FloatingActionButtons = ({
   onEdit,
   onDelete
 }) => {
+  const { toast } = useToast();
   const [isVisible, setIsVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -72,7 +74,7 @@ const FloatingActionButtons = ({
     } else {
       // 클립보드에 복사
       navigator.clipboard.writeText(url);
-      alert('링크가 복사되었습니다!');
+      toast.success('링크가 복사되었습니다!');
     }
   };
 

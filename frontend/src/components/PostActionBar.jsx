@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../contexts/ToastContext';
 import '../styles/PostActionBar.css';
 
 const PostActionBar = ({
@@ -14,6 +15,7 @@ const PostActionBar = ({
   onDelete
 }) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -31,7 +33,7 @@ const PostActionBar = ({
     } else {
       // 클립보드에 복사
       navigator.clipboard.writeText(url);
-      alert('링크가 복사되었습니다!');
+      toast.success('링크가 복사되었습니다!');
     }
   };
 

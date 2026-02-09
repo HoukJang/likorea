@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { getBoardPost, createBoard, updateBoard } from '../api/boards';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '../contexts/ToastContext';
 import { approvePost, rejectPost, updatePendingPost } from '../api/approval';
 import TagSelector from './TagSelector';
 import QuillEditor from './QuillEditor';
@@ -33,6 +34,7 @@ function BoardPostForm() {
 
   // useAuth 훅 사용
   const { user, loading: authLoading, authenticated } = useAuth();
+  const { confirm, prompt } = useToast();
 
   // 현재 사용자 정보 확인
   useEffect(() => {
@@ -66,7 +68,7 @@ function BoardPostForm() {
 
   // 승인 처리
   const handleApprove = async () => {
-    if (!window.confirm('이 게시글을 승인하시겠습니까?')) return;
+    if (!await confirm('이 게시글을 승인하시겠습니까?')) return;
 
     try {
       setLoading(true);
@@ -105,7 +107,7 @@ function BoardPostForm() {
 
   // 거절 처리
   const handleReject = async () => {
-    const reason = window.prompt('거절 사유를 입력하세요 (선택사항):');
+    const reason = await prompt('거절 사유를 입력하세요 (선택사항):');
     if (reason === null) return; // 취소 클릭
 
     try {

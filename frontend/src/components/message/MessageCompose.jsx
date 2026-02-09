@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { sendMessage } from '../../api/message';
 import { getUsers } from '../../api/auth';
+import { useToast } from '../../contexts/ToastContext';
 import Button from '../common/Button';
 import Input from '../common/Input';
 import TextArea from '../common/TextArea';
@@ -11,6 +12,7 @@ function MessageCompose({ replyTo = null, onComplete, onCancel }) {
   const navigate = useNavigate();
   const { userId } = useParams();
   const location = useLocation();
+  const { toast, confirm } = useToast();
 
   // location.state에서 recipient 정보 가져오기
   const recipient = location.state?.recipient;
@@ -69,7 +71,7 @@ function MessageCompose({ replyTo = null, onComplete, onCancel }) {
       setLoading(true);
       setError(null);
       await sendMessage(formData);
-      alert('메시지가 성공적으로 전송되었습니다.');
+      toast.success('메시지가 성공적으로 전송되었습니다.');
       if (onComplete) {
         onComplete();
       } else if (window.location.pathname.includes('/messages')) {
@@ -90,9 +92,9 @@ function MessageCompose({ replyTo = null, onComplete, onCancel }) {
     setShowUserList(false);
   };
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     if (formData.content) {
-      if (window.confirm('작성 중인 내용이 있습니다. 정말 취소하시겠습니까?')) {
+      if (await confirm('작성 중인 내용이 있습니다. 정말 취소하시겠습니까?')) {
         if (onCancel) {
           onCancel();
         } else {

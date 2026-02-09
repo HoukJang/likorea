@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getInbox, getSentMessages, deleteMessage, getUnreadCount } from '../../api/message';
+import { useToast } from '../../contexts/ToastContext';
 import Button from '../common/Button';
 import Pagination from '../common/Pagination';
 import '../../styles/Message.css';
 
 function MessageList({ type = 'inbox', onMessageClick }) {
   const navigate = useNavigate();
+  const { toast, confirm } = useToast();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -48,9 +50,7 @@ function MessageList({ type = 'inbox', onMessageClick }) {
   };
 
   const handleDelete = async (messageId) => {
-    if (!window.confirm('이 메시지를 삭제하시겠습니까?')) {
-      return;
-    }
+    if (!(await confirm('이 메시지를 삭제하시겠습니까?'))) return;
 
     try {
       await deleteMessage(messageId);
@@ -59,19 +59,17 @@ function MessageList({ type = 'inbox', onMessageClick }) {
         await fetchUnreadCount();
       }
     } catch (error) {
-      alert(error.message || '메시지 삭제에 실패했습니다.');
+      toast.error(error.message || '메시지 삭제에 실패했습니다.');
     }
   };
 
   const handleBulkDelete = async () => {
     if (selectedMessages.length === 0) {
-      alert('삭제할 메시지를 선택해주세요.');
+      toast.warning('삭제할 메시지를 선택해주세요.');
       return;
     }
 
-    if (!window.confirm(`선택한 ${selectedMessages.length}개의 메시지를 삭제하시겠습니까?`)) {
-      return;
-    }
+    if (!(await confirm(`선택한 ${selectedMessages.length}개의 메시지를 삭제하시겠습니까?`))) return;
 
     try {
       await Promise.all(selectedMessages.map(id => deleteMessage(id)));
@@ -81,7 +79,7 @@ function MessageList({ type = 'inbox', onMessageClick }) {
         await fetchUnreadCount();
       }
     } catch (error) {
-      alert(error.message || '메시지 삭제에 실패했습니다.');
+      toast.error(error.message || '메시지 삭제에 실패했습니다.');
     }
   };
 

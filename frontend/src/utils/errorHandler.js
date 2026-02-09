@@ -111,10 +111,8 @@ export const showErrorToast = message => {
     // 개발 환경에서 에러 토스트 추적
   }
 
-  // 간단한 alert 대신 커스텀 토스트 구현 가능
   if (typeof window !== 'undefined') {
-    // 임시로 alert 사용
-    alert(message);
+    console.warn('[showErrorToast]', message);
   }
 };
 

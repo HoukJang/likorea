@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useToast } from '../../contexts/ToastContext';
 import './UserMenu.css';
 
 const UserMenu = ({ username, userId, onOpenChange }) => {
@@ -12,6 +13,7 @@ const UserMenu = ({ username, userId, onOpenChange }) => {
   const buttonRef = useRef(null);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { toast } = useToast();
 
   // 모바일 감지
   const isMobile = window.innerWidth <= 768;
@@ -83,13 +85,13 @@ const UserMenu = ({ username, userId, onOpenChange }) => {
     e.stopPropagation();
 
     if (!user) {
-      alert('로그인이 필요합니다.');
+      toast.warning('로그인이 필요합니다.');
       navigate('/login');
       return;
     }
 
     if (user.id === userId) {
-      alert('자신에게는 쪽지를 보낼 수 없습니다.');
+      toast.warning('자신에게는 쪽지를 보낼 수 없습니다.');
       return;
     }
 

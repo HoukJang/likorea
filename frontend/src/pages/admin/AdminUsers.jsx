@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useOutletContext, Navigate } from 'react-router-dom';
+import { useToast } from '../../contexts/ToastContext';
 import {
   getAllUsers,
   updateUserAuthority,
@@ -11,6 +12,7 @@ import '../../styles/Admin.css';
 
 function AdminUsers() {
   const { setMessage, isAdmin, userAuthority } = useOutletContext();
+  const { confirm } = useToast();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -171,7 +173,7 @@ function AdminUsers() {
   // 사용자 삭제
   const handleDeleteUser = async userId => {
     if (
-      !window.confirm(
+      !await confirm(
         '정말로 이 사용자를 삭제하시겠습니까? 관련된 모든 게시글과 댓글도 함께 삭제됩니다.'
       )
     ) {

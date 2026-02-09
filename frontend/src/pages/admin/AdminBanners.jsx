@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useOutletContext, Navigate } from 'react-router-dom';
+import { useToast } from '../../contexts/ToastContext';
 import {
   getAllBanners,
   createBanner,
@@ -11,6 +12,7 @@ import '../../styles/AdminBanners.css';
 
 function AdminBanners() {
   const { isAdmin } = useOutletContext();
+  const { confirm } = useToast();
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -82,7 +84,7 @@ function AdminBanners() {
   };
 
   const handleDelete = async (bannerId) => {
-    if (window.confirm('정말로 이 배너를 삭제하시겠습니까?')) {
+    if (await confirm('정말로 이 배너를 삭제하시겠습니까?')) {
       try {
         await deleteBanner(bannerId);
         await fetchBanners();

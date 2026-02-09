@@ -1,5 +1,6 @@
 import { useRef, useEffect, useMemo } from 'react';
 import ReactQuill from 'react-quill';
+import { useToast } from '../contexts/ToastContext';
 import 'react-quill/dist/quill.snow.css';
 
 // Lazy load image compression library
@@ -19,6 +20,9 @@ const compressionOptions = {
   useWebWorker: true,
   quality: 0.8 // 품질 80%
 };
+
+// 토스트 참조를 저장할 모듈 레벨 변수
+let toastRef = null;
 
 // 커스텀 이미지 핸들러
 const imageHandler = async function() {
@@ -47,7 +51,7 @@ const imageHandler = async function() {
         };
         reader.readAsDataURL(compressedFile);
       } catch (error) {
-        alert('이미지 업로드 중 오류가 발생했습니다.');
+        if (toastRef) toastRef.error('이미지 업로드 중 오류가 발생했습니다.');
         if (process.env.NODE_ENV === 'development') {
           console.error('Image compression error:', error);
         }
@@ -88,6 +92,13 @@ const addTooltips = () => {
 
 function QuillEditor({ value, onChange, placeholder = '내용을 입력하세요...' }) {
   const quillRef = useRef(null);
+  const { toast } = useToast();
+
+  // 모듈 레벨 toastRef를 컴포넌트의 toast로 동기화
+  useEffect(() => {
+    toastRef = toast;
+    return () => { toastRef = null; };
+  }, [toast]);
 
   // Quill 모듈 설정 (간소화된 툴바)
   const modules = useMemo(() => ({
@@ -159,7 +170,7 @@ function QuillEditor({ value, onChange, placeholder = '내용을 입력하세요
               };
               reader.readAsDataURL(compressedFile);
             } catch (error) {
-              alert('이미지 압축 중 오류가 발생했습니다.');
+              if (toastRef) toastRef.error('이미지 압축 중 오류가 발생했습니다.');
               if (process.env.NODE_ENV === 'development') {
                 console.error('Image paste error:', error);
               }

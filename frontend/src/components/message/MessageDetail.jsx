@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getMessage, deleteMessage, markAsRead } from '../../api/message';
 import { getCurrentUser } from '../../api/auth';
+import { useToast } from '../../contexts/ToastContext';
 import Button from '../common/Button';
 import '../../styles/Message.css';
 
 function MessageDetail({ messageId, onReply, onBack }) {
   const navigate = useNavigate();
+  const { toast, confirm } = useToast();
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,16 +49,14 @@ function MessageDetail({ messageId, onReply, onBack }) {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('이 메시지를 삭제하시겠습니까?')) {
-      return;
-    }
+    if (!(await confirm('이 메시지를 삭제하시겠습니까?'))) return;
 
     try {
       await deleteMessage(messageId);
-      alert('메시지가 삭제되었습니다.');
+      toast.success('메시지가 삭제되었습니다.');
       navigate('/messages');
     } catch (error) {
-      alert(error.message || '메시지 삭제에 실패했습니다.');
+      toast.error(error.message || '메시지 삭제에 실패했습니다.');
     }
   };
 

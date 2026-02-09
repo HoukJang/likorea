@@ -4,6 +4,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Loading from './components/common/Loading';
 import { AuthProvider } from './contexts/AuthContext';
 import { MessageProvider } from './contexts/MessageContext';
+import { ToastProvider } from './contexts/ToastContext';
 import { useAuth } from './hooks/useAuth';
 import { initViewportHandlers } from './utils/viewportUtils';
 import './styles/design-system.css';
@@ -190,7 +191,9 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <MessageProvider>
-          <AppContent />
+          <ToastProvider>
+            <AppContent />
+          </ToastProvider>
         </MessageProvider>
       </AuthProvider>
     </ErrorBoundary>

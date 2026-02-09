@@ -1,6 +1,7 @@
 // src/components/CommentForm.jsx
 import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '../contexts/ToastContext';
 import { addComment } from '../api/boards';
 import '../styles/CommentForm.css'; // Import the CSS file
 
@@ -8,12 +9,13 @@ function CommentForm({ postId, parentComment, onCommentAdded }) {
   const [content, setContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
+  const { toast } = useToast();
 
   const handleSubmit = async e => {
     e.preventDefault();
 
     if (!user) {
-      alert('로그인이 필요합니다.');
+      toast.warning('로그인이 필요합니다.');
       return;
     }
 
@@ -25,11 +27,11 @@ function CommentForm({ postId, parentComment, onCommentAdded }) {
       };
 
       await addComment(postId, commentData);
-      alert('댓글 작성 성공!');
+      toast.success('댓글 작성 성공!');
       setContent('');
       onCommentAdded(); // 부모에게 전달해 리스트 업데이트 요청
     } catch (error) {
-      alert(error.message || '댓글 작성에 실패했습니다.');
+      toast.error(error.message || '댓글 작성에 실패했습니다.');
     } finally {
       setIsLoading(false);
     }

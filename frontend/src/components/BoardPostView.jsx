@@ -20,6 +20,7 @@ import { processContent } from '../utils/optimizeImages';
 import { usePermission } from '../hooks/usePermission';
 import { useAuth } from '../hooks/useAuth';
 import { useErrorHandler } from '../utils/errorHandler';
+import { useToast } from '../contexts/ToastContext';
 import FloatingActionButtons from './FloatingActionButtons';
 import PostActionBar from './PostActionBar';
 import '../styles/BoardPostView.css';
@@ -45,6 +46,7 @@ function BoardPostView() {
   const { canModify: checkCanModify } = usePermission();
   const { user } = useAuth();
   const { handleError } = useErrorHandler();
+  const { toast, confirm, prompt } = useToast();
 
   // 게시글과 댓글을 함께 불러오는 함수 업데이트
   const fetchPostAndComments = async () => {
@@ -139,21 +141,21 @@ function BoardPostView() {
   };
 
   const handleDelete = async () => {
-    if (window.confirm('정말 삭제하시겠습니까?')) {
-      try {
-        const userId = user?.id || localStorage.getItem('userId');
-        await deleteBoard(postId, userId);
-        navigate('/');
-      } catch (error) {
-        alert('삭제 권한이 없거나 오류가 발생했습니다.');
-      }
+    if (!(await confirm('정말 삭제하시겠습니까?'))) return;
+
+    try {
+      const userId = user?.id || localStorage.getItem('userId');
+      await deleteBoard(postId, userId);
+      navigate('/');
+    } catch (error) {
+      toast.error('삭제 권한이 없거나 오류가 발생했습니다.');
     }
   };
 
   // 스크랩 토글 핸들러
   const handleScrapToggle = async () => {
     if (!user) {
-      alert('로그인 후 스크랩할 수 있습니다.');
+      toast.warning('로그인 후 스크랩할 수 있습니다.');
       return;
     }
 
@@ -164,12 +166,11 @@ function BoardPostView() {
       if (response.success) {
         setIsScraped(response.isScraped);
         const message = response.isScraped ? '스크랩되었습니다.' : '스크랩이 해제되었습니다.';
-        // 간단한 피드백을 위해 alert 사용 (추후 토스트 메시지로 개선 가능)
-        alert(message);
+        toast.success(message);
       }
     } catch (error) {
       console.error('스크랩 토글 실패:', error);
-      alert('스크랩 처리 중 오류가 발생했습니다.');
+      toast.error('스크랩 처리 중 오류가 발생했습니다.');
     } finally {
       setScrapLoading(false);
     }
@@ -177,16 +178,16 @@ function BoardPostView() {
 
   // 승인 처리
   const handleApprove = async () => {
-    if (!window.confirm('이 게시글을 승인하시겠습니까?')) return;
+    if (!(await confirm('이 게시글을 승인하시겠습니까?'))) return;
 
     try {
       setLoading(true);
       await approvePost(postId);
-      alert('게시글이 승인되었습니다.');
-      navigate('/admin'); // 관리자 페이지로 이동
+      toast.success('게시글이 승인되었습니다.');
+      navigate('/admin');
     } catch (error) {
       const processedError = handleError(error, '게시글 승인');
-      alert(processedError.message);
+      toast.error(processedError.message);
     } finally {
       setLoading(false);
     }
@@ -194,17 +195,17 @@ function BoardPostView() {
 
   // 거절 처리
   const handleReject = async () => {
-    const reason = window.prompt('거절 사유를 입력하세요 (선택사항):');
-    if (reason === null) return; // 취소 클릭
+    const reason = await prompt('거절 사유를 입력하세요 (선택사항):');
+    if (reason === null) return;
 
     try {
       setLoading(true);
       await rejectPost(postId, reason);
-      alert('게시글이 거절되었습니다.');
-      navigate('/admin'); // 관리자 페이지로 이동
+      toast.success('게시글이 거절되었습니다.');
+      navigate('/admin');
     } catch (error) {
       const processedError = handleError(error, '게시글 거절');
-      alert(processedError.message);
+      toast.error(processedError.message);
     } finally {
       setLoading(false);
     }
@@ -222,12 +223,12 @@ function BoardPostView() {
     e.preventDefault();
 
     if (!commentText.trim()) {
-      alert('댓글 내용을 입력해주세요.');
+      toast.warning('댓글 내용을 입력해주세요.');
       return;
     }
 
     if (!user) {
-      alert('로그인 후 댓글을 작성할 수 있습니다.');
+      toast.warning('로그인 후 댓글을 작성할 수 있습니다.');
       return;
     }
 
@@ -293,7 +294,7 @@ function BoardPostView() {
         errorMessage = '댓글 작성 중 오류가 발생했습니다. 다시 시도해주세요.';
       }
 
-      alert(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -312,7 +313,7 @@ function BoardPostView() {
   // 댓글 수정 저장 - API 문서에 맞게 업데이트
   const handleUpdateComment = async commentId => {
     if (!editCommentText.trim()) {
-      alert('댓글 내용을 입력해주세요.');
+      toast.warning('댓글 내용을 입력해주세요.');
       return;
     }
 
@@ -365,7 +366,7 @@ function BoardPostView() {
         errorMessage = '댓글 수정 중 오류가 발생했습니다. 다시 시도해주세요.';
       }
 
-      alert(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -373,7 +374,7 @@ function BoardPostView() {
 
   // 댓글 삭제 - API 문서에 맞게 업데이트
   const handleDeleteComment = async commentId => {
-    if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
+    if (!(await confirm('댓글을 삭제하시겠습니까?'))) return;
 
     try {
       setLoading(true);
@@ -421,7 +422,7 @@ function BoardPostView() {
         errorMessage = '댓글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.';
       }
 
-      alert(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

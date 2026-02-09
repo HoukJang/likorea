@@ -1,0 +1,109 @@
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: confirm-overlay-in 0.15s ease-out;
+}
+
+.confirm-dialog {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-6);
+  width: 90%;
+  max-width: 400px;
+  animation: confirm-dialog-in 0.2s ease-out;
+}
+
+.confirm-dialog-message {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-5);
+  word-break: keep-all;
+}
+
+.confirm-dialog-input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-5);
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast);
+}
+
+.confirm-dialog-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--taegeuk-blue-10);
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.confirm-dialog-btn {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--transition-fast);
+  min-height: 36px;
+}
+
+.confirm-dialog-btn-cancel {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+}
+
+.confirm-dialog-btn-cancel:hover {
+  background-color: var(--color-surface);
+}
+
+.confirm-dialog-btn-confirm {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.confirm-dialog-btn-confirm:hover {
+  background-color: var(--color-primary-hover);
+}
+
+@keyframes confirm-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes confirm-dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .confirm-dialog {
+    width: 95%;
+    padding: var(--space-5);
+  }
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { useToast } from '../../contexts/ToastContext';
 import { getUnreadCount } from '../../api/message';
 import packageJson from '../../../package.json';
 import '../../styles/Admin.css';
@@ -7,6 +8,7 @@ import '../../styles/Admin.css';
 function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { toast } = useToast();
   const [message, setMessage] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -22,7 +24,7 @@ function AdminLayout() {
   useEffect(() => {
     const userAuthority = parseInt(localStorage.getItem('userAuthority')) || 0;
     if (userAuthority !== 5) {
-      alert('관리자 권한이 필요합니다.');
+      toast.error('관리자 권한이 필요합니다.');
       navigate('/');
     }
   }, [navigate]);
