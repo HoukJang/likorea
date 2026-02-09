@@ -464,18 +464,12 @@ fi
 # 5. 버전 관리
 log_step "5. 버전 관리"
 
-if [ -n "$BUMP_VERSION" ]; then
-    log_progress "버전을 $BUMP_VERSION 레벨로 증가시킵니다..."
-    node scripts/version-manager.js bump "$BUMP_VERSION"
-    node scripts/version-manager.js tag
-    NEW_VERSION=$(node -e "console.log(require('./version.json').version)")
-    log_info "새 버전: $NEW_VERSION ✅"
-else
-    node scripts/version-manager.js sync
-    node scripts/version-manager.js inject
-    CURRENT_VERSION=$(node -e "console.log(require('./version.json').version)")
-    log_info "현재 버전: $CURRENT_VERSION ✅"
-fi
+BUMP_VERSION="${BUMP_VERSION:-patch}"
+log_progress "버전을 $BUMP_VERSION 레벨로 증가시킵니다..."
+node scripts/version-manager.js bump "$BUMP_VERSION"
+node scripts/version-manager.js tag
+NEW_VERSION=$(node -e "console.log(require('./version.json').version)")
+log_info "새 버전: $NEW_VERSION ✅"
 
 # 6. 프론트엔드 빌드
 log_step "6. 프론트엔드 빌드"
