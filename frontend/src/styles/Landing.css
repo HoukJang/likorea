@@ -488,9 +488,18 @@
     background: linear-gradient(135deg, #0c2d54 0%, #0047A0 100%);
   }
 
+  .btn-primary {
+    background: rgba(255, 255, 255, 0.15);
+    color: #e5e7eb;
+  }
+
+  .btn-primary:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
   .region-card {
-    background: var(--gray-900);
-    border-color: var(--gray-700);
+    background: #1e1e21;
+    border-color: #3f3f46;
   }
 
   .region-card:hover {
@@ -499,50 +508,50 @@
   }
 
   .region-name {
-    color: var(--gray-100);
+    color: #e4e4e7;
   }
 
   .region-desc {
-    color: var(--gray-400);
+    color: #a1a1aa;
   }
 
   .post-list {
-    background: var(--gray-900);
-    border-color: var(--gray-700);
+    background: #1e1e21;
+    border-color: #3f3f46;
   }
 
   .post-item {
-    border-color: var(--gray-700);
+    border-color: #3f3f46;
   }
 
   .post-item-link:hover {
-    background: var(--gray-800);
+    background: #27272a;
   }
 
   .post-title {
-    color: var(--gray-100);
+    color: #e4e4e7;
   }
 
   .no-posts {
-    background: var(--gray-900);
-    border-color: var(--gray-700);
+    background: #1e1e21;
+    border-color: #3f3f46;
   }
 
   .posts-loading {
-    background: var(--gray-700);
-    border-color: var(--gray-700);
+    background: #3f3f46;
+    border-color: #3f3f46;
   }
 
   .post-skeleton {
-    background: var(--gray-900);
+    background: #1e1e21;
   }
 
   .activity-section {
-    background: var(--gray-800);
+    background: #27272a;
   }
 
   .regions-section {
-    background: var(--gray-900);
-    border-color: var(--gray-700);
+    background: #1e1e21;
+    border-color: #3f3f46;
   }
 }

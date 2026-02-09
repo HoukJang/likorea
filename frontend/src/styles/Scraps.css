@@ -74,7 +74,7 @@
 .sort-btn {
   padding: 8px 16px;
   border: 1px solid var(--gray-200, #e4e4e7);
-  background: white;
+  background: var(--color-surface);
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
@@ -90,9 +90,9 @@
 }
 
 .sort-btn.active {
-  background: var(--gray-900, #18181b);
-  color: white;
-  border-color: var(--gray-900, #18181b);
+  background: var(--color-text-primary);
+  color: var(--color-background);
+  border-color: var(--color-text-primary);
 }
 
 /* 빈 스크랩 */
@@ -124,7 +124,7 @@
 
 /* 스크랩 테이블 */
 .scraps-table {
-  background: white;
+  background: var(--color-surface);
   border: 1px solid var(--gray-200, #e4e4e7);
   border-radius: 6px;
   overflow: hidden;
@@ -226,7 +226,7 @@
 .pagination-btn {
   padding: 8px 12px;
   border: 1px solid var(--gray-200, #e4e4e7);
-  background-color: white;
+  background-color: var(--color-surface);
   color: var(--gray-700, #3f3f46);
   border-radius: 6px;
   cursor: pointer;
@@ -243,9 +243,9 @@
 }
 
 .pagination-btn.active {
-  background-color: var(--gray-900, #18181b);
-  color: white;
-  border-color: var(--gray-900, #18181b);
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-color: var(--color-primary);
   font-weight: 600;
 }
 

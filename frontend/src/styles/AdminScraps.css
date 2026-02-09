@@ -76,7 +76,7 @@
 .sort-btn {
   padding: 8px 16px;
   border: 1px solid #e5e7eb;
-  background: white;
+  background: var(--color-surface);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
@@ -99,7 +99,7 @@
 
 /* 스크랩 테이블 */
 .admin-scraps-table {
-  background: white;
+  background: var(--color-surface);
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   overflow: hidden;
@@ -219,7 +219,7 @@
 .pagination-btn {
   padding: 10px 14px;
   border: 1px solid #e5e7eb;
-  background-color: white;
+  background-color: var(--color-surface);
   color: #111827;
   border-radius: 8px;
   cursor: pointer;

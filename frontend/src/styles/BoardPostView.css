@@ -1113,3 +1113,21 @@
     flex-wrap: wrap;
   }
 }
+
+/* ===== Dark Mode ===== */
+@media (prefers-color-scheme: dark) {
+  .type-tag {
+    background-color: rgba(0, 67, 187, 0.2);
+    color: #6ea8fe;
+  }
+
+  .region-tag {
+    background-color: rgba(162, 25, 31, 0.2);
+    color: #f4a0a4;
+  }
+
+  .subcategory-tag {
+    background-color: rgba(105, 41, 196, 0.2);
+    color: #c4a8ff;
+  }
+}

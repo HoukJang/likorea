@@ -75,6 +75,25 @@
   opacity: 0.6;
 }
 
+@media (prefers-color-scheme: dark) {
+  .site-footer {
+    background-color: #111113;
+    color: #a1a1aa;
+  }
+
+  .footer-tagline {
+    color: #71717a;
+  }
+
+  .footer-nav a {
+    color: #a1a1aa;
+  }
+
+  .footer-copyright {
+    color: #52525b;
+  }
+}
+
 @media (max-width: 768px) {
   .site-footer {
     padding: var(--space-8) 0 var(--space-4);

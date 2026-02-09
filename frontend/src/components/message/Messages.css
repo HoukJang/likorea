@@ -34,8 +34,8 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: var(--gray-900, #18181b);
-  color: white;
+  background: var(--color-text-primary);
+  color: var(--color-background);
   border: none;
   border-radius: 6px;
   font-size: 14px;
@@ -85,7 +85,7 @@
 
 /* 컨텐츠 영역 */
 .messages-content {
-  background: white;
+  background: var(--color-surface);
   border-radius: 6px;
   border: 1px solid var(--gray-200, #e4e4e7);
   box-shadow: none;

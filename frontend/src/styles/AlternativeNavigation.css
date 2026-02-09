@@ -175,7 +175,7 @@
   position: absolute;
   top: calc(100% + var(--spacing-sm));
   right: 0;
-  background: white;
+  background: var(--color-background);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   min-width: 220px;
@@ -396,7 +396,7 @@
   top: 64px;
   left: 0;
   right: 0;
-  background: white;
+  background: var(--color-background);
   box-shadow: var(--shadow-lg);
   max-height: calc(100vh - 64px);
   overflow-y: auto;

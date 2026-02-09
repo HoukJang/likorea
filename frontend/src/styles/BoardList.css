@@ -39,12 +39,12 @@
 }
 
 .btn-primary {
-  background: var(--gray-900);
-  color: var(--white);
+  background: var(--color-text-primary);
+  color: var(--color-background);
 }
 
 .btn-primary:hover {
-  background: var(--gray-800);
+  background: var(--color-text-secondary);
   transform: scale(1.02);
 }
 
@@ -1021,5 +1021,51 @@
   .skeleton-cards {
     display: block;
     padding: 0 14px;
+  }
+}
+
+/* ===== Dark Mode ===== */
+@media (prefers-color-scheme: dark) {
+  .mobile-card[data-post-type='공지'] .mobile-card-category {
+    background-color: rgba(220, 38, 38, 0.15);
+    color: #fca5a5;
+    border-color: rgba(220, 38, 38, 0.3);
+  }
+
+  .mobile-card[data-post-type='사고팔고'] .mobile-card-category {
+    background-color: rgba(234, 88, 12, 0.15);
+    color: #fdba74;
+    border-color: rgba(234, 88, 12, 0.3);
+  }
+
+  .mobile-card[data-post-type='부동산'] .mobile-card-category {
+    background-color: rgba(22, 163, 74, 0.15);
+    color: #86efac;
+    border-color: rgba(22, 163, 74, 0.3);
+  }
+
+  .mobile-card[data-post-type='생활정보'] .mobile-card-category {
+    background-color: rgba(37, 99, 235, 0.15);
+    color: #93c5fd;
+    border-color: rgba(37, 99, 235, 0.3);
+  }
+
+  .mobile-card[data-post-type='모임'] .mobile-card-category {
+    background-color: rgba(124, 58, 237, 0.15);
+    color: #c4b5fd;
+    border-color: rgba(124, 58, 237, 0.3);
+  }
+
+  .mobile-card[data-post-type='취업'] .mobile-card-category {
+    background-color: rgba(79, 70, 229, 0.15);
+    color: #a5b4fc;
+    border-color: rgba(79, 70, 229, 0.3);
+  }
+
+  .mobile-card[data-post-type='기타'] .mobile-card-category,
+  .mobile-card[data-post-type='일반'] .mobile-card-category {
+    background-color: rgba(107, 114, 128, 0.15);
+    color: #d1d5db;
+    border-color: rgba(107, 114, 128, 0.3);
   }
 }
