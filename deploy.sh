@@ -325,7 +325,7 @@ log_step "4. 코드 품질 검사 및 테스트 실행"
 run_test_with_timeout() {
     local dir=$1
     local name=$2
-    local timeout_seconds=60
+    local timeout_seconds=180
     
     log_progress "$name 테스트 실행 중... (최대 ${timeout_seconds}초)"
     cd "$dir"

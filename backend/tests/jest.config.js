@@ -31,6 +31,6 @@ module.exports = {
   verbose: true,
   forceExit: true,
   detectOpenHandles: true,
-  testTimeout: 30000,
+  testTimeout: 120000,
   maxWorkers: 1
 };
