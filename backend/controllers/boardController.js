@@ -12,6 +12,20 @@ const {
   AuthorizationError
 } = require('../middleware/errorHandler');
 
+const PRERENDER_URL = 'http://127.0.0.1:5002';
+const SITE_URL = 'https://likorea.com';
+
+function invalidatePrerender(paths) {
+  if (process.env.NODE_ENV !== 'production') return;
+  const urls = paths.map(p => `${SITE_URL}${p}`);
+  fetch(`${PRERENDER_URL}/invalidate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ urls }),
+    signal: AbortSignal.timeout(3000)
+  }).catch(() => {});
+}
+
 /**
  * Region 필터 파싱 함수
  * @param {string} regionFilter - 사용자 입력 필터 (예: "24", "24-60", "<=13", ">73")
@@ -230,6 +244,8 @@ exports.createPost = asyncHandler(async (req, res) => {
       postNumber: post.postNumber
     }
   });
+
+  invalidatePrerender(['/', '/boards']);
 });
 
 // 게시글 목록 조회 (최적화된 버전)
@@ -520,6 +536,8 @@ exports.updatePost = asyncHandler(async (req, res) => {
       modifiedAt: updatedPost.modifiedAt
     }
   });
+
+  invalidatePrerender([`/boards/${postId}`, '/', '/boards']);
 });
 
 // 게시글 삭제
@@ -550,6 +568,8 @@ exports.deletePost = asyncHandler(async (req, res) => {
     success: true,
     message: '게시글 삭제 성공'
   });
+
+  invalidatePrerender([`/boards/${postId}`, '/', '/boards']);
 });
 
 // 소주제 정보 조회

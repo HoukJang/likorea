@@ -589,6 +589,29 @@ if [ "$ENVIRONMENT" = "production" ]; then
             fi
         fi
         pm2 save
+
+        # Prerender 서비스 관리
+        log_progress "Prerender 서비스 관리 중..."
+        if pm2 list | grep -q "likorea-prerender"; then
+            pm2 restart likorea-prerender --update-env
+            sleep 3
+            if pm2 list | grep "likorea-prerender" | grep -q "online"; then
+                log_info "Prerender 서비스 재시작 성공 ✅"
+            else
+                log_warn "Prerender 서비스 재시작 실패 (SEO 일시 저하, 서비스 정상)"
+            fi
+        else
+            pm2 start prerender/server.js --name "likorea-prerender" \
+                --max-memory-restart 512M \
+                --env production
+            sleep 3
+            if pm2 list | grep "likorea-prerender" | grep -q "online"; then
+                log_info "Prerender 서비스 시작 성공 ✅"
+            else
+                log_warn "Prerender 서비스 시작 실패 (SEO 일시 저하, 서비스 정상)"
+            fi
+        fi
+        pm2 save
     else
         log_warn "PM2가 설치되어 있지 않습니다. 직접 서버를 시작하세요."
         log_info "수동 실행: NODE_ENV=production node server.js"
@@ -765,6 +788,19 @@ if [ "$ENVIRONMENT" = "production" ]; then
         log_info "사이트 접근 가능 ✅"
     else
         log_warn "사이트 접근 불가. 수동 확인 필요"
+    fi
+fi
+
+# 11.5 Prerender 캐시 워밍업
+if [ "$ENVIRONMENT" = "production" ]; then
+    log_progress "Prerender 캐시 워밍업 중..."
+    if curl -s -o /dev/null -w "%{http_code}" "http://localhost:5002/health" | grep -q "200"; then
+        node backend/prerender/warmup.js || {
+            log_warn "캐시 워밍업 실패 (자동 복구됨)"
+        }
+        log_info "Prerender 캐시 워밍업 완료 ✅"
+    else
+        log_warn "Prerender 서비스 응답 없음, 워밍업 건너뜀"
     fi
 fi
 

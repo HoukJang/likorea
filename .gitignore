@@ -434,6 +434,9 @@ webpack-stats.json
 bundle-report.html
 bundle-stats.htmlSuperClaude_Framework/
 
+# Prerender cache
+backend/prerender/cache/
+
 # Content team workspace (AI-generated intermediate files)
 .content-workspace/
 
