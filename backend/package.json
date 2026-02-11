@@ -34,6 +34,7 @@
     "mongoose": "^8.16.5",
     "node-cache": "^5.1.2",
     "openai": "^4.52.7",
+    "puppeteer": "^24.37.2",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "rss-parser": "^3.13.0",
