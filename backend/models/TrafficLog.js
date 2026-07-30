@@ -48,6 +48,10 @@ const trafficLogSchema = new mongoose.Schema(
     error: {
       type: String,
       default: null
+    },
+    isBot: {
+      type: Boolean,
+      default: false
     }
   },
   {
@@ -60,6 +64,7 @@ trafficLogSchema.index({ timestamp: -1 });
 trafficLogSchema.index({ path: 1, timestamp: -1 });
 trafficLogSchema.index({ statusCode: 1, timestamp: -1 });
 trafficLogSchema.index({ userId: 1, timestamp: -1 });
+trafficLogSchema.index({ isBot: 1, timestamp: -1 });
 
 // TTL 인덱스 (30일 후 자동 삭제)
 trafficLogSchema.index({ timestamp: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });

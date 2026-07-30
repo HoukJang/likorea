@@ -1,4 +1,5 @@
 const TrafficLog = require('../models/TrafficLog');
+const TrafficDaily = require('../models/TrafficDaily');
 const { asyncHandler } = require('../middleware/errorHandler');
 
 /**
@@ -39,6 +40,17 @@ exports.getTrafficDashboard = asyncHandler(async (req, res) => {
   const uniqueUsers = await TrafficLog.distinct('userId', {
     timestamp: { $gte: startTime },
     userId: { $ne: null }
+  });
+
+  // 봇/사람 요청 수
+  const botRequests = await TrafficLog.countDocuments({
+    timestamp: { $gte: startTime },
+    isBot: true
+  });
+
+  const humanRequests = await TrafficLog.countDocuments({
+    timestamp: { $gte: startTime },
+    isBot: { $ne: true }
   });
 
   const avgResponseTime = await TrafficLog.aggregate([
@@ -182,7 +194,9 @@ exports.getTrafficDashboard = asyncHandler(async (req, res) => {
       summary: {
         totalRequests,
         uniqueUsers: uniqueUsers.length,
-        avgResponseTime: avgResponseTime[0]?.avgResponseTime || 0
+        avgResponseTime: avgResponseTime[0]?.avgResponseTime || 0,
+        botRequests,
+        humanRequests
       },
       statusCodeStats,
       methodStats,
@@ -281,6 +295,30 @@ exports.getPathAnalysis = asyncHandler(async (req, res) => {
       period,
       pathStats,
       userStats
+    }
+  });
+});
+
+/**
+ * 일별 트래픽 추세 조회 (TrafficDaily 기반, 30일 TTL을 넘는 장기 추세 조회 가능)
+ */
+exports.getTrafficTrend = asyncHandler(async (req, res) => {
+  let days = parseInt(req.query.days, 10);
+  if (!Number.isFinite(days) || days <= 0) {
+    days = 30;
+  }
+  days = Math.min(days, 365);
+
+  const trend = await TrafficDaily.find({})
+    .sort({ date: -1 })
+    .limit(days)
+    .then(docs => docs.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0)));
+
+  res.json({
+    success: true,
+    data: {
+      days,
+      trend
     }
   });
 });
