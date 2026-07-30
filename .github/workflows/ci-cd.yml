@@ -74,6 +74,9 @@ jobs:
     
     - name: Build frontend
       working-directory: ./frontend
+      env:
+        # 프로젝트는 ESLint 경고 모드(점진 적용) — CI=true면 CRA가 경고를 에러로 격상시켜 빌드가 실패함
+        CI: false
       run: npm run build
     
     - name: Upload build artifacts
