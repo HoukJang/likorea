@@ -33,7 +33,11 @@
 - [x] 일별 트래픽 집계 — `backend/models/TrafficDaily.js` + `backend/jobs/trafficAggregator.js` (1시간 주기, 오늘+어제 upsert, NY 타임존) (2026-07-30)
 - [x] 대시보드 API에 봇/실사용자 분리 — summary에 botRequests/humanRequests, 신규 `GET /api/traffic/trend` (days≤365) (2026-07-30)
 - [ ] 프론트 관리자 대시보드(TrafficDashboard.jsx)에 봇/실사용자 분리 표시 + trend 차트 (`frontend/src/api/traffic.js`에 trend 호출 추가 필요)
-- [ ] (운영자) Google Search Console 등록 + sitemap 제출 — 코드 작업 아님, 리마인드만
+- [ ] (운영자) SEO 검색엔진 등록 — 각 15분 내외, 배포 후 진행:
+  - Google Search Console: 도메인 속성 추가 → DNS TXT 소유권 확인 → `https://likorea.com/sitemap.xml` 제출 → 주요 URL 색인 요청
+  - 네이버 서치어드바이저 (searchadvisor.naver.com): 등록 + sitemap 제출 (한국어 검색 유입)
+  - Bing 웹마스터: Search Console 가져오기로 등록
+- [ ] (운영자·배포 시) 프리렌더 가동 확인: `curl -A "Googlebot" https://likorea.com/ | grep -c 게시판` (0이면 미작동), `curl https://likorea.com/sitemap.xml` 응답 확인
 - [ ] (배포 후) CI/개발 환경에서 신규 테스트 실행 확인: `npm test -- tests/unit/botDetector.test.js tests/integration/trafficAggregator.test.js` (샌드박스는 mongodb-memory-server 바이너리 다운로드 차단으로 실행 불가)
 
 ### P2 — 유입 경로: 카카오톡 공유
