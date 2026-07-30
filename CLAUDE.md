@@ -220,6 +220,14 @@ The `deploy.sh` script handles:
 9. Nginx configuration (production)
 10. SSL certificate management (production)
 
+## Growth Harness (트래픽 성장 작업)
+
+트래픽/성장 관련 작업(측정, SEO, 유입 기능 구현)은 전용 하네스를 사용합니다:
+
+- **상태 파일**: `.claude/growth/STATE.md` — 백로그·지표·완료 이력의 단일 소스. 성장 작업 시작 시 이 파일을 먼저 읽고, 종료 시 반드시 갱신. 리포 전체 재분석 금지.
+- **스킬**: `/growth` (다음 백로그 항목 구현), `/traffic-report` (지표 수집·리포트), `/seo-audit` (SEO 인프라 점검)
+- **에이전트**: `traffic-analyst`(haiku, 수집), `seo-auditor`(haiku, 점검), `growth-engineer`(sonnet, 구현) — 기계적 작업은 저비용 모델에 위임하고 해석·리뷰만 메인 모델이 수행
+
 ## Content Pipeline
 
 식당 리뷰, 뉴스, 생활정보 등 콘텐츠 생성 요청 시 반드시 팀 파이프라인을 사용합니다.

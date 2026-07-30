@@ -84,10 +84,12 @@ dump/
 docs/_build/
 docs/.doctrees/
 
-# Claude AI related files
-.claude/
-.claude/**/*
+# Claude AI related files — track harness (skills/agents/growth), ignore local state
+.claude/*
 !.claude/settings.json
+!.claude/skills/
+!.claude/agents/
+!.claude/growth/
 .claude/settings.local.json
 
 # Package lock files (auto-generated)
