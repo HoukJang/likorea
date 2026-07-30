@@ -1,4 +1,5 @@
 const TrafficLog = require('../models/TrafficLog');
+const { isBotUserAgent } = require('../utils/botDetector');
 
 /**
  * 트래픽 로깅 미들웨어
@@ -53,20 +54,23 @@ const trafficLogger = (req, res, next) => {
       const responseSize = responseData ? JSON.stringify(responseData).length : 0;
       const shouldLogResponse = responseSize < 1000; // 1KB 미만만 로깅
 
+      const userAgent = req.get('User-Agent') || '';
+
       // 로그 데이터 구성
       const logData = {
         method: req.method,
         path: sanitizedPath,
         statusCode: res.statusCode,
         responseTime,
-        userAgent: req.get('User-Agent') || '',
+        userAgent,
         ip: req.ip || req.connection.remoteAddress || '',
         userId: req.user ? req.user._id : null,
         userAuthority: req.user ? req.user.authority : null,
         requestBody: sanitizedBody,
         responseData: shouldLogResponse ? responseData : null,
         responseSize,
-        error: responseError
+        error: responseError,
+        isBot: isBotUserAgent(userAgent)
       };
 
       // 비동기로 로그 저장 (응답에 영향 주지 않음)

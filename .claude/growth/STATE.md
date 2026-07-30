@@ -29,10 +29,12 @@
 ## 백로그 (우선순위순)
 
 ### P1 — 측정 기반 확보
-- [ ] `trafficLogger`에 봇 필터링 추가 (userAgent 기반: Googlebot, bingbot, crawler 등 isBot 플래그)
-- [ ] 일별 트래픽 집계를 별도 컬렉션(`TrafficDaily`)에 저장 — 30일 TTL 이후에도 추세 보존
-- [ ] 관리자 대시보드에 봇/실사용자 분리 표시
+- [x] `trafficLogger`에 봇 필터링 추가 — `backend/utils/botDetector.js`, TrafficLog에 `isBot` 필드 (2026-07-30)
+- [x] 일별 트래픽 집계 — `backend/models/TrafficDaily.js` + `backend/jobs/trafficAggregator.js` (1시간 주기, 오늘+어제 upsert, NY 타임존) (2026-07-30)
+- [x] 대시보드 API에 봇/실사용자 분리 — summary에 botRequests/humanRequests, 신규 `GET /api/traffic/trend` (days≤365) (2026-07-30)
+- [ ] 프론트 관리자 대시보드(TrafficDashboard.jsx)에 봇/실사용자 분리 표시 + trend 차트 (`frontend/src/api/traffic.js`에 trend 호출 추가 필요)
 - [ ] (운영자) Google Search Console 등록 + sitemap 제출 — 코드 작업 아님, 리마인드만
+- [ ] (배포 후) CI/개발 환경에서 신규 테스트 실행 확인: `npm test -- tests/unit/botDetector.test.js tests/integration/trafficAggregator.test.js` (샌드박스는 mongodb-memory-server 바이너리 다운로드 차단으로 실행 불가)
 
 ### P2 — 유입 경로: 카카오톡 공유
 - [ ] Kakao JavaScript SDK 연동 (게시글 공유 버튼, PostActionBar.jsx)
@@ -53,6 +55,7 @@
 | 날짜 | 작업 | 브랜치/커밋 |
 |------|------|------------|
 | 2026-07-30 | 성장 하네스 셋업 (스킬/에이전트/STATE) | claude/webpaybi-traffic-improvement-fzx7uq |
+| 2026-07-30 | P1 백엔드: 봇 필터링 + TrafficDaily 일별 집계 + trend API | claude/webpaybi-traffic-improvement-fzx7uq |
 
 ## 작업 규칙
 

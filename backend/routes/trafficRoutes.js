@@ -3,7 +3,8 @@ const router = express.Router();
 const {
   getTrafficDashboard,
   getRealtimeTraffic,
-  getPathAnalysis
+  getPathAnalysis,
+  getTrafficTrend
 } = require('../controllers/trafficController');
 const { authenticateToken, requireAdmin } = require('../middleware/auth');
 
@@ -104,5 +105,30 @@ router.get('/realtime', authenticateToken, requireAdmin, getRealtimeTraffic);
  *         description: 권한 부족
  */
 router.get('/analysis/:path', authenticateToken, requireAdmin, getPathAnalysis);
+
+/**
+ * @swagger
+ * /api/traffic/trend:
+ *   get:
+ *     summary: 일별 트래픽 추세 조회
+ *     description: TrafficDaily 집계 컬렉션을 기반으로 최근 N일의 일별 트래픽 추세를 조회합니다. (30일 TTL을 넘는 장기 추세 조회 가능)
+ *     tags: [Traffic]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: days
+ *         schema:
+ *           type: number
+ *         description: 조회할 일수 (기본값 30, 최대 365)
+ *     responses:
+ *       200:
+ *         description: 일별 트래픽 추세 데이터
+ *       401:
+ *         description: 인증 실패
+ *       403:
+ *         description: 권한 부족
+ */
+router.get('/trend', authenticateToken, requireAdmin, getTrafficTrend);
 
 module.exports = router;

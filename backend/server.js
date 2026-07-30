@@ -22,6 +22,7 @@ const {
   requestSizeLimit
 } = require('./middleware/security');
 const trafficLogger = require('./middleware/trafficLogger');
+const { startTrafficAggregation } = require('./jobs/trafficAggregator');
 const cacheHeaders = require('./middleware/cacheHeaders');
 
 const userRoutes = require('./routes/userRoutes');
@@ -129,6 +130,9 @@ const { generalLimiter, adminLimiter } = rateLimiters;
 // 데이터베이스 연결 및 초기화 (테스트 환경에서는 테스트가 직접 관리)
 if (process.env.NODE_ENV !== 'test') {
   connectDB().then(async () => {
+    // 트래픽 일별 집계 스케줄러 시작 (DB 연결 성공 이후)
+    startTrafficAggregation();
+
     try {
       if (process.env.NODE_ENV === 'development') {
         const setupDevDB = require('./utils/setupDevDB');
