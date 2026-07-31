@@ -1,0 +1,10 @@
+[Unit]
+Description=likorea auto deploy (deploy tagged release commits from origin/main)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/likorea
+ExecStart=/root/likorea/scripts/auto-deploy.sh
+TimeoutStartSec=1800

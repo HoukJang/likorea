@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, development ]
   pull_request:
     branches: [ main ]
 
@@ -85,45 +85,48 @@ jobs:
         name: frontend-build
         path: frontend/build
 
-  deploy-development:
-    name: Deploy to Development
+  # main 푸시 → 테스트 통과 시 버전 bump + release 커밋 + 태그 푸시.
+  # 서버의 likorea-deploy.timer가 태그 달린 release 커밋을 감지해 자동 배포한다.
+  # 기본 patch bump. 커밋 메시지에 [minor] 또는 [major] 포함 시 해당 레벨로 bump.
+  release:
+    name: Release (bump version & tag)
     needs: [test-backend, test-frontend]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Deploy to development server
-      env:
-        DEPLOY_KEY: ${{ secrets.DEV_DEPLOY_KEY }}
-        DEPLOY_HOST: ${{ secrets.DEV_DEPLOY_HOST }}
-        DEPLOY_USER: ${{ secrets.DEV_DEPLOY_USER }}
-      run: |
-        echo "Deploying to development server..."
-        # Add your deployment script here
-        # Example: ssh deployment, rsync, etc.
+    if: "github.ref == 'refs/heads/main' && github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'chore: release')"
+    permissions:
+      contents: write
+    concurrency:
+      group: release
 
-  deploy-production:
-    name: Deploy to Production
-    needs: [test-backend, test-frontend]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    environment: production
-    
     steps:
     - uses: actions/checkout@v4
-    
-    - name: Deploy to production server
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Bump version, commit and tag
       env:
-        DEPLOY_KEY: ${{ secrets.PROD_DEPLOY_KEY }}
-        DEPLOY_HOST: ${{ secrets.PROD_DEPLOY_HOST }}
-        DEPLOY_USER: ${{ secrets.PROD_DEPLOY_USER }}
+        HEAD_MSG: ${{ github.event.head_commit.message }}
       run: |
-        echo "Deploying to production server..."
-        # Add your production deployment script here
-        # This should use the deploy-auto.sh script
-        
+        BUMP=patch
+        case "$HEAD_MSG" in
+          *"[major]"*) BUMP=major ;;
+          *"[minor]"*) BUMP=minor ;;
+        esac
+        node scripts/version-manager.js bump "$BUMP"
+        VERSION=$(node -e "console.log(require('./version.json').version)")
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add version.json package.json backend/package.json frontend/package.json
+        git commit -m "chore: release v${VERSION}"
+        git tag -a "v${VERSION}" -m "Release v${VERSION}"
+        git push origin main --follow-tags
+        echo "Released v${VERSION} — server auto-deploys within ~2 minutes"
+
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest

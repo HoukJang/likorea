@@ -461,15 +461,15 @@ else
     log_info "프론트엔드 테스트 건너뜀"
 fi
 
-# 5. 버전 관리
-log_step "5. 버전 관리"
+# 5. 버전 확인 (버전 bump/태그는 CI release 잡이 main에서 수행 — 서버는 읽기 전용)
+log_step "5. 버전 확인"
 
-BUMP_VERSION="${BUMP_VERSION:-patch}"
-log_progress "버전을 $BUMP_VERSION 레벨로 증가시킵니다..."
-node scripts/version-manager.js bump "$BUMP_VERSION"
-node scripts/version-manager.js tag
+if [ -n "$BUMP_VERSION" ]; then
+    log_progress "버전을 $BUMP_VERSION 레벨로 증가시킵니다..."
+    node scripts/version-manager.js bump "$BUMP_VERSION"
+fi
 NEW_VERSION=$(node -e "console.log(require('./version.json').version)")
-log_info "새 버전: $NEW_VERSION ✅"
+log_info "배포 버전: $NEW_VERSION ✅"
 
 # 6. 프론트엔드 빌드
 log_step "6. 프론트엔드 빌드"

@@ -57,28 +57,29 @@ curl -s https://likorea.com/sitemap.xml | head    # sitemap 응답 확인
 - [ ] **네이버 서치어드바이저** (searchadvisor.naver.com): 사이트 등록 + sitemap 제출
 - [ ] **Bing 웹마스터**: Google Search Console 가져오기로 등록
 
-## 5. (선택) GitHub Actions 자동 배포 전환
+## 5. 자동 배포 (main 머지 → 자동 배포, 설정 완료)
 
-현재 `ci-cd.yml`의 `deploy-production` 잡은 `echo`만 있는 뼈대입니다. 자동 배포를 원하면:
+main 머지 시 자동 배포가 구성되어 있습니다. GitHub Secrets 불필요 (pull 방식):
 
-1. 서버에 배포 전용 SSH 키 생성: `ssh-keygen -t ed25519 -f ~/.ssh/likorea_deploy` 후 공개키를 서버 `~/.ssh/authorized_keys`에 추가
-2. GitHub 리포 Settings → Secrets and variables → Actions에 등록:
-   - `PROD_DEPLOY_HOST` (서버 주소), `PROD_DEPLOY_USER` (계정), `PROD_DEPLOY_KEY` (개인키 전문)
-3. `deploy-production` 잡의 run 단계를 실제 배포로 교체:
-   ```yaml
-   - name: Deploy to production server
-     env:
-       DEPLOY_KEY: ${{ secrets.PROD_DEPLOY_KEY }}
-       DEPLOY_HOST: ${{ secrets.PROD_DEPLOY_HOST }}
-       DEPLOY_USER: ${{ secrets.PROD_DEPLOY_USER }}
-     run: |
-       mkdir -p ~/.ssh
-       echo "$DEPLOY_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
-       ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
-       ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" \
-         "cd <리포 경로> && git pull origin main && ./deploy-auto.sh production --skip-tests"
-   ```
-4. 이후에는 main 머지 = 자동 배포. (CI 테스트가 이미 통과한 커밋이므로 서버에서는 `--skip-tests` 사용)
+1. **CI release 잡** (`ci-cd.yml`): main 푸시 → 테스트 통과 → 버전 patch bump → `chore: release vX.Y.Z` 커밋 + git 태그 푸시
+   - 커밋 메시지에 `[minor]` / `[major]` 포함 시 해당 레벨로 bump
+   - 테스트 실패 시 release 커밋/태그가 생성되지 않음 → 배포 차단
+2. **서버 폴러** (`likorea-deploy.timer`, 2분 주기): origin/main HEAD에 `v*` 태그가 있으면
+   해당 커밋으로 `reset --hard` 후 `./deploy.sh production --auto --skip-tests --skip-lint --skip-git-check` 실행
+   - 스크립트: `/root/likorea/scripts/auto-deploy.sh` (리포의 `scripts/auto-deploy.sh`)
+   - systemd 유닛: 리포 `scripts/systemd/` → 서버 `/etc/systemd/system/`
+
+### 운영 명령어 (서버에서)
+```bash
+systemctl status likorea-deploy.timer          # 타이머 상태
+journalctl -u likorea-deploy.service -n 50     # 배포 로그
+systemctl stop likorea-deploy.timer            # 자동 배포 일시 중지
+sudo systemctl start likorea-deploy.service    # 즉시 1회 폴링/배포
+```
+
+### 버전 관리 원칙
+- 버전 bump와 git 태그는 **CI만** 수행. 서버는 version.json을 읽기만 한다 (`deploy.sh`에서 자동 bump 제거됨).
+- 수동 배포 시에도 서버에서 버전을 올리지 말 것 — git과 서버 버전이 어긋나는 원인.
 
 ## 트러블슈팅
 
