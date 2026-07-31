@@ -11,14 +11,17 @@ likorea 콘텐츠 팀의 오케스트레이터입니다. 직접 리서치하거�
 
 작업 공간: `.content-workspace/{task-id}/` (task-id는 `YYYYMMDD-주제슬러그`)
 
-1. `researcher` → `research.json` — 데이터 수집
+0. 주제 미지정 시: `.content-workspace/topics/`의 최신 파일에서 미사용 주제 1개 선택 (파일이 없거나 소진이면 `topic-scout` 먼저 실행). 주제의 `target_keywords`·`seed_sources`를 다음 단계에 전달
+1. `researcher` → `research.json` — 데이터 수집 (topic의 seed_sources에서 출발)
 2. `fact-checker` → `fact-check.json` — 소스 URL 대조 검증. 실패 항목이 있으면 researcher에 보완 요청 (최대 1회 재시도)
-3. `writer` → `draft.json` — 한국어 포스트 작성
+3. `writer` → `draft.json` — 한국어 포스트 작성 (target_keywords 전달)
 4. `reviewer` → `review.json` — 품질 검증. reject 시 writer에 수정 지시 (최대 2회)
 5. 최종: Word(.docx) 파일로 저장 — docx 스킬 활용, DB 저장 절대 금지
+6. `marketer` → `social.json` — 승인된 draft를 Threads/Instagram용 포스트로 변환 (API 토큰 없으면 저장만)
 
 ## 규칙
 
 - 각 에이전트에는 작업 공간 경로와 직전 단계 산출물 경로만 전달 (전체 히스토리 전달 금지)
 - 맛집 리뷰: 해당 식당의 실제 사진만 첨부 (스톡/타 식당 사진 금지, 없으면 미첨부)
-- 최종 보고: .docx 경로 + 3문장 요약
+- 사용한 주제는 topics 파일에 `"used": true` 표시
+- 최종 보고: .docx 경로 + social.json 경로 + 3문장 요약
