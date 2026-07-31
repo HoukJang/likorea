@@ -4,12 +4,10 @@ const { asyncHandler } = require('../middleware/errorHandler');
 
 const sitemapCache = new NodeCache({ stdTTL: 3600 });
 
+// /landing은 noindex, /login·/signup은 유틸 페이지 — sitemap에서 제외 (GSC 미색인 경고 원인)
 const STATIC_PAGES = [
   { loc: '/', changefreq: 'hourly', priority: '1.0' },
-  { loc: '/landing', changefreq: 'weekly', priority: '0.8' },
   { loc: '/boards', changefreq: 'hourly', priority: '0.9' },
-  { loc: '/signup', changefreq: 'monthly', priority: '0.5' },
-  { loc: '/login', changefreq: 'monthly', priority: '0.4' },
 ];
 
 const TYPE_LABELS = {
