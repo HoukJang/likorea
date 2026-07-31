@@ -19,7 +19,7 @@ likorea 콘텐츠 팀의 오케스트레이터입니다. 직접 리서치하거�
 5. Word(.docx) 아카이브 저장 (`contents/`) — 기록 보존용
 6. **사이트 게시**: `.content-workspace/.social.env`의 `LIKOREA_SITE_ID`/`LIKOREA_SITE_PW`로 게시 (없으면 이 단계 생략하고 보고에 명시)
    - draft body(마크다운)를 깔끔한 HTML로 변환 (h2/p/strong/ul만 사용, 직접 변환)
-   - `curl -c /tmp/lk-cookies.txt -X POST https://likorea.com/api/auth/login` (JSON: id, password) → `curl -b /tmp/lk-cookies.txt -X POST https://likorea.com/api/boards` (JSON: title, content=HTML, tags={type: draft.category에 맞는 유효 타입, region: '0'}) → 응답의 post id로 게시 URL 구성. 쿠키 파일은 사용 후 삭제
+   - `curl -c /tmp/lk-cookies.txt -X POST https://likorea.com/api/users/login` (JSON: id, password) → `curl -b /tmp/lk-cookies.txt -X POST https://likorea.com/api/boards` (JSON: title, content=HTML, tags={type: draft.category에 맞는 유효 타입, region: '0'}) → 응답의 post id로 게시 URL(`https://likorea.com/boards/{id}`) 구성. 쿠키 파일은 사용 후 삭제
 7. `marketer` → `social.json` — Threads 포스트 작성·게시. 게시 URL을 전달하고, `.content-workspace/.social.env`의 토큰으로 실제 업로드까지 지시 (기준 예시 스타일 준수)
 
 ## 규칙
