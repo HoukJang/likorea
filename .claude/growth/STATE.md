@@ -12,7 +12,7 @@
 - 트래픽 수집: `trafficLogger` 미들웨어 → `TrafficLog` 모델 (30일 TTL, 봇/실사용자 구분 없음)
 - 관리자 대시보드: `/admin` 트래픽 메뉴 (1h~30d 기간별 요청수/순사용자/응답시간)
 - 공유 기능: Web Share API + 링크 복사만 (카카오톡 SDK 없음)
-- Google Search Console: 등록 미확인 (2월 시점 인덱싱 0건)
+- Google Search Console: 도메인 속성 등록·확인 완료. 51페이지 색인, 최근 3개월 검색 클릭 10회 (문제는 색인이 아니라 노출/순위)
 - 상세 전략: `docs/ACTIVATION_STRATEGY.md` 참조 (Phase 1 완료, Phase 2+ 미착수)
 
 ## 지표 베이스라인
@@ -20,7 +20,7 @@
 | 지표 | 값 | 확인일 | 출처 |
 |------|-----|--------|------|
 | 월간 방문자 (UV) | 미측정 | - | GA4 / 관리자 대시보드 |
-| Google 인덱스 페이지 | 0 (2월 기준) | 2026-02-09 | ACTIVATION_STRATEGY.md |
+| Google 인덱스 페이지 | 51 색인 / 15 미색인 | 2026-07-30 | GSC Overview (도메인 속성 등록·소유권 확인 완료) |
 | 등록 사용자 수 | 미측정 | - | DB users 컬렉션 |
 | 월간 새 게시글 | 미측정 | - | DB boardposts 컬렉션 |
 
@@ -33,8 +33,8 @@
 - [x] 일별 트래픽 집계 — `backend/models/TrafficDaily.js` + `backend/jobs/trafficAggregator.js` (1시간 주기, 오늘+어제 upsert, NY 타임존) (2026-07-30)
 - [x] 대시보드 API에 봇/실사용자 분리 — summary에 botRequests/humanRequests, 신규 `GET /api/traffic/trend` (days≤365) (2026-07-30)
 - [ ] 프론트 관리자 대시보드(TrafficDashboard.jsx)에 봇/실사용자 분리 표시 + trend 차트 (`frontend/src/api/traffic.js`에 trend 호출 추가 필요)
-- [ ] (운영자) SEO 검색엔진 등록 — 각 15분 내외, 배포 후 진행:
-  - Google Search Console: 도메인 속성 추가 → DNS TXT 소유권 확인 → `https://likorea.com/sitemap.xml` 제출 → 주요 URL 색인 요청
+- [ ] (운영자) SEO 검색엔진 등록 마무리:
+  - ~~Google Search Console 등록~~ 완료 확인 (2026-07-30, 도메인 속성) — 남은 것: sitemap 제출 여부 확인, Pages 미색인 15건 원인 확인, Performance 쿼리 분석
   - 네이버 서치어드바이저 (searchadvisor.naver.com): 등록 + sitemap 제출 (한국어 검색 유입)
   - Bing 웹마스터: Search Console 가져오기로 등록
 - [ ] (운영자·배포 시) 프리렌더 가동 확인: `curl -A "Googlebot" https://likorea.com/ | grep -c 게시판` (0이면 미작동), `curl https://likorea.com/sitemap.xml` 응답 확인
@@ -48,7 +48,7 @@
 - [ ] 콘텐츠 파이프라인으로 시드 콘텐츠 정기 생산 (맛집 리뷰, 생활정보 — CLAUDE.md 파이프라인 규칙 준수, .docx 출력)
 - [ ] 카테고리별 최소 5개 게시글 확보 목표
 
-### P3.5 — 유입 채널 시딩 (2026-07-30 추가, Google 인덱스 0건 site: 검색으로 재확인)
+### P3.5 — 유입 채널 시딩 (2026-07-30 추가; GSC상 51페이지 색인·3개월 클릭 10회 — 노출/순위가 병목)
 - [ ] 한인 커뮤니티 소개 포스팅: 미시USA, 헤이코리안, 롱아일랜드 한인 페이스북 그룹, 네이버 미국 이민 카페
 - [ ] 백링크 확보: 롱아일랜드 한인 교회·한글학교·업소록 사이트에 링크 요청
 - [ ] (운영자 계정 필요) Kakao Developers 앱 등록 → JavaScript 키 발급 (P2 선행 조건)
