@@ -236,7 +236,7 @@ The `deploy.sh` script handles:
 1. `TeamCreate`로 content 팀 생성
 2. `content-lead` 에이전트를 오케스트레이터로 spawn
 3. content-lead가 순차적으로 진행:
-   - (주제 미지정 시) `topic-scout` → 한인 뉴스·커뮤니티 탐색해 주제 발굴 → `topics/YYYY-MM-DD.json`
+   - (주제 미지정 시) 주제 대장 `contents/topics.xlsx`의 `대기` 주제 사용, 없으면 `topic-scout`로 발굴해 대장에 추가 (상태 흐름: 대기 → 초안작성 → 게시완료(사용자 표기))
    - `researcher` → 데이터 수집 (WebSearch, Google Places 등) → `research.json`
    - `fact-checker` → 소스 URL 대조 검증 → `fact-check.json`
    - `writer` → 한국어 포스트 작성 (fable, AI 티 제거 문체 규칙) → `draft.json`
