@@ -6,5 +6,8 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 WorkingDirectory=/root/likorea
+# HOME 필수: 없으면 PM2가 /etc/.pm2에 별도 데몬을 만들어 기존 프로세스를 못 본다
+Environment=HOME=/root
+Environment=PM2_HOME=/root/.pm2
 ExecStart=/root/likorea/scripts/auto-deploy.sh
 TimeoutStartSec=1800
