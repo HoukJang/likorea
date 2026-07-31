@@ -241,8 +241,9 @@ The `deploy.sh` script handles:
    - `fact-checker` → 소스 URL 대조 검증 → `fact-check.json`
    - `writer` → 한국어 포스트 작성 (fable, AI 티 제거 문체 규칙) → `draft.json`
    - `reviewer` → 품질 검증 (AI 티 검출 포함, opus) → `review.json`
-   - `marketer` → Threads/Instagram 포스트 변환 → `social.json` (API 토큰 없으면 저장만)
-4. 최종 출력: Word(.docx) 파일로 저장 (DB 저장 금지)
+   - 사이트 게시: 로그인 API + `POST /api/boards`로 자동 게시 (계정정보는 `.content-workspace/.social.env`)
+   - `marketer` → Threads 포스트 작성·자동 게시 → `social.json`
+4. Word(.docx)는 `contents/`에 아카이브로 항상 저장
 
 ### 에이전트 정의
 - 커스텀 에이전트: `.claude/agents/` 디렉토리 참조
@@ -256,7 +257,8 @@ The `deploy.sh` script handles:
 - 콘텐츠 생성을 위한 독립 스크립트 작성 금지
 - 메인 에이전트가 직접 데이터 수집/포스트 작성 금지
 - 반드시 팀 에이전트를 통해 처리할 것
-- `createContentPost.js`로 DB 직접 저장 금지
+- DB 직접 insert 금지 — 사이트 게시는 반드시 공개 API(`/api/auth/login` + `/api/boards`) 경유 (2026-07-30 자동 게시 허용으로 변경)
+- reviewer 미통과 콘텐츠는 절대 게시 금지 (검토필요 상태로 남길 것)
 
 ## Important Notes
 
