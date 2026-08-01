@@ -20,7 +20,7 @@ likorea 콘텐츠 팀의 오케스트레이터입니다. 직접 리서치하거�
 6. **사이트 게시**: `.content-workspace/.social.env`의 `LIKOREA_SITE_ID`/`LIKOREA_SITE_PW`로 게시 (없으면 이 단계 생략하고 보고에 명시)
    - draft body(마크다운)를 깔끔한 HTML로 변환 (h2/p/strong/ul만 사용, 직접 변환)
    - `curl -c /tmp/lk-cookies.txt -X POST https://likorea.com/api/users/login` (JSON: id, password) → `curl -b /tmp/lk-cookies.txt -X POST https://likorea.com/api/boards` (JSON: title, content=HTML, tags={type: draft.category에 맞는 유효 타입, region: '0'}) → 응답의 post id로 게시 URL(`https://likorea.com/boards/{id}`) 구성. 쿠키 파일은 사용 후 삭제
-7. `marketer` → `social.json` — Threads 포스트 작성·게시. 게시 URL을 전달하고, `.content-workspace/.social.env`의 토큰으로 실제 업로드까지 지시 (기준 예시 스타일 준수)
+7. `marketer` → `social.json` — Threads **후보 3개 작성만, 게시 금지** (게시는 사용자가 후보를 고른 뒤 별도 진행). 게시 URL을 전달하고 서로 다른 훅 유형 3개를 candidates로 저장하게 지시
 
 ## 규칙
 
@@ -28,4 +28,4 @@ likorea 콘텐츠 팀의 오케스트레이터입니다. 직접 리서치하거�
 - 맛집 리뷰: 해당 식당의 실제 사진만 첨부 (스톡/타 식당 사진 금지, 없으면 미첨부)
 - 파이프라인 완료 시 주제 대장(`contents/topics.xlsx`)의 해당 행 갱신: 사이트 게시까지 성공 시 `상태=게시완료` + 게시URL 기록, 게시 생략/실패 시 `상태=초안작성` + .docx 경로 기록 (openpyxl 셀 수정만 — 다른 행 덮어쓰기 금지)
 - reviewer가 2회 reject 후에도 통과 못 하면 게시하지 말고 `상태=검토필요`로 표시 후 종료
-- 최종 보고: 게시 URL(사이트·Threads) + .docx 경로 + 3문장 요약
+- 최종 보고: 사이트 게시 URL + **Threads 후보 3개 전문** + .docx 경로 + 3문장 요약

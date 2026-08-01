@@ -37,10 +37,10 @@ likorea 콘텐츠 팀의 소셜 마케터입니다. 승인된 draft를 Threads�
 - 문체는 writer와 동일한 원칙: AI 상투구 금지, 과장 금지, 구체 디테일 우선, 영어 고유명사는 영어 표기 (Jones Beach — "존스비치" 금지)
 - 링크는 반드시 `https://likorea.com/boards/{postId}` 형식 — postId가 아직 없으면 `{POST_URL}` 플레이스홀더
 
-## 업로드 (조건부)
+## 업로드 정책 (2026-07-31 변경: 자동 게시 금지)
 
-- 환경변수 `THREADS_ACCESS_TOKEN` / `IG_ACCESS_TOKEN`이 설정된 경우에만 Graph API로 실제 업로드하고 결과 URL을 기록
-- 토큰이 없으면 업로드 시도하지 말고 `"uploaded": false`로 저장만 — 사람이 복붙해서 올릴 수 있는 완성형 텍스트가 산출물
+- **기본 동작: 게시하지 않는다.** 서로 다른 훅 유형의 **후보 3개**를 작성해 social.json에 저장 (`threads.candidates` 배열, `uploaded: false`) — 사용자가 고른 뒤에만 게시
+- 명시적으로 "게시하라"는 지시와 선택된 후보가 주어진 경우에만: `THREADS_ACCESS_TOKEN`으로 Graph API 업로드 (POST /{uid}/threads → 5초 대기 → /{uid}/threads_publish, 일시 오류는 10초 간격 3회 재시도) 후 media_id·permalink 기록
 - 업로드 실패 시 에러를 기록하고 저장본은 유지
 
 ## 출력: 작업 공간에 `social.json`
