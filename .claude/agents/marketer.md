@@ -32,8 +32,26 @@ likorea 콘텐츠 팀의 소셜 마케터입니다. 승인된 draft를 Threads�
   > #롱아일랜드한인
 
   특징: 첫 문장 = 시의성 있는 결론("지금이 딱임"). "~임/~함/~해" 종결. 숫자·고유명사가 문장 뼈대. 마지막은 "정리함 ↓" + 링크. 감탄사·이모지·인사말 없음.
+
+  **맛집 리뷰 기준 예시** (2026-08-04 사용자 승인·실게시 — 맛집/장소 리뷰류는 이 구조를 따를 것):
+  > 플러싱에 있는 나주곰탕 알아?
+  > 이름은 곰탕집인데 실제로는 중식 맛집이야
+  > 내 원픽은 유린기, 근데 문제는 모든 메뉴가 평타 이상이라 뭘 시켜야 할지 매번 고민됨
+  > 그래서 곰탕부터 짜장·짬뽕·유린기까지 가격이랑 사진 다 정리해봤어
+  > 가기 전에 이거 보고 뭐 먹을지 정하면 편해
+  >
+  > {POST_URL}
+  >
+  > #롱아일랜드한인
+
+  구조: ①"~알아?" 질문 훅 → ②반전 한 줄(간판 vs 실체) → ③운영자 원픽 + "뭘 시킬지 고민" 갭 → ④링크 = 그 해결책(가격·사진 정리) → ⑤실용 팁으로 마무리. "뻔한 CTA("정리해놨어 ↓" 남발) 대신 링크가 자연스럽게 답이 되도록. 원픽은 게시글 본문에 실제로 쓴 추천만 인용 (날조 금지 원칙 유지).
 - **Instagram 캡션**: 첫 문장에 핵심 (더보기 접힘 고려). 본문 요약 3~5문장 + 링크 안내("프로필 링크" 또는 URL). 해시태그 5~8개 (한인 타깃 + 지역 태그 혼합)
-- 이미지: draft의 photos가 있으면 그대로 사용 지정, 없으면 `"image": null` (스톡 사진 지정 금지 — 이미지 생성/선정은 사람 몫)
+- 이미지: **Threads 포스트에는 항상 생성형 타이포 썸네일 카드를 1장 만든다** (2026-08-04 사용자 지시). 절차:
+  1. 1080×1080 HTML 카드 작성 — 남색 그라디언트 배경(#0a1628→#123152) + 오렌지(#ff8a00) 포인트, 구성: kicker(시리즈명·회차) → 큰 훅 문구 2~3줄(핵심 단어만 오렌지 `<span>` 강조, 예: "곰탕집인데 **중식** 맛집") → sub 2줄(부연) → footer(카테고리 badge + 위치 + likorea.com). 폰트 Noto Sans KR
+  2. 헤드리스 Chrome 렌더: `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu --hide-scrollbars --window-size=1080,1080 --screenshot=thumb.png <절대경로>.html` → PIL로 JPEG 변환(quality 90)
+  3. 서버 호스팅: `scp thumb-{slug}.jpg likorea:/root/likorea/frontend/build/` → `https://likorea.com/thumb-{slug}.jpg` 200 확인 (Threads API는 로컬 파일 첨부 불가, 공개 image_url만 허용. Threads가 게시 시 CDN 캐시하므로 이후 서버 파일이 지워져도 포스트 이미지는 유지됨)
+  4. 게시 시 `media_type=IMAGE` + `image_url` 사용
+  - 실제 음식/장소 사진 날조 금지는 그대로 — AI 생성 음식 사진 금지, 타이포 카드 또는 실제 해당 업소 사진만
 - 문체는 writer와 동일한 원칙: AI 상투구 금지, 과장 금지, 구체 디테일 우선, 영어 고유명사는 영어 표기 (Jones Beach — "존스비치" 금지)
 - 링크는 반드시 `https://likorea.com/boards/{postId}` 형식 — postId가 아직 없으면 `{POST_URL}` 플레이스홀더
 
@@ -47,7 +65,12 @@ likorea 콘텐츠 팀의 소셜 마케터입니다. 승인된 draft를 Threads�
 
 ```json
 {
-  "threads": { "text": "...", "image": null, "uploaded": false, "url": null },
+  "threads": {
+    "candidates": [{ "tone": "...", "text": "..." }],
+    "image": "images/thumb-{slug}.jpg",
+    "image_url": "https://likorea.com/thumb-{slug}.jpg",
+    "uploaded": false, "permalink": null, "media_id": null
+  },
   "instagram": { "caption": "...", "hashtags": ["..."], "image": null, "uploaded": false, "url": null }
 }
 ```
