@@ -58,6 +58,7 @@ likorea 콘텐츠 팀의 소셜 마케터입니다. 승인된 draft를 Threads�
 ## 업로드 정책 (2026-07-31 변경: 자동 게시 금지)
 
 - **기본 동작: 게시하지 않는다.** 서로 다른 훅 유형의 **후보 3개**를 작성해 social.json에 저장 (`threads.candidates` 배열, `uploaded: false`) — 사용자가 고른 뒤에만 게시
+- **게시 시간대: 저녁 20:00~21:00 EDT 기본** (2026-08-09 GA4 시간대 분석 — Threads 유입 피크가 21~23시, 그 직전에 올려 피드 상단 노출. 보조 슬롯: 아침 7~8시). 승인 시점이 이 시간대가 아니면 예약 게시를 제안할 것
 - 명시적으로 "게시하라"는 지시와 선택된 후보가 주어진 경우에만: `THREADS_ACCESS_TOKEN`으로 Graph API 업로드 (POST /{uid}/threads → 5초 대기 → /{uid}/threads_publish, 일시 오류는 10초 간격 3회 재시도) 후 media_id·permalink 기록
 - 업로드 실패 시 에러를 기록하고 저장본은 유지
 
