@@ -19,12 +19,14 @@ description: likorea.com 트래픽 현황 리포트 생성. "트래픽 확인", 
 - 봇 추정 비율 (userAgent에 bot/crawler/spider 포함 요청 비율)
 - 인기 경로 상위 5개
 - 등록 사용자 수, 최근 30일 신규 게시글/댓글 수
+- **글별 성과**: 주제 대장(`contents/topics.xlsx`)에서 `상태=게시완료`인 행의 게시URL로 post id를 뽑아 `GET /api/boards/{id}`의 viewCount 수집
 
 ## 출력
 
 1. 위 항목을 표 하나로 압축한 요약 리포트 (10줄 이내 해설 포함)
 2. `.claude/growth/STATE.md`의 "지표 베이스라인" 표 갱신 (값, 확인일, 출처)
 3. 직전 베이스라인과 비교해 유의미한 변화가 있으면 한 줄 코멘트
+4. **성과 피드백 루프**: topics.xlsx 각 게시완료 행의 `성과(M열)`를 `조회 N (YYYY-MM-DD)` 형식으로 갱신 (기존 기록 뒤에 append — 추이를 남긴다). 조회수 상위 글의 공통 패턴(카테고리·앵글)이 보이면 리포트에 한 줄로 명시 — topic-scout가 이 열을 참고해 발굴함
 
 ## 토큰 규칙
 
