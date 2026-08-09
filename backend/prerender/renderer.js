@@ -8,6 +8,26 @@ const MAX_CONCURRENT = 3;
 const MAX_QUEUE = 10;
 const QUEUE_TIMEOUT = 30000;
 
+const BLOCKED_RESOURCE_TYPES = ['image', 'font', 'media', 'stylesheet'];
+const BLOCKED_HOSTS = [
+  'googletagmanager.com',
+  'google-analytics.com',
+  'analytics.google.com',
+  'doubleclick.net'
+];
+
+function shouldBlockRequest(resourceType, url) {
+  if (BLOCKED_RESOURCE_TYPES.includes(resourceType)) {
+    return true;
+  }
+  try {
+    const { hostname } = new URL(url);
+    return BLOCKED_HOSTS.some(host => hostname === host || hostname.endsWith(`.${host}`));
+  } catch {
+    return false;
+  }
+}
+
 class Renderer {
   constructor() {
     this.browser = null;
@@ -92,8 +112,7 @@ class Renderer {
 
       await page.setRequestInterception(true);
       page.on('request', req => {
-        const type = req.resourceType();
-        if (['image', 'font', 'media', 'stylesheet'].includes(type)) {
+        if (shouldBlockRequest(req.resourceType(), req.url())) {
           req.abort();
         } else {
           req.continue();
@@ -141,3 +160,4 @@ class Renderer {
 }
 
 module.exports = new Renderer();
+module.exports.shouldBlockRequest = shouldBlockRequest;
