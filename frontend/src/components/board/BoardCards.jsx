@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getTagDisplayName } from '../../utils/tagUtils';
 import { timeAgo, getAuthorId } from '../../utils/dataUtils';
 import UserMenu from '../common/UserMenu';
@@ -7,13 +7,18 @@ import UserMenu from '../common/UserMenu';
 const BoardCards = React.memo(({ posts, tagList, pendingOnly = false, userScrapIds = new Set() }) => {
   const navigate = useNavigate();
 
+  const postPath = postId =>
+    pendingOnly ? `/boards/${postId}/edit?pending=true` : `/boards/${postId}`;
+
   const handleCardClick = (e, postId) => {
     if (e.target.closest('.user-menu-container')) {
       e.preventDefault();
       return;
     }
 
-    navigate(pendingOnly ? `/boards/${postId}/edit?pending=true` : `/boards/${postId}`);
+    if (e.target.closest('a')) return;
+
+    navigate(postPath(postId));
   };
 
   return (
@@ -46,12 +51,18 @@ const BoardCards = React.memo(({ posts, tagList, pendingOnly = false, userScrapI
               <span className="mobile-card-views">{post.viewCount ?? 0}</span>
             </div>
             <div className="mobile-card-title">
-              {userScrapIds.has(post._id || post.id) && (
-                <span style={{ marginRight: '6px', color: '#f59e0b' }} title="스크랩한 글">📌</span>
-              )}
-              {post.title}
-              {pendingOnly && <span style={{ marginLeft: '8px', padding: '2px 6px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.75em' }}>승인 대기</span>}
-              {(post.commentCount > 0) && <span className="mobile-comment-count">{post.commentCount}</span>}
+              <Link
+                to={postPath(postId)}
+                className="mobile-card-title-link"
+                aria-label={`게시글 제목: ${post.title}`}
+              >
+                {userScrapIds.has(post._id || post.id) && (
+                  <span style={{ marginRight: '6px', color: '#f59e0b' }} title="스크랩한 글">📌</span>
+                )}
+                {post.title}
+                {pendingOnly && <span style={{ marginLeft: '8px', padding: '2px 6px', backgroundColor: '#ff9800', color: 'white', borderRadius: '4px', fontSize: '0.75em' }}>승인 대기</span>}
+                {(post.commentCount > 0) && <span className="mobile-comment-count">{post.commentCount}</span>}
+              </Link>
             </div>
             <div className="mobile-card-footer">
               <div className="mobile-card-info">
