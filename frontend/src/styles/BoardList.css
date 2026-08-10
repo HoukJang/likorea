@@ -873,7 +873,7 @@
   .mobile-card {
     padding: 14px;
     margin-bottom: 10px;
-    width: 100%;
+    width: calc(100% - 32px);
   }
 
   .mobile-card-title {
@@ -897,7 +897,9 @@
   .mobile-card {
     padding: 12px;
     margin-bottom: 8px;
-    width: 100%;
+    width: calc(100% - 24px);
+    margin-left: 12px;
+    margin-right: 12px;
   }
 
   .mobile-card-title {
