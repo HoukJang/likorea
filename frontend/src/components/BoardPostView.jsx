@@ -130,6 +130,12 @@ function BoardPostView() {
     }
   }, [isRefreshing]);
 
+  // 인증 정보가 게시글 로드보다 늦게 도착하는 경우 권한 재계산
+  useEffect(() => {
+    checkEditDeletePermission(post);
+    setIsAdmin(user?.authority >= 5);
+  }, [user, post]);
+
   const checkEditDeletePermission = postData => {
     if (!postData) {
       setCanModify(false);
